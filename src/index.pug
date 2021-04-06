@@ -1,0 +1,17 @@
+doctype html
+html(lang="ru")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="initial-scale=1.0, width=device-width")
+    title Range slider
+  body
+    .container
+      .range-slider
+        input.range-slider__input.range-slider__input_left.js-range-slider__input_left(type="range" min="0" max="100" value="25")
+        input.range-slider__input.range-slider__input_right.js-range-slider__input_right(type="range" min="0" max="100" value="75")
+
+        .range-slider__slider
+          .range-slider__track
+          .range-slider__range.js-range-slider__range
+          .range-slider__thumb.range-slider__thumb_left.js-range-slider__thumb_left  
+          .range-slider__thumb.range-slider__thumb_right.js-range-slider__thumb_right
