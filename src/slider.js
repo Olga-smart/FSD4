@@ -1,13 +1,41 @@
 const getTemplate = (options) => {
-  return `
-    <input class="range-slider__input range-slider__input_left js-range-slider__input_left" type="range" min="${options.min || 0}" max="${options.max || 100}" value="${options.leftValue || 25}">
-    <input class="range-slider__input range-slider__input_right js-range-slider__input_right" type="range" min="${options.min || 0}" max="${options.max || 100}" value="${options.rightValue || 75}">
+  let result = `
+    <input 
+      class="range-slider__input range-slider__input_left js-range-slider__input_left"
+      type="range" 
+      min="${options.min || 0}" 
+      max="${options.max || 100}" 
+      value="${options.leftValue || 25}" 
+      step="${options.step || 1}"
+    >
+
+    <input 
+      class="range-slider__input range-slider__input_right js-range-slider__input_right"
+      type="range" 
+      min="${options.min || 0}" 
+      max="${options.max || 100}" 
+      value="${options.rightValue || 75}" 
+      step="${options.step || 1}"
+    >
     <div class="range-slider__slider">
       <div class="range-slider__track"></div>
       <div class="range-slider__range js-range-slider__range"></div>
       <div class="range-slider__thumb range-slider__thumb_left js-range-slider__thumb_left"></div><div class="range-slider__thumb range-slider__thumb_right js-range-slider__thumb_right"></div>
     </div>
   `
+  if (options.minMaxLabels) {
+    result += `
+      <div class="range-slider__min-max-label range-slider__min-max-label_left">
+        ${options.min || 0}
+      </div>
+      <div class="range-slider__min-max-label range-slider__min-max-label_right">
+        ${options.max || 100}
+      </div>
+    ` 
+  }
+  
+  
+  return result;
 }
 
 export class Slider {
