@@ -34,6 +34,13 @@ const getTemplate = (options) => {
     ` 
   }
   
+  if (options.valueLabel) {
+    result += `
+      <div class="range-slider__value-label range-slider__value-label_left js-range-slider__value-label js-range-slider__value-label_left"></div>
+      <div class="range-slider__value-label range-slider__value-label_right js-range-slider__value-label js-range-slider__value-label_right"></div>
+    `
+  }
+  
   
   return result;
 }
@@ -41,7 +48,8 @@ const getTemplate = (options) => {
 export class Slider {
   
   constructor(component, options = {}) {
-    this._component = component;
+    this.component = component;
+    this.options = options;
     this._render(options);
     
     this._inputLeft = component.querySelector('.js-range-slider__input_left');
@@ -54,11 +62,22 @@ export class Slider {
     this.setLeftValue();
     this.setRightValue();
     
+    if (options.valueLabel) {
+      this.valueLabelLeft = component.querySelector('.js-range-slider__value-label_left');
+      this.valueLabelRight = component.querySelector('.js-range-slider__value-label_right');
+      
+      this.setLabelLeftValue();
+      this.setLabelRightValue();
+      
+      this.setValueLabelLeftPosition();
+      this.setValueLabelRightPosition();
+    }    
+    
     this._attachEventHandlers();
   }
   
   _render(options) {
-    this._component.innerHTML = getTemplate(options);
+    this.component.innerHTML = getTemplate(options);
   }
   
   setLeftValue(value) {
@@ -85,12 +104,38 @@ export class Slider {
     this._range.style.right = (100 - percent) + '%';
   }
   
+  setLabelLeftValue() {
+    this.valueLabelLeft.textContent = this._inputLeft.value;
+  }
+  
+  setLabelRightValue() {
+    this.valueLabelRight.textContent = this._inputRight.value;
+  }
+  
+  setValueLabelLeftPosition() {
+    this.valueLabelLeft.style.left = this._thumbLeft.style.left;
+  }
+  
+  setValueLabelRightPosition() {
+    this.valueLabelRight.style.right = this._thumbRight.style.right;
+  }
+  
   _attachEventHandlers() {
     this._inputLeft.addEventListener('input', () => {
       this.setLeftValue();
+      
+      if (this.options.valueLabel) {
+        this.setLabelLeftValue();
+        this.setValueLabelLeftPosition();
+      }
     });
     this._inputRight.addEventListener('input', () => {
       this.setRightValue();
+      
+      if (this.options.valueLabel) {
+        this.setLabelRightValue();
+        this.setValueLabelRightPosition();
+      }
     });
 
     this._inputLeft.addEventListener('mouseover', () => {
@@ -123,7 +168,7 @@ export class Slider {
   }
   
   destroy() {
-    this._component.outerHTML = '';
+    this.component.outerHTML = '';
   }
   
 }

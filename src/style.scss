@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  height: 100vh;
+  height: 200vh;
   justify-content: center;
   align-items: center;
   font-family: 'Arial', sans-serif;
@@ -36,7 +36,6 @@ body {
     position: relative;
     z-index: 1;
     height: 6px;
-    margin: 0 15px;
   }
   &__track {
     position: absolute;
@@ -91,10 +90,25 @@ body {
     position: absolute;
     bottom: 20px;
     &_left {
-      left: 15px;
+      left: 0;
     }
     &_right {
-      right: 15px;
+      right: 0;
+    }
+  }
+  &__value-label {
+    display: inline-block;
+    background-color: crimson;
+    color: #fff;
+    position: absolute;
+    padding: 3px 5px;
+    border-radius: 5px;
+    bottom: 20px;
+    &_left {
+      transform: translateX(-50%);
+    }
+    &_right {
+      transform: translateX(50%);
     }
   }
 }
