@@ -35,7 +35,7 @@ body {
   &__slider {
     position: relative;
     z-index: 1;
-    height: 10px;
+    height: 6px;
     margin: 0 15px;
   }
   &__track {
@@ -61,35 +61,35 @@ body {
   &__thumb {
     position: absolute;
     z-index: 3;
-    width: 30px;
-    height: 30px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background-color: crimson;
     box-shadow: 0 0 0 0 rgba(crimson, 0.1);
     transition: box-shadow 0.2s ease-in-out;
     &_left {
       left: 25%;
-      transform: translate(-15px, -10px);
+      transform: translate(-8px, -5px);
     }
     &_right {
       right: 25%;
-      transform: translate(15px, -10px);
+      transform: translate(8px, -5px);
     }
     &_hover {
-      box-shadow: 0 0 0 10px rgba(crimson, 0.1);
+      box-shadow: 0 0 0 5px rgba(crimson, 0.1);
     }
     &_active {
-      box-shadow: 0 0 0 20px rgba(crimson, 0.2);
+      box-shadow: 0 0 0 10px rgba(crimson, 0.2);
     }
   }
   &__min-max-label {
-    background-color: darkgrey;
+    background-color: slategrey;
     color: #fff;
     display: inline-block;
     padding: 3px 5px;
     border-radius: 5px;
     position: absolute;
-    bottom: 14px;
+    bottom: 20px;
     &_left {
       left: 15px;
     }
