@@ -135,10 +135,10 @@ export class Slider {
     } else {
       if ( !this.isRightValueLabelCloseToMaxLabel() ) {
         this.valueLabelRight.classList.remove('range-slider__value-label_under');
-      }      
+      }
     }
     
-    if ( this.isLeftValueLabelCloseToMinLabel() ) {
+    if ( this.isLeftValueLabelCloseToMinLabel() || this._inputLeft.value == this._inputRight.max) {
       this.valueLabelLeft.classList.add('range-slider__value-label_under');
     } else {
       this.valueLabelLeft.classList.remove('range-slider__value-label_under');
