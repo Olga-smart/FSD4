@@ -25,10 +25,10 @@ const getTemplate = (options) => {
   `
   if (options.minMaxLabels) {
     result += `
-      <div class="range-slider__min-max-label range-slider__min-max-label_left">
+      <div class="range-slider__min-max-label range-slider__min-max-label_left js-range-slider__min-max-label_left">
         ${options.min || 0}
       </div>
-      <div class="range-slider__min-max-label range-slider__min-max-label_right">
+      <div class="range-slider__min-max-label range-slider__min-max-label_right js-range-slider__min-max-label_right">
         ${options.max || 100}
       </div>
     ` 
@@ -62,6 +62,11 @@ export class Slider {
     this.setLeftValue();
     this.setRightValue();
     
+    if (options.minMaxLabels) {
+      this.minLabel = component.querySelector('.js-range-slider__min-max-label_left');
+      this.maxLabel = component.querySelector('.js-range-slider__min-max-label_right');
+    }
+    
     if (options.valueLabel) {
       this.valueLabelLeft = component.querySelector('.js-range-slider__value-label_left');
       this.valueLabelRight = component.querySelector('.js-range-slider__value-label_right');
@@ -71,6 +76,10 @@ export class Slider {
       
       this.setValueLabelLeftPosition();
       this.setValueLabelRightPosition();
+      
+      // setTimeout нужен чтобы сработало точно после set...Position
+      setTimeout(() => this.fixValueLabelLeftPosition());
+      setTimeout(() => this.fixValueLabelRightPosition());
     }    
     
     this._attachEventHandlers();
@@ -120,6 +129,49 @@ export class Slider {
     this.valueLabelRight.style.right = this._thumbRight.style.right;
   }
   
+  fixValueLabelLeftPosition() {
+    if ( this.isTwoValueLabelsClose() ) {
+      this.valueLabelRight.classList.add('range-slider__value-label_under');
+    } else {
+      this.valueLabelRight.classList.remove('range-slider__value-label_under');
+    }
+    
+    if ( this.isLeftValueLabelCloseToMinLabel() ) {
+      this.valueLabelLeft.classList.add('range-slider__value-label_under');
+    } else {
+      this.valueLabelLeft.classList.remove('range-slider__value-label_under');
+    }
+  }
+  
+  fixValueLabelRightPosition() {
+    if ( this.isTwoValueLabelsClose() || this.isRightValueLabelCloseToMaxLabel() ) {
+      this.valueLabelRight.classList.add('range-slider__value-label_under');
+    } else {
+      this.valueLabelRight.classList.remove('range-slider__value-label_under');
+    }
+  }
+  
+  isTwoValueLabelsClose() {
+    let leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
+    let rightLabelEdge = this.valueLabelRight.getBoundingClientRect().left;
+
+    return ( (rightLabelEdge - leftLabelEdge) < 3 ); 
+  }
+  
+  isLeftValueLabelCloseToMinLabel() {
+    let leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().left;
+    let minLabelEdge = this.minLabel.getBoundingClientRect().right;
+    
+    return ( (leftLabelEdge - minLabelEdge) < 3 );
+  }
+  
+  isRightValueLabelCloseToMaxLabel() {
+    let rightLabelEdge = this.valueLabelRight.getBoundingClientRect().right;
+    let maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
+    
+    return ( (maxLabelEdge - rightLabelEdge) < 3 );
+  }
+  
   _attachEventHandlers() {
     this._inputLeft.addEventListener('input', () => {
       this.setLeftValue();
@@ -127,6 +179,7 @@ export class Slider {
       if (this.options.valueLabel) {
         this.setLabelLeftValue();
         this.setValueLabelLeftPosition();
+        this.fixValueLabelLeftPosition();
       }
     });
     this._inputRight.addEventListener('input', () => {
@@ -135,6 +188,7 @@ export class Slider {
       if (this.options.valueLabel) {
         this.setLabelRightValue();
         this.setValueLabelRightPosition();
+        this.fixValueLabelRightPosition();
       }
     });
 
