@@ -133,7 +133,9 @@ export class Slider {
     if ( this.isTwoValueLabelsClose() ) {
       this.valueLabelRight.classList.add('range-slider__value-label_under');
     } else {
-      this.valueLabelRight.classList.remove('range-slider__value-label_under');
+      if ( !this.isRightValueLabelCloseToMaxLabel() ) {
+        this.valueLabelRight.classList.remove('range-slider__value-label_under');
+      }      
     }
     
     if ( this.isLeftValueLabelCloseToMinLabel() ) {
@@ -180,6 +182,12 @@ export class Slider {
         this.setLabelLeftValue();
         this.setValueLabelLeftPosition();
         this.fixValueLabelLeftPosition();
+      }
+      
+      if ( this._inputLeft.value == this._inputLeft.max ) {
+        this._inputLeft.style.zIndex = 100;
+      } else {
+        this._inputLeft.style.zIndex = 2;
       }
     });
     this._inputRight.addEventListener('input', () => {
