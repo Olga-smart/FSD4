@@ -50,8 +50,6 @@ body {
   &__range {
     position: absolute;
     z-index: 2;
-    left: 25%;
-    right: 25%;
     top: 0;
     bottom: 0;
     border-radius: 5px;
@@ -113,6 +111,25 @@ body {
     &_under {
       bottom: auto;
       top: 20px;
+    }
+  }
+  &_vertical {
+    transform: rotate(-90deg);
+    .range-slider__min-max-label {
+      &_left {
+        transform-origin: bottom left;
+      }
+      &_right {
+        transform-origin: top right;
+      }
+    }
+    .range-slider__value-label {
+      &_left {
+        transform: translateX(-50%) rotate(90deg);
+      }
+      &_right {
+        transform: translateX(50%) rotate(90deg);
+      }
     }
   }
 }

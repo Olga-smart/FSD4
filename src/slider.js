@@ -41,7 +41,6 @@ const getTemplate = (options) => {
     `
   }
   
-  
   return result;
 }
 
@@ -80,7 +79,15 @@ export class Slider {
       // setTimeout нужен чтобы сработало точно после set...Position
       setTimeout(() => this.fixValueLabelLeftPosition());
       setTimeout(() => this.fixValueLabelRightPosition());
-    }    
+    } 
+    
+    if (options.vertical) {
+      component.classList.add('range-slider_vertical');
+      
+      if (options.minMaxLabels) {
+        this._fixMinMaxLabelsPositionForVertical();
+      }      
+    }
     
     this._attachEventHandlers();
   }
@@ -231,6 +238,12 @@ export class Slider {
   
   destroy() {
     this.component.outerHTML = '';
+  }
+  
+  _fixMinMaxLabelsPositionForVertical() {
+    this.maxLabel.style.transform = `rotate(90deg) translateX(${this.maxLabel.offsetHeight}px)`;
+    
+    this.minLabel.style.transform = `rotate(90deg) translateX(-${this.minLabel.offsetWidth}px)`;
   }
   
 }
