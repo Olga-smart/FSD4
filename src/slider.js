@@ -37,7 +37,10 @@ const getTemplate = (options) => {
   if (options.valueLabel) {
     result += `
       <div class="range-slider__value-label range-slider__value-label_left js-range-slider__value-label js-range-slider__value-label_left"></div>
+
       <div class="range-slider__value-label range-slider__value-label_right js-range-slider__value-label js-range-slider__value-label_right"></div>
+      
+      <div class="range-slider__value-label range-slider__value-label_common js-range-slider__value-label_common"></div>
     `
   }
   
@@ -69,6 +72,7 @@ export class Slider {
     if (options.valueLabel) {
       this.valueLabelLeft = component.querySelector('.js-range-slider__value-label_left');
       this.valueLabelRight = component.querySelector('.js-range-slider__value-label_right');
+      this.valueLabelCommon = component.querySelector('.js-range-slider__value-label_common');
       
       this.setLabelLeftValue();
       this.setLabelRightValue();
@@ -76,10 +80,25 @@ export class Slider {
       this.setValueLabelLeftPosition();
       this.setValueLabelRightPosition();
       
-      // setTimeout нужен чтобы сработало точно после set...Position
-      setTimeout(() => this.fixValueLabelLeftPosition());
-      setTimeout(() => this.fixValueLabelRightPosition());
+      setTimeout(() => {
+        if ( this.isTwoValueLabelsClose() ) {
+          this.mergeLabels();
+        }
+      });
+      
+      
     } 
+    
+    if (options.minMaxLabels && options.valueLabel) {
+      setTimeout(() => {
+        if ( this.isLeftValueLabelCloseToMinLabel() ) {
+          this.minLabel.style.opacity = 0;
+        }
+        if ( this.isRightValueLabelCloseToMaxLabel() ) {
+          this.maxLabel.style.opacity = 0;
+        }
+      });
+    }
     
     if (options.vertical) {
       component.classList.add('range-slider_vertical');
@@ -136,28 +155,30 @@ export class Slider {
     this.valueLabelRight.style.right = this._thumbRight.style.right;
   }
   
-  fixValueLabelLeftPosition() {
-    if ( this.isTwoValueLabelsClose() ) {
-      this.valueLabelRight.classList.add('range-slider__value-label_under');
-    } else {
-      if ( !this.isRightValueLabelCloseToMaxLabel() ) {
-        this.valueLabelRight.classList.remove('range-slider__value-label_under');
-      }
-    }
+  mergeLabels() {
+    this.valueLabelLeft.style.opacity = 0;
+    this.valueLabelRight.style.opacity = 0;
     
-    if ( this.isLeftValueLabelCloseToMinLabel() || this._inputLeft.value == this._inputRight.max) {
-      this.valueLabelLeft.classList.add('range-slider__value-label_under');
-    } else {
-      this.valueLabelLeft.classList.remove('range-slider__value-label_under');
-    }
+    this.valueLabelCommon.textContent = this._inputLeft.value + ' - ' + this._inputRight.value;
+    this.valueLabelCommon.style.opacity = 1;
+    
+//    let distanceBetweenTwoThumbsInPercents = 100 - parseInt(this._thumbRight.style.right) - parseInt(this._thumbLeft.style.left);
+    
+//    this.valueLabelCommon.style.left = parseInt(this.valueLabelLeft.style.left) + distanceBetweenTwoThumbsInPercents / 2 + '%';
+    
+    let distanceBetweenTwoThumbs = this._thumbRight.getBoundingClientRect().left - this._thumbLeft.getBoundingClientRect().right;
+    document.body.append(this.valueLabelCommon);
+    this.valueLabelCommon.style.left = this._thumbLeft.getBoundingClientRect().right + distanceBetweenTwoThumbs / 2 + 'px';
+    this.valueLabelCommon.style.top = this.valueLabelLeft.getBoundingClientRect().top + 'px';
+    this.valueLabelCommon.style.bottom = 'auto';
+    
   }
   
-  fixValueLabelRightPosition() {
-    if ( this.isTwoValueLabelsClose() || this.isRightValueLabelCloseToMaxLabel() ) {
-      this.valueLabelRight.classList.add('range-slider__value-label_under');
-    } else {
-      this.valueLabelRight.classList.remove('range-slider__value-label_under');
-    }
+  splitLabels() {
+    this.component.append(this.valueLabelCommon);
+    this.valueLabelCommon.style.opacity = 0;
+    this.valueLabelLeft.style.opacity = 1;
+    this.valueLabelRight.style.opacity = 1;
   }
   
   isTwoValueLabelsClose() {
@@ -188,7 +209,12 @@ export class Slider {
       if (this.options.valueLabel) {
         this.setLabelLeftValue();
         this.setValueLabelLeftPosition();
-        this.fixValueLabelLeftPosition();
+        
+        if ( this.isTwoValueLabelsClose() ) {
+          this.mergeLabels();
+        } else {
+          this.splitLabels();
+        }
       }
       
       if ( this._inputLeft.value == this._inputLeft.max ) {
@@ -196,6 +222,15 @@ export class Slider {
       } else {
         this._inputLeft.style.zIndex = 2;
       }
+      
+      if (this.options.valueLabel && this.options.minMaxLabels) {
+        if ( this.isLeftValueLabelCloseToMinLabel() ) {
+          this.minLabel.style.opacity = 0;
+        } else {
+          this.minLabel.style.opacity = 1;
+        }
+      }
+      
     });
     this._inputRight.addEventListener('input', () => {
       this.setRightValue();
@@ -203,7 +238,20 @@ export class Slider {
       if (this.options.valueLabel) {
         this.setLabelRightValue();
         this.setValueLabelRightPosition();
-        this.fixValueLabelRightPosition();
+        
+        if ( this.isTwoValueLabelsClose() ) {
+          this.mergeLabels();
+        } else {
+          this.splitLabels();
+        }
+      }
+      
+      if (this.options.valueLabel && this.options.minMaxLabels) {
+        if ( this.isRightValueLabelCloseToMaxLabel() ) {
+          this.maxLabel.style.opacity = 0;
+        } else {
+          this.maxLabel.style.opacity = 1;
+        }
       }
     });
 

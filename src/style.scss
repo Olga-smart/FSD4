@@ -87,6 +87,7 @@ body {
     border-radius: 5px;
     position: absolute;
     bottom: 20px;
+    transition: all 0.2s ease-in-out;
     &_left {
       left: 0;
     }
@@ -108,9 +109,9 @@ body {
     &_right {
       transform: translateX(50%);
     }
-    &_under {
-      bottom: auto;
-      top: 20px;
+    &_common {
+      opacity: 0;
+      transform: translateX(-50%);
     }
   }
   &_vertical {
