@@ -7,7 +7,6 @@ for (let slider of sliders) {
     minMaxLabels: true,
     valueLabel: true,
     min: 0,
-    max: 150,
-    vertical: true
+    max: 150
   });
 }

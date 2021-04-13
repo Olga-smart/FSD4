@@ -162,20 +162,14 @@ export class Slider {
     this.valueLabelCommon.textContent = this._inputLeft.value + ' - ' + this._inputRight.value;
     this.valueLabelCommon.style.opacity = 1;
     
-//    let distanceBetweenTwoThumbsInPercents = 100 - parseInt(this._thumbRight.style.right) - parseInt(this._thumbLeft.style.left);
-    
-//    this.valueLabelCommon.style.left = parseInt(this.valueLabelLeft.style.left) + distanceBetweenTwoThumbsInPercents / 2 + '%';
-    
     let distanceBetweenTwoThumbs = this._thumbRight.getBoundingClientRect().left - this._thumbLeft.getBoundingClientRect().right;
-    document.body.append(this.valueLabelCommon);
-    this.valueLabelCommon.style.left = this._thumbLeft.getBoundingClientRect().right + distanceBetweenTwoThumbs / 2 + 'px';
-    this.valueLabelCommon.style.top = this.valueLabelLeft.getBoundingClientRect().top + 'px';
-    this.valueLabelCommon.style.bottom = 'auto';
+    
+    let distanceBetweenTwoThumbsInPercents = 100 - parseInt(this._thumbRight.style.right) - parseInt(this._thumbLeft.style.left);
+    this.valueLabelCommon.style.left = parseInt(this.valueLabelLeft.style.left) + distanceBetweenTwoThumbsInPercents / 2 + '%';
     
   }
   
   splitLabels() {
-    this.component.append(this.valueLabelCommon);
     this.valueLabelCommon.style.opacity = 0;
     this.valueLabelLeft.style.opacity = 1;
     this.valueLabelRight.style.opacity = 1;
