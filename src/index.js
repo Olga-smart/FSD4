@@ -6,10 +6,8 @@ for (let slider of sliders) {
   new Slider(slider, {
     minMaxLabels: true,
     valueLabel: true,
-    leftValue: 10000,
-    rightValue: 14000,
     min: 0,
-    max: 15000,
+    max: 150,
     vertical: true
   });
 }

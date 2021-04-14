@@ -90,17 +90,6 @@ export class Slider {
       
     } 
     
-    if (options.minMaxLabels && options.valueLabel) {
-      setTimeout(() => {
-        if ( this.isLeftValueLabelCloseToMinLabel() ) {
-          this.minLabel.style.opacity = 0;
-        }
-        if ( this.isRightValueLabelCloseToMaxLabel() ) {
-          this.maxLabel.style.opacity = 0;
-        }
-      });
-    }
-    
     if (options.vertical) {
       component.classList.add('range-slider_vertical');
       
@@ -113,10 +102,18 @@ export class Slider {
       }
     }
     
-    this._attachEventHandlers();
+    if (options.minMaxLabels && options.valueLabel) {
+      setTimeout(() => {
+        if ( this.isLeftValueLabelCloseToMinLabel() ) {
+          this.minLabel.style.opacity = 0;
+        }
+        if ( this.isRightValueLabelCloseToMaxLabel() ) {
+          this.maxLabel.style.opacity = 0;
+        }
+      });
+    }
     
-    console.log('Label: ' + this.valueLabelLeft.style.left);
-    console.log('Thumb: ' + this._thumbLeft.style.left);
+    this._attachEventHandlers();
   }
   
   _render(options) {
@@ -204,25 +201,48 @@ export class Slider {
   }
   
   isLeftValueLabelCloseToMinLabel() {
-    let leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().left;
-    let minLabelEdge = this.minLabel.getBoundingClientRect().right;
+    let leftLabelEdge;
+    let minLabelEdge;
     
-    return ( (leftLabelEdge - minLabelEdge) < 3 );
+    if (!this.options.vertical) {
+      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().left;
+      minLabelEdge = this.minLabel.getBoundingClientRect().right;
+
+      return ( (leftLabelEdge - minLabelEdge) < 3 );
+    }
+    
+    if (this.options.vertical) {
+      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().bottom;
+      minLabelEdge = this.minLabel.getBoundingClientRect().top;
+      
+      return ( (minLabelEdge - leftLabelEdge) < 3 );
+    }
+    
   }
   
   isRightValueLabelCloseToMaxLabel() {
-    let rightLabelEdge = this.valueLabelRight.getBoundingClientRect().right;
-    let maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
+    let rightLabelEdge;
+    let maxLabelEdge;
     
-    return ( (maxLabelEdge - rightLabelEdge) < 3 );
+    if (!this.options.vertical) {
+      rightLabelEdge = this.valueLabelRight.getBoundingClientRect().right;
+      maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
+
+      return ( (maxLabelEdge - rightLabelEdge) < 3 );
+    }
+    
+    if (this.options.vertical) {
+      rightLabelEdge = this.valueLabelRight.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel.getBoundingClientRect().bottom;
+
+      return ( (rightLabelEdge - maxLabelEdge) < 3 );
+    }
+    
   }
   
   _attachEventHandlers() {
     this._inputLeft.addEventListener('input', () => {
       this.setLeftValue();
-      
-      console.log('Label: ' + this.valueLabelLeft.style.left);
-      console.log('Thumb: ' + this._thumbLeft.style.left);
       
       if (this.options.valueLabel) {
         this.setLabelLeftValue();
@@ -325,8 +345,7 @@ export class Slider {
     
     this.valueLabelRight.style.transform = `rotate(90deg) translateX(${this.valueLabelRight.offsetHeight}px) translateY(-50%)`;
     
-    this.valueLabelCommon.style.transform = `rotate(90deg) translateX(${this.valueLabelCommon.offsetHeight}px) translateY(${this.valueLabelCommon.offsetWidth}px) translateY(-50%)`;
-    
+    this.valueLabelCommon.style.transform = `rotate(90deg) translateX(${this.valueLabelCommon.offsetHeight}px) translateY(${this.valueLabelCommon.offsetWidth}px) translateY(-50%)`;    
   }
   
 }
