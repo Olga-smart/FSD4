@@ -76,6 +76,7 @@ export class Slider {
       
       this.setLabelLeftValue();
       this.setLabelRightValue();
+      this.setLabelCommonValue();
       
       this.setValueLabelLeftPosition();
       this.setValueLabelRightPosition();
@@ -105,10 +106,17 @@ export class Slider {
       
       if (options.minMaxLabels) {
         this._fixMinMaxLabelsPositionForVertical();
-      }      
+      }  
+      
+      if (options.valueLabel) {
+        this._fixValueLabelPositionForVertical();
+      }
     }
     
     this._attachEventHandlers();
+    
+    console.log('Label: ' + this.valueLabelLeft.style.left);
+    console.log('Thumb: ' + this._thumbLeft.style.left);
   }
   
   _render(options) {
@@ -147,6 +155,10 @@ export class Slider {
     this.valueLabelRight.textContent = this._inputRight.value;
   }
   
+  setLabelCommonValue() {
+    this.valueLabelCommon.textContent = this._inputLeft.value + ' - ' + this._inputRight.value;
+  }
+  
   setValueLabelLeftPosition() {
     this.valueLabelLeft.style.left = this._thumbLeft.style.left;
   }
@@ -159,7 +171,7 @@ export class Slider {
     this.valueLabelLeft.style.opacity = 0;
     this.valueLabelRight.style.opacity = 0;
     
-    this.valueLabelCommon.textContent = this._inputLeft.value + ' - ' + this._inputRight.value;
+    this.setLabelCommonValue();
     this.valueLabelCommon.style.opacity = 1;
     
     let distanceBetweenTwoThumbs = this._thumbRight.getBoundingClientRect().left - this._thumbLeft.getBoundingClientRect().right;
@@ -176,10 +188,19 @@ export class Slider {
   }
   
   isTwoValueLabelsClose() {
-    let leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
-    let rightLabelEdge = this.valueLabelRight.getBoundingClientRect().left;
+    if (!this.options.vertical) {
+      let leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
+      let rightLabelEdge = this.valueLabelRight.getBoundingClientRect().left;
 
-    return ( (rightLabelEdge - leftLabelEdge) < 3 ); 
+      return ( (rightLabelEdge - leftLabelEdge) < 3 ); 
+    }
+    
+    if (this.options.vertical) {
+      let bottomLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
+      let topLabelEdge = this.valueLabelRight.getBoundingClientRect().bottom;
+      
+      return ( (bottomLabelEdge - topLabelEdge) < 3 ); 
+    }
   }
   
   isLeftValueLabelCloseToMinLabel() {
@@ -199,6 +220,9 @@ export class Slider {
   _attachEventHandlers() {
     this._inputLeft.addEventListener('input', () => {
       this.setLeftValue();
+      
+      console.log('Label: ' + this.valueLabelLeft.style.left);
+      console.log('Thumb: ' + this._thumbLeft.style.left);
       
       if (this.options.valueLabel) {
         this.setLabelLeftValue();
@@ -225,6 +249,10 @@ export class Slider {
         }
       }
       
+      if (this.options.valueLabel && this.options.vertical) {
+        this._fixValueLabelPositionForVertical();
+      }
+      
     });
     this._inputRight.addEventListener('input', () => {
       this.setRightValue();
@@ -246,6 +274,10 @@ export class Slider {
         } else {
           this.maxLabel.style.opacity = 1;
         }
+      }
+      
+      if (this.options.valueLabel && this.options.vertical) {
+        this._fixValueLabelPositionForVertical();
       }
     });
 
@@ -286,6 +318,15 @@ export class Slider {
     this.maxLabel.style.transform = `rotate(90deg) translateX(${this.maxLabel.offsetHeight}px)`;
     
     this.minLabel.style.transform = `rotate(90deg) translateX(-${this.minLabel.offsetWidth}px)`;
+  }
+  
+  _fixValueLabelPositionForVertical() {
+    this.valueLabelLeft.style.transform = `rotate(90deg) translateX(${this.valueLabelLeft.offsetHeight}px) translateY(${this.valueLabelLeft.offsetWidth}px) translateY(-50%)`;
+    
+    this.valueLabelRight.style.transform = `rotate(90deg) translateX(${this.valueLabelRight.offsetHeight}px) translateY(-50%)`;
+    
+    this.valueLabelCommon.style.transform = `rotate(90deg) translateX(${this.valueLabelCommon.offsetHeight}px) translateY(${this.valueLabelCommon.offsetWidth}px) translateY(-50%)`;
+    
   }
   
 }

@@ -2,8 +2,8 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  height: 200vh;
-  width: 200vw;
+  height: 100vh;
+//  width: 200vw;
   justify-content: center;
   align-items: center;
   font-family: 'Arial', sans-serif;
@@ -127,7 +127,8 @@ body {
       }
     }
     .range-slider__value-label {
-      &_left {
+      transform-origin: top right;
+      &_left, &_common {
         transform: translateX(-50%) rotate(90deg);
       }
       &_right {
