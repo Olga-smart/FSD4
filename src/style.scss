@@ -31,6 +31,7 @@ body {
       background-color: red;
       -webkit-appearance: none;
       pointer-events: all;
+      cursor: pointer;
     }
   }
   &__slider {
@@ -66,11 +67,9 @@ body {
     box-shadow: 0 0 0 0 rgba(crimson, 0.1);
     transition: box-shadow 0.2s ease-in-out; 
     &_left {
-      left: 25%;
       transform: translate(-8px, -5px);
     }
     &_right {
-      right: 25%;
       transform: translate(8px, -5px);
     }
     &_hover {
