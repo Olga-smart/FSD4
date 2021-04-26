@@ -1,25 +1,22 @@
 import './style.scss';
-import {Slider} from './slider.js';
 import {Model} from './slider.js';
 import {View} from './slider.js';
-import {Controller} from './slider.js';
+import {Presenter} from './slider.js';
 
 let sliders = document.querySelectorAll('.js-range-slider');
 for (let slider of sliders) {
-//  new Slider(slider, {
-//    minMaxLabels: true,
-//    valueLabel: true,
-//    min: 0,
-//    max: 150,
-//    vertical: true
-//  });
-  
-  new Controller(new Model({
+  let model = new Model({
     min: 0,
     max: 150
-  }), new View(slider, {
+  });
+  
+  let view = new View(slider, {
     minMaxLabels: true,
     valueLabel: true,
-//    vertical: true
-  }));
+    vertical: true
+  });
+  
+  let presenter = new Presenter(model, view);
+  
+  view.registerWith(presenter);
 }
