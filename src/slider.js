@@ -8,11 +8,19 @@ export class Model {
   }
   
   setLeftValue(value) {
-    this.leftValue = Math.min(value, this.rightValue);
+    if (value < this.min) {
+      this.leftValue = this.min;
+    } else {
+      this.leftValue = Math.min(value, this.rightValue);
+    }
   }
   
   setRightValue(value) {
-    this.rightValue = Math.max(value, this.leftValue);
+    if (value > this.max) {
+      this.rightValue = this.max;
+    } else {
+      this.rightValue = Math.max(value, this.leftValue);
+    }    
   }
 }
 
