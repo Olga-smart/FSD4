@@ -1,15 +1,21 @@
 import {Model} from './slider.js';
-//import {View} from './slider.js';
-//import {Presenter} from './slider.js';
+import {View} from './slider.js';
+import {Presenter} from './slider.js';
+import puppeteer from "puppeteer";
+import regeneratorRuntime from "regenerator-runtime";
 
 describe('Model', function() {
   
   describe('consructor()', function() {
     
-    const model = new Model();
+    let model;
+    
+    beforeAll(() => {
+      model = new Model();
+    });
     
     it('set up min value', function() {
-      const model = new Model({
+      let model = new Model({
         min: 10
       });
       expect(model.min).toBe(10);
@@ -20,7 +26,7 @@ describe('Model', function() {
     });
 
     it('set up max value', function() {
-      const model = new Model({
+      let model = new Model({
         max: 10
       });
       expect(model.max).toBe(10);
@@ -31,7 +37,7 @@ describe('Model', function() {
     });
 
     it('set up left value', function() {
-      const model = new Model({
+      let model = new Model({
         leftValue: 10
       });
       expect(model.leftValue).toBe(10);
@@ -42,7 +48,7 @@ describe('Model', function() {
     });
 
     it('set up right value', function() {
-      const model = new Model({
+      let model = new Model({
         rightValue: 10
       });
       expect(model.rightValue).toBe(10);
@@ -53,7 +59,7 @@ describe('Model', function() {
     });
 
     it('set up step', function() {
-      const model = new Model({
+      let model = new Model({
         step: 10
       });
       expect(model.step).toBe(10);
@@ -62,12 +68,12 @@ describe('Model', function() {
     it('set up default step = 1', function() {
       expect(model.step).toBe(1);
     });
-  })
+  });
   
   describe('setLeftValue(value)', function() {
     
     it('set up left value', function() {
-      const model = new Model();
+      let model = new Model();
       model.setLeftValue(10);
       
       expect(model.leftValue).toBe(10);
@@ -75,7 +81,7 @@ describe('Model', function() {
     });
     
     it('set up left value = right value, if user is trying to set left value > right value', function() {
-      const model = new Model({
+      let model = new Model({
         rightValue: 50
       });
       model.setLeftValue(51);
@@ -84,7 +90,7 @@ describe('Model', function() {
     });
     
     it('set up left value = min, if user is trying to set left value < min', function() {
-      const model = new Model({
+      let model = new Model({
         min: 10
       });
       model.setLeftValue(9);
@@ -97,7 +103,7 @@ describe('Model', function() {
   describe('setRightValue(value)', function() {
     
     it('set up right value', function() {
-      const model = new Model();
+      let model = new Model();
       model.setRightValue(100);
       
       expect(model.rightValue).toBe(100);
@@ -105,7 +111,7 @@ describe('Model', function() {
     });
     
     it('set up right value = left value, if user is trying to set right value < left value', function() {
-      const model = new Model({
+      let model = new Model({
         leftValue: 30
       });
       model.setRightValue(29);
@@ -114,7 +120,7 @@ describe('Model', function() {
     });
     
     it('set up right value = max, if user is trying to set right value > max', function() {
-      const model = new Model({
+      let model = new Model({
         max: 100
       });
       model.setRightValue(101);
@@ -124,5 +130,471 @@ describe('Model', function() {
     
   });
 
+});
+
+describe('View', function() {
+  
+  describe('constructor()', function() {
+    
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    
+    it('set up presenter propery', function() {
+      expect(view).toHaveProperty('presenter');
+    });
+    
+    it('set up component property', function() {
+      expect(view.component).toBe(slider);
+    });
+    
+    it('set up inputLeft property', function() {
+      expect(view).toHaveProperty('inputLeft');
+    });
+    
+    it('set up inputRight property', function() {
+      expect(view).toHaveProperty('inputRight');
+    });
+    
+    it('set up type = range for inputs', function() {
+      expect(view.inputLeft.type).toBe('range');
+      expect(view.inputRight.type).toBe('range');
+    });
+    
+    it('set up slider property', function() {
+      expect(view).toHaveProperty('slider');
+    });
+    
+    it('set up track property', function() {
+      expect(view).toHaveProperty('track');
+    });
+    
+    it('set up range property', function() {
+      expect(view).toHaveProperty('range');
+    });
+    
+    it('set up properties for thumbs', function() {
+      expect(view).toHaveProperty('thumbLeft');
+      expect(view).toHaveProperty('thumbRight');
+    });
+    
+    it('set up properties for min and max labels if options.minMaxLabels is true', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        minMaxLabels: true
+      });
+      
+      expect(view).toHaveProperty('minLabel');
+      expect(view).toHaveProperty('maxLabel');
+    });
+    
+    it('do not set up properties for min and max labels if options.minMaxLabels is true', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        minMaxLabels: false
+      });
+      
+      expect(view).not.toHaveProperty('minLabel');
+      expect(view).not.toHaveProperty('maxLabel');
+    });
+    
+    it('set up properties for value labels if options.valueLabel is true', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        valueLabel: true
+      });
+      
+      expect(view).toHaveProperty('valueLabelLeft');
+      expect(view).toHaveProperty('valueLabelRight');
+      expect(view).toHaveProperty('valueLabelCommon');
+    });
+    
+    it('do not set up properties for value labels if options.valueLabel is true', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        valueLabel: false
+      });
+      
+      expect(view).not.toHaveProperty('valueLabelLeft');
+      expect(view).not.toHaveProperty('valueLabelRight');
+      expect(view).not.toHaveProperty('valueLabelCommon');
+    });
+    
+    it('set up vertical property of options.vertical is true', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        vertical: true
+      });
+      
+      expect(view.vertical).toBe(true);
+    });
+    
+    it('do not set up vertical property of options.vertical is false', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        vertical: false
+      });
+      
+      expect(view).not.toHaveProperty('vertical');
+    });
+    
+  });
+  
+  describe('registerWith(presenter)', function() {
+      
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    let presenter = {};
+    view.registerWith(presenter);
+
+    it('set up presenter', function() {
+      expect(view.presenter).toBe(presenter);
+    });
+
+  });
+
+  describe('setMinValue(min)', function() {
+    
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    view.setMinValue(10);
+
+    it('set up min attribute of inputs', function() {
+      expect(view.inputLeft.getAttribute('min')).toBe('10');
+      expect(view.inputRight.getAttribute('min')).toBe('10');
+    });
+    
+    it('if view has minLabel, set up its value', function() {
+      let view = new View(slider, {
+        minMaxLabels: true
+      });      
+      view.setMinValue(10);
+      
+      expect(view.minLabel.textContent).toBe('10');
+    });
+
+  });
+  
+  describe('setMaxValue(min)', function() {
+    
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    view.setMaxValue(100);
+
+    it('set up max attribute of inputs', function() {
+      expect(view.inputLeft.getAttribute('max')).toBe('100');
+      expect(view.inputRight.getAttribute('max')).toBe('100');
+    });
+    
+    it('if view has minLabel, set up its value', function() {
+      let view = new View(slider, {
+        minMaxLabels: true
+      });
+      view.setMaxValue(100);
+      
+      expect(view.maxLabel.textContent).toBe('100');
+    });
+
+  });
+  
+  describe('setStep(step)', function() {
+    
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    view.setStep(5);
+    
+    it('set up step attribute of inputs', function() {
+      expect(view.inputLeft.getAttribute('step')).toBe('5');
+      expect(view.inputRight.getAttribute('step')).toBe('5');
+    });
+    
+  });
+  
+  describe('setLeftValue(value)', function() {
+    
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    view.setLeftValue(10);
+   
+    it('set up value attribute of left input', function() {
+      expect(view.inputLeft.getAttribute('value')).toBe('10');
+    });
+
+  //  it('call function to change left thumb position', function() {
+  //    view.setThumbLeftPosition = jest.fn(10);
+  //    jest.mock(view.setThumbLeftPosition);
+     
+  //    expect(view.setThumbLeftPosition).toBeCalled();
+  //  });   
+    
+  });
+
+  describe('setLeftValue(value)', function() {
+
+    it('when left thumb is being dragged, value of left input is being changed', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const inputValueBefore = await page.evaluate('document.querySelector(".range-slider__input_left").getAttribute("value")');
+      const leftThumb = await page.$('.range-slider__thumb_left');
+      const box = await leftThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x + 100, y);
+      await page.mouse.up();
+      const inputValueAfter = await page.evaluate('document.querySelector(".range-slider__input_left").getAttribute("value")');
+      expect(inputValueBefore).not.toBe(inputValueAfter);
+      await browser.close();
+    });
+
+    it('when left thumb is being dragged, it`s position is being changed', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const leftThumb = await page.$('.range-slider__thumb_left');
+      const boxBefore = await leftThumb.boundingBox();
+      const x = boxBefore.x + boxBefore.width / 2;
+      const y = boxBefore.y + boxBefore.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x + 100, y);
+      await page.mouse.up();
+      const boxAfter = await leftThumb.boundingBox();
+      expect(boxBefore.x).not.toBe(boxAfter.x);
+      await browser.close();
+    });
+
+    it('when left thumb is being dragged, position of left value label is being changed', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const leftValueLabelPositionBefore = await page.evaluate('document.querySelector(".range-slider__value-label_left").getBoundingClientRect().x');
+      const leftThumb = await page.$('.range-slider__thumb_left');
+      const box = await leftThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x + 100, y);
+      await page.mouse.up();
+      const leftValueLabelPositionAfter = await page.evaluate('document.querySelector(".range-slider__value-label_left").getBoundingClientRect().x');
+      expect(leftValueLabelPositionBefore).not.toBe(leftValueLabelPositionAfter);
+      await browser.close();
+    }, 10000);
+
+    it('when left thumb is being dragged, text in left value label is being changed', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const leftValueLabelTextBefore = await page.evaluate('document.querySelector(".range-slider__value-label_left").textContent');
+      const leftThumb = await page.$('.range-slider__thumb_left');
+      const box = await leftThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x + 100, y);
+      await page.mouse.up();
+      const leftValueLabelTextAfter = await page.evaluate('document.querySelector(".range-slider__value-label_left").textContent');
+      expect(leftValueLabelTextBefore).not.toBe(leftValueLabelTextAfter);
+      await browser.close();
+    }, 10000);
+
+    it('when 2 value labels get too close, they merge', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      let leftValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_left").style.opacity');
+      let commonValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_common").style.opacity');
+      const leftThumb = await page.$('.range-slider__thumb_left');
+      const box = await leftThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x + 150, y);
+      await page.mouse.up();
+      expect(leftValueLabelOpacity).toBe('0');
+      expect(commonValueLabelOpacity).toBe('1');
+      await browser.close();
+    }, 10000);
+
+    // TODO: не работает тест
+    it('when 2 value labels get too close and then get too far, they split', async function() {
+      // const browser = await puppeteer.launch();
+      // const page = await browser.newPage();
+      // await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      // const leftThumb = await page.$('.range-slider__thumb_left');
+      // const box = await leftThumb.boundingBox();
+      // const x = box.x + box.width / 2;
+      // const y = box.y + box.height / 2;
+      // await page.mouse.move(x, y);
+      // await page.mouse.down();
+      // await page.mouse.move(x + 150, y);
+      // await page.mouse.up();
+      // await page.mouse.down();
+      // await page.mouse.move(x, y);
+      // await page.mouse.up();
+      // const leftValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_left").style.opacity');
+      // const commonValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_common").style.opacity');
+      // expect(leftValueLabelOpacity).toBe('1');
+      // expect(commonValueLabelOpacity).toBe('0');
+      // await browser.close();
+    }, 10000);
+
+    it('when left value label gets too close to min label, min label hides', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const leftThumb = await page.$('.range-slider__thumb_left');
+      const box = await leftThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x - 50, y);
+      await page.mouse.up();
+      const minLabelOpacity = await page.evaluate('document.querySelector(".range-slider__min-max-label_left").style.opacity');
+      expect(minLabelOpacity).toBe('0');
+      await browser.close();
+    }, 10000);
+
+  });
+
+  describe('setRightValue(value)', function() {
+
+    it('when right thumb is being dragged, value of right input is being changed', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const inputValueBefore = await page.evaluate('document.querySelector(".range-slider__input_right").getAttribute("value")');
+      const rightThumb = await page.$('.range-slider__thumb_right');
+      const box = await rightThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x - 100, y);
+      await page.mouse.up();
+      const inputValueAfter = await page.evaluate('document.querySelector(".range-slider__input_right").getAttribute("value")');
+      expect(inputValueBefore).not.toBe(inputValueAfter);
+      await browser.close();
+    });
+
+    it('when right thumb is being dragged, it`s position is being changed', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const rightThumb = await page.$('.range-slider__thumb_right');
+      const boxBefore = await rightThumb.boundingBox();
+      const x = boxBefore.x + boxBefore.width / 2;
+      const y = boxBefore.y + boxBefore.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x - 100, y);
+      await page.mouse.up();
+      const boxAfter = await rightThumb.boundingBox();
+      expect(boxBefore.x).not.toBe(boxAfter.x);
+      await browser.close();
+    });
+
+    it('when right thumb is being dragged, position of right value label is being changed', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const rightValueLabelPositionBefore = await page.evaluate('document.querySelector(".range-slider__value-label_right").getBoundingClientRect().x');
+      const rightThumb = await page.$('.range-slider__thumb_right');
+      const box = await rightThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x - 100, y);
+      await page.mouse.up();
+      const rightValueLabelPositionAfter = await page.evaluate('document.querySelector(".range-slider__value-label_right").getBoundingClientRect().x');
+      expect(rightValueLabelPositionBefore).not.toBe(rightValueLabelPositionAfter);
+      await browser.close();
+    }, 10000);
+
+    it('when right thumb is being dragged, text in right value label is being changed', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const rightValueLabelTextBefore = await page.evaluate('document.querySelector(".range-slider__value-label_right").textContent');
+      const rightThumb = await page.$('.range-slider__thumb_right');
+      const box = await rightThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x - 100, y);
+      await page.mouse.up();
+      const rightValueLabelTextAfter = await page.evaluate('document.querySelector(".range-slider__value-label_right").textContent');
+      expect(rightValueLabelTextBefore).not.toBe(rightValueLabelTextAfter);
+      await browser.close();
+    }, 10000);
+
+    it('when 2 value labels get too close, they merge', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      let rightValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_right").style.opacity');
+      let commonValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_common").style.opacity');
+      const rightThumb = await page.$('.range-slider__thumb_right');
+      const box = await rightThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x - 150, y);
+      await page.mouse.up();
+      expect(rightValueLabelOpacity).toBe('0');
+      expect(commonValueLabelOpacity).toBe('1');
+      await browser.close();
+    }, 10000);
+
+    // TODO: не работает тест
+    it('when 2 value labels get too close and then get too far, they split', async function() {
+      // const browser = await puppeteer.launch();
+      // const page = await browser.newPage();
+      // await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      // const leftThumb = await page.$('.range-slider__thumb_left');
+      // const box = await leftThumb.boundingBox();
+      // const x = box.x + box.width / 2;
+      // const y = box.y + box.height / 2;
+      // await page.mouse.move(x, y);
+      // await page.mouse.down();
+      // await page.mouse.move(x + 150, y);
+      // await page.mouse.up();
+      // await page.mouse.down();
+      // await page.mouse.move(x, y);
+      // await page.mouse.up();
+      // const leftValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_left").style.opacity');
+      // const commonValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_common").style.opacity');
+      // expect(leftValueLabelOpacity).toBe('1');
+      // expect(commonValueLabelOpacity).toBe('0');
+      // await browser.close();
+    }, 10000);
+
+    it('when right value label gets too close to max label, max label hides', async function() {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
+      const rightThumb = await page.$('.range-slider__thumb_right');
+      const box = await rightThumb.boundingBox();
+      const x = box.x + box.width / 2;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x + 150, y);
+      await page.mouse.up();
+      const maxLabelOpacity = await page.evaluate('document.querySelector(".range-slider__min-max-label_right").style.opacity');
+      expect(maxLabelOpacity).toBe('0');
+      await browser.close();
+    }, 10000);
+
+  });
+  
 });
 

@@ -1,4 +1,5 @@
 {
+  "testEnvironment": "jsdom",
   "collectCoverage": true,
   "moduleFileExtensions": [
     "js",
@@ -7,5 +8,6 @@
   "transform": {
     "^.+\\.js$": "babel-jest",
     "^.+\\.mjs$": "babel-jest"
-  }
+  },
+  "preset": "jest-puppeteer"
 }

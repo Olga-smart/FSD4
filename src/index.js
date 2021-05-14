@@ -13,10 +13,10 @@ for (let slider of sliders) {
   let view = new View(slider, {
     minMaxLabels: true,
     valueLabel: true,
-    vertical: true
+    vertical: false
   });
   
-  let presenter = new Presenter(model, view);
+  // let presenter = new Presenter(model, view);
   
-  view.registerWith(presenter);
+  // view.registerWith(presenter);
 }
