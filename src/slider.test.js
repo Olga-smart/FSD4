@@ -4,133 +4,133 @@ import {Presenter} from './slider.js';
 import puppeteer from "puppeteer";
 import regeneratorRuntime from "regenerator-runtime";
 
-describe('Model', function() {
+// describe('Model', function() {
   
-  describe('consructor()', function() {
+//   describe('consructor()', function() {
     
-    let model;
+//     let model;
     
-    beforeAll(() => {
-      model = new Model();
-    });
+//     beforeAll(() => {
+//       model = new Model();
+//     });
     
-    it('set up min value', function() {
-      let model = new Model({
-        min: 10
-      });
-      expect(model.min).toBe(10);
-    });
+//     it('set up min value', function() {
+//       let model = new Model({
+//         min: 10
+//       });
+//       expect(model.min).toBe(10);
+//     });
 
-    it('set up default min value = 0', function() {
-      expect(model.min).toBe(0);
-    });
+//     it('set up default min value = 0', function() {
+//       expect(model.min).toBe(0);
+//     });
 
-    it('set up max value', function() {
-      let model = new Model({
-        max: 10
-      });
-      expect(model.max).toBe(10);
-    });
+//     it('set up max value', function() {
+//       let model = new Model({
+//         max: 10
+//       });
+//       expect(model.max).toBe(10);
+//     });
 
-    it('set up default max value = 150', function() {
-      expect(model.max).toBe(150);
-    });
+//     it('set up default max value = 150', function() {
+//       expect(model.max).toBe(150);
+//     });
 
-    it('set up left value', function() {
-      let model = new Model({
-        leftValue: 10
-      });
-      expect(model.leftValue).toBe(10);
-    });
+//     it('set up left value', function() {
+//       let model = new Model({
+//         leftValue: 10
+//       });
+//       expect(model.leftValue).toBe(10);
+//     });
 
-    it('set up default left value = 25', function() {
-      expect(model.leftValue).toBe(25);
-    });
+//     it('set up default left value = 25', function() {
+//       expect(model.leftValue).toBe(25);
+//     });
 
-    it('set up right value', function() {
-      let model = new Model({
-        rightValue: 10
-      });
-      expect(model.rightValue).toBe(10);
-    });
+//     it('set up right value', function() {
+//       let model = new Model({
+//         rightValue: 10
+//       });
+//       expect(model.rightValue).toBe(10);
+//     });
 
-    it('set up default right value = 75', function() {
-      expect(model.rightValue).toBe(75);
-    });
+//     it('set up default right value = 75', function() {
+//       expect(model.rightValue).toBe(75);
+//     });
 
-    it('set up step', function() {
-      let model = new Model({
-        step: 10
-      });
-      expect(model.step).toBe(10);
-    });
+//     it('set up step', function() {
+//       let model = new Model({
+//         step: 10
+//       });
+//       expect(model.step).toBe(10);
+//     });
 
-    it('set up default step = 1', function() {
-      expect(model.step).toBe(1);
-    });
-  });
+//     it('set up default step = 1', function() {
+//       expect(model.step).toBe(1);
+//     });
+//   });
   
-  describe('setLeftValue(value)', function() {
+//   describe('setLeftValue(value)', function() {
     
-    it('set up left value', function() {
-      let model = new Model();
-      model.setLeftValue(10);
+//     it('set up left value', function() {
+//       let model = new Model();
+//       model.setLeftValue(10);
       
-      expect(model.leftValue).toBe(10);
+//       expect(model.leftValue).toBe(10);
       
-    });
+//     });
     
-    it('set up left value = right value, if user is trying to set left value > right value', function() {
-      let model = new Model({
-        rightValue: 50
-      });
-      model.setLeftValue(51);
+//     it('set up left value = right value, if user is trying to set left value > right value', function() {
+//       let model = new Model({
+//         rightValue: 50
+//       });
+//       model.setLeftValue(51);
       
-      expect(model.leftValue).toBe(50);
-    });
+//       expect(model.leftValue).toBe(50);
+//     });
     
-    it('set up left value = min, if user is trying to set left value < min', function() {
-      let model = new Model({
-        min: 10
-      });
-      model.setLeftValue(9);
+//     it('set up left value = min, if user is trying to set left value < min', function() {
+//       let model = new Model({
+//         min: 10
+//       });
+//       model.setLeftValue(9);
       
-      expect(model.leftValue).toBe(10);
-    });
+//       expect(model.leftValue).toBe(10);
+//     });
     
-  });
+//   });
   
-  describe('setRightValue(value)', function() {
+//   describe('setRightValue(value)', function() {
     
-    it('set up right value', function() {
-      let model = new Model();
-      model.setRightValue(100);
+//     it('set up right value', function() {
+//       let model = new Model();
+//       model.setRightValue(100);
       
-      expect(model.rightValue).toBe(100);
+//       expect(model.rightValue).toBe(100);
       
-    });
+//     });
     
-    it('set up right value = left value, if user is trying to set right value < left value', function() {
-      let model = new Model({
-        leftValue: 30
-      });
-      model.setRightValue(29);
+//     it('set up right value = left value, if user is trying to set right value < left value', function() {
+//       let model = new Model({
+//         leftValue: 30
+//       });
+//       model.setRightValue(29);
       
-      expect(model.rightValue).toBe(30);
-    });
+//       expect(model.rightValue).toBe(30);
+//     });
     
-    it('set up right value = max, if user is trying to set right value > max', function() {
-      let model = new Model({
-        max: 100
-      });
-      model.setRightValue(101);
+//     it('set up right value = max, if user is trying to set right value > max', function() {
+//       let model = new Model({
+//         max: 100
+//       });
+//       model.setRightValue(101);
       
-      expect(model.rightValue).toBe(100);
-    });
+//       expect(model.rightValue).toBe(100);
+//     });
     
-  });
+//   });
 
-});
+// });
 
 describe('View', function() {
   
@@ -309,26 +309,107 @@ describe('View', function() {
     
   });
   
-  describe('setLeftValue(value)', function() {
+  describe('setLeftValue(value) - Jest', function() {
     
     let slider = document.createElement('div');
     let view = new View(slider);
     view.setLeftValue(10);
-   
+
     it('set up value attribute of left input', function() {
       expect(view.inputLeft.getAttribute('value')).toBe('10');
     });
 
-  //  it('call function to change left thumb position', function() {
-  //    view.setThumbLeftPosition = jest.fn(10);
-  //    jest.mock(view.setThumbLeftPosition);
-     
-  //    expect(view.setThumbLeftPosition).toBeCalled();
-  //  });   
+    it('call function to change left thumb position', function() {
+      view.setThumbLeftPosition = jest.fn();
+      view.setLeftValue(10);
+      expect(view.setThumbLeftPosition).toBeCalled();
+    });  
+
+    describe('do necessary actions with labels', function() {
+
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        minMaxLabels: true,
+        valueLabel: true,
+        vertical: true
+      });
+      view.setLeftValue(10);
+
+      describe('do necessary actions with left value label', function() {
+
+        it('update text for left value label', function() {
+          expect(view.valueLabelLeft.textContent).toBe('10');
+        });
+  
+        it('call function to change left value label position', function() {
+          view.setValueLabelLeftPosition = jest.fn();
+          view.setLeftValue(10);
+          expect(view.setValueLabelLeftPosition).toBeCalled();
+        });  
+
+      });
+
+      describe('do necessary actions with common value label', function() {
+
+        it('update text for common value label', function() {
+          expect(view.valueLabelCommon.textContent).toMatch('10 - ');
+        });
+
+        it('call function to check if two value labels is close', function() {
+          view.isTwoValueLabelsClose = jest.fn();
+          view.setLeftValue(10);
+          expect(view.isTwoValueLabelsClose).toBeCalled();
+        });
+
+        it('call function to merge labels if two value labels is close', function() {
+          view.isTwoValueLabelsClose = jest.fn(() => true);
+          view.mergeLabels = jest.fn();
+          view.setLeftValue(10);
+          expect(view.mergeLabels).toBeCalled();
+        });
+
+        it('call function to split labels if two value labels is not close', function() {
+          view.isTwoValueLabelsClose = jest.fn(() => false);
+          view.splitLabels = jest.fn();
+          view.setLeftValue(10);
+          expect(view.splitLabels).toBeCalled();
+        });
+
+      });
+    
+      describe('do necessary actions with min value label', function() {
+
+        it('call function to check if left value label is close to min label', function() {
+          view.isLeftValueLabelCloseToMinLabel = jest.fn();
+          view.setLeftValue(10);
+          expect(view.isLeftValueLabelCloseToMinLabel).toBeCalled();
+        });
+
+        it('set min label opacity to 0 if left value label is close', function() {
+          view.isLeftValueLabelCloseToMinLabel = jest.fn(() => true);
+          view.setLeftValue(10);
+          expect(view.minLabel.style.opacity).toBe('0');
+        });
+
+        it('set min label opacity to 1 if left value label is not close', function() {
+          view.isLeftValueLabelCloseToMinLabel = jest.fn(() => false);
+          view.setLeftValue(10);
+          expect(view.minLabel.style.opacity).toBe('1');
+        });
+
+      });
+
+      it('call function to fix value label position if slider is vertical', function() {
+        view.fixValueLabelPositionForVertical = jest.fn();
+        view.setLeftValue(10);
+        expect(view.fixValueLabelPositionForVertical).toBeCalled();
+      });
+
+    });  
     
   });
 
-  describe('setLeftValue(value)', function() {
+  describe('setLeftValue(value) - Puppeteer', function() {
 
     it('when left thumb is being dragged, value of left input is being changed', async function() {
       const browser = await puppeteer.launch();
@@ -462,7 +543,7 @@ describe('View', function() {
 
   });
 
-  describe('setRightValue(value)', function() {
+  describe('setRightValue(value) - Puppeteer', function() {
 
     it('when right thumb is being dragged, value of right input is being changed', async function() {
       const browser = await puppeteer.launch();
