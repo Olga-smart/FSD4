@@ -4,133 +4,133 @@ import {Presenter} from './slider.js';
 import puppeteer from "puppeteer";
 import regeneratorRuntime from "regenerator-runtime";
 
-// describe('Model', function() {
+describe('Model', function() {
   
-//   describe('consructor()', function() {
+  describe('consructor()', function() {
     
-//     let model;
+    let model;
     
-//     beforeAll(() => {
-//       model = new Model();
-//     });
+    beforeAll(() => {
+      model = new Model();
+    });
     
-//     it('set up min value', function() {
-//       let model = new Model({
-//         min: 10
-//       });
-//       expect(model.min).toBe(10);
-//     });
+    it('set up min value', function() {
+      let model = new Model({
+        min: 10
+      });
+      expect(model.min).toBe(10);
+    });
 
-//     it('set up default min value = 0', function() {
-//       expect(model.min).toBe(0);
-//     });
+    it('set up default min value = 0', function() {
+      expect(model.min).toBe(0);
+    });
 
-//     it('set up max value', function() {
-//       let model = new Model({
-//         max: 10
-//       });
-//       expect(model.max).toBe(10);
-//     });
+    it('set up max value', function() {
+      let model = new Model({
+        max: 10
+      });
+      expect(model.max).toBe(10);
+    });
 
-//     it('set up default max value = 150', function() {
-//       expect(model.max).toBe(150);
-//     });
+    it('set up default max value = 150', function() {
+      expect(model.max).toBe(150);
+    });
 
-//     it('set up left value', function() {
-//       let model = new Model({
-//         leftValue: 10
-//       });
-//       expect(model.leftValue).toBe(10);
-//     });
+    it('set up left value', function() {
+      let model = new Model({
+        leftValue: 10
+      });
+      expect(model.leftValue).toBe(10);
+    });
 
-//     it('set up default left value = 25', function() {
-//       expect(model.leftValue).toBe(25);
-//     });
+    it('set up default left value = 25', function() {
+      expect(model.leftValue).toBe(25);
+    });
 
-//     it('set up right value', function() {
-//       let model = new Model({
-//         rightValue: 10
-//       });
-//       expect(model.rightValue).toBe(10);
-//     });
+    it('set up right value', function() {
+      let model = new Model({
+        rightValue: 10
+      });
+      expect(model.rightValue).toBe(10);
+    });
 
-//     it('set up default right value = 75', function() {
-//       expect(model.rightValue).toBe(75);
-//     });
+    it('set up default right value = 75', function() {
+      expect(model.rightValue).toBe(75);
+    });
 
-//     it('set up step', function() {
-//       let model = new Model({
-//         step: 10
-//       });
-//       expect(model.step).toBe(10);
-//     });
+    it('set up step', function() {
+      let model = new Model({
+        step: 10
+      });
+      expect(model.step).toBe(10);
+    });
 
-//     it('set up default step = 1', function() {
-//       expect(model.step).toBe(1);
-//     });
-//   });
+    it('set up default step = 1', function() {
+      expect(model.step).toBe(1);
+    });
+  });
   
-//   describe('setLeftValue(value)', function() {
+  describe('setLeftValue(value)', function() {
     
-//     it('set up left value', function() {
-//       let model = new Model();
-//       model.setLeftValue(10);
+    it('set up left value', function() {
+      let model = new Model();
+      model.setLeftValue(10);
       
-//       expect(model.leftValue).toBe(10);
+      expect(model.leftValue).toBe(10);
       
-//     });
+    });
     
-//     it('set up left value = right value, if user is trying to set left value > right value', function() {
-//       let model = new Model({
-//         rightValue: 50
-//       });
-//       model.setLeftValue(51);
+    it('set up left value = right value, if user is trying to set left value > right value', function() {
+      let model = new Model({
+        rightValue: 50
+      });
+      model.setLeftValue(51);
       
-//       expect(model.leftValue).toBe(50);
-//     });
+      expect(model.leftValue).toBe(50);
+    });
     
-//     it('set up left value = min, if user is trying to set left value < min', function() {
-//       let model = new Model({
-//         min: 10
-//       });
-//       model.setLeftValue(9);
+    it('set up left value = min, if user is trying to set left value < min', function() {
+      let model = new Model({
+        min: 10
+      });
+      model.setLeftValue(9);
       
-//       expect(model.leftValue).toBe(10);
-//     });
+      expect(model.leftValue).toBe(10);
+    });
     
-//   });
+  });
   
-//   describe('setRightValue(value)', function() {
+  describe('setRightValue(value)', function() {
     
-//     it('set up right value', function() {
-//       let model = new Model();
-//       model.setRightValue(100);
+    it('set up right value', function() {
+      let model = new Model();
+      model.setRightValue(100);
       
-//       expect(model.rightValue).toBe(100);
+      expect(model.rightValue).toBe(100);
       
-//     });
+    });
     
-//     it('set up right value = left value, if user is trying to set right value < left value', function() {
-//       let model = new Model({
-//         leftValue: 30
-//       });
-//       model.setRightValue(29);
+    it('set up right value = left value, if user is trying to set right value < left value', function() {
+      let model = new Model({
+        leftValue: 30
+      });
+      model.setRightValue(29);
       
-//       expect(model.rightValue).toBe(30);
-//     });
+      expect(model.rightValue).toBe(30);
+    });
     
-//     it('set up right value = max, if user is trying to set right value > max', function() {
-//       let model = new Model({
-//         max: 100
-//       });
-//       model.setRightValue(101);
+    it('set up right value = max, if user is trying to set right value > max', function() {
+      let model = new Model({
+        max: 100
+      });
+      model.setRightValue(101);
       
-//       expect(model.rightValue).toBe(100);
-//     });
+      expect(model.rightValue).toBe(100);
+    });
     
-//   });
+  });
 
-// });
+});
 
 describe('View', function() {
   
@@ -274,7 +274,7 @@ describe('View', function() {
 
   });
   
-  describe('setMaxValue(min)', function() {
+  describe('setMaxValue(max)', function() {
     
     let slider = document.createElement('div');
     let view = new View(slider);
@@ -285,7 +285,7 @@ describe('View', function() {
       expect(view.inputRight.getAttribute('max')).toBe('100');
     });
     
-    it('if view has minLabel, set up its value', function() {
+    it('if view has maxLabel, set up its value', function() {
       let view = new View(slider, {
         minMaxLabels: true
       });
@@ -317,6 +317,14 @@ describe('View', function() {
 
     it('set up value attribute of left input', function() {
       expect(view.inputLeft.getAttribute('value')).toBe('10');
+    });
+
+    // TODO: не работает тест
+    it('make z-index of left input higher than z-index of right-input when they are both at maximum', function() {
+      // view.setMaxValue(100);
+      // view.setRightValue(100);
+      // view.setLeftValue(100);
+      // expect(+view.inputLeft.style.zIndex).toBeGreaterThan(+view.inputRight.style.zIndex);
     });
 
     it('call function to change left thumb position', function() {
@@ -543,6 +551,106 @@ describe('View', function() {
 
   });
 
+  describe('setRightValue(value) - Jest', function() {
+    
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    view.setRightValue(50);
+
+    it('set up value attribute of right input', function() {
+      expect(view.inputRight.getAttribute('value')).toBe('50');
+    });
+
+    it('call function to change right thumb position', function() {
+      view.setThumbRightPosition = jest.fn();
+      view.setRightValue(50);
+      expect(view.setThumbRightPosition).toBeCalled();
+    });  
+
+    describe('do necessary actions with labels', function() {
+
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        minMaxLabels: true,
+        valueLabel: true,
+        vertical: true
+      });
+      view.setRightValue(50);
+
+      describe('do necessary actions with right value label', function() {
+
+        it('update text for right value label', function() {
+          expect(view.valueLabelRight.textContent).toBe('50');
+        });
+  
+        it('call function to change right value label position', function() {
+          view.setValueLabelRightPosition = jest.fn();
+          view.setRightValue(50);
+          expect(view.setValueLabelRightPosition).toBeCalled();
+        });  
+
+      });
+
+      describe('do necessary actions with common value label', function() {
+
+        it('update text for common value label', function() {
+          expect(view.valueLabelCommon.textContent).toMatch(' - 50');
+        });
+
+        it('call function to check if two value labels is close', function() {
+          view.isTwoValueLabelsClose = jest.fn();
+          view.setRightValue(50);
+          expect(view.isTwoValueLabelsClose).toBeCalled();
+        });
+
+        it('call function to merge labels if two value labels is close', function() {
+          view.isTwoValueLabelsClose = jest.fn(() => true);
+          view.mergeLabels = jest.fn();
+          view.setRightValue(50);
+          expect(view.mergeLabels).toBeCalled();
+        });
+
+        it('call function to split labels if two value labels is not close', function() {
+          view.isTwoValueLabelsClose = jest.fn(() => false);
+          view.splitLabels = jest.fn();
+          view.setRightValue(50);
+          expect(view.splitLabels).toBeCalled();
+        });
+
+      });
+    
+      describe('do necessary actions with max value label', function() {
+
+        it('call function to check if right value label is close to max label', function() {
+          view.isRightValueLabelCloseToMaxLabel = jest.fn();
+          view.setRightValue(50);
+          expect(view.isRightValueLabelCloseToMaxLabel).toBeCalled();
+        });
+
+        it('set max label opacity to 0 if right value label is close', function() {
+          view.isRightValueLabelCloseToMaxLabel = jest.fn(() => true);
+          view.setRightValue(50);
+          expect(view.maxLabel.style.opacity).toBe('0');
+        });
+
+        it('set max label opacity to 1 if right value label is not close', function() {
+          view.isRightValueLabelCloseToMaxLabel = jest.fn(() => false);
+          view.setRightValue(50);
+          expect(view.maxLabel.style.opacity).toBe('1');
+        });
+
+      });
+
+      it('call function to fix value label position if slider is vertical', function() {
+        view.fixValueLabelPositionForVertical = jest.fn();
+        view.setRightValue(50);
+        expect(view.fixValueLabelPositionForVertical).toBeCalled();
+      });
+
+    });  
+    
+  });
+
   describe('setRightValue(value) - Puppeteer', function() {
 
     it('when right thumb is being dragged, value of right input is being changed', async function() {
@@ -677,5 +785,143 @@ describe('View', function() {
 
   });
   
-});
+  describe('setThumbLeftPosition(value)', function() {
+
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    view.setMinValue(0);
+    view.setMaxValue(100);
+    view.setRightValue(100);
+
+    it('set left property of left thumb properly', function() {
+      for (let i = 0; i <= 100; i++) {
+        view.setThumbLeftPosition(i);
+        // Из-за особенности записи дробных чисел в js может быть погрешность в 1 единицу
+        expect(parseInt(view.thumbLeft.style.left)).toBeGreaterThanOrEqual(i - 1);
+        expect(parseInt(view.thumbLeft.style.left)).toBeLessThanOrEqual(i + 1)
+      }
+    });
+
+    it('set left property of range properly', function() {
+      for (let i = 0; i <= 100; i++) {
+        view.setThumbLeftPosition(i);
+        // Из-за особенности записи дробных чисел в js может быть погрешность в 1 единицу
+        expect(parseInt(view.range.style.left)).toBeGreaterThanOrEqual(i - 1);
+        expect(parseInt(view.range.style.left)).toBeLessThanOrEqual(i + 1)
+      }
+    });
+
+  });
+
+  describe('setThumbRightPosition(value)', function() {
+    
+    let slider = document.createElement('div');
+    let view = new View(slider);
+    view.setMinValue(0);
+    view.setMaxValue(100);
+    view.setLeftValue(0);
+
+    it('set right property of right thumb properly', function() {
+      for (let i = 0; i <= 100; i++) {
+        view.setThumbRightPosition(i);
+        // Из-за особенности записи дробных чисел в js может быть погрешность в 1 единицу
+        expect(parseInt(view.thumbRight.style.right)).toBeGreaterThanOrEqual(100 - i - 1);
+        expect(parseInt(view.thumbRight.style.right)).toBeLessThanOrEqual(100 - i + 1)
+      }
+    });
+
+    it('set right property of range properly', function() {
+      for (let i = 0; i <= 100; i++) {
+        view.setThumbRightPosition(i);
+        // Из-за особенности записи дробных чисел в js может быть погрешность в 1 единицу
+        expect(parseInt(view.range.style.right)).toBeGreaterThanOrEqual(100 - i - 1);
+        expect(parseInt(view.range.style.right)).toBeLessThanOrEqual(100 - i + 1)
+      }
+    });
+
+  });
+
+  describe('setValueLabelLeftPosition()', function() {
+
+    let slider = document.createElement('div');
+    let view = new View(slider, {
+      valueLabel: true
+    });
+
+    it('left property of left label must be equal to left property of left thumb', function() {
+      view.setThumbLeftPosition(10);
+      view.setValueLabelLeftPosition();
+      expect(parseInt(view.valueLabelLeft.style.left)).toEqual(parseInt(view.thumbLeft.style.left));
+    });
+
+  });
+
+  describe('setValueLabelRightPosition()', function() {
+
+    let slider = document.createElement('div');
+    let view = new View(slider, {
+      valueLabel: true
+    });
+
+    it('right property of right label must be equal to right property of right thumb', function() {
+      view.setThumbRightPosition(50);
+      view.setValueLabelRightPosition();
+      expect(parseInt(view.valueLabelRight.style.right)).toEqual(parseInt(view.thumbRight.style.right));
+    });
+
+  });
+
+  describe('mergeLabels()', function() {
+
+    let slider = document.createElement('div');
+    let view = new View(slider, {
+      valueLabel: true
+    });
+
+    beforeEach(() => {
+      view.mergeLabels();
+    }); 
+
+    it('make left value label transparent', function() {
+      expect(view.valueLabelLeft.style.opacity).toBe('0');
+    }); 
+
+    it('make right value label transparent', function() {
+      expect(view.valueLabelRight.style.opacity).toBe('0');
+    }); 
+
+    it('make common value label opaque', function() {
+      expect(view.valueLabelCommon.style.opacity).toBe('1');
+    });
+    
+    it.todo('common value label is halfway between left and right thumbs');
+
+  });
+
+  describe('splitLabels()', function() {
+
+    let slider = document.createElement('div');
+    let view = new View(slider, {
+      valueLabel: true
+    });
+
+    beforeEach(() => {
+      view.splitLabels();
+    });    
+
+    it('make common value label transparent', function() {
+      expect(view.valueLabelCommon.style.opacity).toBe('0');
+    });
+
+    it('make left value label opaque', function() {
+      expect(view.valueLabelLeft.style.opacity).toBe('1');
+    });
+
+    it('make right value label opaque', function() {
+      expect(view.valueLabelRight.style.opacity).toBe('1');
+    });
+
+  });
+
+}); 
 

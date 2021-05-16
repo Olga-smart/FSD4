@@ -1,28 +1,28 @@
-// export class Model {
-//   constructor(options = {}) {
-//     this.min = options.min || 0;
-//     this.max = options.max || 150;
-//     this.leftValue = options.leftValue || 25;
-//     this.rightValue = options.rightValue || 75;
-//     this.step = options.step || 1;  
-//   }
+export class Model {
+  constructor(options = {}) {
+    this.min = options.min || 0;
+    this.max = options.max || 150;
+    this.leftValue = options.leftValue || 25;
+    this.rightValue = options.rightValue || 75;
+    this.step = options.step || 1;  
+  }
   
-//   setLeftValue(value) {
-//     if (value < this.min) {
-//       this.leftValue = this.min;
-//     } else {
-//       this.leftValue = Math.min(value, this.rightValue);
-//     }
-//   }
+  setLeftValue(value) {
+    if (value < this.min) {
+      this.leftValue = this.min;
+    } else {
+      this.leftValue = Math.min(value, this.rightValue);
+    }
+  }
   
-//   setRightValue(value) {
-//     if (value > this.max) {
-//       this.rightValue = this.max;
-//     } else {
-//       this.rightValue = Math.max(value, this.leftValue);
-//     }    
-//   }
-// }
+  setRightValue(value) {
+    if (value > this.max) {
+      this.rightValue = this.max;
+    } else {
+      this.rightValue = Math.max(value, this.leftValue);
+    }    
+  }
+}
 
 export class View {
   constructor(component, options = {}) {
@@ -150,18 +150,24 @@ export class View {
       } else {
         this.splitLabels();
       }
-      
-      if (this.valueLabelLeft && this.minLabel) {
-        if ( this.isLeftValueLabelCloseToMinLabel() ) {
-          this.minLabel.style.opacity = 0;
-        } else {
-          this.minLabel.style.opacity = 1;
-        }
+
+      if ( this.inputLeft.value == this.inputLeft.max ) {
+        this.inputLeft.style.zIndex = 100;
+      } else {
+        this.inputLeft.style.zIndex = 2;
       }
-      
-      if (this.valueLabelLeft && this.vertical) {
-        this.fixValueLabelPositionForVertical();
+    }
+
+    if (this.valueLabelLeft && this.minLabel) {
+      if ( this.isLeftValueLabelCloseToMinLabel() ) {
+        this.minLabel.style.opacity = 0;
+      } else {
+        this.minLabel.style.opacity = 1;
       }
+    }
+    
+    if (this.valueLabelLeft && this.vertical) {
+      this.fixValueLabelPositionForVertical();
     }
   }
   
@@ -180,25 +186,19 @@ export class View {
       } else {
         this.splitLabels();
       }
-      
-      if ( this.inputLeft.value == this.inputLeft.max ) {
-        this.inputLeft.style.zIndex = 100;
-      } else {
-        this.inputLeft.style.zIndex = 2;
-      }
-      
-      if (this.valueLabelRight && this.maxLabel) {
-        if ( this.isRightValueLabelCloseToMaxLabel() ) {
-          this.maxLabel.style.opacity = 0;
-        } else {
-          this.maxLabel.style.opacity = 1;
-        }
-      }
-      
-      if (this.valueLabelRight && this.vertical) {
-        this.fixValueLabelPositionForVertical();
-      }
     } 
+
+    if (this.valueLabelRight && this.maxLabel) {
+      if ( this.isRightValueLabelCloseToMaxLabel() ) {
+        this.maxLabel.style.opacity = 0;
+      } else {
+        this.maxLabel.style.opacity = 1;
+      }
+    }
+    
+    if (this.valueLabelRight && this.vertical) {
+      this.fixValueLabelPositionForVertical();
+    }
   }
   
   setThumbLeftPosition(value) {
@@ -356,26 +356,26 @@ export class View {
   }
 }
 
-// export class Presenter {
-//   constructor(model, view) {  
-//     this.model = model;
-//     this.view = view;
+export class Presenter {
+  constructor(model, view) {  
+    this.model = model;
+    this.view = view;
     
-//     view.setMinValue(model.min);
-//     view.setMaxValue(model.max);
-//     view.setLeftValue(model.leftValue);
-//     view.setRightValue(model.rightValue);
-//     view.setStep(model.step);
-//   }
+    view.setMinValue(model.min);
+    view.setMaxValue(model.max);
+    view.setLeftValue(model.leftValue);
+    view.setRightValue(model.rightValue);
+    view.setStep(model.step);
+  }
   
-//   handleLeftInput(value) {
-//     this.model.setLeftValue(value);
-//     this.view.setLeftValue(this.model.leftValue);
-//   }
+  handleLeftInput(value) {
+    this.model.setLeftValue(value);
+    this.view.setLeftValue(this.model.leftValue);
+  }
   
-//   handleRightInput(value) {
-//     this.model.setRightValue(value);
-//     this.view.setRightValue(this.model.rightValue);
-//   }
+  handleRightInput(value) {
+    this.model.setRightValue(value);
+    this.view.setRightValue(this.model.rightValue);
+  }
   
-// }
+}

@@ -16,7 +16,7 @@ for (let slider of sliders) {
     vertical: false
   });
   
-  // let presenter = new Presenter(model, view);
+  let presenter = new Presenter(model, view);
   
-  // view.registerWith(presenter);
+  view.registerWith(presenter);
 }
