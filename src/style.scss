@@ -33,6 +33,22 @@ body {
       pointer-events: all;
       cursor: pointer;
     }
+    &::-moz-range-thumb {
+      width: 30px;
+      height: 30px;
+      border-radius: 0;
+      background-color: red;
+      pointer-events: all;
+      cursor: pointer;
+    }
+    &::-ms-thumb {
+      width: 30px;
+      height: 30px;
+      border-radius: 0;
+      background-color: red;
+      pointer-events: all;
+      cursor: pointer;
+    }
   }
   &__slider {
     position: relative;
