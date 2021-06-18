@@ -1,7 +1,7 @@
 import './style.scss';
-import {Model} from './model.js';
-import {View} from './view.js';
-import {Presenter} from './presenter';
+import {Model} from './model/model.js';
+import {View} from './view/view.js';
+import {Presenter} from './presenter/presenter.js';
 
 let sliders = document.querySelectorAll('.js-range-slider');
 for (let slider of sliders) {
