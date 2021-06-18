@@ -15,18 +15,28 @@ export class View {
     this.inputLeft = new Input('left');
     this.inputLeft.registerWith(this);
 
-    this.inputRight = new Input('right');
-    this.inputRight.registerWith(this);
-    
     this.slider = new Slider();
     this.track = new Track();
     this.range = new Range();
 
     this.thumbLeft = new Thumb('left');
-    this.thumbRight = new Thumb('right');
     
-    this.slider.append(this.track.component, this.range.component, this.thumbLeft.component, this.thumbRight.component);
-    this.component.append(this.inputLeft.component, this.inputRight.component, this.slider.component);
+    this.slider.append(this.track.component, this.range.component, this.thumbLeft.component);
+    this.component.append(this.slider.component, this.inputLeft.component);
+
+    if (options.range) {
+      this.inputRight = new Input('right');
+      this.inputRight.registerWith(this);
+      this.thumbRight = new Thumb('right');
+
+      this.slider.append(this.thumbRight.component);
+      this.component.append(this.inputRight.component);
+
+      this.isRange = true;
+    } else {
+      this.isRange = false;
+      this.range.setLeftIndent(0);
+    }
     
     if (options.minMaxLabels) {
       this.minLabel = new MinMaxLabel('left');
@@ -40,14 +50,19 @@ export class View {
       this.valueLabelRight = new ValueLabel('right');
       this.valueLabelCommon = new ValueLabel('common');
 
-      this.component.append(this.valueLabelLeft.component, this.valueLabelRight.component, this.valueLabelCommon.component);
+      this.component.append(this.valueLabelLeft.component);
+
+      if (options.range) {
+        this.component.append(this.valueLabelRight.component, this.valueLabelCommon.component);
+
+        // TODO: через раз срабатывает ошибочно
+        setTimeout(() => {
+          if ( this.isTwoValueLabelsClose() ) {
+            this.mergeLabels();
+          }
+        });
+      }
       
-      // TODO: через раз срабатывает ошибочно
-      setTimeout(() => {
-        if ( this.isTwoValueLabelsClose() ) {
-          this.mergeLabels();
-        }
-      });
     }
     
     if (options.vertical) {
@@ -76,10 +91,16 @@ export class View {
         if ( this.isLeftValueLabelCloseToMinLabel() ) {
           this.minLabel.setOpacity(0);
         }
-        if ( this.isRightValueLabelCloseToMaxLabel() ) {
-          this.maxLabel.setOpacity(0);
-        }
       });
+
+      if (options.range) {
+        // TODO: Срабатывает через раз
+        setTimeout(() => {
+          if ( this.isRightValueLabelCloseToMaxLabel() ) {
+            this.maxLabel.setOpacity(0);
+          }
+        });
+      }
     }
   }
   
@@ -89,7 +110,9 @@ export class View {
   
   setMinValue(min) {
     this.inputLeft.setMinValue(min);
-    this.inputRight.setMinValue(min);
+    if (this.isRange) {
+      this.inputRight.setMinValue(min);
+    }    
     if (this.minLabel) {
       this.minLabel.setValue(min);
     }
@@ -97,7 +120,9 @@ export class View {
   
   setMaxValue(max) {
     this.inputLeft.setMaxValue(max);
-    this.inputRight.setMaxValue(max);
+    if (this.isRange) {
+      this.inputRight.setMaxValue(max);
+    }    
     if (this.maxLabel) {
       this.maxLabel.setValue(max);
     }
@@ -105,7 +130,9 @@ export class View {
   
   setStep(step) {
     this.inputLeft.setStep(step);
-    this.inputRight.setStep(step);
+    if (this.isRange) {
+      this.inputRight.setStep(step);
+    }
   }
     
   setLeftValue(value) {
@@ -115,19 +142,22 @@ export class View {
     
     if (this.valueLabelLeft) {
       this.valueLabelLeft.setValue(value);
-      this.valueLabelCommon.setValue( value + ' - ' + this.inputRight.getValue() );
       this.valueLabelLeft.setLeftIndent( this.thumbLeft.getLeftIndent() );
-      
-      if ( this.isTwoValueLabelsClose() ) {
-        this.mergeLabels();
-      } else {
-        this.splitLabels();
-      }
 
-      if ( this.inputLeft.getValue() == this.inputLeft.getMax() ) {
-        this.inputLeft.setZIndex(100);
-      } else {
-        this.inputLeft.setZIndex(2);
+      if(this.isRange) {
+        this.valueLabelCommon.setValue( value + ' - ' + this.inputRight.getValue() );
+
+        if ( this.isTwoValueLabelsClose() ) {
+          this.mergeLabels();
+        } else {
+          this.splitLabels();
+        }
+  
+        if ( this.inputLeft.getValue() == this.inputLeft.getMax() ) {
+          this.inputLeft.setZIndex(100);
+        } else {
+          this.inputLeft.setZIndex(2);
+        }
       }
     }
 
@@ -136,6 +166,14 @@ export class View {
         this.minLabel.setOpacity(0);
       } else {
         this.minLabel.setOpacity(1);
+      }
+
+      if(!this.isRange) {
+        if ( this.isLeftValueLabelCloseToMaxLabel() ) {
+          this.maxLabel.setOpacity(0);
+        } else {
+          this.maxLabel.setOpacity(1);
+        }
       }
     }
     
@@ -181,7 +219,14 @@ export class View {
     let percent = ((value - min) / (max - min)) * 100;
 
     this.thumbLeft.setLeftIndent(percent);
-    this.range.setLeftIndent(percent);
+
+    if (!this.isRange) {
+      this.range.setRightIndent(100 - percent);
+    }
+
+    if (this.isRange) {
+      this.range.setLeftIndent(percent);
+    }
   }
   
   setThumbRightPosition(value) {
@@ -233,8 +278,10 @@ export class View {
   
   fixValueLabelPositionForVertical() {
     this.valueLabelLeft.fixPositionForVertical();
-    this.valueLabelRight.fixPositionForVertical();
-    this.valueLabelCommon.fixPositionForVertical();    
+    if (this.isRange) {
+      this.valueLabelRight.fixPositionForVertical();
+      this.valueLabelCommon.fixPositionForVertical();
+    }    
   }
   
   isLeftValueLabelCloseToMinLabel() {
@@ -254,6 +301,25 @@ export class View {
       
       return ( (minLabelEdge - leftLabelEdge) < 3 );
     }    
+  }
+
+  isLeftValueLabelCloseToMaxLabel() {
+    let leftLabelEdge;
+    let maxLabelEdge;
+
+    if (!this.vertical) {
+      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
+      maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
+
+      return ( (maxLabelEdge - leftLabelEdge) < 3 );
+    }
+
+    if (this.vertical) {
+      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel.getBoundingClientRect().bottom;
+      
+      return ( (leftLabelEdge - maxLabelEdge) < 3 );
+    } 
   }
   
   isRightValueLabelCloseToMaxLabel() {

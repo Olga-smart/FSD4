@@ -6,8 +6,11 @@ export class Presenter {
       view.setMinValue(model.min);
       view.setMaxValue(model.max);
       view.setLeftValue(model.leftValue);
-      view.setRightValue(model.rightValue);
       view.setStep(model.step);
+
+      if (this.view.isRange) {
+        view.setRightValue(model.rightValue);
+      }
     }
     
     handleLeftInput(value) {

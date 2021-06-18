@@ -13,7 +13,6 @@ export class Label {
   }
 
   getBoundingClientRect() {
-    console.log(this.component.getBoundingClientRect());
     return this.component.getBoundingClientRect();
   } 
 }
