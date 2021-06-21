@@ -41,4 +41,31 @@ describe('MinMaxLabel', function() {
 
   });
 
+  describe('fixPositionForVertical()', function() {
+
+    describe('apply necessary transformation', function() {
+
+      it('if this.type == left or by default', function() {
+        let label = new MinMaxLabel();
+        label.fixPositionForVertical();
+
+        expect(label.component.style.transform).toStrictEqual(expect.stringContaining('rotate(90deg) translateX'));
+
+        label = new MinMaxLabel('left');
+        label.fixPositionForVertical();
+
+        expect(label.component.style.transform).toStrictEqual(expect.stringContaining('rotate(90deg) translateX'));
+      });
+
+      it('if this.type == right', function() {
+        let label = new MinMaxLabel('right');
+        label.fixPositionForVertical();
+
+        expect(label.component.style.transform).toStrictEqual(expect.stringContaining('rotate(90deg) translateX'));
+      })
+
+    });
+
+  });
+
 });

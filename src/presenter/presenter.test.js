@@ -25,31 +25,41 @@ describe('Presenter', function() {
       it('set min value for view', function() {
         view.setMinValue = jest.fn();
         let presenter = new Presenter(model, view);
-        expect(view.setMinValue).toBeCalled();
+
+        expect(view.setMinValue).toBeCalledWith(model.min);
       });
   
       it('set max value for view', function() {
         view.setMaxValue = jest.fn();
         let presenter = new Presenter(model, view);
-        expect(view.setMaxValue).toBeCalled();
+
+        expect(view.setMaxValue).toBeCalledWith(model.max);
       });
   
       it('set left value for view', function() {
         view.setLeftValue = jest.fn();
         let presenter = new Presenter(model, view);
-        expect(view.setLeftValue).toBeCalled();
+
+        expect(view.setLeftValue).toBeCalledWith(model.leftValue);
       });
   
-      it('set right value for view', function() {
+      it('set right value for view if range', function() {
+        let model = new Model({
+          range: true
+        });
+        let view = new View(slider, {
+          range: true
+        });
         view.setRightValue = jest.fn();
         let presenter = new Presenter(model, view);
-        expect(view.setRightValue).toBeCalled();
+
+        expect(view.setRightValue).toBeCalledWith(model.rightValue);
       });
   
       it('set step for view', function() {
         view.setStep = jest.fn();
         let presenter = new Presenter(model, view);
-        expect(view.setStep).toBeCalled();
+        expect(view.setStep).toBeCalledWith(model.step);
       });
   
     });
@@ -59,29 +69,47 @@ describe('Presenter', function() {
       it('set left value for model', function() {
         model.setLeftValue = jest.fn();
         presenter.handleLeftInput(10);
-        expect(model.setLeftValue).toBeCalled();
+
+        expect(model.setLeftValue).toBeCalledWith(10);
       });
   
       it('set left value for view', function() {
         view.setLeftValue = jest.fn();
         presenter.handleLeftInput(10);
-        expect(view.setLeftValue).toBeCalled();
+
+        expect(view.setLeftValue).toBeCalledWith(model.leftValue);
       });
   
     });
   
     describe('handleRightInput(value)', function() {
   
-      it('set rightt value for model', function() {
+      it('set right value for model', function() {
+        let model = new Model({
+          range: true
+        });
+        let view = new View(slider, {
+          range: true
+        });
         model.setRightValue = jest.fn();
+        let presenter = new Presenter(model, view);
         presenter.handleRightInput(10);
-        expect(model.setRightValue).toBeCalled();
+
+        expect(model.setRightValue).toBeCalledWith(10);
       });
   
-      it('set rightt value for view', function() {
+      it('set right value for view', function() {
+        let model = new Model({
+          range: true
+        });
+        let view = new View(slider, {
+          range: true
+        });
         view.setRightValue = jest.fn();
+        let presenter = new Presenter(model, view);
         presenter.handleRightInput(10);
-        expect(view.setRightValue).toBeCalled();
+        
+        expect(view.setRightValue).toBeCalledWith(model.rightValue);
       });
   
     });

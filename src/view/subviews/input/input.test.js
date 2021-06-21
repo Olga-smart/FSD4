@@ -134,4 +134,74 @@ describe('Input', function() {
 
   });
 
+  describe('attachEventHandlers()', function() {
+
+    it('handle left input', function() {
+      let input = new Input();
+      let view = {};
+      input.registerWith(view);
+      input.view.handleLeftInput = jest.fn();
+      let event = new Event('input');
+      input.component.dispatchEvent(event);
+  
+      expect(input.view.handleLeftInput).toBeCalledWith(input.component.value);
+    });
+
+    it('handle right input', function() {
+      let input = new Input('right');
+      let view = {};
+      input.registerWith(view);
+      input.view.handleRightInput = jest.fn();
+      let event = new Event('input');
+      input.component.dispatchEvent(event);
+  
+      expect(input.view.handleRightInput).toBeCalledWith(input.component.value);
+    });
+
+    it('handle mouseover', function() {
+      let input = new Input('right');
+      let view = {};
+      input.registerWith(view);
+      input.view.handleInputMouseover = jest.fn();
+      let event = new Event('mouseover');
+      input.component.dispatchEvent(event);
+
+      expect(input.view.handleInputMouseover).toBeCalledWith(input.type);
+    });
+
+    it('handle mouseout', function() {
+      let input = new Input('right');
+      let view = {};
+      input.registerWith(view);
+      input.view.handleInputMouseout = jest.fn();
+      let event = new Event('mouseout');
+      input.component.dispatchEvent(event);
+
+      expect(input.view.handleInputMouseout).toBeCalledWith(input.type);
+    });
+
+    it('handle mousedown', function() {
+      let input = new Input('right');
+      let view = {};
+      input.registerWith(view);
+      input.view.handleInputMousedown = jest.fn();
+      let event = new Event('mousedown');
+      input.component.dispatchEvent(event);
+
+      expect(input.view.handleInputMousedown).toBeCalledWith(input.type);
+    });
+
+    it('handle mouseup', function() {
+      let input = new Input('right');
+      let view = {};
+      input.registerWith(view);
+      input.view.handleInputMouseup = jest.fn();
+      let event = new Event('mouseup');
+      input.component.dispatchEvent(event);
+
+      expect(input.view.handleInputMouseup).toBeCalledWith(input.type);
+    });
+    
+  });
+
 });

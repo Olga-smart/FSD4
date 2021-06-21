@@ -9,8 +9,8 @@
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
     "start": "cross-env NODE_ENV=development webpack serve --mode development --open",
     "test": "jest --detectOpenHandles",
-    "testslider": "jest --detectOpenHandles src/view/subviews/slider",
-    "testview": "jest --detectOpenHandles src/view/view.test.js"
+    "testinput": "jest --detectOpenHandles src/view/subviews/input",
+    "testpresenter": "jest --detectOpenHandles src/presenter/presenter.test.js"
   },
   "repository": {
     "type": "git",

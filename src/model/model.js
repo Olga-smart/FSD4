@@ -1,11 +1,11 @@
 export class Model {
     constructor(options = {}) {
-      this.min = options.min || 0;
-      this.max = options.max || 150;
-      this.leftValue = options.leftValue || 25;
-      this.step = options.step || 1;  
+      this.min = options.min ?? 0;
+      this.max = options.max ?? 150;
+      this.leftValue = options.leftValue ?? 25;
+      this.step = options.step ?? 1;  
       if (options.range) {
-        this.rightValue = options.rightValue || 75;
+        this.rightValue = options.rightValue ?? 75;
         this.isRange = true;
       } else {
         this.isRange = false;
@@ -15,6 +15,7 @@ export class Model {
     setLeftValue(value) {
       if (value < this.min) {
         this.leftValue = this.min;
+        return;
       } 
 
       if (!this.isRange) {

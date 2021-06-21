@@ -16,13 +16,19 @@ describe('View', function() {
     it('set up component property', function() {
       expect(view.component).toBe(slider);
     });
-    
-    it('set up inputLeft property', function() {
-      expect(view).toHaveProperty('inputLeft');
-    });
-    
-    it('set up inputRight property', function() {
-      expect(view).toHaveProperty('inputRight');
+
+    describe('set up properties for inputs', function() {
+      it('set up left input', function() {
+        expect(view).toHaveProperty('inputLeft');
+      })
+      it('set up right input if necessary', function() {
+        let slider = document.createElement('div');
+        let view = new View(slider, {
+          range: true
+        });
+
+        expect(view).toHaveProperty('inputRight');
+      }); 
     });
     
     it('set up slider property', function() {
@@ -37,9 +43,18 @@ describe('View', function() {
       expect(view).toHaveProperty('range');
     });
     
-    it('set up properties for thumbs', function() {
-      expect(view).toHaveProperty('thumbLeft');
-      expect(view).toHaveProperty('thumbRight');
+    describe('set up properties for thumbs', function() {
+      it('set up left thumb', function() {
+        expect(view).toHaveProperty('thumbLeft');
+      })
+      it('set up right thumb if necessary', function() {
+        let slider = document.createElement('div');
+        let view = new View(slider, {
+          range: true
+        });
+
+        expect(view).toHaveProperty('thumbRight');
+      }); 
     });
     
     it('set up properties for min and max labels if options.minMaxLabels is true', function() {
@@ -62,18 +77,29 @@ describe('View', function() {
       expect(view).not.toHaveProperty('maxLabel');
     });
     
-    it('set up properties for value labels if options.valueLabel is true', function() {
+    describe('set up properties for value labels if options.valueLabel is true', function() {
       let slider = document.createElement('div');
       let view = new View(slider, {
         valueLabel: true
       });
       
-      expect(view).toHaveProperty('valueLabelLeft');
-      expect(view).toHaveProperty('valueLabelRight');
-      expect(view).toHaveProperty('valueLabelCommon');
+      it('set up left value label', function() {
+        expect(view).toHaveProperty('valueLabelLeft');
+      });
+
+      it('set up right and common value labels if necessary', function() {
+        let slider = document.createElement('div');
+        let view = new View(slider, {
+          valueLabel: true,
+          range: true
+        });
+
+        expect(view).toHaveProperty('valueLabelRight');
+        expect(view).toHaveProperty('valueLabelCommon');
+      });    
     });
     
-    it('do not set up properties for value labels if options.valueLabel is true', function() {
+    it('do not set up properties for value labels if options.valueLabel is false', function() {
       let slider = document.createElement('div');
       let view = new View(slider, {
         valueLabel: false
@@ -117,76 +143,97 @@ describe('View', function() {
 
   });
 
-  describe('setMinValue(min)', function() {
-    
-    let slider = document.createElement('div');
-    let view = new View(slider);
-    view.inputLeft.setMinValue = jest.fn();
-    view.inputRight.setMinValue = jest.fn();
-    view.setMinValue(10);    
+  describe('setMinValue(min)', function() {   
 
     it('call function to set min attribute of left input', function() {
-      expect(view.inputLeft.setMinValue).toBeCalled();
+      let slider = document.createElement('div');
+      let view = new View(slider);
+      view.inputLeft.setMinValue = jest.fn();
+      view.setMinValue(10); 
+
+      expect(view.inputLeft.setMinValue).toBeCalledWith(10);
     });
 
-    it('call function to set min attribute of right input', function() {
-      expect(view.inputRight.setMinValue).toBeCalled();
+    it('call function to set min attribute of right input if necessary', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        range: true
+      });
+      view.inputRight.setMinValue = jest.fn();
+      view.setMinValue(10);
+
+      expect(view.inputRight.setMinValue).toBeCalledWith(10);
     });
     
     it('if view has minLabel, set up its value', function() {
+      let slider = document.createElement('div');
       let view = new View(slider, {
         minMaxLabels: true
       });
       view.minLabel.setValue = jest.fn();      
       view.setMinValue(10);
       
-      expect(view.minLabel.setValue).toBeCalled();
+      expect(view.minLabel.setValue).toBeCalledWith(10);
     });
 
   });
   
   describe('setMaxValue(max)', function() {
-    
-    let slider = document.createElement('div');
-    let view = new View(slider);
-    view.inputLeft.setMaxValue = jest.fn();
-    view.inputRight.setMaxValue = jest.fn();
-    view.setMaxValue(100);
 
     it('call function to set max attribute of left input', function() {
-      expect(view.inputLeft.setMaxValue).toBeCalled();
+      let slider = document.createElement('div');
+      let view = new View(slider);
+      view.inputLeft.setMaxValue = jest.fn();
+      view.setMaxValue(100);
+
+      expect(view.inputLeft.setMaxValue).toBeCalledWith(100);
     });
 
-    it('call function to set max attribute of right input', function() {
-      expect(view.inputRight.setMaxValue).toBeCalled();
+    it('call function to set max attribute of right input if necessary', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        range: true
+      });
+      view.inputRight.setMaxValue = jest.fn();
+
+      view.setMaxValue(100);
+
+      expect(view.inputRight.setMaxValue).toBeCalledWith(100);
     });
     
     it('if view has maxLabel, set up its value', function() {
+      let slider = document.createElement('div');
       let view = new View(slider, {
         minMaxLabels: true
       });
       view.maxLabel.setValue = jest.fn(); 
       view.setMaxValue(100);
       
-      expect(view.maxLabel.setValue).toBeCalled();
+      expect(view.maxLabel.setValue).toBeCalledWith(100);
     });
 
   });
   
   describe('setStep(step)', function() {
     
-    let slider = document.createElement('div');
-    let view = new View(slider);
-    view.inputLeft.setStep = jest.fn();
-    view.inputRight.setStep = jest.fn();
-    view.setStep(5);
-    
     it('call function to set step attribute of left input', function() {
-      expect(view.inputLeft.setStep).toBeCalled();
+      let slider = document.createElement('div');
+      let view = new View(slider);
+      view.inputLeft.setStep = jest.fn();
+      view.setStep(5); 
+
+      expect(view.inputLeft.setStep).toBeCalledWith(5);
     });
     
-    it('call function to set step attribute of right input', function() {
-      expect(view.inputRight.setStep).toBeCalled();
+    it('call function to set step attribute of right input if necessary', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        range: true
+      });
+      view.inputRight.setStep = jest.fn();
+      view.setStep(5);
+
+      expect(view.inputRight.setStep).toBeCalledWith(5);
     });
     
   });
@@ -227,7 +274,8 @@ describe('View', function() {
       let view = new View(slider, {
         minMaxLabels: true,
         valueLabel: true,
-        vertical: true
+        vertical: true,
+        range: true
       });
       view.valueLabelLeft.setValue = jest.fn();
       view.valueLabelCommon.setValue = jest.fn();
@@ -301,6 +349,37 @@ describe('View', function() {
 
       });
 
+      describe('do necessary actions with max value label if slider has a single value', function() {
+
+        let slider = document.createElement('div');
+        let view = new View(slider, {
+          minMaxLabels: true,
+          valueLabel: true,
+          vertical: true,
+          range: false
+        });
+        view.isLeftValueLabelCloseToMaxLabel = jest.fn();
+        view.maxLabel.setOpacity = jest.fn();
+        view.setLeftValue(10);
+
+        it('call function to check if left value label is close to max label', function() {
+          expect(view.isLeftValueLabelCloseToMaxLabel).toBeCalled();
+        });
+
+        it('set max label opacity to 0 if left value label is close', function() {
+          view.isLeftValueLabelCloseToMaxLabel = jest.fn(() => true);
+          view.setLeftValue(10);
+          expect(view.maxLabel.setOpacity).toBeCalledWith(0);
+        });
+
+        it('set max label opacity to 1 if left value label is not close', function() {
+          view.isLeftValueLabelCloseToMaxLabel = jest.fn(() => false);
+          view.setLeftValue(10);
+          expect(view.maxLabel.setOpacity).toBeCalledWith(1);
+        });
+
+      });
+
       it('call function to fix value label position if slider is vertical', function() {
         view.fixValueLabelPositionForVertical = jest.fn();
         view.setLeftValue(10);
@@ -311,7 +390,7 @@ describe('View', function() {
     
   });
 
-  describe('setLeftValue(value) - Puppeteer', function() {
+  describe.skip('setLeftValue(value) - Puppeteer', function() {
 
     it('when left thumb is being dragged, value of left input is being changed', async function() {
       const browser = await puppeteer.launch();
@@ -448,7 +527,9 @@ describe('View', function() {
   describe('setRightValue(value) - Jest', function() {
     
     let slider = document.createElement('div');
-    let view = new View(slider);
+    let view = new View(slider, {
+      range: true
+    });
     view.inputRight.setValue = jest.fn();
     view.setThumbRightPosition = jest.fn();
     view.setRightValue(50);
@@ -467,7 +548,8 @@ describe('View', function() {
       let view = new View(slider, {
         minMaxLabels: true,
         valueLabel: true,
-        vertical: true
+        vertical: true,
+        range: true
       });
       view.valueLabelRight.setValue = jest.fn();
       view.valueLabelCommon.setValue = jest.fn();
@@ -551,7 +633,7 @@ describe('View', function() {
     
   });
 
-  describe('setRightValue(value) - Puppeteer', function() {
+  describe.skip('setRightValue(value) - Puppeteer', function() {
 
     it('when right thumb is being dragged, value of right input is being changed', async function() {
       const browser = await puppeteer.launch();
@@ -691,7 +773,6 @@ describe('View', function() {
     let view = new View(slider);
     view.setMinValue(0);
     view.setMaxValue(100);
-    view.setRightValue(100);
 
     it('set left property of left thumb properly', function() {
       for (let i = 1; i <= 100; i++) {
@@ -702,13 +783,34 @@ describe('View', function() {
       }
     });
 
-    it('set left property of range properly', function() {
-      for (let i = 0; i <= 100; i++) {
-        view.setThumbLeftPosition(i);
-        // Из-за особенности записи дробных чисел в js может быть погрешность в 1 единицу
-        expect(parseInt(view.range.component.style.left)).toBeGreaterThanOrEqual(i - 1);
-        expect(parseInt(view.range.component.style.left)).toBeLessThanOrEqual(i + 1)
-      }
+    describe('if range', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        range: true
+      });
+      view.setMinValue(0);
+      view.setMaxValue(100);
+      view.setRightValue(100);
+
+      it('set left property of range properly', function() {
+        for (let i = 0; i <= 100; i++) {
+          view.setThumbLeftPosition(i);
+          // Из-за особенности записи дробных чисел в js может быть погрешность в 1 единицу
+          expect(parseInt(view.range.component.style.left)).toBeGreaterThanOrEqual(i - 1);
+          expect(parseInt(view.range.component.style.left)).toBeLessThanOrEqual(i + 1)
+        }
+      });
+    });
+    
+    describe('if single value', function() {
+      it('set right property of range properly', function() {
+        for (let i = 0; i <= 100; i++) {
+          view.setThumbLeftPosition(i);
+          // Из-за особенности записи дробных чисел в js может быть погрешность в 1 единицу
+          expect(parseInt(view.range.component.style.right)).toBeGreaterThanOrEqual(100 - i - 1);
+          expect(parseInt(view.range.component.style.right)).toBeLessThanOrEqual(100 - i + 1)
+        }
+      });
     });
 
   });
@@ -716,7 +818,9 @@ describe('View', function() {
   describe('setThumbRightPosition(value)', function() {
     
     let slider = document.createElement('div');
-    let view = new View(slider);
+    let view = new View(slider, {
+      range: true
+    });
     view.setMinValue(0);
     view.setMaxValue(100);
     view.setLeftValue(0);
@@ -745,7 +849,8 @@ describe('View', function() {
 
     let slider = document.createElement('div');
     let view = new View(slider, {
-      valueLabel: true
+      valueLabel: true,
+      range: true
     });
 
     view.valueLabelLeft.setOpacity = jest.fn();
@@ -776,7 +881,8 @@ describe('View', function() {
 
     let slider = document.createElement('div');
     let view = new View(slider, {
-      valueLabel: true
+      valueLabel: true,
+      range: true
     });
 
     view.valueLabelLeft.setOpacity = jest.fn();
@@ -808,7 +914,8 @@ describe('View', function() {
       let slider = document.createElement('div');
       let view = new View(slider, {
         valueLabel: true,
-        vertical: false
+        vertical: false,
+        range: true
       });
       view.valueLabelLeft.getBoundingClientRect = jest.fn();
       view.valueLabelRight.getBoundingClientRect = jest.fn();
@@ -842,7 +949,8 @@ describe('View', function() {
       let slider = document.createElement('div');
       let view = new View(slider, {
         valueLabel: true,
-        vertical: true
+        vertical: true,
+        range: true
       });
       view.valueLabelLeft.getBoundingClientRect = jest.fn();
       view.valueLabelRight.getBoundingClientRect = jest.fn();
@@ -899,7 +1007,8 @@ describe('View', function() {
     let slider = document.createElement('div');
     let view = new View(slider, {
       valueLabel: true,
-      vertical: true
+      vertical: true,
+      range: true
     });
     view.valueLabelLeft.fixPositionForVertical = jest.fn();
     view.valueLabelRight.fixPositionForVertical = jest.fn();
@@ -994,7 +1103,7 @@ describe('View', function() {
 
   });
 
-  describe('isRightValueLabelCloseToMaxLabel()', function() {
+  describe('isLeftValueLabelCloseToMaxLabel()', function() {
 
     describe('if slider is horizontal', function() {
 
@@ -1003,6 +1112,81 @@ describe('View', function() {
         valueLabel: true,
         minMaxLabels: true,
         vertical: false
+      });
+      view.valueLabelLeft.getBoundingClientRect = jest.fn();
+      view.maxLabel.getBoundingClientRect= jest.fn();
+
+      it('return true if distance between 2 labels is < than 3 px', function() {
+        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+          right: 50
+        });
+        view.maxLabel.getBoundingClientRect.mockReturnValue({
+          left: 52
+        });
+
+        expect(view.isLeftValueLabelCloseToMaxLabel()).toBe(true);
+      });
+
+      it('return false if distance between 2 labels is > than 3 px', function() {
+        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+          right: 50
+        });
+        view.maxLabel.getBoundingClientRect.mockReturnValue({
+          left: 55
+        });
+
+        expect(view.isLeftValueLabelCloseToMaxLabel()).toBe(false);
+      });
+
+    });
+
+    describe('if slider is vertical', function() {
+
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        valueLabel: true,
+        minMaxLabels: true,
+        vertical: true
+      });
+      view.valueLabelLeft.getBoundingClientRect = jest.fn();
+      view.maxLabel.getBoundingClientRect= jest.fn();
+
+      it('return true if distance between 2 labels is < than 3 px', function() {
+        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+          top: 52
+        });
+        view.maxLabel.getBoundingClientRect.mockReturnValue({
+          bottom: 50
+        });
+
+        expect(view.isLeftValueLabelCloseToMaxLabel()).toBe(true);
+      });
+
+      it('return false if distance between 2 labels is > than 3 px', function() {
+        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+          top: 55
+        });
+        view.maxLabel.getBoundingClientRect.mockReturnValue({
+          bottom: 50
+        });
+
+        expect(view.isLeftValueLabelCloseToMaxLabel()).toBe(false);
+      });
+
+    });
+
+  });
+
+  describe('isRightValueLabelCloseToMaxLabel()', function() {
+
+    describe('if slider is horizontal', function() {
+
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        valueLabel: true,
+        minMaxLabels: true,
+        vertical: false,
+        range: true
       });
       view.valueLabelRight.getBoundingClientRect = jest.fn();
       view.maxLabel.getBoundingClientRect= jest.fn();
@@ -1037,7 +1221,8 @@ describe('View', function() {
       let view = new View(slider, {
         valueLabel: true,
         minMaxLabels: true,
-        vertical: true
+        vertical: true,
+        range: true
       });
       view.valueLabelRight.getBoundingClientRect = jest.fn();
       view.maxLabel.getBoundingClientRect= jest.fn();
@@ -1088,7 +1273,9 @@ describe('View', function() {
   describe('handleRightInput(value)', function() {
 
     let slider = document.createElement('div');
-    let view = new View(slider);
+    let view = new View(slider, {
+      range: true
+    });
     let presenter = {};
     view.registerWith(presenter);
     view.presenter.handleRightInput = jest.fn();
@@ -1105,7 +1292,9 @@ describe('View', function() {
   describe('handleInputMouseover(type)', function() {
 
     let slider = document.createElement('div');
-    let view = new View(slider);
+    let view = new View(slider, {
+      range: true
+    });
 
     it('if type = left (of by default) call function to add hover styling to left thumb', function() {
       view.thumbLeft.addHover = jest.fn();
@@ -1129,7 +1318,9 @@ describe('View', function() {
   describe('handleInputMouseout(type)', function() {
 
     let slider = document.createElement('div');
-    let view = new View(slider);
+    let view = new View(slider, {
+      range: true
+    });
 
     it('if type = left (of by default) call function to remove hover styling to left thumb', function() {
       view.thumbLeft.removeHover = jest.fn();
@@ -1153,7 +1344,9 @@ describe('View', function() {
   describe('handleInputMousedown(type)', function() {
 
     let slider = document.createElement('div');
-    let view = new View(slider);
+    let view = new View(slider, {
+      range: true
+    });
     
     it('if type = left (of by default) call function to add active styling to left thumb', function() {
       view.thumbLeft.makeActive = jest.fn();
@@ -1177,7 +1370,9 @@ describe('View', function() {
   describe('handleInputMouseup(type)', function() {
 
     let slider = document.createElement('div');
-    let view = new View(slider);
+    let view = new View(slider, {
+      range: true
+    });
     
     it('if type = left (of by default) call function to remove active styling to left thumb', function() {
       view.thumbLeft.makeInactive = jest.fn();

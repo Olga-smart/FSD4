@@ -14,7 +14,7 @@ for (let slider of sliders) {
   let view = new View(slider, {
     minMaxLabels: true,
     valueLabel: true,
-    vertical: true,
+    vertical: false,
     range: true
   });
   
