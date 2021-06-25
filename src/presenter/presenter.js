@@ -11,6 +11,10 @@ export class Presenter {
       if (this.view.isRange) {
         view.setRightValue(model.rightValue);
       }
+
+      if (this.view.hasScale) {
+        view.addScale(model.min, model.max, view.scaleIntervals);
+      }
     }
     
     handleLeftInput(value) {

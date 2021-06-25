@@ -9,6 +9,10 @@ body {
   font-family: 'Arial', sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .container {
   position: relative;
   width: 50%;
@@ -131,6 +135,43 @@ body {
       transform: translateX(-50%);
     }
   }
+  &__scale {
+    position: relative;
+    top: 8px;
+    height: 8px;
+    display: flex;  
+    &-interval {
+      border-right: 1px solid gray;
+      height: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      position: relative;
+      &:first-child {
+        border-left: 1px solid grey;
+      }
+      &-value {
+        // display: block;
+        position: absolute;
+        top: calc(100% + 3px);
+        right: 0;
+        transform: translateX(50%);
+        font-size: 0.7rem;
+        color: gray;;
+        &_min {
+          left: 0;
+          right: unset;
+          transform: translateX(-50%);
+        }
+      }
+    }
+    &-mark {
+      display: block;
+      width: 1px;
+      height: 4px;
+      background-color: gray;
+    }
+  }
   &_vertical {
     transform: rotate(-90deg);
     .range-slider__min-max-label {
@@ -152,3 +193,4 @@ body {
     }
   }
 }
+

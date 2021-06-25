@@ -5,6 +5,7 @@ import {Input} from './subviews/input/input.js';
 import {Thumb} from './subviews/thumb/thumb.js';
 import {MinMaxLabel} from './subviews/minMaxLabel/minMaxLabel.js';
 import {ValueLabel} from './subviews/valueLabel/valueLabel.js';
+import {Scale} from './subviews/scale/scale.js';
 
 export class View {
   constructor(component, options = {}) {
@@ -24,6 +25,8 @@ export class View {
     this.slider.append(this.track.component, this.range.component, this.thumbLeft.component);
     this.component.append(this.slider.component, this.inputLeft.component);
 
+    this.scaleIntervals = options.scaleIntervals;
+
     if (options.range) {
       this.inputRight = new Input('right');
       this.inputRight.registerWith(this);
@@ -37,23 +40,30 @@ export class View {
       this.isRange = false;
       this.range.setLeftIndent(0);
     }
+
+    if (options.scale) {
+      this.hasScale = true;
+    } else {
+      this.hasScale = false;
+    }
     
     if (options.minMaxLabels) {
       this.minLabel = new MinMaxLabel('left');
       this.maxLabel = new MinMaxLabel('right');
 
-      this.component.append(this.minLabel.component, this.maxLabel.component);
+      this.slider.append(this.minLabel.component, this.maxLabel.component);
     }
     
     if (options.valueLabel) {
       this.valueLabelLeft = new ValueLabel('left');
-      this.valueLabelRight = new ValueLabel('right');
-      this.valueLabelCommon = new ValueLabel('common');
-
-      this.component.append(this.valueLabelLeft.component);
+      
+      this.slider.append(this.valueLabelLeft.component);
 
       if (options.range) {
-        this.component.append(this.valueLabelRight.component, this.valueLabelCommon.component);
+        this.valueLabelRight = new ValueLabel('right');
+        this.valueLabelCommon = new ValueLabel('common');
+
+        this.slider.append(this.valueLabelRight.component, this.valueLabelCommon.component);
 
         // TODO: через раз срабатывает ошибочно
         setTimeout(() => {
@@ -384,6 +394,11 @@ export class View {
       this.thumbRight.makeInactive();
     }
   } 
+
+  addScale(min, max, intervalsNumber) {
+    this.scale = new Scale(min, max, intervalsNumber);
+    this.component.append(this.scale.component);
+  }
 }
 
 

@@ -15,7 +15,9 @@ for (let slider of sliders) {
     minMaxLabels: true,
     valueLabel: true,
     vertical: false,
-    range: true
+    range: true,
+    scale: true,
+    scaleIntervals: 10
   });
   
   let presenter = new Presenter(model, view);
