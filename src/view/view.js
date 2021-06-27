@@ -410,7 +410,6 @@ export class View {
       let topOffsetInPercents = topOffsetInPx * 100 / trackCoords.height;
       let bottomOffsetInPercents = 100 - topOffsetInPercents;
       value = Math.round(bottomOffsetInPercents * this.inputLeft.getMax() / 100);
-      console.log(value);
     }    
 
     if ( this.whichThumbIsNearer(value) == 'left' ) {
@@ -482,6 +481,10 @@ export class View {
     this.scale = new Scale(min, max, intervalsNumber);
     this.scale.registerWith(this);
     this.component.append(this.scale.component);
+
+    if (this.vertical) {
+      this.scale.fixPositionForVertical();
+    }
   }
 }
 

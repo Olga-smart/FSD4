@@ -55,7 +55,6 @@ export class Input {
       if (this.type == 'right') {
         this.view.handleRightInput(value);
       }
-      console.log('input');
     });
 
     this.component.addEventListener('mouseover', () => {

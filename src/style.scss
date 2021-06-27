@@ -169,7 +169,7 @@ body {
         border-left: 1px solid grey;
       }
       &-value {
-        // display: block;
+        display: block;
         position: absolute;
         top: calc(100% + 3px);
         right: 0;
@@ -202,11 +202,11 @@ body {
     }
     .range-slider__value-label {
       transform-origin: top right;
-      &_left, &_common {
-        transform: translateX(-50%) rotate(90deg);
-      }
-      &_right {
-        transform: translateX(50%) rotate(90deg);
+    }
+    .range-slider__scale-interval-value {
+      transform-origin: top right;
+      &_min {
+        transform-origin: top left;
       }
     }
   }

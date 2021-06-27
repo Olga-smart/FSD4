@@ -9,6 +9,7 @@ export class Scale {
     this.intervalsNumber = intervalsNumber;
     this.intervals = [];
     this.values = [];
+    this.valueElements = [];
 
     this.createIntervals();
     this.addMarksInIntervals();
@@ -48,20 +49,29 @@ export class Scale {
 
   addValues() {
     this.values[0] = this.min;
-    let step = Math.round(this.max / this.intervalsNumber);
+    let step = Math.round( (this.max - this.min) / this.intervalsNumber );
     for (let i = 1; i < this.intervalsNumber; i++) {
-      this.values[i] = i * step;
+      this.values[i] = i * step + this.min;
     }
     this.values.push(this.max);
 
-    let value = createElement('span', 'range-slider__scale-interval-value range-slider__scale-interval-value_min');
-    value.textContent = this.values[0];
-    this.intervals[0].append(value);  
+    let valueElement = createElement('span', 'range-slider__scale-interval-value range-slider__scale-interval-value_min');
+    valueElement.textContent = this.values[0];
+    this.intervals[0].append(valueElement);  
+    this.valueElements.push(valueElement);
 
     for (let i = 1; i < this.values.length; i++) {
-      let value = createElement('span', 'range-slider__scale-interval-value range-slider__scale-interval-value');
-      value.textContent = this.values[i];
-      this.intervals[i-1].append(value); 
+      let valueElement = createElement('span', 'range-slider__scale-interval-value range-slider__scale-interval-value');
+      valueElement.textContent = this.values[i];
+      this.intervals[i-1].append(valueElement); 
+      this.valueElements.push(valueElement);
+    }
+  }
+
+  fixPositionForVertical() {
+    this.valueElements[0].style.transform = `rotate(90deg) translateY(-50%)`;
+    for (let i = 1; i < this.valueElements.length; i++) {
+      this.valueElements[i].style.transform = `rotate(90deg) translateX(${this.valueElements[i].offsetWidth}px) translateY(${-this.valueElements[i].offsetHeight}px) translateY(50%)`;
     }
   }
 
