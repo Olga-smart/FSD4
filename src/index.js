@@ -6,7 +6,7 @@ import {Presenter} from './presenter/presenter.js';
 let sliders = document.querySelectorAll('.js-range-slider');
 for (let slider of sliders) {
   let model = new Model({
-    min: 0,
+    min: -150,
     max: 150,
     range: true
   });
@@ -14,7 +14,7 @@ for (let slider of sliders) {
   let view = new View(slider, {
     minMaxLabels: true,
     valueLabel: true,
-    vertical: true,
+    // vertical: true,
     range: true,
     scale: true,
     scaleIntervals: 5

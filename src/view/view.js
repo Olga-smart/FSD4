@@ -402,17 +402,17 @@ export class View {
     if (!this.vertical) {
       let leftOffsetInPx = x - trackCoords.left;
       let leftOffsetInPercents = leftOffsetInPx * 100 / trackCoords.width;
-      value = Math.round(leftOffsetInPercents * this.inputLeft.getMax() / 100);
+      value = Math.round(leftOffsetInPercents * (this.inputLeft.getMax() - this.inputLeft.getMin()) / 100 + +this.inputLeft.getMin());
     }
 
     if (this.vertical) {
       let topOffsetInPx = y - trackCoords.top;
       let topOffsetInPercents = topOffsetInPx * 100 / trackCoords.height;
       let bottomOffsetInPercents = 100 - topOffsetInPercents;
-      value = Math.round(bottomOffsetInPercents * this.inputLeft.getMax() / 100);
+      value = Math.round(bottomOffsetInPercents * (this.inputLeft.getMax() - this.inputLeft.getMin()) / 100 + +this.inputLeft.getMin());
     }    
 
-    if ( this.whichThumbIsNearer(value) == 'left' ) {
+    if ( this.whichThumbIsNearer(x, y) == 'left' ) {
       this.addSmoothTransition('left');
       this.presenter.handleLeftInput(value);
       setTimeout(() => {
@@ -427,19 +427,45 @@ export class View {
     }
   }
 
-  whichThumbIsNearer(value) {
-    let leftValue = this.inputLeft.getValue();
-    let rightValue = this.inputRight.getValue();
+  whichThumbIsNearer(x, y) {
+    let leftThumbCoords = this.thumbLeft.component.getBoundingClientRect();
+    let rightThumbCoords = this.thumbRight.component.getBoundingClientRect();
 
-    let distanceFromLeftValue = Math.abs(value - leftValue);
-    let distanceFromRightValue = Math.abs(value - rightValue);
+    let distanceFromLeftThumb;
+    let distanceFromRightThumb;
 
-    if (distanceFromLeftValue <= distanceFromRightValue) {
+    if (!this.vertical) {
+      distanceFromLeftThumb = Math.abs(x - leftThumbCoords.right);
+      distanceFromRightThumb = Math.abs(x - rightThumbCoords.left);
+    }
+
+    if (this.vertical) {
+      distanceFromLeftThumb = Math.abs(y - leftThumbCoords.top);
+      distanceFromRightThumb = Math.abs(y - rightThumbCoords.bottom);
+      console.log('From left: ' + distanceFromLeftThumb);
+      console.log('From right: ' + distanceFromRightThumb)
+    }
+
+    if (distanceFromLeftThumb <= distanceFromRightThumb) {
       return 'left';
     } else {
       return 'right';
     }
   }
+
+  // whichThumbIsNearer(value) {
+  //   let leftValue = this.inputLeft.getValue();
+  //   let rightValue = this.inputRight.getValue();
+
+  //   let distanceFromLeftValue = Math.abs(value - leftValue);
+  //   let distanceFromRightValue = Math.abs(value - rightValue);
+
+  //   if (distanceFromLeftValue <= distanceFromRightValue) {
+  //     return 'left';
+  //   } else {
+  //     return 'right';
+  //   }
+  // }
 
   addSmoothTransition(side = 'left') {
     if (side == 'left') {
