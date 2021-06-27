@@ -25,8 +25,6 @@ export class View {
     this.slider.append(this.track.component, this.range.component, this.thumbLeft.component);
     this.component.append(this.slider.component, this.inputLeft.component);
 
-    this.scaleIntervals = options.scaleIntervals;
-
     if (options.range) {
       this.inputRight = new Input('right');
       this.inputRight.registerWith(this);
@@ -43,6 +41,8 @@ export class View {
 
     if (options.scale) {
       this.hasScale = true;
+      this.scaleIntervals = options.scaleIntervals;
+
     } else {
       this.hasScale = false;
     }
@@ -395,8 +395,92 @@ export class View {
     }
   } 
 
+  handleScaleClick(x, y) {
+    let trackCoords = this.track.component.getBoundingClientRect();
+    let value;
+
+    if (!this.vertical) {
+      let leftOffsetInPx = x - trackCoords.left;
+      let leftOffsetInPercents = leftOffsetInPx * 100 / trackCoords.width;
+      value = Math.round(leftOffsetInPercents * this.inputLeft.getMax() / 100);
+    }
+
+    if (this.vertical) {
+      let topOffsetInPx = y - trackCoords.top;
+      let topOffsetInPercents = topOffsetInPx * 100 / trackCoords.height;
+      let bottomOffsetInPercents = 100 - topOffsetInPercents;
+      value = Math.round(bottomOffsetInPercents * this.inputLeft.getMax() / 100);
+      console.log(value);
+    }    
+
+    if ( this.whichThumbIsNearer(value) == 'left' ) {
+      this.addSmoothTransition('left');
+      this.presenter.handleLeftInput(value);
+      setTimeout(() => {
+        this.removeSmoothTransition('left');
+      }, 1000);
+    } else {
+      this.addSmoothTransition('right');
+      this.presenter.handleRightInput(value);
+      setTimeout(() => {
+        this.removeSmoothTransition('right');
+      }, 1000);
+    }
+  }
+
+  whichThumbIsNearer(value) {
+    let leftValue = this.inputLeft.getValue();
+    let rightValue = this.inputRight.getValue();
+
+    let distanceFromLeftValue = Math.abs(value - leftValue);
+    let distanceFromRightValue = Math.abs(value - rightValue);
+
+    if (distanceFromLeftValue <= distanceFromRightValue) {
+      return 'left';
+    } else {
+      return 'right';
+    }
+  }
+
+  addSmoothTransition(side = 'left') {
+    if (side == 'left') {
+      this.thumbLeft.component.classList.add('range-slider__thumb_smooth-transition');
+      this.range.component.classList.add('range-slider__range_smooth-transition');
+      if (this.valueLabelLeft) {
+        this.valueLabelLeft.component.classList.add('range-slider__value-label_smooth-transition');
+      }
+    }
+
+    if (side == 'right') {
+      this.thumbRight.component.classList.add('range-slider__thumb_smooth-transition');
+      this.range.component.classList.add('range-slider__range_smooth-transition');
+      if (this.valueLabelRight) {
+        this.valueLabelRight.component.classList.add('range-slider__value-label_smooth-transition');
+      }
+    }
+  }
+
+  removeSmoothTransition(side = 'left') {
+    if (side == 'left') {
+      this.thumbLeft.component.classList.remove('range-slider__thumb_smooth-transition');
+      this.range.component.classList.remove('range-slider__range_smooth-transition');
+      if (this.valueLabelLeft) {
+        this.valueLabelLeft.component.classList.remove('range-slider__value-label_smooth-transition');
+      }
+    }
+
+    if (side == 'right') {
+      this.thumbRight.component.classList.remove('range-slider__thumb_smooth-transition');
+      this.range.component.classList.remove('range-slider__range_smooth-transition');
+      if (this.valueLabelRight) {
+        this.valueLabelRight.component.classList.remove('range-slider__value-label_smooth-transition');
+      }
+    }
+  }
+
   addScale(min, max, intervalsNumber) {
     this.scale = new Scale(min, max, intervalsNumber);
+    this.scale.registerWith(this);
     this.component.append(this.scale.component);
   }
 }

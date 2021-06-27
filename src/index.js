@@ -14,10 +14,10 @@ for (let slider of sliders) {
   let view = new View(slider, {
     minMaxLabels: true,
     valueLabel: true,
-    vertical: false,
+    vertical: true,
     range: true,
     scale: true,
-    scaleIntervals: 10
+    scaleIntervals: 5
   });
   
   let presenter = new Presenter(model, view);

@@ -2,6 +2,7 @@ import {createElement} from '../../helpers/createElement.js';
 
 export class Scale {
   constructor(min, max, intervalsNumber = 4) {
+    this.view = null;
     this.component = createElement('div', 'range-slider__scale');
     this.min = min;
     this.max = max;
@@ -12,7 +13,12 @@ export class Scale {
     this.createIntervals();
     this.addMarksInIntervals();
     this.addValues();
+    this.attachEventHandlers();
   }    
+
+  registerWith(view) {
+    this.view = view;
+  }
 
   createIntervals() {
     for (let i = 0; i < this.intervalsNumber; i++) {
@@ -57,5 +63,11 @@ export class Scale {
       value.textContent = this.values[i];
       this.intervals[i-1].append(value); 
     }
+  }
+
+  attachEventHandlers() {
+    this.component.addEventListener('click', (event) => {
+      this.view.handleScaleClick(event.clientX, event.clientY);
+    });
   }
 }
