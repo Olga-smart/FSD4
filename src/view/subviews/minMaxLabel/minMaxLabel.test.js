@@ -62,7 +62,7 @@ describe('MinMaxLabel', function() {
         label.fixPositionForVertical();
 
         expect(label.component.style.transform).toStrictEqual(expect.stringContaining('rotate(90deg) translateX'));
-      })
+      });
 
     });
 

@@ -422,7 +422,7 @@ export class View {
         }, 1000);
       }
     }
-        
+
   }
 
   convertСlickСoordsToValue(x, y) {
@@ -470,20 +470,6 @@ export class View {
       return 'right';
     }
   }
-
-  // whichThumbIsNearer(value) {
-  //   let leftValue = this.inputLeft.getValue();
-  //   let rightValue = this.inputRight.getValue();
-
-  //   let distanceFromLeftValue = Math.abs(value - leftValue);
-  //   let distanceFromRightValue = Math.abs(value - rightValue);
-
-  //   if (distanceFromLeftValue <= distanceFromRightValue) {
-  //     return 'left';
-  //   } else {
-  //     return 'right';
-  //   }
-  // }
 
   addSmoothTransition(side = 'left') {
     if (side == 'left') {
