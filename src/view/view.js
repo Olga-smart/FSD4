@@ -18,6 +18,7 @@ export class View {
 
     this.slider = new Slider();
     this.track = new Track();
+    this.track.registerWith(this);
     this.range = new Range();
 
     this.thumbLeft = new Thumb('left');
@@ -396,6 +397,35 @@ export class View {
   } 
 
   handleScaleClick(x, y) {
+    let value = this.convertСlickСoordsToValue(x, y);
+
+    if (!this.isRange) {
+      this.addSmoothTransition('left');
+      this.presenter.handleLeftInput(value);
+      setTimeout(() => {
+        this.removeSmoothTransition('left');
+      }, 1000);
+    }
+
+    if (this.isRange) {
+      if ( this.whichThumbIsNearer(x, y) == 'left' ) {
+        this.addSmoothTransition('left');
+        this.presenter.handleLeftInput(value);
+        setTimeout(() => {
+          this.removeSmoothTransition('left');
+        }, 1000);
+      } else {
+        this.addSmoothTransition('right');
+        this.presenter.handleRightInput(value);
+        setTimeout(() => {
+          this.removeSmoothTransition('right');
+        }, 1000);
+      }
+    }
+        
+  }
+
+  convertСlickСoordsToValue(x, y) {
     let trackCoords = this.track.component.getBoundingClientRect();
     let value;
 
@@ -410,21 +440,9 @@ export class View {
       let topOffsetInPercents = topOffsetInPx * 100 / trackCoords.height;
       let bottomOffsetInPercents = 100 - topOffsetInPercents;
       value = Math.round(bottomOffsetInPercents * (this.inputLeft.getMax() - this.inputLeft.getMin()) / 100 + +this.inputLeft.getMin());
-    }    
+    } 
 
-    if ( this.whichThumbIsNearer(x, y) == 'left' ) {
-      this.addSmoothTransition('left');
-      this.presenter.handleLeftInput(value);
-      setTimeout(() => {
-        this.removeSmoothTransition('left');
-      }, 1000);
-    } else {
-      this.addSmoothTransition('right');
-      this.presenter.handleRightInput(value);
-      setTimeout(() => {
-        this.removeSmoothTransition('right');
-      }, 1000);
-    }
+    return value;
   }
 
   whichThumbIsNearer(x, y) {
