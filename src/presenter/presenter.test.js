@@ -61,6 +61,17 @@ describe('Presenter', function() {
         let presenter = new Presenter(model, view);
         expect(view.setStep).toBeCalledWith(model.step);
       });
+
+      it('add scale for view if it has scale', function() {
+        let model = new Model();
+        let view = new View(slider, {
+          scale: true
+        });
+        view.addScale = jest.fn();
+        let presenter = new Presenter(model, view);
+
+        expect(view.addScale).toBeCalledWith(model.min, model.max, view.scaleIntervals);
+      });
   
     });
   

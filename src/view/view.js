@@ -42,7 +42,7 @@ export class View {
 
     if (options.scale) {
       this.hasScale = true;
-      this.scaleIntervals = options.scaleIntervals;
+      this.scaleIntervals = options.scaleIntervals ?? 4;
 
     } else {
       this.hasScale = false;
@@ -396,6 +396,16 @@ export class View {
     }
   } 
 
+  addScale(min, max, intervalsNumber) {
+    this.scale = new Scale(min, max, intervalsNumber);
+    this.scale.registerWith(this);
+    this.component.append(this.scale.component);
+
+    if (this.vertical) {
+      this.scale.fixPositionForVertical();
+    }
+  }
+
   handleScaleClick(x, y) {
     let value = this.convertСlickСoordsToValue(x, y);
 
@@ -460,8 +470,6 @@ export class View {
     if (this.vertical) {
       distanceFromLeftThumb = Math.abs(y - leftThumbCoords.top);
       distanceFromRightThumb = Math.abs(y - rightThumbCoords.bottom);
-      console.log('From left: ' + distanceFromLeftThumb);
-      console.log('From right: ' + distanceFromRightThumb)
     }
 
     if (distanceFromLeftThumb <= distanceFromRightThumb) {
@@ -507,15 +515,7 @@ export class View {
     }
   }
 
-  addScale(min, max, intervalsNumber) {
-    this.scale = new Scale(min, max, intervalsNumber);
-    this.scale.registerWith(this);
-    this.component.append(this.scale.component);
-
-    if (this.vertical) {
-      this.scale.fixPositionForVertical();
-    }
-  }
+  
 }
 
 

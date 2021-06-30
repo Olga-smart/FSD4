@@ -56,6 +56,36 @@ describe('View', function() {
         expect(view).toHaveProperty('thumbRight');
       }); 
     });
+
+    it('set up hasScale property', function() {
+      expect(view).toHaveProperty('hasScale');
+    });
+
+    describe('set up scaleIntervals property if options.scale is true', function() {
+
+      it('4 by default', function() {
+        let slider = document.createElement('div');
+        let view = new View(slider, {
+          scale: true
+        });
+
+        expect(view.scaleIntervals).toBe(4);
+      });
+
+      it('certain number if options.scaleIntervals is set', function() {
+        let slider = document.createElement('div');
+
+        for (let i = 1; i < 25; i++) {
+          let view = new View(slider, {
+            scale: true,
+            scaleIntervals: i
+          });
+  
+          expect(view.scaleIntervals).toBe(i);
+        }
+      });
+      
+    });
     
     it('set up properties for min and max labels if options.minMaxLabels is true', function() {
       let slider = document.createElement('div');
@@ -1389,6 +1419,488 @@ describe('View', function() {
 
       view.handleInputMouseup('right');
       expect(view.thumbRight.makeInactive).toBeCalled();
+    });
+
+  });
+
+  describe('addScale(min, max, intervalsNumber)', function() {
+
+    let slider = document.createElement('div');
+    let view = new View(slider, {
+      scale: true
+    });
+    view.addScale(0, 150, 4);
+
+    it('set up scale property', function() {
+      expect(view).toHaveProperty('scale');
+    });    
+
+  });
+
+  describe('handleScaleClick(x, y)', function() {
+
+    it('call function to convert click coords to slider value', function() {
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        scale: true
+      });
+      let presenter = {};
+      view.registerWith(presenter);
+      view.presenter.handleLeftInput = jest.fn();
+      view.convertСlickСoordsToValue = jest.fn();
+      view.handleScaleClick(100, 100);
+
+      expect(view.convertСlickСoordsToValue).toBeCalledWith(100, 100);
+    });
+
+    describe('if !slider.isRange', function() {
+
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        scale: true,
+        valueLabel: true
+      });
+      let presenter = {};
+      view.registerWith(presenter);
+      view.presenter.handleLeftInput = jest.fn();
+      view.addSmoothTransition = jest.fn();
+      view.removeSmoothTransition = jest.fn();
+      view.handleScaleClick(100, 100);
+
+      it('call function to add smooth transition', function() {
+        expect(view.addSmoothTransition).toBeCalled();
+      });
+
+      it('call function to handle left input', function() {
+        expect(view.presenter.handleLeftInput).toBeCalled();
+      });
+
+    });
+
+    describe('if slider.isRange', function() {
+
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        scale: true,
+        valueLabel: true,
+        range: true
+      });
+      let presenter = {};
+      view.registerWith(presenter);
+      view.presenter.handleLeftInput = jest.fn();
+      view.presenter.handleRightInput = jest.fn();
+      view.addSmoothTransition = jest.fn();
+      view.removeSmoothTransition = jest.fn();
+      view.whichThumbIsNearer = jest.fn();
+      view.handleScaleClick(100, 100);
+
+      it('call function to check which thumb is nearer', function() {
+        expect(view.whichThumbIsNearer).toBeCalledWith(100, 100);
+      });
+
+      describe('if left thumb is nearer', function() {
+
+        view.whichThumbIsNearer = jest.fn();
+        view.whichThumbIsNearer.mockReturnValue('left');
+        view.handleScaleClick(100, 100);
+
+        it('call function to add smooth transition', function() {
+          expect(view.addSmoothTransition).toBeCalled();
+        });
+
+        it('call function to handle left input', function() {
+          expect(view.presenter.handleLeftInput).toBeCalled();
+        });
+
+      });
+
+      describe('if right thumb is nearer', function() {
+
+        view.whichThumbIsNearer = jest.fn();
+        view.whichThumbIsNearer.mockReturnValue('right');
+        view.handleScaleClick(100, 100);
+
+        it('call function to add smooth transition', function() {
+          expect(view.addSmoothTransition).toBeCalled();
+        });
+
+        it('call function to handle right input', function() {
+          expect(view.presenter.handleRightInput).toBeCalled();
+        });
+
+      });
+
+    });
+
+  });
+
+  describe('convertСlickСoordsToValue(x, y)', function() {
+
+    describe('if slider is horizontal', function() {
+
+      describe('if min = 0, max = 100', function() {
+
+        let slider = document.createElement('div');
+        let view = new View(slider, {
+          range: true,
+          vertical: false,
+          min: 0,
+          max: 100
+        });
+        view.track.component.getBoundingClientRect = jest.fn();
+        view.inputLeft.getMin = jest.fn();
+        view.inputLeft.getMax = jest.fn();
+        view.inputLeft.getMin.mockReturnValue(0);
+        view.inputLeft.getMax.mockReturnValue(100);
+
+        describe('if track width = 100, track left offset = 0', function() {
+   
+          it('if click on i px return i', function() {
+            view.track.component.getBoundingClientRect.mockReturnValue({
+              width: 100,
+              left: 0
+            });
+
+            for (let i = 0; i <= 100; i++) {
+              expect(view.convertСlickСoordsToValue(i, 100)).toBe(i);
+            }
+          });
+
+        });
+
+        describe('if track width = 200, track left offset = 0', function() {
+
+          it('if click on i px return Math.round(i/2)', function() {
+            view.track.component.getBoundingClientRect.mockReturnValue({
+              width: 200,
+              left: 0
+            });
+
+            for (let i = 0; i <= 200; i++) {
+              expect(view.convertСlickСoordsToValue(i, 100)).toBe( Math.round(i/2) );
+            }
+
+          });
+
+        });
+                  
+        describe('if track width = 300, track left offset = 0', function() {
+
+          it('if click on i px return Math.round(i/3)', function() {
+            view.track.component.getBoundingClientRect.mockReturnValue({
+              width: 300,
+              left: 0
+            });
+
+            for (let i = 0; i <= 300; i++) {
+              expect(view.convertСlickСoordsToValue(i, 100)).toBe( Math.round(i/3) );
+            }
+
+          });
+
+        });
+
+        describe('if track width = 100, track left offset > 0', function() {
+
+          it('if click on i px and track left offset = j return (i - j)', function() {
+            for (let i = 0, j = 0; i <= 100; i++, j++) {
+              view.track.component.getBoundingClientRect.mockReturnValue({
+                width: 100,
+                left: j
+              });
+
+              expect(view.convertСlickСoordsToValue(i, 100)).toBe(i - j);
+            }
+
+          });
+
+        });
+
+        describe('if track width = 200, track left offset > 0', function() {
+
+          it('if click on i px and track left offset = j return Math.round((i-j)/2)', function() {
+            for (let i = 0, j = 0; i <= 200; i++, j++) {
+              view.track.component.getBoundingClientRect.mockReturnValue({
+                width: 200,
+                left: j
+              });
+
+              expect(view.convertСlickСoordsToValue(i, 100)).toBe( Math.round( (i-j)/2 ) );
+            }
+
+          });
+
+        });
+
+        describe('if track width = 300, track left offset > 0', function() {
+
+          it('if click on i px and track left offset = j return Math.round((i-j)/3)', function() {
+            for (let i = 0, j = 0; i <= 300; i++, j++) {
+              view.track.component.getBoundingClientRect.mockReturnValue({
+                width: 300,
+                left: j
+              });
+
+              expect(view.convertСlickСoordsToValue(i, 100)).toBe( Math.round( (i-j)/3 ) );
+            }
+
+          });
+
+        });
+
+      });
+
+    });
+
+    describe('if slider is vertical', function() {
+
+      describe('if min = 0, max = 100', function() {
+
+        let slider = document.createElement('div');
+        let view = new View(slider, {
+          range: true,
+          vertical: true,
+          min: 0,
+          max: 100
+        });
+        view.track.component.getBoundingClientRect = jest.fn();
+        view.inputLeft.getMin = jest.fn();
+        view.inputLeft.getMax = jest.fn();
+        view.inputLeft.getMin.mockReturnValue(0);
+        view.inputLeft.getMax.mockReturnValue(100);
+
+        describe('if track height = 100, track top offset = 0', function() {
+   
+          it('if click on i px return (100 - i)', function() {
+            view.track.component.getBoundingClientRect.mockReturnValue({
+              height: 100,
+              top: 0
+            });
+
+            for (let i = 100; i >= 0; i--) {
+              expect(view.convertСlickСoordsToValue(100, i)).toBe(100 - i);
+            }
+          });
+
+        });
+
+        describe('if track height = 200, track top offset = 0', function() {
+
+          it('if click on i px return Math.round( (200-i)/2 )', function() {
+            view.track.component.getBoundingClientRect.mockReturnValue({
+              height: 200,
+              top: 0
+            });
+
+            for (let i = 200; i >= 0; i--) {
+              expect(view.convertСlickСoordsToValue(100, i)).toBe( Math.round( (200-i)/2 ) );
+            }
+
+          });
+
+        });
+                  
+        describe('if track height = 300, track top offset = 0', function() {
+
+          it('if click on i px return Math.round( (300-i)/3 )', function() {
+            view.track.component.getBoundingClientRect.mockReturnValue({
+              height: 300,
+              top: 0
+            });
+
+            for (let i = 300; i >= 0; i--) {
+              expect(view.convertСlickСoordsToValue(100, i)).toBe( Math.round( (300-i)/3 ) );
+            }
+
+          });
+
+        });
+
+        describe('if track height = 100, track top offset > 0', function() {
+
+          it('if click on i px and track top offset = j return (100 - i + j)', function() {
+            for (let i = 100, j = 0; i >= 100; i--, j++) {
+              view.track.component.getBoundingClientRect.mockReturnValue({
+                height: 100,
+                top: j
+              });
+
+              expect(view.convertСlickСoordsToValue(100, i)).toBe(100 - i + j);
+            }
+
+          });
+
+        });
+
+        describe('if track height = 200, track top offset > 0', function() {
+
+          it('if click on i px and track left offset = j return Math.round( (200-i+j)/2 )', function() {
+            for (let i = 200, j = 0; i >= 0; i--, j++) {
+              view.track.component.getBoundingClientRect.mockReturnValue({
+                height: 200,
+                top: j
+              });
+
+              expect(view.convertСlickСoordsToValue(100, i)).toBe( Math.round( (200-i+j)/2 ) );
+            }
+
+          });
+
+        });
+
+        describe('if track height = 300, track top offset > 0', function() {
+
+          it('if click on i px and track left offset = j return Math.round( (300-i+j)/3 )', function() {
+            for (let i = 0, j = 0; i <= 300; i++, j++) {
+              view.track.component.getBoundingClientRect.mockReturnValue({
+                height: 300,
+                top: j
+              });
+
+              expect(view.convertСlickСoordsToValue(100, i)).toBe( Math.round( (300-i+j)/3 ) );
+            }
+
+          });
+
+        });
+
+      });
+
+    });
+
+  });
+
+  describe('whichThumbIsNearer(x, y)', function() {
+
+    describe('if slider is horizontal', function() {
+
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        range: true,
+        vertical: false
+      });
+      view.thumbLeft.component.getBoundingClientRect = jest.fn();
+      view.thumbLeft.component.getBoundingClientRect.mockReturnValue({
+        right: 10
+      });
+      view.thumbRight.component.getBoundingClientRect = jest.fn();
+      view.thumbRight.component.getBoundingClientRect.mockReturnValue({
+        left: 20
+      });
+
+      it('if distance from both thumbs is equal return "left"', function() {
+        expect(view.whichThumbIsNearer(15, 0)).toBe('left'); 
+      });
+
+      it('if distance from left thumb is less return "left"', function() {
+        expect(view.whichThumbIsNearer(12, 0)).toBe('left'); 
+      });
+
+      it('if distance from right thumb is less return "right"', function() {
+        expect(view.whichThumbIsNearer(18, 0)).toBe('right'); 
+      });
+
+    });
+
+    describe('if slider is vertical', function() {
+
+      let slider = document.createElement('div');
+      let view = new View(slider, {
+        range: true,
+        vertical: true
+      });
+      view.thumbLeft.component.getBoundingClientRect = jest.fn();
+      view.thumbLeft.component.getBoundingClientRect.mockReturnValue({
+        top: 20
+      });
+      view.thumbRight.component.getBoundingClientRect = jest.fn();
+      view.thumbRight.component.getBoundingClientRect.mockReturnValue({
+        bottom: 10
+      });
+
+      it('if distance from both thumbs is equal return "left"', function() {
+        expect(view.whichThumbIsNearer(0, 25)).toBe('left'); 
+      });
+
+      it('if distance from left thumb is less return "left"', function() {
+        expect(view.whichThumbIsNearer(0, 22)).toBe('left'); 
+      });
+
+      it('if distance from right thumb is less return "right"', function() {
+        expect(view.whichThumbIsNearer(0, 12)).toBe('right'); 
+      });
+
+    });
+
+  });
+
+  describe('addSmoothTransition(side)', function() {
+
+    let slider = document.createElement('div');
+    let view = new View(slider, {
+      range: true,
+      valueLabel: true
+    });
+
+    it('add necessary classes to thumb, range and label if side = left', function() {
+      view.addSmoothTransition('left');
+
+      expect(view.thumbLeft.component.classList).toContain('range-slider__thumb_smooth-transition');
+      expect(view.range.component.classList).toContain('range-slider__range_smooth-transition');
+      expect(view.valueLabelLeft.component.classList).toContain('range-slider__value-label_smooth-transition');
+    });
+
+    it('add necessary classes to thumb, range and label if side = right', function() {
+      view.addSmoothTransition('right');
+
+      expect(view.thumbRight.component.classList).toContain('range-slider__thumb_smooth-transition');
+      expect(view.range.component.classList).toContain('range-slider__range_smooth-transition');
+      expect(view.valueLabelRight.component.classList).toContain('range-slider__value-label_smooth-transition');
+    });
+
+    it('add necessary classes to thumb, range and label by default', function() {
+      view.addSmoothTransition();
+
+      expect(view.thumbLeft.component.classList).toContain('range-slider__thumb_smooth-transition');
+      expect(view.range.component.classList).toContain('range-slider__range_smooth-transition');
+      expect(view.valueLabelLeft.component.classList).toContain('range-slider__value-label_smooth-transition');
+    });
+
+  });
+
+  describe('removeSmoothTransition(side)', function() {
+
+    let slider = document.createElement('div');
+    let view = new View(slider, {
+      range: true,
+      valueLabel: true
+    });
+
+    it('remove necessary classes to thumb, range and label if side = left', function() {
+      view.addSmoothTransition('left');
+      view.removeSmoothTransition('left');
+
+      expect(view.thumbLeft.component.classList).not.toContain('range-slider__thumb_smooth-transition');
+      expect(view.range.component.classList).not.toContain('range-slider__range_smooth-transition');
+      expect(view.valueLabelLeft.component.classList).not.toContain('range-slider__value-label_smooth-transition');
+    });
+
+    it('remove necessary classes to thumb, range and label if side = right', function() {
+      view.addSmoothTransition('right');
+      view.removeSmoothTransition('right');
+
+      expect(view.thumbRight.component.classList).not.toContain('range-slider__thumb_smooth-transition');
+      expect(view.range.component.classList).not.toContain('range-slider__range_smooth-transition');
+      expect(view.valueLabelRight.component.classList).not.toContain('range-slider__value-label_smooth-transition');
+    });
+
+    it('remove necessary classes to thumb, range and label by default', function() {
+      view.addSmoothTransition();
+      view.removeSmoothTransition();
+
+      expect(view.thumbLeft.component.classList).not.toContain('range-slider__thumb_smooth-transition');
+      expect(view.range.component.classList).not.toContain('range-slider__range_smooth-transition');
+      expect(view.valueLabelLeft.component.classList).not.toContain('range-slider__value-label_smooth-transition');
     });
 
   });
