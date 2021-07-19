@@ -1,4 +1,4 @@
-export function createElement(tag, className) {
+export function createElement(tag: string, className?: string): HTMLElement {
     const element = document.createElement(tag);
     if (className) {
     element.className = className; 

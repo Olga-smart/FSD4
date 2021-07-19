@@ -1,5 +1,11 @@
+import {Model} from '../model/model';
+import {View} from '../view/view';
+
 export class Presenter {
-    constructor(model, view) {  
+    model: Model;
+    view: View;
+
+    constructor(model: Model, view: View) {  
       this.model = model;
       this.view = view;
       
@@ -17,12 +23,12 @@ export class Presenter {
       }
     }
     
-    handleLeftInput(value) {
+    handleLeftInput(value: number): void {
       this.model.setLeftValue(value);
       this.view.setLeftValue(this.model.leftValue);
     }
     
-    handleRightInput(value) {
+    handleRightInput(value: number): void {
       this.model.setRightValue(value);
       this.view.setRightValue(this.model.rightValue);
     }

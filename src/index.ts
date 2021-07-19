@@ -1,11 +1,11 @@
 import './style.scss';
-import {Model} from './model/model.js';
-import {View} from './view/view.js';
-import {Presenter} from './presenter/presenter.js';
+import {Model} from './model/model';
+import {View} from './view/view';
+import {Presenter} from './presenter/presenter';
 
 let sliders = document.querySelectorAll('.js-range-slider');
 for (let slider of sliders) {
-  let model = new Model({
+  let model: Model = new Model({
     min: 10,
     max: 150,
     // leftValue: -100,
