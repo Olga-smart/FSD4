@@ -1,4 +1,4 @@
-export abstract class Label {
+export class Label {
   type: 'left' | 'right' | 'common';
   component: HTMLElement;
 

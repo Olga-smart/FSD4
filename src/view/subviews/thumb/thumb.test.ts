@@ -1,4 +1,4 @@
-import {Thumb} from "./thumb.js";
+import {Thumb} from "./thumb";
 
 describe('Thumb', function() {
 

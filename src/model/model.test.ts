@@ -1,4 +1,4 @@
-import {Model} from './model.js';
+import {Model} from './model';
 
 describe('Model', function() {
   
@@ -6,7 +6,7 @@ describe('Model', function() {
 
     describe('set up default values', function() {
 
-      let model;
+      let model: Model;
     
       beforeEach(() => {
         model = new Model();

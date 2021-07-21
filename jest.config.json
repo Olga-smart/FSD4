@@ -3,11 +3,13 @@
   "collectCoverage": true,
   "moduleFileExtensions": [
     "js",
-    "mjs"
+    "mjs",
+    "ts"
   ],
   "transform": {
     "^.+\\.js$": "babel-jest",
-    "^.+\\.mjs$": "babel-jest"
+    "^.+\\.mjs$": "babel-jest",   
+    "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
   },
   "preset": "jest-puppeteer"
 }

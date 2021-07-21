@@ -1,4 +1,5 @@
-import {Input} from "./input.js";
+import {Input} from "./input";
+import {View} from "../../view";
 
 describe('Input', function() {
 
@@ -29,7 +30,7 @@ describe('Input', function() {
     });
 
     it('set up type = range', function() {
-      expect(input.component.type).toBe('range');
+      expect((input.component as HTMLInputElement).type).toBe('range');
     });
 
   });
@@ -37,7 +38,7 @@ describe('Input', function() {
   describe('registerWith(view)', function() {
 
     let input = new Input();
-    let view = {};
+    let view: any = {};
     input.registerWith(view);
 
     it('set up view', function() {
@@ -138,68 +139,68 @@ describe('Input', function() {
 
     it('handle left input', function() {
       let input = new Input();
-      let view = {};
+      let view: any = {};
       input.registerWith(view);
-      input.view.handleLeftInput = jest.fn();
+      input.view!.handleLeftInput = jest.fn();
       let event = new Event('input');
       input.component.dispatchEvent(event);
   
-      expect(input.view.handleLeftInput).toBeCalledWith(input.component.value);
+      expect(input.view!.handleLeftInput).toBeCalledWith(+(input.component as HTMLInputElement).value);
     });
 
     it('handle right input', function() {
       let input = new Input('right');
-      let view = {};
+      let view: any = {};
       input.registerWith(view);
-      input.view.handleRightInput = jest.fn();
+      input.view!.handleRightInput = jest.fn();
       let event = new Event('input');
       input.component.dispatchEvent(event);
   
-      expect(input.view.handleRightInput).toBeCalledWith(input.component.value);
+      expect(input.view!.handleRightInput).toBeCalledWith(+(input.component as HTMLInputElement).value);
     });
 
     it('handle mouseover', function() {
       let input = new Input('right');
-      let view = {};
+      let view: any = {};
       input.registerWith(view);
-      input.view.handleInputMouseover = jest.fn();
+      input.view!.handleInputMouseover = jest.fn();
       let event = new Event('mouseover');
       input.component.dispatchEvent(event);
 
-      expect(input.view.handleInputMouseover).toBeCalledWith(input.type);
+      expect(input.view!.handleInputMouseover).toBeCalledWith(input.type);
     });
 
     it('handle mouseout', function() {
       let input = new Input('right');
-      let view = {};
+      let view: any = {};
       input.registerWith(view);
-      input.view.handleInputMouseout = jest.fn();
+      input.view!.handleInputMouseout = jest.fn();
       let event = new Event('mouseout');
       input.component.dispatchEvent(event);
 
-      expect(input.view.handleInputMouseout).toBeCalledWith(input.type);
+      expect(input.view!.handleInputMouseout).toBeCalledWith(input.type);
     });
 
     it('handle mousedown', function() {
       let input = new Input('right');
-      let view = {};
+      let view: any = {};
       input.registerWith(view);
-      input.view.handleInputMousedown = jest.fn();
+      input.view!.handleInputMousedown = jest.fn();
       let event = new Event('mousedown');
       input.component.dispatchEvent(event);
 
-      expect(input.view.handleInputMousedown).toBeCalledWith(input.type);
+      expect(input.view!.handleInputMousedown).toBeCalledWith(input.type);
     });
 
     it('handle mouseup', function() {
       let input = new Input('right');
-      let view = {};
+      let view: any = {};
       input.registerWith(view);
-      input.view.handleInputMouseup = jest.fn();
+      input.view!.handleInputMouseup = jest.fn();
       let event = new Event('mouseup');
       input.component.dispatchEvent(event);
 
-      expect(input.view.handleInputMouseup).toBeCalledWith(input.type);
+      expect(input.view!.handleInputMouseup).toBeCalledWith(input.type);
     });
     
   });

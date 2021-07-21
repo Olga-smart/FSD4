@@ -1,5 +1,5 @@
-import { experiments } from "webpack";
-import {ValueLabel} from "./valueLabel.js";
+// import { experiments } from "webpack";
+import {ValueLabel} from "./valueLabel";
 
 describe('ValueLabel', function() {
 

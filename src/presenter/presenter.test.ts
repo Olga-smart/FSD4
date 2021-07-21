@@ -1,11 +1,11 @@
-import {Model} from '../model/model.js';
-import {View} from '../view/view.js';
-import {Presenter} from './presenter.js';
+import {Model} from '../model/model';
+import {View} from '../view/view';
+import {Presenter} from './presenter';
 
 describe('Presenter', function() {
 
-    jest.mock('../model/model.js');
-    jest.mock('../view/view.js');
+    jest.mock('../model/model');
+    jest.mock('../view/view');
   
     let slider = document.createElement('div');
     let model = new Model();

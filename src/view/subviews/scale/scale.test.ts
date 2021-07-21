@@ -1,5 +1,5 @@
-import { values } from "regenerator-runtime";
-import {Scale} from "./scale.js";
+// import { values } from "regenerator-runtime";
+import {Scale} from "./scale";
 
 describe('Scale', function() {
 
@@ -58,7 +58,7 @@ describe('Scale', function() {
   describe('registerWith(view)', function() {
 
     let scale = new Scale(0, 150, 4);
-    let view = {};
+    let view: any = {};
     scale.registerWith(view);
 
     it('set up view', function() {
@@ -190,13 +190,13 @@ describe('Scale', function() {
 
     it('handle click', function() {
       let scale = new Scale(0, 150, 4);
-      let view = {};
+      let view: any = {};
       scale.registerWith(view);
-      scale.view.handleScaleClick = jest.fn();
+      scale.view!.handleScaleClick = jest.fn();
       let event = new Event('click');
       scale.component.dispatchEvent(event);
 
-      expect(scale.view.handleScaleClick).toBeCalledWith(event.clientX, event.clientY);
+      expect(scale.view!.handleScaleClick).toBeCalledWith((event as MouseEvent).clientX, (event as MouseEvent).clientY);
     });
 
   });

@@ -1,4 +1,4 @@
-import {Track} from "./track.js";
+import {Track} from "./track";
 
 describe('Track', function() {
 
@@ -19,7 +19,7 @@ describe('Track', function() {
   describe('registerWith(view)', function() {
 
     let track = new Track();
-    let view = {};
+    let view: any = {};
     track.registerWith(view);
 
     it('set up view', function() {
@@ -32,13 +32,13 @@ describe('Track', function() {
 
     it('handle click', function() {
       let track = new Track();
-      let view = {};
+      let view: any = {};
       track.registerWith(view);
-      track.view.handleScaleClick = jest.fn();
+      track.view!.handleScaleClick = jest.fn();
       let event = new Event('click');
       track.component.dispatchEvent(event);
 
-      expect(track.view.handleScaleClick).toBeCalledWith(event.clientX, event.clientY);
+      expect(track.view!.handleScaleClick).toBeCalledWith((event as MouseEvent).clientX, (event as MouseEvent).clientY);
     });
 
   });

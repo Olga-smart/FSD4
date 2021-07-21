@@ -1,4 +1,4 @@
-import {View} from './view.js';
+import {View} from './view';
 import puppeteer from "puppeteer";
 import regeneratorRuntime from "regenerator-runtime";
 
@@ -18,9 +18,11 @@ describe('View', function() {
     });
 
     describe('set up properties for inputs', function() {
+
       it('set up left input', function() {
         expect(view).toHaveProperty('inputLeft');
       })
+
       it('set up right input if necessary', function() {
         let slider = document.createElement('div');
         let view = new View(slider, {
@@ -28,7 +30,8 @@ describe('View', function() {
         });
 
         expect(view).toHaveProperty('inputRight');
-      }); 
+      });
+
     });
     
     it('set up slider property', function() {
@@ -44,9 +47,11 @@ describe('View', function() {
     });
     
     describe('set up properties for thumbs', function() {
+
       it('set up left thumb', function() {
         expect(view).toHaveProperty('thumbLeft');
       })
+
       it('set up right thumb if necessary', function() {
         let slider = document.createElement('div');
         let view = new View(slider, {
@@ -55,6 +60,7 @@ describe('View', function() {
 
         expect(view).toHaveProperty('thumbRight');
       }); 
+
     });
 
     it('set up hasScale property', function() {
@@ -108,6 +114,7 @@ describe('View', function() {
     });
     
     describe('set up properties for value labels if options.valueLabel is true', function() {
+
       let slider = document.createElement('div');
       let view = new View(slider, {
         valueLabel: true
@@ -126,10 +133,12 @@ describe('View', function() {
 
         expect(view).toHaveProperty('valueLabelRight');
         expect(view).toHaveProperty('valueLabelCommon');
-      });    
+      });   
+
     });
     
     it('do not set up properties for value labels if options.valueLabel is false', function() {
+
       let slider = document.createElement('div');
       let view = new View(slider, {
         valueLabel: false
@@ -138,6 +147,7 @@ describe('View', function() {
       expect(view).not.toHaveProperty('valueLabelLeft');
       expect(view).not.toHaveProperty('valueLabelRight');
       expect(view).not.toHaveProperty('valueLabelCommon');
+
     });
     
     it('set up vertical property of options.vertical is true', function() {
@@ -164,7 +174,7 @@ describe('View', function() {
       
     let slider = document.createElement('div');
     let view = new View(slider);
-    let presenter = {};
+    let presenter: any = {};
     view.registerWith(presenter);
 
     it('set up presenter', function() {

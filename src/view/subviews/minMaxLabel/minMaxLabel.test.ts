@@ -1,4 +1,4 @@
-import {MinMaxLabel} from './minMaxLabel.js';
+import {MinMaxLabel} from './minMaxLabel';
 
 describe('MinMaxLabel', function() {
 
