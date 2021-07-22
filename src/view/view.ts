@@ -309,8 +309,8 @@ export class View {
     
     // TODO: срабатывает через раз
     if (this.vertical) {
-      let bottomLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().top;
-      let topLabelEdge = this.valueLabelRight.component.getBoundingClientRect().bottom;
+      let bottomLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
+      let topLabelEdge = this.valueLabelRight.getBoundingClientRect().bottom;
       
       return ( (bottomLabelEdge - topLabelEdge) < 3 ); 
     }
@@ -334,15 +334,15 @@ export class View {
     let minLabelEdge;
     
     if (!this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().left;
-      minLabelEdge = this.minLabel.component.getBoundingClientRect().right;
+      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().left;
+      minLabelEdge = this.minLabel.getBoundingClientRect().right;
 
       return ( (leftLabelEdge - minLabelEdge) < 3 );
     }
     
     if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().bottom;
-      minLabelEdge = this.minLabel.component.getBoundingClientRect().top;
+      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().bottom;
+      minLabelEdge = this.minLabel.getBoundingClientRect().top;
       
       return ( (minLabelEdge - leftLabelEdge) < 3 );
     }    
@@ -353,15 +353,15 @@ export class View {
     let maxLabelEdge;
 
     if (!this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().right;
-      maxLabelEdge = this.maxLabel.component.getBoundingClientRect().left;
+      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
+      maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
 
       return ( (maxLabelEdge - leftLabelEdge) < 3 );
     }
 
     if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel.component.getBoundingClientRect().bottom;
+      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel.getBoundingClientRect().bottom;
       
       return ( (leftLabelEdge - maxLabelEdge) < 3 );
     } 
@@ -372,15 +372,15 @@ export class View {
     let maxLabelEdge;
     
     if (!this.vertical) {
-      rightLabelEdge = this.valueLabelRight.component.getBoundingClientRect().right;
-      maxLabelEdge = this.maxLabel.component.getBoundingClientRect().left;
+      rightLabelEdge = this.valueLabelRight.getBoundingClientRect().right;
+      maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
 
       return ( (maxLabelEdge - rightLabelEdge) < 3 );
     }
     
     if (this.vertical) {
-      rightLabelEdge = this.valueLabelRight.component.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel.component.getBoundingClientRect().bottom;
+      rightLabelEdge = this.valueLabelRight.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel.getBoundingClientRect().bottom;
 
       return ( (rightLabelEdge - maxLabelEdge) < 3 );
     }    
@@ -490,8 +490,8 @@ export class View {
   }
 
   whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
-    let leftThumbCoords = this.thumbLeft.component.getBoundingClientRect();
-    let rightThumbCoords = this.thumbRight.component.getBoundingClientRect();
+    let leftThumbCoords = this.thumbLeft.getBoundingClientRect();
+    let rightThumbCoords = this.thumbRight.getBoundingClientRect();
 
     let distanceFromLeftThumb: number = 0;
     let distanceFromRightThumb: number = 0;

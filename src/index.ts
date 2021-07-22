@@ -18,8 +18,8 @@ for (let slider of sliders) {
     valueLabel: true,
     // vertical: true,
     range: true,
-    // scale: true,
-    // scaleIntervals: 5
+    scale: true,
+    scaleIntervals: 5
   });
   
   let presenter = new Presenter(model, view);
