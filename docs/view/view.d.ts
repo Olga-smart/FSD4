@@ -8,6 +8,8 @@ import { ValueLabel } from './subviews/valueLabel/valueLabel';
 import { Scale } from './subviews/scale/scale';
 import { Presenter } from '../presenter/presenter';
 declare type ViewOptions = {
+    min?: number;
+    max?: number;
     minMaxLabels?: boolean;
     valueLabel?: boolean;
     vertical?: boolean;

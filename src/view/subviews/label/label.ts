@@ -13,7 +13,7 @@ export class Label {
 
   setValue(value: number | string): void {
     this.component.textContent = `${value}`;
-  }
+  } 
 
   getBoundingClientRect(): DOMRect {
     return this.component.getBoundingClientRect();

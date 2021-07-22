@@ -10,7 +10,8 @@
     "start": "cross-env NODE_ENV=development webpack serve --mode development --open",
     "test": "jest --detectOpenHandles",
     "testvaluelabel": "jest --detectOpenHandles src/view/subviews/valuelabel",
-    "testview": "jest --detectOpenHandles src/view/view.test.ts"
+    "testview": "jest --detectOpenHandles src/view/view.test.ts",
+    "testview1": "jest --detectOpenHandles src/view/view1.test.ts"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.14.5",
     "@types/jest": "^26.0.24",
+    "@types/jest-environment-puppeteer": "^4.4.1",
+    "@types/regenerator-runtime": "^0.13.1",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^7.0.0",
     "cross-env": "^7.0.3",

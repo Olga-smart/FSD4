@@ -6,15 +6,17 @@ import {Thumb} from './subviews/thumb/thumb';
 import {MinMaxLabel} from './subviews/minMaxLabel/minMaxLabel';
 import {ValueLabel} from './subviews/valueLabel/valueLabel';
 import {Scale} from './subviews/scale/scale';
-import { Presenter } from '../presenter/presenter';
+import {Presenter} from '../presenter/presenter';
 
 type ViewOptions = {
+  min?: number,
+  max?: number,
   minMaxLabels?: boolean,
   valueLabel?: boolean,
   vertical?: boolean,
   range?: boolean,
   scale?: boolean,
-  scaleIntervals?: number
+  scaleIntervals?: number  
 }
 
 export class View {
@@ -300,13 +302,15 @@ export class View {
       let leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
       let rightLabelEdge = this.valueLabelRight.getBoundingClientRect().left;
 
+      console.log(this.valueLabelRight.getBoundingClientRect());
+
       return ( (rightLabelEdge - leftLabelEdge) < 3 ); 
     }
     
     // TODO: срабатывает через раз
     if (this.vertical) {
-      let bottomLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
-      let topLabelEdge = this.valueLabelRight.getBoundingClientRect().bottom;
+      let bottomLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().top;
+      let topLabelEdge = this.valueLabelRight.component.getBoundingClientRect().bottom;
       
       return ( (bottomLabelEdge - topLabelEdge) < 3 ); 
     }
@@ -330,15 +334,15 @@ export class View {
     let minLabelEdge;
     
     if (!this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().left;
-      minLabelEdge = this.minLabel.getBoundingClientRect().right;
+      leftLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().left;
+      minLabelEdge = this.minLabel.component.getBoundingClientRect().right;
 
       return ( (leftLabelEdge - minLabelEdge) < 3 );
     }
     
     if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().bottom;
-      minLabelEdge = this.minLabel.getBoundingClientRect().top;
+      leftLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().bottom;
+      minLabelEdge = this.minLabel.component.getBoundingClientRect().top;
       
       return ( (minLabelEdge - leftLabelEdge) < 3 );
     }    
@@ -349,15 +353,15 @@ export class View {
     let maxLabelEdge;
 
     if (!this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
-      maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
+      leftLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().right;
+      maxLabelEdge = this.maxLabel.component.getBoundingClientRect().left;
 
       return ( (maxLabelEdge - leftLabelEdge) < 3 );
     }
 
     if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel.getBoundingClientRect().bottom;
+      leftLabelEdge = this.valueLabelLeft.component.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel.component.getBoundingClientRect().bottom;
       
       return ( (leftLabelEdge - maxLabelEdge) < 3 );
     } 
@@ -368,15 +372,15 @@ export class View {
     let maxLabelEdge;
     
     if (!this.vertical) {
-      rightLabelEdge = this.valueLabelRight.getBoundingClientRect().right;
-      maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
+      rightLabelEdge = this.valueLabelRight.component.getBoundingClientRect().right;
+      maxLabelEdge = this.maxLabel.component.getBoundingClientRect().left;
 
       return ( (maxLabelEdge - rightLabelEdge) < 3 );
     }
     
     if (this.vertical) {
-      rightLabelEdge = this.valueLabelRight.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel.getBoundingClientRect().bottom;
+      rightLabelEdge = this.valueLabelRight.component.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel.component.getBoundingClientRect().bottom;
 
       return ( (rightLabelEdge - maxLabelEdge) < 3 );
     }    

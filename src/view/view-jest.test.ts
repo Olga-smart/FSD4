@@ -1,6 +1,5 @@
 import {View} from './view';
-import puppeteer from "puppeteer";
-import regeneratorRuntime from "regenerator-runtime";
+import {Presenter} from '../presenter/presenter';
 
 describe('View', function() {
   
@@ -278,7 +277,7 @@ describe('View', function() {
     
   });
   
-  describe('setLeftValue(value) - Jest', function() {
+  describe('setLeftValue(value)', function() {
     
     let slider = document.createElement('div');
     let view = new View(slider);
@@ -430,141 +429,7 @@ describe('View', function() {
     
   });
 
-  describe.skip('setLeftValue(value) - Puppeteer', function() {
-
-    it('when left thumb is being dragged, value of left input is being changed', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const inputValueBefore = await page.evaluate('document.querySelector(".range-slider__input_left").getAttribute("value")');
-      const leftThumb = await page.$('.range-slider__thumb_left');
-      const box = await leftThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x + 100, y);
-      await page.mouse.up();
-      const inputValueAfter = await page.evaluate('document.querySelector(".range-slider__input_left").getAttribute("value")');
-      expect(inputValueBefore).not.toBe(inputValueAfter);
-      await browser.close();
-    });
-
-    it('when left thumb is being dragged, it`s position is being changed', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const leftThumb = await page.$('.range-slider__thumb_left');
-      const boxBefore = await leftThumb.boundingBox();
-      const x = boxBefore.x + boxBefore.width / 2;
-      const y = boxBefore.y + boxBefore.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x + 100, y);
-      await page.mouse.up();
-      const boxAfter = await leftThumb.boundingBox();
-      expect(boxBefore.x).not.toBe(boxAfter.x);
-      await browser.close();
-    });
-
-    it('when left thumb is being dragged, position of left value label is being changed', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const leftValueLabelPositionBefore = await page.evaluate('document.querySelector(".range-slider__value-label_left").getBoundingClientRect().x');
-      const leftThumb = await page.$('.range-slider__thumb_left');
-      const box = await leftThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x + 100, y);
-      await page.mouse.up();
-      const leftValueLabelPositionAfter = await page.evaluate('document.querySelector(".range-slider__value-label_left").getBoundingClientRect().x');
-      expect(leftValueLabelPositionBefore).not.toBe(leftValueLabelPositionAfter);
-      await browser.close();
-    }, 10000);
-
-    it('when left thumb is being dragged, text in left value label is being changed', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const leftValueLabelTextBefore = await page.evaluate('document.querySelector(".range-slider__value-label_left").textContent');
-      const leftThumb = await page.$('.range-slider__thumb_left');
-      const box = await leftThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x + 100, y);
-      await page.mouse.up();
-      const leftValueLabelTextAfter = await page.evaluate('document.querySelector(".range-slider__value-label_left").textContent');
-      expect(leftValueLabelTextBefore).not.toBe(leftValueLabelTextAfter);
-      await browser.close();
-    }, 10000);
-
-    it('when 2 value labels get too close, they merge', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      let leftValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_left").style.opacity');
-      let commonValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_common").style.opacity');
-      const leftThumb = await page.$('.range-slider__thumb_left');
-      const box = await leftThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x + 150, y);
-      await page.mouse.up();
-      expect(leftValueLabelOpacity).toBe('0');
-      expect(commonValueLabelOpacity).toBe('1');
-      await browser.close();
-    }, 10000);
-
-    // TODO: не работает тест
-    it('when 2 value labels get too close and then get too far, they split', async function() {
-      // const browser = await puppeteer.launch();
-      // const page = await browser.newPage();
-      // await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      // const leftThumb = await page.$('.range-slider__thumb_left');
-      // const box = await leftThumb.boundingBox();
-      // const x = box.x + box.width / 2;
-      // const y = box.y + box.height / 2;
-      // await page.mouse.move(x, y);
-      // await page.mouse.down();
-      // await page.mouse.move(x + 150, y);
-      // await page.mouse.up();
-      // await page.mouse.down();
-      // await page.mouse.move(x, y);
-      // await page.mouse.up();
-      // const leftValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_left").style.opacity');
-      // const commonValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_common").style.opacity');
-      // expect(leftValueLabelOpacity).toBe('1');
-      // expect(commonValueLabelOpacity).toBe('0');
-      // await browser.close();
-    }, 10000);
-
-    it('when left value label gets too close to min label, min label hides', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const leftThumb = await page.$('.range-slider__thumb_left');
-      const box = await leftThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x - 50, y);
-      await page.mouse.up();
-      const minLabelOpacity = await page.evaluate('document.querySelector(".range-slider__min-max-label_left").style.opacity');
-      expect(minLabelOpacity).toBe('0');
-      await browser.close();
-    }, 10000);
-
-  });
-
-  describe('setRightValue(value) - Jest', function() {
+  describe('setRightValue(value)', function() {
     
     let slider = document.createElement('div');
     let view = new View(slider, {
@@ -671,140 +536,6 @@ describe('View', function() {
 
     });  
     
-  });
-
-  describe.skip('setRightValue(value) - Puppeteer', function() {
-
-    it('when right thumb is being dragged, value of right input is being changed', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const inputValueBefore = await page.evaluate('document.querySelector(".range-slider__input_right").getAttribute("value")');
-      const rightThumb = await page.$('.range-slider__thumb_right');
-      const box = await rightThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x - 100, y);
-      await page.mouse.up();
-      const inputValueAfter = await page.evaluate('document.querySelector(".range-slider__input_right").getAttribute("value")');
-      expect(inputValueBefore).not.toBe(inputValueAfter);
-      await browser.close();
-    });
-
-    it('when right thumb is being dragged, it`s position is being changed', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const rightThumb = await page.$('.range-slider__thumb_right');
-      const boxBefore = await rightThumb.boundingBox();
-      const x = boxBefore.x + boxBefore.width / 2;
-      const y = boxBefore.y + boxBefore.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x - 100, y);
-      await page.mouse.up();
-      const boxAfter = await rightThumb.boundingBox();
-      expect(boxBefore.x).not.toBe(boxAfter.x);
-      await browser.close();
-    });
-
-    it('when right thumb is being dragged, position of right value label is being changed', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const rightValueLabelPositionBefore = await page.evaluate('document.querySelector(".range-slider__value-label_right").getBoundingClientRect().x');
-      const rightThumb = await page.$('.range-slider__thumb_right');
-      const box = await rightThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x - 100, y);
-      await page.mouse.up();
-      const rightValueLabelPositionAfter = await page.evaluate('document.querySelector(".range-slider__value-label_right").getBoundingClientRect().x');
-      expect(rightValueLabelPositionBefore).not.toBe(rightValueLabelPositionAfter);
-      await browser.close();
-    }, 10000);
-
-    it('when right thumb is being dragged, text in right value label is being changed', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const rightValueLabelTextBefore = await page.evaluate('document.querySelector(".range-slider__value-label_right").textContent');
-      const rightThumb = await page.$('.range-slider__thumb_right');
-      const box = await rightThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x - 100, y);
-      await page.mouse.up();
-      const rightValueLabelTextAfter = await page.evaluate('document.querySelector(".range-slider__value-label_right").textContent');
-      expect(rightValueLabelTextBefore).not.toBe(rightValueLabelTextAfter);
-      await browser.close();
-    }, 10000);
-
-    it('when 2 value labels get too close, they merge', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      let rightValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_right").style.opacity');
-      let commonValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_common").style.opacity');
-      const rightThumb = await page.$('.range-slider__thumb_right');
-      const box = await rightThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x - 150, y);
-      await page.mouse.up();
-      expect(rightValueLabelOpacity).toBe('0');
-      expect(commonValueLabelOpacity).toBe('1');
-      await browser.close();
-    }, 10000);
-
-    // TODO: не работает тест
-    it('when 2 value labels get too close and then get too far, they split', async function() {
-      // const browser = await puppeteer.launch();
-      // const page = await browser.newPage();
-      // await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      // const leftThumb = await page.$('.range-slider__thumb_left');
-      // const box = await leftThumb.boundingBox();
-      // const x = box.x + box.width / 2;
-      // const y = box.y + box.height / 2;
-      // await page.mouse.move(x, y);
-      // await page.mouse.down();
-      // await page.mouse.move(x + 150, y);
-      // await page.mouse.up();
-      // await page.mouse.down();
-      // await page.mouse.move(x, y);
-      // await page.mouse.up();
-      // const leftValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_left").style.opacity');
-      // const commonValueLabelOpacity = await page.evaluate('document.querySelector(".range-slider__value-label_common").style.opacity');
-      // expect(leftValueLabelOpacity).toBe('1');
-      // expect(commonValueLabelOpacity).toBe('0');
-      // await browser.close();
-    }, 10000);
-
-    it('when right value label gets too close to max label, max label hides', async function() {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto('file:///C:/Users/%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0/Documents/%D0%A3%D1%87%D0%B5%D0%B1%D0%B0/%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0/FSD_4/docs/index.html');
-      const rightThumb = await page.$('.range-slider__thumb_right');
-      const box = await rightThumb.boundingBox();
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x + 150, y);
-      await page.mouse.up();
-      const maxLabelOpacity = await page.evaluate('document.querySelector(".range-slider__min-max-label_right").style.opacity');
-      expect(maxLabelOpacity).toBe('0');
-      await browser.close();
-    }, 10000);
-
   });
   
   describe('setThumbLeftPosition(value)', function() {
@@ -957,14 +688,14 @@ describe('View', function() {
         vertical: false,
         range: true
       });
-      view.valueLabelLeft.getBoundingClientRect = jest.fn();
-      view.valueLabelRight.getBoundingClientRect = jest.fn();
+      view.valueLabelLeft.component.getBoundingClientRect = jest.fn();
+      view.valueLabelRight.component.getBoundingClientRect = jest.fn();
 
       it('return true if distance between 2 labels is < than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           right: 50
         });        
-        view.valueLabelRight.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 52
         });
 
@@ -972,10 +703,10 @@ describe('View', function() {
       });
 
       it('return false if distance between 2 labels is > than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           right: 50
         });        
-        view.valueLabelRight.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 55
         });
 
@@ -992,14 +723,14 @@ describe('View', function() {
         vertical: true,
         range: true
       });
-      view.valueLabelLeft.getBoundingClientRect = jest.fn();
-      view.valueLabelRight.getBoundingClientRect = jest.fn();
+      view.valueLabelLeft.component.getBoundingClientRect = jest.fn();
+      view.valueLabelRight.component.getBoundingClientRect = jest.fn();
 
       it('return true if distance between 2 labels is < than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 52
         });        
-        view.valueLabelRight.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           bottom: 50
         });
 
@@ -1007,10 +738,10 @@ describe('View', function() {
       });
 
       it('return false if distance between 2 labels is > than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 55
         });        
-        view.valueLabelRight.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           bottom: 50
         });
 
@@ -1079,14 +810,14 @@ describe('View', function() {
         minMaxLabels: true,
         vertical: false
       });
-      view.valueLabelLeft.getBoundingClientRect = jest.fn();
-      view.minLabel.getBoundingClientRect= jest.fn();
+      view.valueLabelLeft.component.getBoundingClientRect = jest.fn();
+      view.minLabel.component.getBoundingClientRect= jest.fn();
 
       it('return true if distance between 2 labels is < than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 52
         });
-        view.minLabel.getBoundingClientRect.mockReturnValue({
+        (view.minLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           right: 50
         });
 
@@ -1094,10 +825,10 @@ describe('View', function() {
       });
 
       it('return false if distance between 2 labels is > than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 55
         });
-        view.minLabel.getBoundingClientRect.mockReturnValue({
+        (view.minLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           right: 50
         });
 
@@ -1114,14 +845,14 @@ describe('View', function() {
         minMaxLabels: true,
         vertical: true
       });
-      view.valueLabelLeft.getBoundingClientRect = jest.fn();
-      view.minLabel.getBoundingClientRect= jest.fn();
+      view.valueLabelLeft.component.getBoundingClientRect = jest.fn();
+      view.minLabel.component.getBoundingClientRect= jest.fn();
 
       it('return true if distance between 2 labels is < than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           bottom: 50
         });
-        view.minLabel.getBoundingClientRect.mockReturnValue({
+        (view.minLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 52
         });
 
@@ -1129,10 +860,10 @@ describe('View', function() {
       });
 
       it('return false if distance between 2 labels is > than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           bottom: 50
         });
-        view.minLabel.getBoundingClientRect.mockReturnValue({
+        (view.minLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 55
         });
 
@@ -1153,14 +884,14 @@ describe('View', function() {
         minMaxLabels: true,
         vertical: false
       });
-      view.valueLabelLeft.getBoundingClientRect = jest.fn();
-      view.maxLabel.getBoundingClientRect= jest.fn();
+      view.valueLabelLeft.component.getBoundingClientRect = jest.fn();
+      view.maxLabel.component.getBoundingClientRect= jest.fn();
 
       it('return true if distance between 2 labels is < than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           right: 50
         });
-        view.maxLabel.getBoundingClientRect.mockReturnValue({
+        (view.maxLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 52
         });
 
@@ -1168,10 +899,10 @@ describe('View', function() {
       });
 
       it('return false if distance between 2 labels is > than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           right: 50
         });
-        view.maxLabel.getBoundingClientRect.mockReturnValue({
+        (view.maxLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 55
         });
 
@@ -1188,14 +919,14 @@ describe('View', function() {
         minMaxLabels: true,
         vertical: true
       });
-      view.valueLabelLeft.getBoundingClientRect = jest.fn();
-      view.maxLabel.getBoundingClientRect= jest.fn();
+      view.valueLabelLeft.component.getBoundingClientRect = jest.fn();
+      view.maxLabel.component.getBoundingClientRect= jest.fn();
 
       it('return true if distance between 2 labels is < than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 52
         });
-        view.maxLabel.getBoundingClientRect.mockReturnValue({
+        (view.maxLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           bottom: 50
         });
 
@@ -1203,10 +934,10 @@ describe('View', function() {
       });
 
       it('return false if distance between 2 labels is > than 3 px', function() {
-        view.valueLabelLeft.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 55
         });
-        view.maxLabel.getBoundingClientRect.mockReturnValue({
+        (view.maxLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           bottom: 50
         });
 
@@ -1228,14 +959,14 @@ describe('View', function() {
         vertical: false,
         range: true
       });
-      view.valueLabelRight.getBoundingClientRect = jest.fn();
-      view.maxLabel.getBoundingClientRect= jest.fn();
+      view.valueLabelRight.component.getBoundingClientRect = jest.fn();
+      view.maxLabel.component.getBoundingClientRect= jest.fn();
 
       it('return true if distance between 2 labels is < than 3 px', function() {
-        view.valueLabelRight.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           right: 50
         });
-        view.maxLabel.getBoundingClientRect.mockReturnValue({
+        (view.maxLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 52
         });
 
@@ -1243,10 +974,10 @@ describe('View', function() {
       });
 
       it('return false if distance between 2 labels is > than 3 px', function() {
-        view.valueLabelRight.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           right: 50
         });
-        view.maxLabel.getBoundingClientRect.mockReturnValue({
+        (view.maxLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 55
         });
 
@@ -1264,14 +995,14 @@ describe('View', function() {
         vertical: true,
         range: true
       });
-      view.valueLabelRight.getBoundingClientRect = jest.fn();
-      view.maxLabel.getBoundingClientRect= jest.fn();
+      view.valueLabelRight.component.getBoundingClientRect = jest.fn();
+      view.maxLabel.component.getBoundingClientRect= jest.fn();
 
       it('return true if distance between 2 labels is < than 3 px', function() {
-        view.valueLabelRight.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 52
         });
-        view.maxLabel.getBoundingClientRect.mockReturnValue({
+        (view.maxLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           bottom: 50
         });
 
@@ -1279,10 +1010,10 @@ describe('View', function() {
       });
 
       it('return false if distance between 2 labels is > than 3 px', function() {
-        view.valueLabelRight.getBoundingClientRect.mockReturnValue({
+        (view.valueLabelRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 55
         });
-        view.maxLabel.getBoundingClientRect.mockReturnValue({
+        (view.maxLabel.component.getBoundingClientRect as jest.Mock).mockReturnValue({
           bottom: 50
         });
 
@@ -1297,14 +1028,14 @@ describe('View', function() {
 
     let slider = document.createElement('div');
     let view = new View(slider);
-    let presenter = {};
+    let presenter: any = {};
     view.registerWith(presenter);
-    view.presenter.handleLeftInput = jest.fn();
+    view.presenter!.handleLeftInput = jest.fn();
 
     it('call presenter function to handle input', function() {
       for(let i = 0; i <= 100; i++) {
         view.handleLeftInput(i);
-        expect(view.presenter.handleLeftInput).toBeCalledWith(i);
+        expect(view.presenter!.handleLeftInput).toBeCalledWith(i);
       }
     });    
 
@@ -1316,14 +1047,14 @@ describe('View', function() {
     let view = new View(slider, {
       range: true
     });
-    let presenter = {};
+    let presenter: any = {};
     view.registerWith(presenter);
-    view.presenter.handleRightInput = jest.fn();
+    view.presenter!.handleRightInput = jest.fn();
 
     it('call presenter function to handle input', function() {
       for(let i = 0; i <= 100; i++) {
         view.handleRightInput(i);
-        expect(view.presenter.handleRightInput).toBeCalledWith(i);
+        expect(view.presenter!.handleRightInput).toBeCalledWith(i);
       }
     });    
 
@@ -1454,9 +1185,9 @@ describe('View', function() {
       let view = new View(slider, {
         scale: true
       });
-      let presenter = {};
+      let presenter: any = {};
       view.registerWith(presenter);
-      view.presenter.handleLeftInput = jest.fn();
+      view.presenter!.handleLeftInput = jest.fn();
       view.convertСlickСoordsToValue = jest.fn();
       view.handleScaleClick(100, 100);
 
@@ -1471,8 +1202,8 @@ describe('View', function() {
         valueLabel: true
       });
       let presenter = {};
-      view.registerWith(presenter);
-      view.presenter.handleLeftInput = jest.fn();
+      view.registerWith(presenter as Presenter);
+      (view.presenter as Presenter).handleLeftInput = jest.fn();
       view.addSmoothTransition = jest.fn();
       view.removeSmoothTransition = jest.fn();
       view.handleScaleClick(100, 100);
@@ -1482,7 +1213,7 @@ describe('View', function() {
       });
 
       it('call function to handle left input', function() {
-        expect(view.presenter.handleLeftInput).toBeCalled();
+        expect((view.presenter as Presenter).handleLeftInput).toBeCalled();
       });
 
     });
@@ -1496,9 +1227,9 @@ describe('View', function() {
         range: true
       });
       let presenter = {};
-      view.registerWith(presenter);
-      view.presenter.handleLeftInput = jest.fn();
-      view.presenter.handleRightInput = jest.fn();
+      view.registerWith(presenter as Presenter);
+      (view.presenter as Presenter).handleLeftInput = jest.fn();
+      (view.presenter as Presenter).handleRightInput = jest.fn();
       view.addSmoothTransition = jest.fn();
       view.removeSmoothTransition = jest.fn();
       view.whichThumbIsNearer = jest.fn();
@@ -1511,7 +1242,7 @@ describe('View', function() {
       describe('if left thumb is nearer', function() {
 
         view.whichThumbIsNearer = jest.fn();
-        view.whichThumbIsNearer.mockReturnValue('left');
+        (view.whichThumbIsNearer as jest.Mock).mockReturnValue('left');
         view.handleScaleClick(100, 100);
 
         it('call function to add smooth transition', function() {
@@ -1519,7 +1250,7 @@ describe('View', function() {
         });
 
         it('call function to handle left input', function() {
-          expect(view.presenter.handleLeftInput).toBeCalled();
+          expect((view.presenter as Presenter).handleLeftInput).toBeCalled();
         });
 
       });
@@ -1527,7 +1258,7 @@ describe('View', function() {
       describe('if right thumb is nearer', function() {
 
         view.whichThumbIsNearer = jest.fn();
-        view.whichThumbIsNearer.mockReturnValue('right');
+        (view.whichThumbIsNearer as jest.Mock).mockReturnValue('right');
         view.handleScaleClick(100, 100);
 
         it('call function to add smooth transition', function() {
@@ -1535,7 +1266,7 @@ describe('View', function() {
         });
 
         it('call function to handle right input', function() {
-          expect(view.presenter.handleRightInput).toBeCalled();
+          expect((view.presenter as Presenter).handleRightInput).toBeCalled();
         });
 
       });
@@ -1560,13 +1291,13 @@ describe('View', function() {
         view.track.component.getBoundingClientRect = jest.fn();
         view.inputLeft.getMin = jest.fn();
         view.inputLeft.getMax = jest.fn();
-        view.inputLeft.getMin.mockReturnValue(0);
-        view.inputLeft.getMax.mockReturnValue(100);
+        (view.inputLeft.getMin as jest.Mock).mockReturnValue(0);
+        (view.inputLeft.getMax as jest.Mock).mockReturnValue(100);
 
         describe('if track width = 100, track left offset = 0', function() {
    
           it('if click on i px return i', function() {
-            view.track.component.getBoundingClientRect.mockReturnValue({
+            (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
               width: 100,
               left: 0
             });
@@ -1581,7 +1312,7 @@ describe('View', function() {
         describe('if track width = 200, track left offset = 0', function() {
 
           it('if click on i px return Math.round(i/2)', function() {
-            view.track.component.getBoundingClientRect.mockReturnValue({
+            (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
               width: 200,
               left: 0
             });
@@ -1597,7 +1328,7 @@ describe('View', function() {
         describe('if track width = 300, track left offset = 0', function() {
 
           it('if click on i px return Math.round(i/3)', function() {
-            view.track.component.getBoundingClientRect.mockReturnValue({
+            (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
               width: 300,
               left: 0
             });
@@ -1614,7 +1345,7 @@ describe('View', function() {
 
           it('if click on i px and track left offset = j return (i - j)', function() {
             for (let i = 0, j = 0; i <= 100; i++, j++) {
-              view.track.component.getBoundingClientRect.mockReturnValue({
+              (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
                 width: 100,
                 left: j
               });
@@ -1630,7 +1361,7 @@ describe('View', function() {
 
           it('if click on i px and track left offset = j return Math.round((i-j)/2)', function() {
             for (let i = 0, j = 0; i <= 200; i++, j++) {
-              view.track.component.getBoundingClientRect.mockReturnValue({
+              (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
                 width: 200,
                 left: j
               });
@@ -1646,7 +1377,7 @@ describe('View', function() {
 
           it('if click on i px and track left offset = j return Math.round((i-j)/3)', function() {
             for (let i = 0, j = 0; i <= 300; i++, j++) {
-              view.track.component.getBoundingClientRect.mockReturnValue({
+              (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
                 width: 300,
                 left: j
               });
@@ -1676,13 +1407,13 @@ describe('View', function() {
         view.track.component.getBoundingClientRect = jest.fn();
         view.inputLeft.getMin = jest.fn();
         view.inputLeft.getMax = jest.fn();
-        view.inputLeft.getMin.mockReturnValue(0);
-        view.inputLeft.getMax.mockReturnValue(100);
+        (view.inputLeft.getMin as jest.Mock).mockReturnValue(0);
+        (view.inputLeft.getMax as jest.Mock).mockReturnValue(100);
 
         describe('if track height = 100, track top offset = 0', function() {
    
           it('if click on i px return (100 - i)', function() {
-            view.track.component.getBoundingClientRect.mockReturnValue({
+            (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
               height: 100,
               top: 0
             });
@@ -1697,7 +1428,7 @@ describe('View', function() {
         describe('if track height = 200, track top offset = 0', function() {
 
           it('if click on i px return Math.round( (200-i)/2 )', function() {
-            view.track.component.getBoundingClientRect.mockReturnValue({
+            (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
               height: 200,
               top: 0
             });
@@ -1713,7 +1444,7 @@ describe('View', function() {
         describe('if track height = 300, track top offset = 0', function() {
 
           it('if click on i px return Math.round( (300-i)/3 )', function() {
-            view.track.component.getBoundingClientRect.mockReturnValue({
+            (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
               height: 300,
               top: 0
             });
@@ -1730,7 +1461,7 @@ describe('View', function() {
 
           it('if click on i px and track top offset = j return (100 - i + j)', function() {
             for (let i = 100, j = 0; i >= 100; i--, j++) {
-              view.track.component.getBoundingClientRect.mockReturnValue({
+              (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
                 height: 100,
                 top: j
               });
@@ -1746,7 +1477,7 @@ describe('View', function() {
 
           it('if click on i px and track left offset = j return Math.round( (200-i+j)/2 )', function() {
             for (let i = 200, j = 0; i >= 0; i--, j++) {
-              view.track.component.getBoundingClientRect.mockReturnValue({
+              (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
                 height: 200,
                 top: j
               });
@@ -1762,7 +1493,7 @@ describe('View', function() {
 
           it('if click on i px and track left offset = j return Math.round( (300-i+j)/3 )', function() {
             for (let i = 0, j = 0; i <= 300; i++, j++) {
-              view.track.component.getBoundingClientRect.mockReturnValue({
+              (view.track.component.getBoundingClientRect as jest.Mock).mockReturnValue({
                 height: 300,
                 top: j
               });
@@ -1790,11 +1521,11 @@ describe('View', function() {
         vertical: false
       });
       view.thumbLeft.component.getBoundingClientRect = jest.fn();
-      view.thumbLeft.component.getBoundingClientRect.mockReturnValue({
+      (view.thumbLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
         right: 10
       });
       view.thumbRight.component.getBoundingClientRect = jest.fn();
-      view.thumbRight.component.getBoundingClientRect.mockReturnValue({
+      (view.thumbRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
         left: 20
       });
 
@@ -1820,11 +1551,11 @@ describe('View', function() {
         vertical: true
       });
       view.thumbLeft.component.getBoundingClientRect = jest.fn();
-      view.thumbLeft.component.getBoundingClientRect.mockReturnValue({
+      (view.thumbLeft.component.getBoundingClientRect as jest.Mock).mockReturnValue({
         top: 20
       });
       view.thumbRight.component.getBoundingClientRect = jest.fn();
-      view.thumbRight.component.getBoundingClientRect.mockReturnValue({
+      (view.thumbRight.component.getBoundingClientRect as jest.Mock).mockReturnValue({
         bottom: 10
       });
 

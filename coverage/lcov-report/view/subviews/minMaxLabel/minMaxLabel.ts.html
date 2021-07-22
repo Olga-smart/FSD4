@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -76,23 +76,23 @@
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L20'></a><a href='#L20'>20</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {Label} from '../label/label';
@@ -101,17 +101,17 @@ import {createElement} from '../../helpers/createElement';
 export class MinMaxLabel extends Label {
   component: HTMLElement;
 &nbsp;
-<span class="fstat-no" title="function not covered" >  constructor(t</span>ype: 'left' | 'right' = <span class="branch-0 cbranch-no" title="branch not covered" >'left')</span> {
-<span class="cstat-no" title="statement not covered" >    super(type);</span>
-<span class="cstat-no" title="statement not covered" >    this.component = createElement('div', `range-slider__min-max-label range-slider__min-max-label_${type} js-range-slider__min-max-label_${type}`);</span>
+  constructor(type: 'left' | 'right' = 'left') {
+    super(type);
+    this.component = createElement('div', `range-slider__min-max-label range-slider__min-max-label_${type} js-range-slider__min-max-label_${type}`);
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  fixPositionForVertical(</span>): void {
-<span class="cstat-no" title="statement not covered" >    if (this.type == 'left') {</span>
-<span class="cstat-no" title="statement not covered" >      this.component.style.transform = `rotate(90deg) translateX(-${this.component.offsetWidth}px)`;</span>
+  fixPositionForVertical(): void {
+    if (this.type == 'left') {
+      this.component.style.transform = `rotate(90deg) translateX(-${this.component.offsetWidth}px)`;
     }
-<span class="cstat-no" title="statement not covered" >    if (this.type == 'right') {</span>
-<span class="cstat-no" title="statement not covered" >      this.component.style.transform = `rotate(90deg) translateX(${this.component.offsetHeight}px)`;</span>
+    if (this.type == 'right') {
+      this.component.style.transform = `rotate(90deg) translateX(${this.component.offsetHeight}px)`;
     }
   } 
 }</pre></td></tr></table></pre>
@@ -121,7 +121,7 @@ export class MinMaxLabel extends Label {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jul 20 2021 11:32:17 GMT+0700 (Новосибирск, стандартное время)
+                at Thu Jul 22 2021 11:33:50 GMT+0700 (Новосибирск, стандартное время)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

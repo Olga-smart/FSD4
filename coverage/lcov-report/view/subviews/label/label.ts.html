@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -77,45 +77,45 @@
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export abstract class Label {
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export class Label {
   type: 'left' | 'right' | 'common';
   component: HTMLElement;
 &nbsp;
-<span class="fstat-no" title="function not covered" >  constructor(t</span>ype: 'left' | 'right' | 'common' = <span class="branch-0 cbranch-no" title="branch not covered" >'left')</span> {
-<span class="cstat-no" title="statement not covered" >    this.type = type;</span>
-<span class="cstat-no" title="statement not covered" >    this.component = document.createElement('div');</span>
+  constructor(type: 'left' | 'right' | 'common' = 'left') {
+    this.type = type;
+    this.component = document.createElement('div');
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  setOpacity(</span>value: number): void {
-<span class="cstat-no" title="statement not covered" >    this.component.style.opacity = `${value}`;</span>
+  setOpacity(value: number): void {
+    this.component.style.opacity = `${value}`;
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  setValue(</span>value: number | string): void {
-<span class="cstat-no" title="statement not covered" >    this.component.textContent = `${value}`;</span>
-  }
+  setValue(value: number | string): void {
+    this.component.textContent = `${value}`;
+  } 
 &nbsp;
-<span class="fstat-no" title="function not covered" >  getBoundingClientRect(</span>): DOMRect {
-<span class="cstat-no" title="statement not covered" >    return this.component.getBoundingClientRect();</span>
+  getBoundingClientRect(): DOMRect {
+    return this.component.getBoundingClientRect();
   } 
 }</pre></td></tr></table></pre>
 
@@ -124,7 +124,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jul 20 2021 11:32:17 GMT+0700 (Новосибирск, стандартное время)
+                at Thu Jul 22 2021 11:33:50 GMT+0700 (Новосибирск, стандартное время)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
