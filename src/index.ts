@@ -9,8 +9,8 @@ import {Presenter} from './presenter/presenter';
     let model: Model = new Model({
       // min: 10,
       // max: 150,
-      // leftValue: -100,
-      // rightValue: -50,
+      // leftValue: 50,
+      // rightValue: 57,
       range: true
     });
     
@@ -25,7 +25,8 @@ import {Presenter} from './presenter/presenter';
     
     let presenter = new Presenter(model, view);
     
-    view.registerWith(presenter);
+    view.registerWith(presenter);   
+
   }
 }());
 

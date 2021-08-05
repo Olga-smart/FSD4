@@ -97,13 +97,6 @@ export class View {
         this.valueLabelCommon = new ValueLabel('common');
 
         this.slider.append(this.valueLabelRight.component, this.valueLabelCommon.component);
-
-        // TODO: через раз срабатывает ошибочно
-        setTimeout(() => {
-          if ( this.isTwoValueLabelsClose() ) {
-            this.mergeLabels();
-          }
-        });
       }
       
     }
@@ -127,27 +120,9 @@ export class View {
         });
       }
     }
-    
-    if (options.minMaxLabels && options.valueLabel) {
-      // TODO: Срабатывает через раз
-      setTimeout(() => {
-        if ( this.isLeftValueLabelCloseToMinLabel() ) {
-          this.minLabel.setOpacity(0);
-        }
-      });
-
-      if (options.range) {
-        // TODO: Срабатывает через раз
-        setTimeout(() => {
-          if ( this.isRightValueLabelCloseToMaxLabel() ) {
-            this.maxLabel.setOpacity(0);
-          }
-        });
-      }
-    }
   }
   
-  registerWith(presenter: Presenter){
+  registerWith(presenter: Presenter) {
     this.presenter = presenter;
   }
   
@@ -254,7 +229,7 @@ export class View {
       this.fixValueLabelPositionForVertical();
     }
   }
-  
+
   setThumbLeftPosition(value: number): void {
     let min = parseInt(this.inputLeft.getMin());
     let max = parseInt(this.inputLeft.getMax());
@@ -301,8 +276,6 @@ export class View {
     if (!this.vertical) {
       let leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
       let rightLabelEdge = this.valueLabelRight.getBoundingClientRect().left;
-
-      console.log(this.valueLabelRight.getBoundingClientRect());
 
       return ( (rightLabelEdge - leftLabelEdge) < 3 ); 
     }
@@ -545,6 +518,46 @@ export class View {
       this.range.component.classList.remove('range-slider__range_smooth-transition');
       if (this.valueLabelRight) {
         this.valueLabelRight.component.classList.remove('range-slider__value-label_smooth-transition');
+      }
+    }
+  }
+
+  /* 
+   * This function is necessary only once on init
+   * and called from Presenter constuctor after all settings
+   * because sometimes getBoundingClientRect() works wrong
+   * immediately after loading the page
+   */
+  updateLabelsLook(): void {
+    if (this.valueLabelLeft && this.isRange) {
+      if ( this.isTwoValueLabelsClose() ) {
+        this.mergeLabels();
+      } else {
+        this.splitLabels();
+      }
+    }
+
+    if (this.valueLabelLeft && this.minLabel) {
+      if ( this.isLeftValueLabelCloseToMinLabel() ) {
+        this.minLabel.setOpacity(0);
+      } else {
+        this.minLabel.setOpacity(1);
+      }
+
+      if(!this.isRange) {
+        if ( this.isLeftValueLabelCloseToMaxLabel() ) {
+          this.maxLabel?.setOpacity(0);
+        } else {
+          this.maxLabel?.setOpacity(1);
+        }
+      }
+    }
+
+    if (this.valueLabelRight && this.maxLabel) {
+      if ( this.isRightValueLabelCloseToMaxLabel() ) {
+        this.maxLabel.setOpacity(0);
+      } else {
+        this.maxLabel.setOpacity(1);
       }
     }
   }

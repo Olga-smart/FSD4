@@ -9,18 +9,23 @@ export class Presenter {
       this.model = model;
       this.view = view;
       
-      view.setMinValue(model.min);
-      view.setMaxValue(model.max);
-      view.setLeftValue(model.leftValue);
-      view.setStep(model.step);
+      this.view.setMinValue(model.min);
+      this.view.setMaxValue(model.max);
+      this.view.setLeftValue(model.leftValue);
+      this.view.setStep(model.step);
 
       if (this.view.isRange) {
-        view.setRightValue(model.rightValue);
+        this.view.setRightValue(model.rightValue);
       }
 
       if (this.view.hasScale) {
-        view.addScale(model.min, model.max, view.scaleIntervals);
+        this.view.addScale(model.min, model.max, view.scaleIntervals);
       }
+      
+      setTimeout(() => {
+        this.view.updateLabelsLook();
+      });
+ 
     }
     
     handleLeftInput(value: number): void {
