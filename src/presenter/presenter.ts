@@ -22,9 +22,17 @@ export class Presenter {
         this.view.addScale(model.min, model.max, view.scaleIntervals);
       }
       
-      setTimeout(() => {
-        this.view.updateLabelsLook();
-      });
+      if(this.view.vertical) {
+
+        if (this.view.minLabel && this.view.maxLabel) {
+          this.view.fixMinMaxLabelsPositionForVertical();
+        }
+
+        if (this.view.valueLabelLeft) {
+          this.view.fixValueLabelPositionForVertical();
+        }
+        
+      }
  
     }
     

@@ -103,22 +103,7 @@ export class View {
     
     if (options.vertical) {
       this.component.classList.add('range-slider_vertical');
-      this.vertical = true;
-      
-      if (options.minMaxLabels) {
-        // TODO: Сделать так чтобы корректировка положения лейблов происходила после присвоения им значения, setTimeout непредсказуем
-        setTimeout(() => {
-          this.fixMinMaxLabelsPositionForVertical();
-        });
-        
-      }  
-      
-      if (options.valueLabel) {
-        // TODO: Сделать так чтобы корректировка положения лейблов происходила после присвоения им значения, setTimeout непредсказуем
-        setTimeout(() => {
-          this.fixValueLabelPositionForVertical();
-        });
-      }
+      this.vertical = true;     
     }
   }
   
@@ -280,7 +265,6 @@ export class View {
       return ( (rightLabelEdge - leftLabelEdge) < 3 ); 
     }
     
-    // TODO: срабатывает через раз
     if (this.vertical) {
       let bottomLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
       let topLabelEdge = this.valueLabelRight.getBoundingClientRect().bottom;
@@ -518,46 +502,6 @@ export class View {
       this.range.component.classList.remove('range-slider__range_smooth-transition');
       if (this.valueLabelRight) {
         this.valueLabelRight.component.classList.remove('range-slider__value-label_smooth-transition');
-      }
-    }
-  }
-
-  /* 
-   * This function is necessary only once on init
-   * and called from Presenter constuctor after all settings
-   * because sometimes getBoundingClientRect() works wrong
-   * immediately after loading the page
-   */
-  updateLabelsLook(): void {
-    if (this.valueLabelLeft && this.isRange) {
-      if ( this.isTwoValueLabelsClose() ) {
-        this.mergeLabels();
-      } else {
-        this.splitLabels();
-      }
-    }
-
-    if (this.valueLabelLeft && this.minLabel) {
-      if ( this.isLeftValueLabelCloseToMinLabel() ) {
-        this.minLabel.setOpacity(0);
-      } else {
-        this.minLabel.setOpacity(1);
-      }
-
-      if(!this.isRange) {
-        if ( this.isLeftValueLabelCloseToMaxLabel() ) {
-          this.maxLabel?.setOpacity(0);
-        } else {
-          this.maxLabel?.setOpacity(1);
-        }
-      }
-    }
-
-    if (this.valueLabelRight && this.maxLabel) {
-      if ( this.isRightValueLabelCloseToMaxLabel() ) {
-        this.maxLabel.setOpacity(0);
-      } else {
-        this.maxLabel.setOpacity(1);
       }
     }
   }
