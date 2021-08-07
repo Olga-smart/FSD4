@@ -7,6 +7,7 @@ import {MinMaxLabel} from './subviews/minMaxLabel/minMaxLabel';
 import {ValueLabel} from './subviews/valueLabel/valueLabel';
 import {Scale} from './subviews/scale/scale';
 import {Presenter} from '../presenter/presenter';
+import {createElement} from './helpers/createElement';
 
 type ViewOptions = {
   min?: number,
@@ -39,6 +40,7 @@ export class View {
   valueLabelCommon!: ValueLabel;
   vertical?: boolean;
   scale?: Scale;
+  parentElement?: HTMLElement;
 
   constructor(component: Element, options: ViewOptions = {}) {
     this.presenter = null;
@@ -55,16 +57,15 @@ export class View {
 
     this.thumbLeft = new Thumb('left');
     
-    this.slider.append(this.track.component, this.range.component, this.thumbLeft.component);
-    this.component.append(this.slider.component, this.inputLeft.component);
+    this.slider.append(this.track.component, this.range.component, this.thumbLeft.component, this.inputLeft.component);
+    this.component.append(this.slider.component);
 
     if (options.range) {
       this.inputRight = new Input('right');
       this.inputRight.registerWith(this);
       this.thumbRight = new Thumb('right');
 
-      this.slider.append(this.thumbRight.component);
-      this.component.append(this.inputRight.component);
+      this.slider.append(this.thumbRight.component, this.inputRight.component);
 
       this.isRange = true;
     } else {
@@ -75,9 +76,13 @@ export class View {
     if (options.scale) {
       this.hasScale = true;
       this.scaleIntervals = options.scaleIntervals ?? 4;
-
+      this.component.classList.add('range-slider_with-scale')
     } else {
       this.hasScale = false;
+    }
+
+    if (options.minMaxLabels || options.valueLabel) {
+      this.component.classList.add('range-slider_with-labels')
     }
     
     if (options.minMaxLabels) {
@@ -103,7 +108,14 @@ export class View {
     
     if (options.vertical) {
       this.component.classList.add('range-slider_vertical');
-      this.vertical = true;     
+      this.vertical = true; 
+
+      this.parentElement = createElement('div', 'range-slider_wrapper'); 
+      this.component.after(this.parentElement);
+      this.parentElement.append(this.component);
+      this.parentElement.style.height = (this.component as HTMLElement).offsetWidth + 'px';   
+      let paddingTop = parseInt( getComputedStyle(this.component).paddingTop );
+      (this.component as HTMLElement).style.transform = `rotate(-90deg) translateX(-${(this.component as HTMLElement).offsetWidth/2 - paddingTop}px)`
     }
   }
   

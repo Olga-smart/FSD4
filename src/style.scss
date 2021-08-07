@@ -14,12 +14,16 @@ body {
 }
 
 .container {
-  position: relative;
   width: 50%;
   max-width: 500px;
+  // display: grid;
+  // grid-template-columns: 0.5fr 1fr 0.5fr;
 }
 
 .range-slider {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  position: relative;
   &__input {
     position: absolute;
     top: 0;
@@ -212,6 +216,12 @@ body {
         transform-origin: top left;
       }
     }
+  }
+  &_with-labels {
+    padding-top: 38px;
+  }
+  &_with-scale {
+    padding-bottom: 25px;
   }
 }
 
