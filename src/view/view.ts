@@ -40,7 +40,7 @@ export class View {
   valueLabelCommon!: ValueLabel;
   vertical?: boolean;
   scale?: Scale;
-  parentElement?: HTMLElement;
+  wrapper?: HTMLElement;
 
   constructor(component: Element, options: ViewOptions = {}) {
     this.presenter = null;
@@ -110,12 +110,27 @@ export class View {
       this.component.classList.add('range-slider_vertical');
       this.vertical = true; 
 
-      this.parentElement = createElement('div', 'range-slider_wrapper'); 
-      this.component.after(this.parentElement);
-      this.parentElement.append(this.component);
-      this.parentElement.style.height = (this.component as HTMLElement).offsetWidth + 'px';   
+      this.wrapper = createElement('div', 'range-slider_wrapper'); 
+      this.component.after(this.wrapper);
+      this.wrapper.append(this.component);
+      this.wrapper.style.height = (this.component as HTMLElement).offsetWidth + 'px';   
       let paddingTop = parseInt( getComputedStyle(this.component).paddingTop );
-      (this.component as HTMLElement).style.transform = `rotate(-90deg) translateX(-${(this.component as HTMLElement).offsetWidth/2 - paddingTop}px)`
+      (this.component as HTMLElement).style.transform = `rotate(-90deg) translateX(-${(this.component as HTMLElement).offsetWidth/2 - paddingTop}px)`;
+
+      let container = this.wrapper.parentElement as HTMLElement;
+      if (getComputedStyle(container).display === 'flex' || getComputedStyle(container).display === 'grid') {
+        // (this.component as HTMLElement).style.width = '0';
+        let oldWraperHeight = this.wrapper.offsetHeight; 
+        // setTimeout(() => {
+        //   (this.component as HTMLElement).style.width = container.offsetHeight + 'px';
+        //   this.wrapper!.style.height = (this.component as HTMLElement).offsetWidth + 'px';
+        // });
+        (this.component as HTMLElement).style.width = container.offsetHeight + 'px';
+          this.wrapper!.style.height = (this.component as HTMLElement).offsetWidth + 'px';
+        let newWraperHeight = this.wrapper.offsetHeight; 
+        console.log(newWraperHeight); 
+        (this.component as HTMLElement).style.transform = (this.component as HTMLElement).style.transform + ` translateX(-${(newWraperHeight - oldWraperHeight)/2}px)`;
+      }
     }
   }
   

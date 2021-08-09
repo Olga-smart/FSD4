@@ -16,8 +16,9 @@ body {
 .container {
   width: 50%;
   max-width: 500px;
-  // display: grid;
-  // grid-template-columns: 0.5fr 1fr 0.5fr;
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 0.5fr;
+  // display: flex;
 }
 
 .range-slider {
