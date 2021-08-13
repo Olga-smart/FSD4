@@ -14,4 +14,16 @@ export class Range {
   setRightIndent(percent: number): void {
     this.component.style.right = percent + '%';
   }
+
+  setLeftIndentInPx(px: number): void {
+    this.component.style.left = `${px}px`;
+  }
+
+  setRightIndentInPx(px: number): void {
+    this.component.style.right = `${px}px`;
+  }
+
+  setWidthInPx(px: number): void {
+    this.component.style.width = `${px}px`;
+  }
 }

@@ -18,7 +18,7 @@ window.addEventListener('load', () => {
       let view = new View(slider, {
         minMaxLabels: true,
         valueLabel: true,
-        vertical: true,
+        // vertical: true,
         range: true,
         scale: true,
         scaleIntervals: 5

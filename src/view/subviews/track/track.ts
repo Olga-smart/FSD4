@@ -20,4 +20,12 @@ export class Track {
       this.view?.handleScaleClick(event.clientX, event.clientY);
     });
   }
+
+  getBoundingClientRect() {
+    return this.component.getBoundingClientRect();
+  }
+
+  getOffsetWidth() {
+    return this.component.offsetWidth;
+  }
 }

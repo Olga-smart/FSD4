@@ -1,13 +1,11 @@
 import {Slider} from './subviews/slider/slider';
 import {Track} from './subviews/track/track';
 import {Range} from './subviews/range/range';
-import {Input} from './subviews/input/input';
 import {Thumb} from './subviews/thumb/thumb';
 import {MinMaxLabel} from './subviews/minMaxLabel/minMaxLabel';
 import {ValueLabel} from './subviews/valueLabel/valueLabel';
 import {Scale} from './subviews/scale/scale';
 import {Presenter} from '../presenter/presenter';
-import {createElement} from './helpers/createElement';
 
 type ViewOptions = {
   min?: number,
@@ -23,8 +21,6 @@ type ViewOptions = {
 export class View {
   presenter: Presenter | null;
   component: Element;
-  inputLeft: Input;
-  inputRight!: Input;
   slider: Slider;
   track: Track;
   range: Range;
@@ -46,9 +42,6 @@ export class View {
     this.presenter = null;
     
     this.component = component;
-    
-    this.inputLeft = new Input('left');
-    this.inputLeft.registerWith(this);
 
     this.slider = new Slider();
     this.track = new Track();
@@ -56,16 +49,16 @@ export class View {
     this.range = new Range();
 
     this.thumbLeft = new Thumb('left');
+    this.thumbLeft.registerWith(this);
     
-    this.slider.append(this.track.component, this.range.component, this.thumbLeft.component, this.inputLeft.component);
+    this.slider.append(this.track.component, this.range.component, this.thumbLeft.component);
     this.component.append(this.slider.component);
 
     if (options.range) {
-      this.inputRight = new Input('right');
-      this.inputRight.registerWith(this);
       this.thumbRight = new Thumb('right');
+      this.thumbRight.registerWith(this);
 
-      this.slider.append(this.thumbRight.component, this.inputRight.component);
+      this.slider.append(this.thumbRight.component);
 
       this.isRange = true;
     } else {
@@ -108,29 +101,7 @@ export class View {
     
     if (options.vertical) {
       this.component.classList.add('range-slider_vertical');
-      this.vertical = true; 
-
-      this.wrapper = createElement('div', 'range-slider_wrapper'); 
-      this.component.after(this.wrapper);
-      this.wrapper.append(this.component);
-      this.wrapper.style.height = (this.component as HTMLElement).offsetWidth + 'px';   
-      let paddingTop = parseInt( getComputedStyle(this.component).paddingTop );
-      (this.component as HTMLElement).style.transform = `rotate(-90deg) translateX(-${(this.component as HTMLElement).offsetWidth/2 - paddingTop}px)`;
-
-      let container = this.wrapper.parentElement as HTMLElement;
-      if (getComputedStyle(container).display === 'flex' || getComputedStyle(container).display === 'grid') {
-        // (this.component as HTMLElement).style.width = '0';
-        let oldWraperHeight = this.wrapper.offsetHeight; 
-        // setTimeout(() => {
-        //   (this.component as HTMLElement).style.width = container.offsetHeight + 'px';
-        //   this.wrapper!.style.height = (this.component as HTMLElement).offsetWidth + 'px';
-        // });
-        (this.component as HTMLElement).style.width = container.offsetHeight + 'px';
-          this.wrapper!.style.height = (this.component as HTMLElement).offsetWidth + 'px';
-        let newWraperHeight = this.wrapper.offsetHeight; 
-        console.log(newWraperHeight); 
-        (this.component as HTMLElement).style.transform = (this.component as HTMLElement).style.transform + ` translateX(-${(newWraperHeight - oldWraperHeight)/2}px)`;
-      }
+      this.vertical = true;
     }
   }
   
@@ -139,43 +110,50 @@ export class View {
   }
   
   setMinValue(min:number): void {
-    this.inputLeft.setMinValue(min);
-    if (this.isRange) {
-      this.inputRight.setMinValue(min);
-    }    
+    // this.inputLeft.setMinValue(min);
+    // if (this.isRange) {
+    //   this.inputRight.setMinValue(min);
+    // }    
     if (this.minLabel) {
       this.minLabel.setValue(min);
     }
   }
   
   setMaxValue(max: number): void {
-    this.inputLeft.setMaxValue(max);
-    if (this.isRange) {
-      this.inputRight.setMaxValue(max);
-    }    
+    // this.inputLeft.setMaxValue(max);
+    // if (this.isRange) {
+    //   this.inputRight.setMaxValue(max);
+    // }    
     if (this.maxLabel) {
       this.maxLabel.setValue(max);
     }
   }
   
-  setStep(step: number): void {
-    this.inputLeft.setStep(step);
-    if (this.isRange) {
-      this.inputRight.setStep(step);
+  // setStep(step: number): void {
+  //   this.inputLeft.setStep(step);
+  //   if (this.isRange) {
+  //     this.inputRight.setStep(step);
+  //   }
+  // }
+    
+  setLeftValue(value: number, px: number): void {  
+    // this.setThumbLeftPosition(value);
+    this.thumbLeft.setLeftIndentInPx(px);
+
+    if (!this.isRange) {
+      this.range.setWidthInPx(px);
     }
-  }
-    
-  setLeftValue(value: number): void {
-    this.inputLeft.setValue(value);
-    
-    this.setThumbLeftPosition(value);
+
+    if (this.isRange) {
+      this.range.setLeftIndentInPx(px);
+    } 
     
     if (this.valueLabelLeft) {
       this.valueLabelLeft.setValue(value);
       this.valueLabelLeft.setLeftIndent( this.thumbLeft.getLeftIndent() );
 
       if(this.isRange) {
-        this.valueLabelCommon?.setValue( value + ' - ' + this.inputRight.getValue() );
+        // this.valueLabelCommon?.setValue( value + ' - ' + this.inputRight.getValue() );
 
         if ( this.isTwoValueLabelsClose() ) {
           this.mergeLabels();
@@ -183,11 +161,11 @@ export class View {
           this.splitLabels();
         }
   
-        if ( this.inputLeft.getValue() == this.inputLeft.getMax() ) {
-          this.inputLeft.setZIndex(100);
-        } else {
-          this.inputLeft.setZIndex(2);
-        }
+        // if ( this.inputLeft.getValue() == this.inputLeft.getMax() ) {
+        //   this.inputLeft.setZIndex(100);
+        // } else {
+        //   this.inputLeft.setZIndex(2);
+        // }
       }
     }
 
@@ -212,14 +190,17 @@ export class View {
     }
   }
   
-  setRightValue(value: number): void {
-    this.inputRight.setValue(value);
+  setRightValue(value: number, px: number): void {
+    // this.inputRight.setValue(value);
     
-    this.setThumbRightPosition(value);
+    // this.setThumbRightPosition(value);
+    this.thumbRight.setLeftIndentInPx(px);
+
+    this.range.setRightIndentInPx(this.track.getOffsetWidth() - px);
     
     if (this.valueLabelRight) {
       this.valueLabelRight.setValue(value);
-      this.valueLabelCommon?.setValue(this.inputLeft.getValue() + ' - ' + value);
+      // this.valueLabelCommon?.setValue(this.inputLeft.getValue() + ' - ' + value);
       this.valueLabelRight.setRightIndent( this.thumbRight.getRightIndent() );
       
       if ( this.isTwoValueLabelsClose() ) {
@@ -243,30 +224,30 @@ export class View {
   }
 
   setThumbLeftPosition(value: number): void {
-    let min = parseInt(this.inputLeft.getMin());
-    let max = parseInt(this.inputLeft.getMax());
+    // let min = parseInt(this.inputLeft.getMin());
+    // let max = parseInt(this.inputLeft.getMax());
 
-    let percent = ((value - min) / (max - min)) * 100;
+    // let percent = ((value - min) / (max - min)) * 100;
 
-    this.thumbLeft.setLeftIndent(percent);
+    // this.thumbLeft.setLeftIndent(percent);
 
-    if (!this.isRange) {
-      this.range.setRightIndent(100 - percent);
-    }
+    // if (!this.isRange) {
+    //   this.range.setRightIndent(100 - percent);
+    // }
 
-    if (this.isRange) {
-      this.range.setLeftIndent(percent);
-    }
+    // if (this.isRange) {
+    //   this.range.setLeftIndent(percent);
+    // }
   }
   
   setThumbRightPosition(value: number): void {
-    let min = parseInt(this.inputRight.getMin());
-    let max = parseInt(this.inputRight.getMax());
+    // let min = parseInt(this.inputRight.getMin());
+    // let max = parseInt(this.inputRight.getMax());
 
-    let percent = 100 - ((value - min) / (max - min)) * 100;
+    // let percent = 100 - ((value - min) / (max - min)) * 100;
 
-    this.thumbRight.setRightIndent(percent);
-    this.range.setRightIndent(percent);
+    // this.thumbRight.setRightIndent(percent);
+    // this.range.setRightIndent(percent);
   }
   
   mergeLabels(): void {
@@ -370,49 +351,106 @@ export class View {
     }    
   }
 
-  handleLeftInput(value: number): void {
-    this.presenter?.handleLeftInput(value);
+  // handleLeftInput(value: number): void {
+  //   this.presenter?.handleLeftInput(value);
+  // }
+
+  // handleRightInput(value: number): void {
+  //   this.presenter?.handleRightInput(value);
+  // }
+
+  handleLeftInput(clientX: number, shiftX: number = 0): void {
+    let newLeft = clientX - shiftX - this.track.getBoundingClientRect().left;
+
+    //  For thumb
+    if (newLeft < 0) {
+      newLeft = 0;
+    }
+
+    if (!this.isRange) {
+      if (newLeft > this.track.getOffsetWidth()) {
+        newLeft = this.track.getOffsetWidth();
+      }
+    }
+
+    if (this.isRange) {
+      let rightThumbPosition = parseInt(this.thumbRight.component.style.left);
+      if (newLeft > rightThumbPosition) {
+        newLeft = rightThumbPosition;
+      }
+    }   
+
+    this.thumbLeft.component.style.left = newLeft + 'px';
+
+    // For range
+    if (!this.isRange) {
+      this.range.setWidthInPx(newLeft);
+    } 
+    
+    if (this.isRange) {
+      this.range.setLeftIndentInPx(newLeft);
+    }
+
+    // this.presenter?.handleLeftInput(value);
   }
 
-  handleRightInput(value: number): void {
-    this.presenter?.handleRightInput(value);
+  handleRightInput(clientX: number, shiftX: number = 0): void {
+    let newLeft = clientX - shiftX - this.track.getBoundingClientRect().left;
+
+    // For thumb
+    let leftThumbPosition = parseInt(this.thumbLeft.component.style.left);
+
+    if (newLeft < leftThumbPosition) {
+      newLeft = leftThumbPosition;
+    }
+
+    if (newLeft > this.track.getOffsetWidth()) {
+      newLeft = this.track.getOffsetWidth();
+    }
+
+    this.thumbRight.component.style.left = newLeft + 'px';
+
+    // For range
+    this.range.setRightIndentInPx(this.track.getOffsetWidth() - newLeft);
+
+    // this.presenter?.handleRightInput(value);
   }
 
-  handleInputMouseover(type: 'left' | 'right' = 'left'): void {
-    if (type == 'left') {
-      this.thumbLeft.addHover();
-    }
-    if (type == 'right') {
-      this.thumbRight.addHover();
-    }
-  }
+  // handleInputMouseover(type: 'left' | 'right' = 'left'): void {
+  //   if (type == 'left') {
+  //     this.thumbLeft.addHover();
+  //   }
+  //   if (type == 'right') {
+  //     this.thumbRight.addHover();
+  //   }
+  // }
 
-  handleInputMouseout(type: 'left' | 'right' = 'left'): void {
-    if (type == 'left') {
-      this.thumbLeft.removeHover();
-    }
-    if (type == 'right') {
-      this.thumbRight.removeHover();
-    }
-  }
+  // handleInputMouseout(type: 'left' | 'right' = 'left'): void {
+  //   if (type == 'left') {
+  //     this.thumbLeft.removeHover();
+  //   }
+  //   if (type == 'right') {
+  //     this.thumbRight.removeHover();
+  //   }
+  // }
 
-  handleInputMousedown(type: 'left' | 'right' = 'left'): void {
-    if (type == 'left') {
-      this.thumbLeft.makeActive();
-    }
-    if (type == 'right') {
-      this.thumbRight.makeActive();
-    }
-  } 
+  // handleInputMousedown(type: 'left' | 'right' = 'left'): void {
+  //   if (type == 'left') {
+  //     this.thumbLeft.makeActive();
+  //   }
+  //   if (type == 'right') {
+  //     this.thumbRight.makeActive();
+  //   }
+  // } 
 
-  handleInputMouseup(type: 'left' | 'right' = 'left'): void {
-    if (type == 'left') {
-      this.thumbLeft.makeInactive();
-    }
-    if (type == 'right') {
-      this.thumbRight.makeInactive();
-    }
-  } 
+  // handleInputMouseup(type: 'left' | 'right' = 'left'): void {
+  //   if (type == 'left') {
+  //     this.thumbLeft.makeInactive();
+  //   }
+  //   if (type == 'right') {
+  //     this.thumbRight.makeInactive();
+  //   }
+  // } 
 
   addScale(min: number, max: number, intervalsNumber: number): void {
     this.scale = new Scale(min, max, intervalsNumber);
@@ -460,14 +498,14 @@ export class View {
     if (!this.vertical) {
       let leftOffsetInPx = x - trackCoords.left;
       let leftOffsetInPercents = leftOffsetInPx * 100 / trackCoords.width;
-      value = Math.round(leftOffsetInPercents * (+this.inputLeft.getMax() - +this.inputLeft.getMin()) / 100 + +this.inputLeft.getMin());
+      // value = Math.round(leftOffsetInPercents * (+this.inputLeft.getMax() - +this.inputLeft.getMin()) / 100 + +this.inputLeft.getMin());
     }
 
     if (this.vertical) {
       let topOffsetInPx = y - trackCoords.top;
       let topOffsetInPercents = topOffsetInPx * 100 / trackCoords.height;
       let bottomOffsetInPercents = 100 - topOffsetInPercents;
-      value = Math.round(bottomOffsetInPercents * (+this.inputLeft.getMax() - +this.inputLeft.getMin()) / 100 + +this.inputLeft.getMin());
+      // value = Math.round(bottomOffsetInPercents * (+this.inputLeft.getMax() - +this.inputLeft.getMin()) / 100 + +this.inputLeft.getMin());
     } 
 
     return value;
