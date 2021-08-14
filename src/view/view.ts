@@ -137,7 +137,6 @@ export class View {
   // }
     
   setLeftValue(value: number, px: number): void {  
-    // this.setThumbLeftPosition(value);
     this.thumbLeft.setLeftIndentInPx(px);
 
     if (!this.isRange) {
@@ -153,19 +152,19 @@ export class View {
       this.valueLabelLeft.setLeftIndent( this.thumbLeft.getLeftIndent() );
 
       if(this.isRange) {
-        // this.valueLabelCommon?.setValue( value + ' - ' + this.inputRight.getValue() );
+        this.valueLabelCommon?.setValue( value + ' - ' + this.valueLabelRight.getValue() );
 
         if ( this.isTwoValueLabelsClose() ) {
           this.mergeLabels();
         } else {
           this.splitLabels();
         }
-  
-        // if ( this.inputLeft.getValue() == this.inputLeft.getMax() ) {
-        //   this.inputLeft.setZIndex(100);
-        // } else {
-        //   this.inputLeft.setZIndex(2);
-        // }
+
+        if ( parseInt(this.thumbLeft.getLeftIndent()) == this.track.getOffsetWidth() ) {
+          this.thumbLeft.setZIndex(100);
+        } else {
+          this.thumbLeft.setZIndex(3);
+        }
       }
     }
 
@@ -191,17 +190,14 @@ export class View {
   }
   
   setRightValue(value: number, px: number): void {
-    // this.inputRight.setValue(value);
-    
-    // this.setThumbRightPosition(value);
     this.thumbRight.setLeftIndentInPx(px);
 
     this.range.setRightIndentInPx(this.track.getOffsetWidth() - px);
     
     if (this.valueLabelRight) {
       this.valueLabelRight.setValue(value);
-      // this.valueLabelCommon?.setValue(this.inputLeft.getValue() + ' - ' + value);
-      this.valueLabelRight.setRightIndent( this.thumbRight.getRightIndent() );
+      this.valueLabelCommon?.setValue(this.valueLabelLeft.getValue() + ' - ' + value);
+      this.valueLabelRight.setLeftIndent( this.thumbRight.getLeftIndent() );
       
       if ( this.isTwoValueLabelsClose() ) {
         this.mergeLabels();
@@ -255,8 +251,11 @@ export class View {
     this.valueLabelRight?.setOpacity(0);
     this.valueLabelCommon?.setOpacity(1);
     
-    let distanceBetweenTwoThumbsInPercents = 100 - parseInt(this.thumbRight.getRightIndent()) - parseInt(this.thumbLeft.getLeftIndent());
-    this.valueLabelCommon?.setLeftIndent( parseInt(this.valueLabelLeft.getLeftIndent()) + distanceBetweenTwoThumbsInPercents / 2 + '%' );
+    // let distanceBetweenTwoThumbsInPercents = 100 - parseInt(this.thumbRight.getRightIndent()) - parseInt(this.thumbLeft.getLeftIndent());
+    // this.valueLabelCommon?.setLeftIndent( parseInt(this.valueLabelLeft.getLeftIndent()) + distanceBetweenTwoThumbsInPercents / 2 + '%' );
+
+    let distanceBetweenTwoThumbsInPx = parseInt(this.thumbRight.getLeftIndent()) - parseInt(this.thumbLeft.getLeftIndent());
+    this.valueLabelCommon?.setLeftIndent( parseInt(this.valueLabelLeft.getLeftIndent()) + distanceBetweenTwoThumbsInPx / 2 + 'px' );
   }
   
   splitLabels(): void {
@@ -390,7 +389,8 @@ export class View {
     if (this.isRange) {
       this.range.setLeftIndentInPx(newLeft);
     }
-
+    
+    this.presenter?.handleLeftInput(newLeft);
     // this.presenter?.handleLeftInput(value);
   }
 
@@ -413,6 +413,7 @@ export class View {
     // For range
     this.range.setRightIndentInPx(this.track.getOffsetWidth() - newLeft);
 
+    this.presenter?.handleRightInput(newLeft);
     // this.presenter?.handleRightInput(value);
   }
 

@@ -58,6 +58,10 @@ export class Thumb {
     return this.component.style.right;
   }
 
+  setZIndex(value: number): void {
+    this.component.style.zIndex = `${value}`;
+  }
+
   getBoundingClientRect(): DOMRect {
     return this.component.getBoundingClientRect();
   }

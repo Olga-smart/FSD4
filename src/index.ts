@@ -8,7 +8,7 @@ window.addEventListener('load', () => {
     let sliders = document.querySelectorAll('.js-range-slider');
     for (let slider of sliders) {
       let model: Model = new Model({
-        // min: 100,
+        // min: 10,
         // max: 200,
         // leftValue: 125,
         // rightValue: 175,

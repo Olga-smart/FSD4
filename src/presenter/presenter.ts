@@ -38,14 +38,28 @@ export class Presenter {
  
     }
     
-    handleLeftInput(value: number): void {
+    // handleLeftInput(value: number): void {
+    //   this.model.setLeftValue(value);
+    //   // this.view.setLeftValue(this.model.leftValue);
+    // }
+
+    handleLeftInput(px: number) {
+      let value = this.convertPxToValue(px);
       this.model.setLeftValue(value);
-      // this.view.setLeftValue(this.model.leftValue);
+
+      this.view.setLeftValue(value, px);
     }
-    
-    handleRightInput(value: number): void {
+
+    // handleRightInput(value: number): void {
+    //   this.model.setRightValue(value);
+    //   // this.view.setRightValue(this.model.rightValue);
+    // }
+
+    handleRightInput(px: number) {
+      let value = this.convertPxToValue(px);
       this.model.setRightValue(value);
-      // this.view.setRightValue(this.model.rightValue);
+
+      this.view.setRightValue(value, px);
     }
     
     passLeftValueToView(value: number) {
@@ -60,13 +74,24 @@ export class Presenter {
 
     convertValueToPx(value: number): number {
       let trackWidthInPx: number = +this.view.track.getOffsetWidth();
-      let min:number = this.model.min;
-      let max:number = this.model.max;
+      let min: number = this.model.min;
+      let max: number = this.model.max;
 
       let percent: number = ((value - min) / (max - min)) * 100;
       let px: number = trackWidthInPx * percent / 100;
 
       return px;
+    }
+
+    convertPxToValue(px: number): number {
+      let trackWidthInPx: number = +this.view.track.getOffsetWidth();
+      let min: number = this.model.min;
+      let max: number = this.model.max;
+
+      let percent: number = px * 100 / trackWidthInPx;
+      let value: number = Math.round((max - min) * percent / 100 + min);
+
+      return value;
     }
 
   }

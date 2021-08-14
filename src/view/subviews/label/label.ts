@@ -15,6 +15,10 @@ export class Label {
     this.component.textContent = `${value}`;
   } 
 
+  getValue(): string | null {
+    return this.component.textContent;
+  }
+
   getBoundingClientRect(): DOMRect {
     return this.component.getBoundingClientRect();
   } 
