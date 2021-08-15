@@ -85,9 +85,15 @@ export class Scale {
     }
   }
 
+  getBoundingClientRect() {
+    return this.component.getBoundingClientRect();
+  }
+
   attachEventHandlers(): void {
     this.component.addEventListener('click', (event) => {
-      this.view?.handleScaleClick(event.clientX, event.clientY);
+      let x: number = event.clientX - this.getBoundingClientRect().left;
+      let y: number = event.clientY - this.getBoundingClientRect().top;
+      this.view?.handleScaleClick(x, y);
     });
   }
 }

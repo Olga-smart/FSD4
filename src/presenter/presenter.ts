@@ -37,28 +37,16 @@ export class Presenter {
       }
  
     }
-    
-    // handleLeftInput(value: number): void {
-    //   this.model.setLeftValue(value);
-    //   // this.view.setLeftValue(this.model.leftValue);
-    // }
 
     handleLeftInput(px: number) {
       let value = this.convertPxToValue(px);
       this.model.setLeftValue(value);
-
       this.view.setLeftValue(value, px);
     }
-
-    // handleRightInput(value: number): void {
-    //   this.model.setRightValue(value);
-    //   // this.view.setRightValue(this.model.rightValue);
-    // }
 
     handleRightInput(px: number) {
       let value = this.convertPxToValue(px);
       this.model.setRightValue(value);
-
       this.view.setRightValue(value, px);
     }
     

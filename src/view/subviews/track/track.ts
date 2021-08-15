@@ -15,17 +15,19 @@ export class Track {
     this.view = view;
   }
 
-  attachEventHandlers() {
-    this.component.addEventListener('click', (event) => {
-      this.view?.handleScaleClick(event.clientX, event.clientY);
-    });
-  }
-
   getBoundingClientRect() {
     return this.component.getBoundingClientRect();
   }
 
   getOffsetWidth() {
     return this.component.offsetWidth;
+  }
+
+  attachEventHandlers() {
+    this.component.addEventListener('click', (event) => {
+      let x: number = event.clientX - this.getBoundingClientRect().left;
+      let y: number = event.clientY - this.getBoundingClientRect().top;
+      this.view?.handleScaleClick(x, y);
+    });
   }
 }

@@ -350,18 +350,9 @@ export class View {
     }    
   }
 
-  // handleLeftInput(value: number): void {
-  //   this.presenter?.handleLeftInput(value);
-  // }
-
-  // handleRightInput(value: number): void {
-  //   this.presenter?.handleRightInput(value);
-  // }
-
   handleLeftInput(clientX: number, shiftX: number = 0): void {
     let newLeft = clientX - shiftX - this.track.getBoundingClientRect().left;
 
-    //  For thumb
     if (newLeft < 0) {
       newLeft = 0;
     }
@@ -377,27 +368,14 @@ export class View {
       if (newLeft > rightThumbPosition) {
         newLeft = rightThumbPosition;
       }
-    }   
-
-    this.thumbLeft.component.style.left = newLeft + 'px';
-
-    // For range
-    if (!this.isRange) {
-      this.range.setWidthInPx(newLeft);
-    } 
-    
-    if (this.isRange) {
-      this.range.setLeftIndentInPx(newLeft);
     }
     
     this.presenter?.handleLeftInput(newLeft);
-    // this.presenter?.handleLeftInput(value);
   }
 
   handleRightInput(clientX: number, shiftX: number = 0): void {
     let newLeft = clientX - shiftX - this.track.getBoundingClientRect().left;
 
-    // For thumb
     let leftThumbPosition = parseInt(this.thumbLeft.component.style.left);
 
     if (newLeft < leftThumbPosition) {
@@ -408,13 +386,7 @@ export class View {
       newLeft = this.track.getOffsetWidth();
     }
 
-    this.thumbRight.component.style.left = newLeft + 'px';
-
-    // For range
-    this.range.setRightIndentInPx(this.track.getOffsetWidth() - newLeft);
-
     this.presenter?.handleRightInput(newLeft);
-    // this.presenter?.handleRightInput(value);
   }
 
   // handleInputMouseover(type: 'left' | 'right' = 'left'): void {
@@ -463,12 +435,39 @@ export class View {
     }
   }
 
-  handleScaleClick(x: number, y: number): void {
-    let value = this.convertСlickСoordsToValue(x, y);
+  // handleScaleClick(x: number, y: number): void {
+  //   let value = this.convertСlickСoordsToValue(x, y);
 
+  //   if (!this.isRange) {
+  //     this.addSmoothTransition('left');
+  //     this.presenter?.handleLeftInput(value);
+  //     setTimeout(() => {
+  //       this.removeSmoothTransition('left');
+  //     }, 1000);
+  //   }
+
+  //   if (this.isRange) {
+  //     if ( this.whichThumbIsNearer(x, y) == 'left' ) {
+  //       this.addSmoothTransition('left');
+  //       this.presenter?.handleLeftInput(value);
+  //       setTimeout(() => {
+  //         this.removeSmoothTransition('left');
+  //       }, 1000);
+  //     } else {
+  //       this.addSmoothTransition('right');
+  //       this.presenter?.handleRightInput(value);
+  //       setTimeout(() => {
+  //         this.removeSmoothTransition('right');
+  //       }, 1000);
+  //     }
+  //   }
+
+  // }
+
+  handleScaleClick(x: number, y: number): void {
     if (!this.isRange) {
       this.addSmoothTransition('left');
-      this.presenter?.handleLeftInput(value);
+      this.presenter?.handleLeftInput(x);
       setTimeout(() => {
         this.removeSmoothTransition('left');
       }, 1000);
@@ -477,13 +476,13 @@ export class View {
     if (this.isRange) {
       if ( this.whichThumbIsNearer(x, y) == 'left' ) {
         this.addSmoothTransition('left');
-        this.presenter?.handleLeftInput(value);
+        this.presenter?.handleLeftInput(x);
         setTimeout(() => {
           this.removeSmoothTransition('left');
         }, 1000);
       } else {
         this.addSmoothTransition('right');
-        this.presenter?.handleRightInput(value);
+        this.presenter?.handleRightInput(x);
         setTimeout(() => {
           this.removeSmoothTransition('right');
         }, 1000);
@@ -515,21 +514,28 @@ export class View {
   whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
     let leftThumbCoords = this.thumbLeft.getBoundingClientRect();
     let rightThumbCoords = this.thumbRight.getBoundingClientRect();
+    let trackCoords = this.track.getBoundingClientRect();
 
-    let distanceFromLeftThumb: number = 0;
-    let distanceFromRightThumb: number = 0;
+    let distanceFromLeftThumbCenter: number = 0;
+    let distanceFromRightThumbCenter: number = 0;
 
     if (!this.vertical) {
-      distanceFromLeftThumb = Math.abs(x - leftThumbCoords.right);
-      distanceFromRightThumb = Math.abs(x - rightThumbCoords.left);
+      let leftThumbCenter = leftThumbCoords.left + leftThumbCoords.width/2 - trackCoords.left;
+      let rightThumbCenter = rightThumbCoords.left + rightThumbCoords.width/2 - trackCoords.left;
+
+      distanceFromLeftThumbCenter = Math.abs(x - leftThumbCenter);
+      distanceFromRightThumbCenter = Math.abs(x - rightThumbCenter);
     }
 
     if (this.vertical) {
-      distanceFromLeftThumb = Math.abs(y - leftThumbCoords.top);
-      distanceFromRightThumb = Math.abs(y - rightThumbCoords.bottom);
+      let leftThumbCenter = leftThumbCoords.top + leftThumbCoords.height/2 - trackCoords.top;
+      let rightThumbCenter = rightThumbCoords.top + rightThumbCoords.height/2 - trackCoords.top;
+
+      distanceFromLeftThumbCenter = Math.abs(y - leftThumbCenter);
+      distanceFromRightThumbCenter = Math.abs(y - rightThumbCenter);
     }
 
-    if (distanceFromLeftThumb <= distanceFromRightThumb) {
+    if (distanceFromLeftThumbCenter <= distanceFromRightThumbCenter) {
       return 'left';
     } else {
       return 'right';
