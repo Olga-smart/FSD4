@@ -11,12 +11,10 @@ export class Presenter {
       
       this.view.setMinValue(model.min);
       this.view.setMaxValue(model.max);
-      // this.view.setLeftValue(model.leftValue);
       // this.view.setStep(model.step);
       this.passLeftValueToView(model.leftValue);
 
       if (this.view.isRange) {
-        // this.view.setRightValue(model.rightValue);
         this.passRightValueToView(model.rightValue);
       }
 
@@ -41,13 +39,13 @@ export class Presenter {
     handleLeftInput(px: number) {
       let value = this.convertPxToValue(px);
       this.model.setLeftValue(value);
-      this.view.setLeftValue(value, px);
+      this.view.setLeftValue(value, this.convertValueToPx(value));
     }
 
     handleRightInput(px: number) {
       let value = this.convertPxToValue(px);
       this.model.setRightValue(value);
-      this.view.setRightValue(value, px);
+      this.view.setRightValue(value, this.convertValueToPx(value));
     }
     
     passLeftValueToView(value: number) {
@@ -77,9 +75,20 @@ export class Presenter {
       let max: number = this.model.max;
 
       let percent: number = px * 100 / trackWidthInPx;
-      let value: number = Math.round((max - min) * percent / 100 + min);
+      
+      let value: number = ((max - min) * percent / 100 + min);
+      value = this.fitToStep(value);
+      value = this.removeCalcInaccuracy(value);
 
       return value;
+    }
+
+    fitToStep(value: number): number {
+      return Math.round(value / this.model.step) * this.model.step;
+    }
+
+    removeCalcInaccuracy(value: number): number {
+      return +value.toFixed(10)
     }
 
   }

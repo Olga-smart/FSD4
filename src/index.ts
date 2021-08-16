@@ -12,7 +12,8 @@ window.addEventListener('load', () => {
         // max: 200,
         // leftValue: 125,
         // rightValue: 175,
-        range: true
+        range: true,
+        step: 10
       });
       
       let view = new View(slider, {

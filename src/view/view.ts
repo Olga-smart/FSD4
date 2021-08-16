@@ -128,13 +128,6 @@ export class View {
       this.maxLabel.setValue(max);
     }
   }
-  
-  // setStep(step: number): void {
-  //   this.inputLeft.setStep(step);
-  //   if (this.isRange) {
-  //     this.inputRight.setStep(step);
-  //   }
-  // }
     
   setLeftValue(value: number, px: number): void {  
     this.thumbLeft.setLeftIndentInPx(px);
@@ -389,42 +382,6 @@ export class View {
     this.presenter?.handleRightInput(newLeft);
   }
 
-  // handleInputMouseover(type: 'left' | 'right' = 'left'): void {
-  //   if (type == 'left') {
-  //     this.thumbLeft.addHover();
-  //   }
-  //   if (type == 'right') {
-  //     this.thumbRight.addHover();
-  //   }
-  // }
-
-  // handleInputMouseout(type: 'left' | 'right' = 'left'): void {
-  //   if (type == 'left') {
-  //     this.thumbLeft.removeHover();
-  //   }
-  //   if (type == 'right') {
-  //     this.thumbRight.removeHover();
-  //   }
-  // }
-
-  // handleInputMousedown(type: 'left' | 'right' = 'left'): void {
-  //   if (type == 'left') {
-  //     this.thumbLeft.makeActive();
-  //   }
-  //   if (type == 'right') {
-  //     this.thumbRight.makeActive();
-  //   }
-  // } 
-
-  // handleInputMouseup(type: 'left' | 'right' = 'left'): void {
-  //   if (type == 'left') {
-  //     this.thumbLeft.makeInactive();
-  //   }
-  //   if (type == 'right') {
-  //     this.thumbRight.makeInactive();
-  //   }
-  // } 
-
   addScale(min: number, max: number, intervalsNumber: number): void {
     this.scale = new Scale(min, max, intervalsNumber);
     this.scale.registerWith(this);
@@ -434,35 +391,6 @@ export class View {
       this.scale.fixPositionForVertical();
     }
   }
-
-  // handleScaleClick(x: number, y: number): void {
-  //   let value = this.convertСlickСoordsToValue(x, y);
-
-  //   if (!this.isRange) {
-  //     this.addSmoothTransition('left');
-  //     this.presenter?.handleLeftInput(value);
-  //     setTimeout(() => {
-  //       this.removeSmoothTransition('left');
-  //     }, 1000);
-  //   }
-
-  //   if (this.isRange) {
-  //     if ( this.whichThumbIsNearer(x, y) == 'left' ) {
-  //       this.addSmoothTransition('left');
-  //       this.presenter?.handleLeftInput(value);
-  //       setTimeout(() => {
-  //         this.removeSmoothTransition('left');
-  //       }, 1000);
-  //     } else {
-  //       this.addSmoothTransition('right');
-  //       this.presenter?.handleRightInput(value);
-  //       setTimeout(() => {
-  //         this.removeSmoothTransition('right');
-  //       }, 1000);
-  //     }
-  //   }
-
-  // }
 
   handleScaleClick(x: number, y: number): void {
     if (!this.isRange) {
