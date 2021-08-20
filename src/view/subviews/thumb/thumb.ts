@@ -46,12 +46,20 @@ export class Thumb {
     this.component.style.left = `${px}px`;
   }
 
+  setTopIndentInPx(px: number): void {
+    this.component.style.top = `${px}px`;
+  }
+
   setRightIndentInPx(px: number): void {
     this.component.style.right = `${px}px`;
   }
 
   getLeftIndent(): string {
     return this.component.style.left;
+  }
+
+  getTopIndent(): string {
+    return this.component.style.top;
   }
 
   getRightIndent(): string {
@@ -86,13 +94,14 @@ export class Thumb {
       event.preventDefault(); // предотвратить запуск выделения (действие браузера)
 
       let shiftX: number = event.clientX - this.getBoundingClientRect().left;
+      let shiftY: number = event.clientY - this.getBoundingClientRect().top;
       
       let handlePointerMove = (event: PointerEvent) => {
         if (this.type == 'left') {
-          this.view?.handleLeftInput(event.clientX, shiftX);
+          this.view?.handleLeftInput(event.clientX, event.clientY, shiftX, shiftY);
         }
         if (this.type == 'right') {
-          this.view?.handleRightInput(event.clientX, shiftX);
+          this.view?.handleRightInput(event.clientX, event.clientY, shiftX, shiftY);
         }
       };
 

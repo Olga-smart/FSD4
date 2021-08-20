@@ -78,11 +78,24 @@ export class Scale {
     }
   }
 
-  fixPositionForVertical(): void {
-    this.valueElements[0].style.transform = `rotate(90deg) translateY(-50%)`;
-    for (let i = 1; i < this.valueElements.length; i++) {
-      this.valueElements[i].style.transform = `rotate(90deg) translateX(${this.valueElements[i].offsetWidth}px) translateY(${-this.valueElements[i].offsetHeight}px) translateY(50%)`;
-    }
+  fitWidthForVertical() {
+    let maxWidth = 0;
+    this.valueElements.forEach(valueElement => {
+      if (valueElement.offsetWidth > maxWidth) {
+        maxWidth = valueElement.offsetWidth;
+      }
+    });
+    this.component.style.paddingRight = `${maxWidth + 3}px`;
+  }
+
+  fitHeightForHorizontal() {
+    let maxHeight = 0;
+    this.valueElements.forEach(valueElement => {
+      if (valueElement.offsetWidth > maxHeight) {
+        maxHeight = valueElement.offsetWidth;
+      }
+    });
+    this.component.style.paddingBottom = `${maxHeight + 3}px`;
   }
 
   getBoundingClientRect() {

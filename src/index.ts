@@ -13,13 +13,13 @@ window.addEventListener('load', () => {
         // leftValue: 125,
         // rightValue: 175,
         range: true,
-        step: 10
+        // step: 5
       });
       
       let view = new View(slider, {
         minMaxLabels: true,
         valueLabel: true,
-        // vertical: true,
+        vertical: true,
         range: true,
         scale: true,
         scaleIntervals: 5

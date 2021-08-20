@@ -23,7 +23,20 @@ export class Range {
     this.component.style.right = `${px}px`;
   }
 
+  setTopIndentInPx(px: number): void {
+    this.component.style.top = `${px}px`;
+  }
+
+  setBottomIndentInPx(px: number): void {
+    this.component.style.bottom = `${px}px`;
+  }
+
   setWidthInPx(px: number): void {
     this.component.style.width = `${px}px`;
   }
+
+  setHeightInPx(px: number): void {
+    this.component.style.height = `${px}px`;
+  }
+
 }

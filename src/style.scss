@@ -16,69 +16,42 @@ body {
 .container {
   width: 50%;
   max-width: 500px;
+  height: 500px;
+  // border: 1px solid sandybrown;
   // display: grid;
   // grid-template-columns: 0.5fr 1fr 0.5fr;
-  // display: flex;
+  display: flex;
 }
 
 .range-slider {
-  padding-top: 5px;
-  padding-bottom: 5px;
   position: relative;
-  &__input {
-    position: absolute;
-    top: 0;
-    z-index: 2;
-    height: 10px;
-    width: 100%;
-    -webkit-appearance: none;
-    pointer-events: none;
-    opacity: 0;
-    &::-webkit-slider-thumb {
-      width: 30px;
-      height: 30px;
-      border-radius: 0;
-      background-color: red;
-      -webkit-appearance: none;
-      pointer-events: all;
-      cursor: pointer;
-    }
-    &::-moz-range-thumb {
-      width: 30px;
-      height: 30px;
-      border-radius: 0;
-      background-color: red;
-      pointer-events: all;
-      cursor: pointer;
-    }
-    &::-ms-thumb {
-      width: 30px;
-      height: 30px;
-      border-radius: 0;
-      background-color: red;
-      pointer-events: all;
-      cursor: pointer;
-    }
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  &__labels-container {
+    position: relative;
   }
   &__slider {
     position: relative;
     z-index: 1;
-    height: 6px;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
   &__track {
-    position: absolute;
-    z-index: 1;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    position: relative;
+    // z-index: 1;
+    height: 6px;
+    // left: 0;
+    // right: 0;
+    // top: 0;
+    // bottom: 0;
     border-radius: 5px;
     background-color: rgba(crimson, 0.3);
     cursor: pointer;
   }
   &__range {
     position: absolute;
-    z-index: 2;
+    // z-index: 2;
     top: 0;
     bottom: 0;
     border-radius: 5px;
@@ -86,12 +59,12 @@ body {
     pointer-events: none;
     &_smooth-transition {
       transition:
-        left 0.5s ease-in-out,
-        right 0.5s ease-in-out;
+        all 0.5s ease-in-out;
     }  
   }
   &__thumb {
     position: absolute;
+    top: 0;
     z-index: 3;
     width: 16px;
     height: 16px;
@@ -108,10 +81,12 @@ body {
         right 0.5s ease-in-out;
     }  
     &_left {
-      transform: translate(-50%, -5px);
+      // transform: translate(-50%, -5px);
+      transform: translateX(-50%);
     }
     &_right {
-      transform: translate(-50%, -5px);
+      // transform: translate(-50%, -5px);
+      transform: translateX(-50%);
     }
     &_hover {
       box-shadow: 0 0 0 5px rgba(crimson, 0.1);
@@ -127,7 +102,7 @@ body {
     padding: 3px 5px;
     border-radius: 5px;
     position: absolute;
-    bottom: 20px;
+    bottom: 4px;
     transition: all 0.2s ease-in-out;
     &_left {
       left: 0;
@@ -143,7 +118,7 @@ body {
     position: absolute;
     padding: 3px 5px;
     border-radius: 5px;
-    bottom: 20px;
+    bottom: 4px;
     white-space: nowrap;
     &_smooth-transition {
       transition:
@@ -163,7 +138,7 @@ body {
   }
   &__scale {
     position: relative;
-    top: 8px;
+    padding-top: 8px;
     height: 8px;
     display: flex;  
     cursor: pointer;
@@ -184,7 +159,7 @@ body {
         right: 0;
         transform: translateX(50%);
         font-size: 0.7rem;
-        color: gray;;
+        color: gray;
         &_min {
           left: 0;
           right: unset;
@@ -200,30 +175,106 @@ body {
     }
   }
   &_vertical {
-    transform: rotate(-90deg);
-    .range-slider__min-max-label {
-      &_left {
-        transform-origin: bottom left;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 100%;
+    flex-direction: row;
+    .range-slider {
+      &__slider {
+        // width: 6px;
+        height: 100%;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: unset;
+        padding-bottom: unset;
       }
-      &_right {
-        transform-origin: top right;
+      &__track {
+        width: 6px;
+        height: 100%;
       }
-    }
-    .range-slider__value-label {
-      transform-origin: top right;
-    }
-    .range-slider__scale-interval-value {
-      transform-origin: top right;
-      &_min {
-        transform-origin: top left;
+      &__range {
+        top: unset;
+        bottom: unset;
+        left: 0;
+        right: 0; 
       }
+      &__thumb {
+        top: unset;
+        left: 0;
+        &_smooth-transition {
+          transition: 
+            box-shadow 0.2s ease-in-out,
+            top 0.5s ease-in-out,
+            bottom 0.5s ease-in-out;
+        }  
+        &_left {
+          // transform: translate(-5px, -50%);
+          transform: translateY(-50%);
+        }
+        &_right {
+          // transform: translate(-5px, -50%);
+          transform: translateY(-50%);
+        }
+      }
+      &__min-max-label {
+        bottom: unset;
+        right: 4px;
+        &_left {
+          left: unset;
+          bottom: 0;
+        }
+        &_right {
+          right: 4px;
+          top: 0;
+        }
+      }
+      &__value-label {
+        bottom: unset;
+        right: 4px;
+        transform: translateY(-50%);
+        &_smooth-transition {
+          transition:
+            top 0.8s cubic-bezier(0.79,0.14,0.15,0.86),
+            bottom 0.8s cubic-bezier(0.79,0.14,0.15,0.86);
+        }
+      }
+      &__scale {
+        top: 0;
+        padding-left: 8px;
+        padding-top: unset;
+        height: 100%;
+        flex-direction: column-reverse;
+        &-interval {
+          border-right: unset;
+          border-top: 1px solid gray;
+          width: 10px;
+          height: 100%;
+          flex-direction: column-reverse;
+          &:first-child {
+            border-left: unset;
+            border-bottom: 1px solid gray;
+          }
+          &-value {
+            top: 0;
+            left: calc(100% + 3px);
+            margin-top: unset;
+            right: unset;
+            transform: translateY(-50%);
+            &_min {
+              left: calc(100% + 3px);
+              right: unset;
+              top: unset;
+              bottom: 0;
+              transform: translateY(50%);
+            }
+          }
+        }
+        &-mark {
+          width: 4px;
+          height: 1px;
+        }
+      }      
     }
-  }
-  &_with-labels {
-    padding-top: 38px;
-  }
-  &_with-scale {
-    padding-bottom: 25px;
   }
 }
 

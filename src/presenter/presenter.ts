@@ -11,7 +11,6 @@ export class Presenter {
       
       this.view.setMinValue(model.min);
       this.view.setMaxValue(model.max);
-      // this.view.setStep(model.step);
       this.passLeftValueToView(model.leftValue);
 
       if (this.view.isRange) {
@@ -20,20 +19,15 @@ export class Presenter {
 
       if (this.view.hasScale) {
         this.view.addScale(model.min, model.max, view.scaleIntervals);
-      }
-      
-      if(this.view.vertical) {
+      } 
 
-        if (this.view.minLabel && this.view.maxLabel) {
-          this.view.fixMinMaxLabelsPositionForVertical();
-        }
-
-        if (this.view.valueLabelLeft) {
-          this.view.fixValueLabelPositionForVertical();
-        }
-        
+      if (!this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
+        this.view.fixLabelsContainerHeightForHorizontal();
       }
- 
+
+      if (this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
+        this.view.fixLabelsContainerWidthForVertical();
+      }
     }
 
     handleLeftInput(px: number) {
@@ -59,23 +53,39 @@ export class Presenter {
     }
 
     convertValueToPx(value: number): number {
-      let trackWidthInPx: number = +this.view.track.getOffsetWidth();
       let min: number = this.model.min;
       let max: number = this.model.max;
-
       let percent: number = ((value - min) / (max - min)) * 100;
-      let px: number = trackWidthInPx * percent / 100;
+      let px: number = 0; 
+
+      if (!this.view.vertical) {
+        let trackWidthInPx: number = +this.view.track.getOffsetWidth();
+        px = trackWidthInPx * percent / 100;
+      }
+      
+      if (this.view.vertical) {
+        let trackHeightInPx: number = +this.view.track.getOffsetHeight();
+        px = trackHeightInPx * percent / 100;
+      }
 
       return px;
     }
 
     convertPxToValue(px: number): number {
-      let trackWidthInPx: number = +this.view.track.getOffsetWidth();
       let min: number = this.model.min;
       let max: number = this.model.max;
-
-      let percent: number = px * 100 / trackWidthInPx;
+      let percent: number = 0;
       
+      if (!this.view.vertical) {
+        let trackWidthInPx: number = +this.view.track.getOffsetWidth();
+        percent = px * 100 / trackWidthInPx;
+      }
+
+      if (this.view.vertical) {
+        let trackHeightInPx: number = +this.view.track.getOffsetHeight();
+        percent = px * 100 / trackHeightInPx;
+      }
+
       let value: number = ((max - min) * percent / 100 + min);
       value = this.fitToStep(value);
       value = this.removeCalcInaccuracy(value);

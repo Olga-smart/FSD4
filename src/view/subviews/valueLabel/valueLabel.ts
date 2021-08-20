@@ -25,6 +25,14 @@ export class ValueLabel extends Label {
     return this.component.style.right;
   }
 
+  setTopIndent(value: string): void {
+    this.component.style.top = value;
+  }
+
+  getTopIndent(): string {
+    return this.component.style.top;
+  }
+
   fixPositionForVertical(): void {
     if (this.type == 'left') {
       this.component.style.transform = `rotate(90deg) translateX(${this.component.offsetHeight}px) translateY(${this.component.offsetWidth}px) translateY(-50%)`;

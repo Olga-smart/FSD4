@@ -22,4 +22,12 @@ export class Label {
   getBoundingClientRect(): DOMRect {
     return this.component.getBoundingClientRect();
   } 
+
+  getOffsetWidth() {
+    return this.component.offsetWidth;
+  }
+
+  getOffsetHeight() {
+    return this.component.offsetHeight;
+  }
 }

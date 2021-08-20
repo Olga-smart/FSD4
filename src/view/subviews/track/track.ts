@@ -23,6 +23,10 @@ export class Track {
     return this.component.offsetWidth;
   }
 
+  getOffsetHeight() {
+    return this.component.offsetHeight;
+  }
+
   attachEventHandlers() {
     this.component.addEventListener('click', (event) => {
       let x: number = event.clientX - this.getBoundingClientRect().left;

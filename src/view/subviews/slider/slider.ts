@@ -10,4 +10,8 @@ export class Slider {
   append(...elements: HTMLElement[]) {
     this.component.append(...elements);
   }
+
+  before(...elements: HTMLElement[]) {
+    this.component.before(...elements);
+  }
 }
