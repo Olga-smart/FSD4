@@ -5,8 +5,9 @@ import {Thumb} from './subviews/thumb/thumb';
 import {MinMaxLabel} from './subviews/minMaxLabel/minMaxLabel';
 import {ValueLabel} from './subviews/valueLabel/valueLabel';
 import {Scale} from './subviews/scale/scale';
+import {LabelsContainer} from './subviews/labelsContainer/labelsContainer';
 import {Presenter} from '../presenter/presenter';
-import { createElement } from './helpers/createElement';
+import {Label} from './subviews/label/label';
 
 type ViewOptions = {
   min?: number,
@@ -26,18 +27,18 @@ export class View {
   track: Track;
   range: Range;
   thumbLeft: Thumb;
-  thumbRight!: Thumb;
+  thumbRight?: Thumb;
   isRange: boolean;
   hasScale: boolean;
-  scaleIntervals!: number;
-  minLabel!: MinMaxLabel;
-  maxLabel!: MinMaxLabel;
-  valueLabelLeft!: ValueLabel;
-  valueLabelRight!: ValueLabel;
-  valueLabelCommon!: ValueLabel;
+  scaleIntervals?: number;
+  minLabel?: MinMaxLabel;
+  maxLabel?: MinMaxLabel;
+  valueLabelLeft?: ValueLabel;
+  valueLabelRight?: ValueLabel;
+  valueLabelCommon?: ValueLabel;
   vertical?: boolean;
   scale?: Scale;
-  labelsContainer?: HTMLElement;
+  labelsContainer?: LabelsContainer;
 
   constructor(component: Element, options: ViewOptions = {}) {
     this.presenter = null;
@@ -52,7 +53,7 @@ export class View {
     this.thumbLeft = new Thumb('left');
     this.thumbLeft.registerWith(this);
     
-    this.track.component.append(this.range.component);
+    this.track.append(this.range.component);
     this.slider.append(this.track.component, this.thumbLeft.component);
     this.component.append(this.slider.component);
 
@@ -79,48 +80,34 @@ export class View {
     } else {
       this.hasScale = false;
     }
-    
-    if (options.minMaxLabels) {
-      this.minLabel = new MinMaxLabel('left');
-      this.maxLabel = new MinMaxLabel('right');
-
-      this.slider.append(this.minLabel.component, this.maxLabel.component);
-    }
-    
-    if (options.valueLabel) {
-      this.valueLabelLeft = new ValueLabel('left');
-      
-      this.slider.append(this.valueLabelLeft.component);
-
-      if (options.range) {
-        this.valueLabelRight = new ValueLabel('right');
-        this.valueLabelCommon = new ValueLabel('common');
-
-        this.slider.append(this.valueLabelRight.component, this.valueLabelCommon.component);
-      }
-      
-    }
 
     if (options.minMaxLabels || options.valueLabel) {
-      this.labelsContainer = createElement('div', 'range-slider__labels-container');
+      this.labelsContainer = new LabelsContainer();
+
       if (options.minMaxLabels) {
+        this.minLabel = new MinMaxLabel('left');
+        this.maxLabel = new MinMaxLabel('right');
         this.labelsContainer.append(this.minLabel.component, this.maxLabel.component);
       }
+
       if (options.valueLabel) {
+        this.valueLabelLeft = new ValueLabel('left');
         this.labelsContainer.append(this.valueLabelLeft.component);
+
         if (options.range) {
+          this.valueLabelRight = new ValueLabel('right');
+          this.valueLabelCommon = new ValueLabel('common');
           this.labelsContainer.append(this.valueLabelRight.component, this.valueLabelCommon.component);
         }
+
       }
 
-      this.slider.before(this.labelsContainer);
+      this.slider.before(this.labelsContainer.component);
     }
     
     if (options.vertical) {
       this.component.classList.add('range-slider_vertical');
       this.vertical = true;
-
-
     }
   }
   
@@ -134,11 +121,7 @@ export class View {
     }
   }
   
-  setMaxValue(max: number): void {
-    // this.inputLeft.setMaxValue(max);
-    // if (this.isRange) {
-    //   this.inputRight.setMaxValue(max);
-    // }    
+  setMaxValue(max: number): void {   
     if (this.maxLabel) {
       this.maxLabel.setValue(max);
     }
@@ -194,7 +177,7 @@ export class View {
       this.valueLabelLeft.setValue(value);
       
       if(this.isRange) {
-        this.valueLabelCommon?.setValue( value + ' - ' + this.valueLabelRight.getValue() );
+        this.valueLabelCommon?.setValue( value + ' - ' + this.valueLabelRight!.getValue() );
 
         if ( this.isTwoValueLabelsClose() ) {
           this.mergeLabels();
@@ -223,27 +206,27 @@ export class View {
   
   setRightValue(value: number, px: number): void {
     if (!this.vertical) {
-      this.thumbRight.setLeftIndentInPx(px);
+      this.thumbRight!.setLeftIndentInPx(px);
       this.range.setRightIndentInPx(this.track.getOffsetWidth() - px);
 
       if (this.valueLabelRight) {
-        this.valueLabelRight.setLeftIndent( this.thumbRight.getLeftIndent() );
+        this.valueLabelRight.setLeftIndent( this.thumbRight!.getLeftIndent() );
       }
     }
     
     if (this.vertical) {
       let pxFromTop = this.track.getOffsetHeight() - px;
-      this.thumbRight.setTopIndentInPx(pxFromTop);
+      this.thumbRight!.setTopIndentInPx(pxFromTop);
       this.range.setTopIndentInPx(pxFromTop);
 
       if (this.valueLabelRight) {
-        this.valueLabelRight.setTopIndent( this.thumbRight.getTopIndent() );
+        this.valueLabelRight.setTopIndent( this.thumbRight!.getTopIndent() );
       }
     }
     
     if (this.valueLabelRight) {
       this.valueLabelRight.setValue(value);
-      this.valueLabelCommon?.setValue(this.valueLabelLeft.getValue() + ' - ' + value);
+      this.valueLabelCommon!.setValue(this.valueLabelLeft!.getValue() + ' - ' + value);
       
       if ( this.isTwoValueLabelsClose() ) {
         this.mergeLabels();
@@ -267,15 +250,14 @@ export class View {
     this.valueLabelCommon?.setOpacity(1);
 
     if (!this.vertical) {
-      let distanceBetweenThumbsInPx = parseInt(this.thumbRight.getLeftIndent()) - parseInt(this.thumbLeft.getLeftIndent());
-      this.valueLabelCommon?.setLeftIndent( parseInt(this.valueLabelLeft.getLeftIndent()) + distanceBetweenThumbsInPx / 2 + 'px' );
+      let distanceBetweenThumbsInPx = parseInt(this.thumbRight!.getLeftIndent()) - parseInt(this.thumbLeft.getLeftIndent());
+      this.valueLabelCommon?.setLeftIndent( parseInt(this.valueLabelLeft!.getLeftIndent()) + distanceBetweenThumbsInPx / 2 + 'px' );
     }
 
     if (this.vertical) {
-      let distanceBetweenThumbsInPx = parseInt(this.thumbRight.getTopIndent()) - parseInt(this.thumbLeft.getTopIndent());
-      this.valueLabelCommon?.setTopIndent( parseInt(this.valueLabelRight.getTopIndent()) - distanceBetweenThumbsInPx / 2 + 'px' );
-    }
-    
+      let distanceBetweenThumbsInPx = parseInt(this.thumbRight!.getTopIndent()) - parseInt(this.thumbLeft.getTopIndent());
+      this.valueLabelCommon?.setTopIndent( parseInt(this.valueLabelRight!.getTopIndent()) - distanceBetweenThumbsInPx / 2 + 'px' );
+    }    
   }
   
   splitLabels(): void {
@@ -286,15 +268,15 @@ export class View {
   
   isTwoValueLabelsClose(): boolean | undefined {
     if (!this.vertical) {
-      let leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
-      let rightLabelEdge = this.valueLabelRight.getBoundingClientRect().left;
+      let leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
+      let rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().left;
 
       return ( (rightLabelEdge - leftLabelEdge) < 3 ); 
     }
     
     if (this.vertical) {
-      let bottomLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
-      let topLabelEdge = this.valueLabelRight.getBoundingClientRect().bottom;
+      let bottomLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
+      let topLabelEdge = this.valueLabelRight!.getBoundingClientRect().bottom;
       
       return ( (bottomLabelEdge - topLabelEdge) < 3 ); 
     }
@@ -305,15 +287,15 @@ export class View {
     let minLabelEdge;
     
     if (!this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().left;
-      minLabelEdge = this.minLabel.getBoundingClientRect().right;
+      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().left;
+      minLabelEdge = this.minLabel!.getBoundingClientRect().right;
 
       return ( (leftLabelEdge - minLabelEdge) < 3 );
     }
     
     if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().bottom;
-      minLabelEdge = this.minLabel.getBoundingClientRect().top;
+      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().bottom;
+      minLabelEdge = this.minLabel!.getBoundingClientRect().top;
       
       return ( (minLabelEdge - leftLabelEdge) < 3 );
     }    
@@ -324,15 +306,15 @@ export class View {
     let maxLabelEdge;
 
     if (!this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().right;
-      maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
+      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
+      maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
 
       return ( (maxLabelEdge - leftLabelEdge) < 3 );
     }
 
     if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel.getBoundingClientRect().bottom;
+      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel!.getBoundingClientRect().bottom;
       
       return ( (leftLabelEdge - maxLabelEdge) < 3 );
     } 
@@ -343,15 +325,15 @@ export class View {
     let maxLabelEdge;
     
     if (!this.vertical) {
-      rightLabelEdge = this.valueLabelRight.getBoundingClientRect().right;
-      maxLabelEdge = this.maxLabel.getBoundingClientRect().left;
+      rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().right;
+      maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
 
       return ( (maxLabelEdge - rightLabelEdge) < 3 );
     }
     
     if (this.vertical) {
-      rightLabelEdge = this.valueLabelRight.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel.getBoundingClientRect().bottom;
+      rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel!.getBoundingClientRect().bottom;
 
       return ( (rightLabelEdge - maxLabelEdge) < 3 );
     }    
@@ -372,7 +354,7 @@ export class View {
       }
   
       if (this.isRange) {
-        let rightThumbPosition = parseInt(this.thumbRight.component.style.left);
+        let rightThumbPosition = parseInt(this.thumbRight!.component.style.left);
         if (newLeft > rightThumbPosition) {
           newLeft = rightThumbPosition;
         }
@@ -395,7 +377,7 @@ export class View {
       }
   
       if (this.isRange) {
-        let rightThumbPosition = parseInt(this.thumbRight.component.style.top);
+        let rightThumbPosition = parseInt(this.thumbRight!.component.style.top);
         if (newTop < rightThumbPosition) {
           newTop = rightThumbPosition;
         }
@@ -457,7 +439,7 @@ export class View {
     }    
   }
 
-  handleScaleClick(x: number, y: number): void {
+  handleScaleOrTrackClick(x: number, y: number): void {
     if (!this.isRange) {
       this.addSmoothTransition('left');
 
@@ -499,12 +481,11 @@ export class View {
         }, 1000);
       }
     }
-
   }
 
   whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
     let leftThumbCoords = this.thumbLeft.getBoundingClientRect();
-    let rightThumbCoords = this.thumbRight.getBoundingClientRect();
+    let rightThumbCoords = this.thumbRight!.getBoundingClientRect();
     let trackCoords = this.track.getBoundingClientRect();
 
     let distanceFromLeftThumbCenter: number = 0;
@@ -543,7 +524,7 @@ export class View {
     }
 
     if (side == 'right') {
-      this.thumbRight.component.classList.add('range-slider__thumb_smooth-transition');
+      this.thumbRight!.component.classList.add('range-slider__thumb_smooth-transition');
       this.range.component.classList.add('range-slider__range_smooth-transition');
       if (this.valueLabelRight) {
         this.valueLabelRight.component.classList.add('range-slider__value-label_smooth-transition');
@@ -561,7 +542,7 @@ export class View {
     }
 
     if (side == 'right') {
-      this.thumbRight.component.classList.remove('range-slider__thumb_smooth-transition');
+      this.thumbRight!.component.classList.remove('range-slider__thumb_smooth-transition');
       this.range.component.classList.remove('range-slider__range_smooth-transition');
       if (this.valueLabelRight) {
         this.valueLabelRight.component.classList.remove('range-slider__value-label_smooth-transition');
@@ -570,29 +551,32 @@ export class View {
   }
 
   fixLabelsContainerWidthForVertical(): void {
-    let maxWidth = 0;
-    let labels = [this.minLabel, this.maxLabel, this.valueLabelLeft, this.valueLabelRight];
-
-    labels.forEach(label => {
-      if (label?.getOffsetWidth() > maxWidth) {
-        maxWidth = label.getOffsetWidth();
-      }
-    })
-
-    this.labelsContainer!.style.paddingLeft = `${maxWidth + 4}px`;
+    let labels: Label[] = this.collectLabels();
+    this.labelsContainer?.fixWidthForVertical(labels);    
   }
 
   fixLabelsContainerHeightForHorizontal(): void {
-    let maxHeight = 0;
-    let labels = [this.minLabel, this.maxLabel, this.valueLabelLeft, this.valueLabelRight];
+    let labels: Label[] = this.collectLabels();
+    this.labelsContainer?.fixHeightForHorizontal(labels);
+  }
 
-    labels.forEach(label => {
-      if (label?.getOffsetHeight() > maxHeight) {
-        maxHeight = label.getOffsetHeight();
-      }
-    })
+  collectLabels(): Label[] {
+    let labels: Label[] = [];
 
-    this.labelsContainer!.style.paddingTop = `${maxHeight + 4}px`;
+    if (this.minLabel && this.maxLabel) {
+      labels.push(this.minLabel);
+      labels.push(this.maxLabel);
+    }
+
+    if (this.valueLabelLeft) {
+      labels.push(this.valueLabelLeft);
+    }
+
+    if (this.valueLabelRight) {
+      labels.push(this.valueLabelRight);
+    }
+
+    return labels;
   }
 
 }

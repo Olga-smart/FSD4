@@ -18,7 +18,7 @@ export class Presenter {
       }
 
       if (this.view.hasScale) {
-        this.view.addScale(model.min, model.max, view.scaleIntervals);
+        this.view.addScale(model.min, model.max, view.scaleIntervals!);
       } 
 
       if (!this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {

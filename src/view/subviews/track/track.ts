@@ -27,11 +27,15 @@ export class Track {
     return this.component.offsetHeight;
   }
 
+  append(...elements: HTMLElement[]) {
+    this.component.append(...elements);
+  }
+
   attachEventHandlers() {
     this.component.addEventListener('click', (event) => {
       let x: number = event.clientX - this.getBoundingClientRect().left;
       let y: number = event.clientY - this.getBoundingClientRect().top;
-      this.view?.handleScaleClick(x, y);
+      this.view?.handleScaleOrTrackClick(x, y);
     });
   }
 }

@@ -106,7 +106,7 @@ export class Scale {
     this.component.addEventListener('click', (event) => {
       let x: number = event.clientX - this.getBoundingClientRect().left;
       let y: number = event.clientY - this.getBoundingClientRect().top;
-      this.view?.handleScaleClick(x, y);
+      this.view?.handleScaleOrTrackClick(x, y);
     });
   }
 }
