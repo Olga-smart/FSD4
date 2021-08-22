@@ -1,5 +1,5 @@
 import {createElement} from '../../helpers/createElement';
-import { View } from '../../view';
+import {View} from '../../view';
 
 export class Scale {
   view: View | null;
@@ -80,21 +80,25 @@ export class Scale {
 
   fitWidthForVertical() {
     let maxWidth = 0;
+
     this.valueElements.forEach(valueElement => {
       if (valueElement.offsetWidth > maxWidth) {
         maxWidth = valueElement.offsetWidth;
       }
     });
+
     this.component.style.paddingRight = `${maxWidth + 3}px`;
   }
 
   fitHeightForHorizontal() {
     let maxHeight = 0;
+
     this.valueElements.forEach(valueElement => {
       if (valueElement.offsetWidth > maxHeight) {
         maxHeight = valueElement.offsetWidth;
       }
     });
+    
     this.component.style.paddingBottom = `${maxHeight + 3}px`;
   }
 

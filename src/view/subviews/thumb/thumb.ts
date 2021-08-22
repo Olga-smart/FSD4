@@ -4,7 +4,7 @@ import { View } from '../../view';
 export class Thumb {
   type: 'left' | 'right';
   component: HTMLElement;
-  view!: View | null;
+  view: View | null;
 
   constructor(type: 'left' | 'right' = 'left') {
     this.view = null;
@@ -18,30 +18,6 @@ export class Thumb {
     this.view = view;
   }
 
-  // addHover(): void {
-  //   this.component.classList.add('range-slider__thumb_hover');
-  // }
-
-  // removeHover(): void {
-  //   this.component.classList.remove('range-slider__thumb_hover');
-  // }
-
-  // makeActive(): void {
-  //   this.component.classList.add('range-slider__thumb_active');
-  // }
-
-  // makeInactive(): void {
-  //   this.component.classList.remove('range-slider__thumb_active');
-  // }
-
-  setLeftIndent(percent: number): void {
-    this.component.style.left = percent + '%';
-  }
-
-  setRightIndent(percent: number): void {
-    this.component.style.right = percent + '%';
-  }
-
   setLeftIndentInPx(px: number): void {
     this.component.style.left = `${px}px`;
   }
@@ -50,20 +26,12 @@ export class Thumb {
     this.component.style.top = `${px}px`;
   }
 
-  setRightIndentInPx(px: number): void {
-    this.component.style.right = `${px}px`;
-  }
-
   getLeftIndent(): string {
     return this.component.style.left;
   }
 
   getTopIndent(): string {
     return this.component.style.top;
-  }
-
-  getRightIndent(): string {
-    return this.component.style.right;
   }
 
   setZIndex(value: number): void {

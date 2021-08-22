@@ -14,7 +14,7 @@ export class Presenter {
       this.passLeftValueToView(model.leftValue);
 
       if (this.view.isRange) {
-        this.passRightValueToView(model.rightValue);
+        this.passRightValueToView(model.rightValue!);
       }
 
       if (this.view.hasScale) {
@@ -30,24 +30,24 @@ export class Presenter {
       }
     }
 
-    handleLeftInput(px: number) {
+    handleLeftInput(px: number): void {
       let value = this.convertPxToValue(px);
       this.model.setLeftValue(value);
       this.view.setLeftValue(value, this.convertValueToPx(value));
     }
 
-    handleRightInput(px: number) {
+    handleRightInput(px: number): void {
       let value = this.convertPxToValue(px);
       this.model.setRightValue(value);
       this.view.setRightValue(value, this.convertValueToPx(value));
     }
     
-    passLeftValueToView(value: number) {
+    passLeftValueToView(value: number): void {
       let px = this.convertValueToPx(value);
       this.view.setLeftValue(value, px);
     }
 
-    passRightValueToView(value: number) {
+    passRightValueToView(value: number): void {
       let px = this.convertValueToPx(value);
       this.view.setRightValue(value, px);
     }

@@ -1,46 +1,46 @@
-import {Track} from "./track";
+// import {Track} from "./track";
 
-describe('Track', function() {
+// describe('Track', function() {
 
-  describe('constructor()', function() {
+//   describe('constructor()', function() {
 
-    describe('set up component property with necessary classes', function() {
+//     describe('set up component property with necessary classes', function() {
 
-      let track = new Track();
+//       let track = new Track();
 
-      it('common class', function() {        
-        expect(track.component.classList).toContain('range-slider__track');
-      });
+//       it('common class', function() {        
+//         expect(track.component.classList).toContain('range-slider__track');
+//       });
 
-    });
+//     });
 
-  });
+//   });
 
-  describe('registerWith(view)', function() {
+//   describe('registerWith(view)', function() {
 
-    let track = new Track();
-    let view: any = {};
-    track.registerWith(view);
+//     let track = new Track();
+//     let view: any = {};
+//     track.registerWith(view);
 
-    it('set up view', function() {
-      expect(track.view).toBe(view);
-    });
+//     it('set up view', function() {
+//       expect(track.view).toBe(view);
+//     });
 
-  });
+//   });
 
-  describe('attachEventHandlers()', function() {
+//   describe('attachEventHandlers()', function() {
 
-    it('handle click', function() {
-      let track = new Track();
-      let view: any = {};
-      track.registerWith(view);
-      track.view!.handleScaleClick = jest.fn();
-      let event = new Event('click');
-      track.component.dispatchEvent(event);
+//     it('handle click', function() {
+//       let track = new Track();
+//       let view: any = {};
+//       track.registerWith(view);
+//       track.view!.handleScaleClick = jest.fn();
+//       let event = new Event('click');
+//       track.component.dispatchEvent(event);
 
-      expect(track.view!.handleScaleClick).toBeCalledWith((event as MouseEvent).clientX, (event as MouseEvent).clientY);
-    });
+//       expect(track.view!.handleScaleClick).toBeCalledWith((event as MouseEvent).clientX, (event as MouseEvent).clientY);
+//     });
 
-  });
+//   });
 
-});
+// });

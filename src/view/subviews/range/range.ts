@@ -7,14 +7,6 @@ export class Range {
     this.component = createElement('div', 'range-slider__range js-range-slider__range');
   }
 
-  setLeftIndent(percent: number): void {
-    this.component.style.left = percent + '%';
-  }
-
-  setRightIndent(percent: number): void {
-    this.component.style.right = percent + '%';
-  }
-
   setLeftIndentInPx(px: number): void {
     this.component.style.left = `${px}px`;
   }
@@ -38,5 +30,4 @@ export class Range {
   setHeightInPx(px: number): void {
     this.component.style.height = `${px}px`;
   }
-
 }

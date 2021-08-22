@@ -11,7 +11,7 @@ export class Model {
     min: number;
     max: number;
     leftValue: number;
-    rightValue!: number;
+    rightValue?: number;
     step: number;
     isRange: boolean;
 
@@ -39,7 +39,7 @@ export class Model {
       }
 
       if (this.isRange) {
-        this.leftValue = Math.min(value, this.rightValue);
+        this.leftValue = Math.min(value, this.rightValue!);
       }
     }
     

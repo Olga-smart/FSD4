@@ -1,5 +1,5 @@
 import {createElement} from '../../helpers/createElement';
-import { View } from '../../view';
+import {View} from '../../view';
 
 export class Track {
   view: View | null;
@@ -14,17 +14,17 @@ export class Track {
   registerWith(view: View) {
     this.view = view;
   }
-
-  getBoundingClientRect() {
-    return this.component.getBoundingClientRect();
-  }
-
+  
   getOffsetWidth() {
     return this.component.offsetWidth;
   }
 
   getOffsetHeight() {
     return this.component.offsetHeight;
+  }
+
+  getBoundingClientRect() {
+    return this.component.getBoundingClientRect();
   }
 
   append(...elements: HTMLElement[]) {
