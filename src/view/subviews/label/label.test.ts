@@ -25,13 +25,18 @@ describe('Label', function() {
       expect(label.type).toBe('left');
     });
 
+    it('set up type = common if the argument is "common"', function() {
+      let label = new Label('common');
+      expect(label.type).toBe('common');
+    });
+
     it('set up component property', function() {
       expect(label).toHaveProperty('component');
     });
 
     it('component property is div element', function() {
       expect(label.component).toBeInstanceOf(HTMLDivElement);
-    })
+    });
 
   });
 

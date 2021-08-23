@@ -16,7 +16,7 @@ export class LabelsContainer {
     let maxWidth = 0;
 
     labels.forEach(label => {
-      if (label?.getOffsetWidth() > maxWidth) {
+      if (label.getOffsetWidth() > maxWidth) {
         maxWidth = label.getOffsetWidth();
       }
     })
@@ -28,7 +28,7 @@ export class LabelsContainer {
     let maxHeight = 0;
 
     labels.forEach(label => {
-      if (label?.getOffsetHeight() > maxHeight) {
+      if (label.getOffsetHeight() > maxHeight) {
         maxHeight = label.getOffsetHeight();
       }
     })
