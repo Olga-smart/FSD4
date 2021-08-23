@@ -20,30 +20,57 @@ describe('Label', function() {
       expect(label.type).toBe('right');
     });
 
+    it('set up type = left if the argument is "left"', function() {
+      let label = new Label('left');
+      expect(label.type).toBe('left');
+    });
+
     it('set up component property', function() {
       expect(label).toHaveProperty('component');
     });
+
+    it('component property is div element', function() {
+      expect(label.component).toBeInstanceOf(HTMLDivElement);
+    })
 
   });
 
   describe('setOpacity(value)', function() {
 
     let label = new Label();
-    label.setOpacity(0.5);
 
     it('change opacity of component', function() {
-      expect(label.component.style.opacity).toBe('0.5');
+      for (let i = 0; i <= 1; i += 0.1) {
+        label.setOpacity(i);
+        expect(label.component.style.opacity).toBe(`${i}`);
+      }
     });
 
   });
 
   describe('setValue(value)', function() {
 
-    let label = new Label();
-    label.setValue(20)
+    let label = new Label();    
 
     it('change textContent of component', function() {
-      expect(label.component.textContent).toBe('20');
+      for (let i = -50; i <= 50; i++) {
+        label.setValue(i);
+        expect(label.component.textContent).toBe(`${i}`);
+      }
+    });
+
+  });
+
+  describe('getValue()', function() {
+
+    let label = new Label();    
+
+    it('return textContent of component', function() {
+      for (let i = -50; i <= 50; i++) {
+        label.component.textContent = `${i}`;
+        let value = label.getValue();
+        expect(value).toBe(`${i}`);
+      }
     });
 
   });
@@ -54,10 +81,29 @@ describe('Label', function() {
     let coords = label.getBoundingClientRect();
 
     it('return component coordinates', function() {
-      expect(coords).toHaveProperty('top');
-      expect(coords).toHaveProperty('right');
-      expect(coords).toHaveProperty('bottom');
-      expect(coords).toHaveProperty('left');
+      expect(coords).toEqual(label.component.getBoundingClientRect());
+    });
+
+  });
+
+  describe('getOffsetWidth()', function() {
+
+    let label = new Label();
+    let width = label.getOffsetWidth();
+
+    it('return component width', function() {
+      expect(width).toBe(label.component.offsetWidth);
+    });
+
+  });
+
+  describe('getOffsetHeight()', function() {
+
+    let label = new Label();
+    let height = label.getOffsetHeight();
+
+    it('return component height', function() {
+      expect(height).toBe(label.component.offsetHeight);
     });
 
   });

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1626959346093" clover="3.2.0">
-  <project timestamp="1626959346094" name="All files">
-    <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="0" coveredelements="0" complexity="0" loc="0" ncloc="0" packages="0" files="0" classes="0"/>
+<coverage generated="1629729682598" clover="3.2.0">
+  <project timestamp="1629729682598" name="All files">
+    <metrics statements="9" coveredstatements="9" conditionals="1" coveredconditionals="1" methods="7" coveredmethods="7" elements="17" coveredelements="17" complexity="0" loc="9" ncloc="9" packages="1" files="1" classes="1"/>
+    <file name="label.ts" path="C:\Users\Ольга\Documents\Учеба\Верстка\FSD_4\src\view\subviews\label\label.ts">
+      <metrics statements="9" coveredstatements="9" conditionals="1" coveredconditionals="1" methods="7" coveredmethods="7"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="6" count="10" type="stmt"/>
+      <line num="7" count="10" type="stmt"/>
+      <line num="11" count="11" type="stmt"/>
+      <line num="15" count="101" type="stmt"/>
+      <line num="19" count="101" type="stmt"/>
+      <line num="23" count="1" type="stmt"/>
+      <line num="27" count="1" type="stmt"/>
+      <line num="31" count="1" type="stmt"/>
+    </file>
   </project>
 </coverage>
