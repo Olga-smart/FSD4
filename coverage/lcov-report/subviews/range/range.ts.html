@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for subviews/label/label.ts</title>
+    <title>Code coverage report for subviews/range/range.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">subviews/label</a> label.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">subviews/range</a> range.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.29% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -91,67 +91,67 @@
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export class Label {
-  type: 'left' | 'right' | 'common';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {createElement} from '../../helpers/createElement';
+&nbsp;
+export class Range {
   component: HTMLElement;
 &nbsp;
-  constructor(type: 'left' | 'right' | 'common' = <span class="branch-0 cbranch-no" title="branch not covered" >'left')</span> {
-    this.type = type;
-    this.component = document.createElement('div');
+  constructor() {
+    this.component = createElement('div', 'range-slider__range js-range-slider__range');
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  setOpacity(</span>value: number): void {
-<span class="cstat-no" title="statement not covered" >    this.component.style.opacity = `${value}`;</span>
+  setLeftIndentInPx(px: number): void {
+    this.component.style.left = `${px}px`;
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  setValue(</span>value: number | string): void {
-<span class="cstat-no" title="statement not covered" >    this.component.textContent = `${value}`;</span>
-  } 
-&nbsp;
-<span class="fstat-no" title="function not covered" >  getValue(</span>): string | null {
-<span class="cstat-no" title="statement not covered" >    return this.component.textContent;</span>
+  setRightIndentInPx(px: number): void {
+    this.component.style.right = `${px}px`;
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  getBoundingClientRect(</span>): DOMRect {
-<span class="cstat-no" title="statement not covered" >    return this.component.getBoundingClientRect();</span>
-  } 
-&nbsp;
-<span class="fstat-no" title="function not covered" >  getOffsetWidth(</span>) {
-<span class="cstat-no" title="statement not covered" >    return this.component.offsetWidth;</span>
+  setTopIndentInPx(px: number): void {
+    this.component.style.top = `${px}px`;
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  getOffsetHeight(</span>) {
-<span class="cstat-no" title="statement not covered" >    return this.component.offsetHeight;</span>
+  setBottomIndentInPx(px: number): void {
+    this.component.style.bottom = `${px}px`;
+  }
+&nbsp;
+  setWidthInPx(px: number): void {
+    this.component.style.width = `${px}px`;
+  }
+&nbsp;
+  setHeightInPx(px: number): void {
+    this.component.style.height = `${px}px`;
   }
 }</pre></td></tr></table></pre>
 
@@ -160,7 +160,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 24 2021 10:20:40 GMT+0700 (Новосибирск, стандартное время)
+                at Tue Aug 24 2021 10:30:59 GMT+0700 (Новосибирск, стандартное время)
             </div>
         </div>
         <script src="../../prettify.js"></script>

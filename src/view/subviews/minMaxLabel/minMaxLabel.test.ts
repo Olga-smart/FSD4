@@ -38,7 +38,12 @@ describe('MinMaxLabel', function() {
         expect(label.component.classList).toContain('js-range-slider__min-max-label_right');
       });
 
-    });
+      it('component property is div element', function() {
+        let label = new MinMaxLabel();
+        expect(label.component).toBeInstanceOf(HTMLDivElement);
+      });
+
+    });    
 
     describe('inherit from Label', function() {
 
