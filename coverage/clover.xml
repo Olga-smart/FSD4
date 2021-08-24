@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1629734476871" clover="3.2.0">
-  <project timestamp="1629734476871" name="All files">
-    <metrics statements="28" coveredstatements="22" conditionals="7" coveredconditionals="4" methods="14" coveredmethods="8" elements="49" coveredelements="34" complexity="0" loc="28" ncloc="28" packages="3" files="3" classes="3"/>
+<coverage generated="1629774826101" clover="3.2.0">
+  <project timestamp="1629774826101" name="All files">
+    <metrics statements="19" coveredstatements="13" conditionals="4" coveredconditionals="2" methods="9" coveredmethods="3" elements="32" coveredelements="18" complexity="0" loc="19" ncloc="19" packages="3" files="3" classes="3"/>
     <package name="helpers">
       <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
       <file name="createElement.ts" path="C:\Users\Ольга\Documents\Учеба\Верстка\FSD_4\src\view\helpers\createElement.ts">
         <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
-        <line num="2" count="4" type="stmt"/>
-        <line num="3" count="4" type="cond" truecount="1" falsecount="1"/>
-        <line num="4" count="4" type="stmt"/>
-        <line num="7" count="4" type="stmt"/>
+        <line num="2" count="8" type="stmt"/>
+        <line num="3" count="8" type="cond" truecount="1" falsecount="1"/>
+        <line num="4" count="8" type="stmt"/>
+        <line num="7" count="8" type="stmt"/>
       </file>
     </package>
     <package name="subviews.label">
-      <metrics statements="9" coveredstatements="3" conditionals="1" coveredconditionals="1" methods="7" coveredmethods="1"/>
+      <metrics statements="9" coveredstatements="3" conditionals="1" coveredconditionals="0" methods="7" coveredmethods="1"/>
       <file name="label.ts" path="C:\Users\Ольга\Documents\Учеба\Верстка\FSD_4\src\view\subviews\label\label.ts">
-        <metrics statements="9" coveredstatements="3" conditionals="1" coveredconditionals="1" methods="7" coveredmethods="1"/>
+        <metrics statements="9" coveredstatements="3" conditionals="1" coveredconditionals="0" methods="7" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
-        <line num="6" count="6" type="stmt"/>
-        <line num="7" count="6" type="stmt"/>
+        <line num="6" count="8" type="stmt"/>
+        <line num="7" count="8" type="stmt"/>
         <line num="11" count="0" type="stmt"/>
         <line num="15" count="0" type="stmt"/>
         <line num="19" count="0" type="stmt"/>
@@ -28,24 +28,15 @@
         <line num="31" count="0" type="stmt"/>
       </file>
     </package>
-    <package name="subviews.labelsContainer">
-      <metrics statements="14" coveredstatements="14" conditionals="4" coveredconditionals="2" methods="6" coveredmethods="6"/>
-      <file name="labelsContainer.ts" path="C:\Users\Ольга\Documents\Учеба\Верстка\FSD_4\src\view\subviews\labelsContainer\labelsContainer.ts">
-        <metrics statements="14" coveredstatements="14" conditionals="4" coveredconditionals="2" methods="6" coveredmethods="6"/>
+    <package name="subviews.minMaxLabel">
+      <metrics statements="5" coveredstatements="5" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+      <file name="minMaxLabel.ts" path="C:\Users\Ольга\Documents\Учеба\Верстка\FSD_4\src\view\subviews\minMaxLabel\minMaxLabel.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
-        <line num="8" count="4" type="stmt"/>
-        <line num="12" count="2" type="stmt"/>
-        <line num="16" count="1" type="stmt"/>
-        <line num="18" count="1" type="stmt"/>
-        <line num="19" count="3" type="cond" truecount="1" falsecount="1"/>
-        <line num="20" count="3" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
-        <line num="28" count="1" type="stmt"/>
-        <line num="30" count="1" type="stmt"/>
-        <line num="31" count="3" type="cond" truecount="1" falsecount="1"/>
-        <line num="32" count="3" type="stmt"/>
-        <line num="36" count="1" type="stmt"/>
+        <line num="8" count="8" type="stmt"/>
+        <line num="9" count="8" type="stmt"/>
       </file>
     </package>
   </project>

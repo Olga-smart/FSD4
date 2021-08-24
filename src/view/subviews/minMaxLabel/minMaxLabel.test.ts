@@ -1,71 +1,91 @@
-// import {MinMaxLabel} from './minMaxLabel';
+import {MinMaxLabel} from './minMaxLabel';
+import {Label} from '../label/label';
 
-// describe('MinMaxLabel', function() {
+describe('MinMaxLabel', function() {
 
-//   describe('constructor(type)', function() {
+  describe('constructor(type)', function() {
 
-//     describe('set up component property with necessary classes', function() {
+    describe('set up component property with necessary classes', function() {
 
-//       it('set up common class', function() {
-//         let label = new MinMaxLabel();
-//         expect(label.component.classList).toContain('range-slider__min-max-label');
-//       });
+      it('set up common class', function() {
+        let label = new MinMaxLabel();
+        expect(label.component.classList).toContain('range-slider__min-max-label');
+      });
 
-//       it('set up class for left label if argument "type" == "left" or by default', function() {
-//         let label = new MinMaxLabel();
-//         expect(label.component.classList).toContain('range-slider__min-max-label_left');
+      it('set up class for left label if argument "type" == "left" or by default', function() {
+        let label = new MinMaxLabel();
+        expect(label.component.classList).toContain('range-slider__min-max-label_left');
 
-//         label = new MinMaxLabel('left');
-//         expect(label.component.classList).toContain('range-slider__min-max-label_left');
-//       });
+        label = new MinMaxLabel('left');
+        expect(label.component.classList).toContain('range-slider__min-max-label_left');
+      });
 
-//       it('set up js-class for left label if argument "type" == "left" or by default', function() {
-//         let label = new MinMaxLabel();
-//         expect(label.component.classList).toContain('js-range-slider__min-max-label_left');
+      it('set up js-class for left label if argument "type" == "left" or by default', function() {
+        let label = new MinMaxLabel();
+        expect(label.component.classList).toContain('js-range-slider__min-max-label_left');
 
-//         label = new MinMaxLabel('left');
-//         expect(label.component.classList).toContain('js-range-slider__min-max-label_left');
-//       }); 
+        label = new MinMaxLabel('left');
+        expect(label.component.classList).toContain('js-range-slider__min-max-label_left');
+      }); 
 
-//       it('set up class for right label if argument "type" == "right"', function() {
-//         let label = new MinMaxLabel('right');
-//         expect(label.component.classList).toContain('range-slider__min-max-label_right');
-//       });
+      it('set up class for right label if argument "type" == "right"', function() {
+        let label = new MinMaxLabel('right');
+        expect(label.component.classList).toContain('range-slider__min-max-label_right');
+      });
 
-//       it('set up js-class for right label if argument "type" == "right"', function() {
-//         let label = new MinMaxLabel('right');
-//         expect(label.component.classList).toContain('js-range-slider__min-max-label_right');
-//       });
+      it('set up js-class for right label if argument "type" == "right"', function() {
+        let label = new MinMaxLabel('right');
+        expect(label.component.classList).toContain('js-range-slider__min-max-label_right');
+      });
 
-//     });
+    });
 
-//   });
+    describe('inherit from Label', function() {
 
-//   describe('fixPositionForVertical()', function() {
+        let label = new MinMaxLabel();
 
-//     describe('apply necessary transformation', function() {
+        it('is instance of Label', function() {
+          expect(label).toBeInstanceOf(Label);
+        });
 
-//       it('if this.type == left or by default', function() {
-//         let label = new MinMaxLabel();
-//         label.fixPositionForVertical();
+        describe('has parent properties', function() {
 
-//         expect(label.component.style.transform).toStrictEqual(expect.stringContaining('rotate(90deg) translateX'));
+          it('has type property', function() {
+            expect(label).toHaveProperty('type');
+          });
 
-//         label = new MinMaxLabel('left');
-//         label.fixPositionForVertical();
+        });
 
-//         expect(label.component.style.transform).toStrictEqual(expect.stringContaining('rotate(90deg) translateX'));
-//       });
+        describe('has parent methods', function() {
 
-//       it('if this.type == right', function() {
-//         let label = new MinMaxLabel('right');
-//         label.fixPositionForVertical();
+          it('has setOpacity() method', function() {
+            expect(label).toHaveProperty('setOpacity');
+          });
 
-//         expect(label.component.style.transform).toStrictEqual(expect.stringContaining('rotate(90deg) translateX'));
-//       });
+          it('has setValue() method', function() {
+            expect(label).toHaveProperty('setValue');
+          });
 
-//     });
+          it('has getValue() method', function() {
+            expect(label).toHaveProperty('getValue');
+          });
 
-//   });
+          it('has getBoundingClientRect() method', function() {
+            expect(label).toHaveProperty('getBoundingClientRect');
+          });
 
-// });
+          it('has getOffsetWidth() method', function() {
+            expect(label).toHaveProperty('getOffsetWidth');
+          });
+
+          it('has getOffsetHeight() method', function() {
+            expect(label).toHaveProperty('getOffsetHeight');
+          });
+
+        });
+
+    });
+
+  });
+
+});
