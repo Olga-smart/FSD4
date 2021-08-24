@@ -71,7 +71,7 @@ export class Scale {
     this.valueElements.push(valueElement);
 
     for (let i = 1; i < this.values.length; i++) {
-      let valueElement = createElement('span', 'range-slider__scale-interval-value range-slider__scale-interval-value');
+      let valueElement = createElement('span', 'range-slider__scale-interval-value');
       valueElement.textContent = `${this.values[i]}`;
       this.intervals[i-1].append(valueElement); 
       this.valueElements.push(valueElement);
@@ -94,8 +94,8 @@ export class Scale {
     let maxHeight = 0;
 
     this.valueElements.forEach(valueElement => {
-      if (valueElement.offsetWidth > maxHeight) {
-        maxHeight = valueElement.offsetWidth;
+      if (valueElement.offsetHeight > maxHeight) {
+        maxHeight = valueElement.offsetHeight;
       }
     });
     

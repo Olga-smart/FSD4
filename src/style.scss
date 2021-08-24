@@ -18,7 +18,7 @@ body {
   height: 500px;
   // display: grid;
   // grid-template-columns: 0.5fr 1fr 0.5fr;
-  display: flex;
+  // display: flex;
 }
 
 .range-slider {
@@ -125,7 +125,6 @@ body {
   &__scale {
     position: relative;
     padding-top: 8px;
-    height: 8px;
     display: flex;  
     cursor: pointer;
     &-interval {
