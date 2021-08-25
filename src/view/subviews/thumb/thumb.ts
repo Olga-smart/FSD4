@@ -1,5 +1,5 @@
 import {createElement} from '../../helpers/createElement';
-import { View } from '../../view';
+import {View} from '../../view';
 
 export class Thumb {
   type: 'left' | 'right';
