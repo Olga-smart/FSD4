@@ -23,16 +23,24 @@ describe('LabelsContainer', function() {
 
   describe('append(...elements)', function() {
 
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+
     let labelsContainer = new LabelsContainer();
     let div = document.createElement('div');
-    labelsContainer.component.append = jest.fn();
+    jest.spyOn(HTMLElement.prototype, 'append');
     labelsContainer.append(div);
+
+    it('append element to component', function() {
+      expect(div.parentNode).toBe(labelsContainer.component);
+    });
 
     it('call built-in method append', function() {
       expect(labelsContainer.component.append).toBeCalledWith(div);
     });
 
-    it('works with multiple arguments', function() {
+    it('work with multiple arguments', function() {
       let div1 = document.createElement('div');
       let div2 = document.createElement('div');
       let div3 = document.createElement('div');
