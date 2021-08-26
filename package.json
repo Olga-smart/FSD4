@@ -9,7 +9,7 @@
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
     "start": "cross-env NODE_ENV=development webpack serve --mode development --open",
     "test": "jest --detectOpenHandles",
-    "testvaluelabel": "jest --detectOpenHandles src/view/subviews/valueLabel",
+    "testcreateElement": "jest --detectOpenHandles src/view/helpers/createElement",
     "testview": "jest --detectOpenHandles src/view/view-jest.test.ts",
     "testview1": "jest --detectOpenHandles src/view/view-puppeteer.test.ts"
   },
