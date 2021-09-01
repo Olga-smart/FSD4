@@ -1,4 +1,3 @@
-// import { values } from "regenerator-runtime";
 import {Scale} from "./scale";
 
 describe('Scale', function() {

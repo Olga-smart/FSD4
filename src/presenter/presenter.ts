@@ -94,7 +94,9 @@ export class Presenter {
     }
 
     fitToStep(value: number): number {
-      return Math.round(value / this.model.step) * this.model.step;
+      let result = Math.round(value / this.model.step) * this.model.step;
+      result = this.removeCalcInaccuracy(result);
+      return result;
     }
 
     removeCalcInaccuracy(value: number): number {

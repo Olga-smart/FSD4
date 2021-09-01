@@ -13,7 +13,7 @@ window.addEventListener('load', () => {
         // leftValue: 125,
         // rightValue: 175,
         range: true,
-        // step: 5
+        step: 0.6
       });
       
       let view = new View(slider, {
@@ -28,6 +28,10 @@ window.addEventListener('load', () => {
       let presenter = new Presenter(model, view);
       
       view.registerWith(presenter);
+
+      console.log(presenter.fitToStep(7));
+      console.log(presenter.removeCalcInaccuracy(presenter.fitToStep(7)));
+      console.log(presenter.fitToStep(6) % 0.6);
     }
 });
 

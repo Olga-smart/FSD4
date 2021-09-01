@@ -1,4 +1,5 @@
-import {Thumb} from "./thumb";
+import {Thumb} from './thumb';
+import {View} from '../../view';
 
 describe('Thumb', function() {
 
@@ -222,7 +223,7 @@ describe('Thumb', function() {
         thumb.component.dispatchEvent(new Event('pointerdown'));
         thumb.component.dispatchEvent(new Event('pointermove'));
   
-        expect(thumb.view!.handleLeftInput).toBeCalled;
+        expect(thumb.view!.handleLeftInput).toBeCalled();
       });
 
       it('call handler for right input if thumb type is right', function() {
@@ -235,25 +236,28 @@ describe('Thumb', function() {
         thumb.component.dispatchEvent(new Event('pointerdown'));
         thumb.component.dispatchEvent(new Event('pointermove'));
   
-        expect(thumb.view!.handleRightInput).toBeCalled;
+        expect(thumb.view!.handleRightInput).toBeCalled();
       });
 
       it('nothing happens if view is not registered', function() {
         let thumb = new Thumb('left');
         thumb.component.setPointerCapture = jest.fn();
+        jest.spyOn(View.prototype, 'handleLeftInput');
 
         thumb.component.dispatchEvent(new Event('pointerdown'));
         thumb.component.dispatchEvent(new Event('pointermove'));
   
-        expect(thumb.view?.handleLeftInput).not.toBeCalled;
+        expect(View.prototype.handleLeftInput).not.toBeCalled();
 
+        
         thumb = new Thumb('right');
         thumb.component.setPointerCapture = jest.fn();
+        jest.spyOn(View.prototype, 'handleRightInput');
 
         thumb.component.dispatchEvent(new Event('pointerdown'));
         thumb.component.dispatchEvent(new Event('pointermove'));
   
-        expect(thumb.view?.handleRightInput).not.toBeCalled;
+        expect(View.prototype.handleRightInput).not.toBeCalled();
       });
       
     });

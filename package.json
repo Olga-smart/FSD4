@@ -9,7 +9,7 @@
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
     "start": "cross-env NODE_ENV=development webpack serve --mode development --open",
     "test": "jest --detectOpenHandles",
-    "testcreateElement": "jest --detectOpenHandles src/view/helpers/createElement",
+    "testpresenter": "jest --detectOpenHandles src/presenter/presenter",
     "testview": "jest --detectOpenHandles src/view/view-jest.test.ts",
     "testview1": "jest --detectOpenHandles src/view/view-puppeteer.test.ts"
   },
@@ -20,7 +20,7 @@
   "author": "Olga Tarasova",
   "license": "ISC",
   "devDependencies": {
-    "@babel/preset-typescript": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
     "@types/jest": "^26.0.24",
     "@types/jest-environment-puppeteer": "^4.4.1",
     "@types/regenerator-runtime": "^0.13.1",
@@ -29,27 +29,27 @@
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.7",
     "html-webpack-plugin": "^5.3.2",
-    "jest": "^27.0.6",
+    "jest": "^27.1.0",
     "jest-puppeteer": "^5.0.4",
     "mini-css-extract-plugin": "^1.6.2",
     "pug": "^3.0.0",
     "pug-loader": "^2.4.0",
     "puppeteer": "^9.1.1",
-    "regenerator-runtime": "^0.13.7",
+    "regenerator-runtime": "^0.13.9",
     "resolve-url-loader": "^3.1.4",
-    "sass": "^1.35.2",
+    "sass": "^1.38.2",
     "sass-loader": "^11.1.1",
     "style-loader": "^2.0.0",
-    "ts-jest": "^27.0.3",
-    "ts-loader": "^9.2.3",
-    "typescript": "^4.3.5",
-    "webpack": "^5.45.1",
-    "webpack-cli": "^4.7.2",
+    "ts-jest": "^27.0.5",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.2",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "@babel/core": "^7.14.6",
-    "@babel/node": "^7.14.7",
-    "@babel/preset-env": "^7.14.7"
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0"
   }
 }

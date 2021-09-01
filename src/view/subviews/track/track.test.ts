@@ -1,4 +1,5 @@
-import {Track} from "./track";
+import {Track} from './track';
+import {View} from '../../view';
 
 describe('Track', function() {
 
@@ -120,8 +121,9 @@ describe('Track', function() {
       let track = new Track();
       let event = new Event('click');
       track.component.dispatchEvent(event);
+      jest.spyOn(View.prototype, 'handleScaleOrTrackClick');
 
-      expect(track.view?.handleScaleOrTrackClick).not.toBeCalled;
+      expect(View.prototype.handleScaleOrTrackClick).not.toBeCalled();
     });
 
   });
