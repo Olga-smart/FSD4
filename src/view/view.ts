@@ -52,26 +52,13 @@ export class View {
 
     this.thumbLeft = new Thumb('left');
     this.thumbLeft.registerWith(this);
-    
-    this.track.append(this.range.component);
-    this.slider.append(this.track.component, this.thumbLeft.component);
-    this.component.append(this.slider.component);
 
     if (options.range) {
-      this.thumbRight = new Thumb('right');
-      this.thumbRight.registerWith(this);
-
-      this.slider.append(this.thumbRight.component);
-
       this.isRange = true;
+      this.thumbRight = new Thumb('right');
+      this.thumbRight.registerWith(this);  
     } else {
       this.isRange = false;
-      if (!options.vertical) {
-        this.range.setLeftIndentInPx(0);
-      }
-      if (options.vertical) {
-        this.range.setBottomIndentInPx(0);
-      }
     }
 
     if (options.scale) {
@@ -87,32 +74,66 @@ export class View {
       if (options.minMaxLabels) {
         this.minLabel = new MinMaxLabel('left');
         this.maxLabel = new MinMaxLabel('right');
-        this.labelsContainer.append(this.minLabel.component, this.maxLabel.component);
       }
 
       if (options.valueLabel) {
         this.valueLabelLeft = new ValueLabel('left');
-        this.labelsContainer.append(this.valueLabelLeft.component);
 
         if (options.range) {
           this.valueLabelRight = new ValueLabel('right');
           this.valueLabelCommon = new ValueLabel('common');
-          this.labelsContainer.append(this.valueLabelRight.component, this.valueLabelCommon.component);
         }
 
       }
 
-      this.slider.before(this.labelsContainer.component);
     }
     
     if (options.vertical) {
-      this.component.classList.add('range-slider_vertical');
       this.vertical = true;
     }
+
+    this.render();
   }
   
   registerWith(presenter: Presenter) {
     this.presenter = presenter;
+  }
+
+  render(): void {
+    this.track.append(this.range.component);
+    this.slider.append(this.track.component, this.thumbLeft.component);
+    this.component.append(this.slider.component);
+
+    if (this.isRange) {
+      this.slider.append(this.thumbRight!.component);
+    } else {
+      if (!this.vertical) {
+        this.range.setLeftIndentInPx(0);
+      }
+      if (this.vertical) {
+        this.range.setBottomIndentInPx(0);
+      }
+    }
+
+    if (this.minLabel && this.maxLabel) {
+      this.labelsContainer!.append(this.minLabel.component, this.maxLabel.component);
+    }
+
+    if (this.valueLabelLeft) {
+      this.labelsContainer!.append(this.valueLabelLeft.component);
+    }
+
+    if (this.range) {
+      this.labelsContainer!.append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
+    }
+
+    if (this.labelsContainer) {
+      this.slider.before(this.labelsContainer.component);
+    }
+
+    if (this.vertical) {
+      this.component.classList.add('range-slider_vertical');
+    }
   }
   
   setMinValue(min: number): void {   
