@@ -121,11 +121,11 @@ export class View {
 
     if (this.valueLabelLeft) {
       this.labelsContainer!.append(this.valueLabelLeft.component);
-    }
 
-    if (this.range) {
-      this.labelsContainer!.append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
-    }
+      if (this.isRange) {
+        this.labelsContainer!.append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
+      }
+    }   
 
     if (this.labelsContainer) {
       this.slider.before(this.labelsContainer.component);
@@ -198,7 +198,7 @@ export class View {
       this.valueLabelLeft.setValue(value);
       
       if(this.isRange) {
-        this.valueLabelCommon?.setValue( value + ' - ' + this.valueLabelRight!.getValue() );
+        this.valueLabelCommon!.setValue( value + ' - ' + this.valueLabelRight!.getValue() );
 
         if ( this.isTwoValueLabelsClose() ) {
           this.mergeLabels();
@@ -217,9 +217,9 @@ export class View {
 
       if(!this.isRange) {
         if ( this.isLeftValueLabelCloseToMaxLabel() ) {
-          this.maxLabel?.setOpacity(0);
+          this.maxLabel!.setOpacity(0);
         } else {
-          this.maxLabel?.setOpacity(1);
+          this.maxLabel!.setOpacity(1);
         }
       }
     }    
