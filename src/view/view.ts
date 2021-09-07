@@ -375,7 +375,7 @@ export class View {
       }
   
       if (this.isRange) {
-        let rightThumbPosition = parseInt(this.thumbRight!.component.style.left);
+        let rightThumbPosition = parseInt(this.thumbRight!.getLeftIndent());
         if (newLeft > rightThumbPosition) {
           newLeft = rightThumbPosition;
         }
@@ -398,7 +398,7 @@ export class View {
       }
   
       if (this.isRange) {
-        let rightThumbPosition = parseInt(this.thumbRight!.component.style.top);
+        let rightThumbPosition = parseInt(this.thumbRight!.getTopIndent());
         if (newTop < rightThumbPosition) {
           newTop = rightThumbPosition;
         }
@@ -414,7 +414,7 @@ export class View {
     if (!this.vertical) {
       let newLeft = clientX - shiftX - this.track.getBoundingClientRect().left;
 
-      let leftThumbPosition = parseInt(this.thumbLeft.component.style.left);
+      let leftThumbPosition = parseInt(this.thumbLeft.getLeftIndent());
   
       if (newLeft < leftThumbPosition) {
         newLeft = leftThumbPosition;
@@ -430,7 +430,7 @@ export class View {
     if (this.vertical) {
       let newTop = clientY - shiftY - this.track.getBoundingClientRect().top;
 
-      let leftThumbPosition = parseInt(this.thumbLeft.component.style.top);
+      let leftThumbPosition = parseInt(this.thumbLeft.getTopIndent());
 
       if (newTop < 0) {
         newTop = 0;
