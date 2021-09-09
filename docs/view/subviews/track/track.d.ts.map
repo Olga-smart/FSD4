@@ -1,0 +1,1 @@
+{"version":3,"file":"track.d.ts","sourceRoot":"","sources":["../../../../src/view/subviews/track/track.ts"],"names":[],"mappings":"AACA,OAAO,EAAC,IAAI,EAAC,MAAM,YAAY,CAAC;AAEhC,qBAAa,KAAK;IAChB,IAAI,EAAE,IAAI,GAAG,IAAI,CAAC;IAClB,SAAS,EAAE,WAAW,CAAC;;IAQvB,YAAY,CAAC,IAAI,EAAE,IAAI;IAIvB,cAAc;IAId,eAAe;IAIf,qBAAqB;IAIrB,MAAM,CAAC,GAAG,QAAQ,EAAE,WAAW,EAAE;IAIjC,mBAAmB;CAOpB"}
