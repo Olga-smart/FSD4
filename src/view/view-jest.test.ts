@@ -162,7 +162,7 @@ describe('View', function() {
       it('if options.valueLabel is true', function() {
         let slider = document.createElement('div');
         let view = new View(slider, {
-          valueLabel: true
+          valueLabels: true
         });
 
         expect(view.labelsContainer).toBeInstanceOf(LabelsContainer);
@@ -172,7 +172,7 @@ describe('View', function() {
         let slider = document.createElement('div');
         let view = new View(slider, {
           minMaxLabels: false,
-          valueLabel: false
+          valueLabels: false
         });
 
         expect(view).not.toHaveProperty('labelsContainer');
@@ -262,7 +262,7 @@ describe('View', function() {
         it('set up left value label', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true
+            valueLabels: true
           });
 
           expect(view).toHaveProperty('valueLabelLeft');
@@ -271,7 +271,7 @@ describe('View', function() {
         it('set up right and common value labels if necessary', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             range: true
           });
   
@@ -282,7 +282,7 @@ describe('View', function() {
         it('properties for value labels are instancies of ValueLabel', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             range: true
           });
   
@@ -296,7 +296,7 @@ describe('View', function() {
       it('do not set up properties for value labels if options.valueLabel is false', function() {
         let slider = document.createElement('div');
         let view = new View(slider, {
-          valueLabel: false
+          valueLabels: false
         });
         
         expect(view).not.toHaveProperty('valueLabelLeft');
@@ -445,7 +445,7 @@ describe('View', function() {
       it('append valueLabelLeft component', function() {
         let slider = document.createElement('div');
         let view = new View(slider, {
-          valueLabel: true
+          valueLabels: true
         });
 
         expect(view.labelsContainer!.component.children).toContain(view.valueLabelLeft!.component);
@@ -454,7 +454,7 @@ describe('View', function() {
       it('append valueLabelRight component', function() {
         let slider = document.createElement('div');
         let view = new View(slider, {
-          valueLabel: true,
+          valueLabels: true,
           range: true
         });
 
@@ -464,7 +464,7 @@ describe('View', function() {
       it('append valueLabelCommon component', function() {
         let slider = document.createElement('div');
         let view = new View(slider, {
-          valueLabel: true,
+          valueLabels: true,
           range: true
         });
 
@@ -477,7 +477,7 @@ describe('View', function() {
       let slider = document.createElement('div');
       let view = new View(slider, {
         minMaxLabels: true,
-        valueLabel: true
+        valueLabels: true
       });
 
       expect(view.component.children).toContain(view.labelsContainer!.component);
@@ -668,7 +668,7 @@ describe('View', function() {
         it('set up left label value', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true
+            valueLabels: true
           });
           view.valueLabelLeft!.setValue = jest.fn();
 
@@ -681,7 +681,7 @@ describe('View', function() {
         it('set up common label value is view.isRange', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             range: true
           });
           view.valueLabelCommon!.setValue = jest.fn();
@@ -702,7 +702,7 @@ describe('View', function() {
         it('change left indent if slider is horizontal', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true
+            valueLabels: true
           });
           view.valueLabelLeft!.setLeftIndent = jest.fn();
   
@@ -716,7 +716,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             vertical: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.valueLabelLeft!.setTopIndent = jest.fn();
           let trackHeight = 500;
@@ -737,7 +737,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.isTwoValueLabelsClose = jest.fn();
           view.setLeftValue(100, 100);
@@ -749,7 +749,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.isTwoValueLabelsClose = jest.fn();
           (view.isTwoValueLabelsClose as jest.Mock).mockReturnValue(true);
@@ -763,7 +763,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.isTwoValueLabelsClose = jest.fn();
           (view.isTwoValueLabelsClose as jest.Mock).mockReturnValue(false);
@@ -779,7 +779,7 @@ describe('View', function() {
             let slider = document.createElement('div');
             let view = new View(slider, {
               range: true,
-              valueLabel: true,
+              valueLabels: true,
               vertical: true
             });
             view.isTwoValueLabelsClose = jest.fn();
@@ -792,7 +792,7 @@ describe('View', function() {
             let slider = document.createElement('div');
             let view = new View(slider, {
               range: true,
-              valueLabel: true,
+              valueLabels: true,
               vertical: true
             });
             view.isTwoValueLabelsClose = jest.fn();
@@ -807,7 +807,7 @@ describe('View', function() {
             let slider = document.createElement('div');
             let view = new View(slider, {
               range: true,
-              valueLabel: true,
+              valueLabels: true,
               vertical: true
             });
             view.isTwoValueLabelsClose = jest.fn();
@@ -827,7 +827,7 @@ describe('View', function() {
         it('call function to check every time when setLeftValue(value, px) is called', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isLeftValueLabelCloseToMinLabel = jest.fn();
@@ -839,7 +839,7 @@ describe('View', function() {
         it('make min label transparent if left value label is close to it', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isLeftValueLabelCloseToMinLabel = jest.fn();
@@ -853,7 +853,7 @@ describe('View', function() {
         it('make min label not transparent if left value label is not close to it', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isLeftValueLabelCloseToMinLabel = jest.fn();
@@ -871,7 +871,7 @@ describe('View', function() {
         it('call function to check every time when setLeftValue(value, px) is called', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isLeftValueLabelCloseToMaxLabel = jest.fn();
@@ -883,7 +883,7 @@ describe('View', function() {
         it('make max label transparent if left value label is close to it', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isLeftValueLabelCloseToMaxLabel = jest.fn();
@@ -897,7 +897,7 @@ describe('View', function() {
         it('make max label not transparent if left value label is not close to it', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isLeftValueLabelCloseToMaxLabel = jest.fn();
@@ -999,7 +999,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.valueLabelRight!.setValue = jest.fn();
 
@@ -1012,7 +1012,7 @@ describe('View', function() {
         it('set up common label value', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
-            valueLabel: true,
+            valueLabels: true,
             range: true
           });
           view.valueLabelCommon!.setValue = jest.fn();
@@ -1034,7 +1034,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.valueLabelRight!.setLeftIndent = jest.fn();
   
@@ -1049,7 +1049,7 @@ describe('View', function() {
           let view = new View(slider, {
             range: true,
             vertical: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.valueLabelRight!.setTopIndent = jest.fn();
           let trackHeight = 500;
@@ -1070,7 +1070,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.isTwoValueLabelsClose = jest.fn();
           view.setRightValue(100, 100);
@@ -1082,7 +1082,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.isTwoValueLabelsClose = jest.fn();
           (view.isTwoValueLabelsClose as jest.Mock).mockReturnValue(true);
@@ -1096,7 +1096,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true
+            valueLabels: true
           });
           view.isTwoValueLabelsClose = jest.fn();
           (view.isTwoValueLabelsClose as jest.Mock).mockReturnValue(false);
@@ -1112,7 +1112,7 @@ describe('View', function() {
             let slider = document.createElement('div');
             let view = new View(slider, {
               range: true,
-              valueLabel: true,
+              valueLabels: true,
               vertical: true
             });
             view.isTwoValueLabelsClose = jest.fn();
@@ -1125,7 +1125,7 @@ describe('View', function() {
             let slider = document.createElement('div');
             let view = new View(slider, {
               range: true,
-              valueLabel: true,
+              valueLabels: true,
               vertical: true
             });
             view.isTwoValueLabelsClose = jest.fn();
@@ -1140,7 +1140,7 @@ describe('View', function() {
             let slider = document.createElement('div');
             let view = new View(slider, {
               range: true,
-              valueLabel: true,
+              valueLabels: true,
               vertical: true
             });
             view.isTwoValueLabelsClose = jest.fn();
@@ -1161,7 +1161,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isRightValueLabelCloseToMaxLabel = jest.fn();
@@ -1174,7 +1174,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isRightValueLabelCloseToMaxLabel = jest.fn();
@@ -1189,7 +1189,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             range: true,
-            valueLabel: true,
+            valueLabels: true,
             minMaxLabels: true
           });
           view.isRightValueLabelCloseToMaxLabel = jest.fn();
@@ -1210,7 +1210,7 @@ describe('View', function() {
 
     let slider = document.createElement('div');
     let view = new View(slider, {
-      valueLabel: true,
+      valueLabels: true,
       range: true
     });
 
@@ -1240,7 +1240,7 @@ describe('View', function() {
 
     let slider = document.createElement('div');
     let view = new View(slider, {
-      valueLabel: true,
+      valueLabels: true,
       range: true
     });
 
@@ -1272,7 +1272,7 @@ describe('View', function() {
 
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         vertical: false,
         range: true
       });
@@ -1307,7 +1307,7 @@ describe('View', function() {
 
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         vertical: true,
         range: true
       });
@@ -1346,7 +1346,7 @@ describe('View', function() {
 
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         minMaxLabels: true,
         vertical: false
       });
@@ -1381,7 +1381,7 @@ describe('View', function() {
 
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         minMaxLabels: true,
         vertical: true
       });
@@ -1420,7 +1420,7 @@ describe('View', function() {
 
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         minMaxLabels: true,
         vertical: false
       });
@@ -1455,7 +1455,7 @@ describe('View', function() {
 
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         minMaxLabels: true,
         vertical: true
       });
@@ -1494,7 +1494,7 @@ describe('View', function() {
 
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         minMaxLabels: true,
         vertical: false,
         range: true
@@ -1530,7 +1530,7 @@ describe('View', function() {
 
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         minMaxLabels: true,
         vertical: true,
         range: true
@@ -1795,7 +1795,7 @@ describe('View', function() {
       let slider = document.createElement('div');
       let view = new View(slider, {
         scale: true,
-        valueLabel: true
+        valueLabels: true
       });
       let presenter = {};
       view.registerWith(presenter as Presenter);
@@ -1818,7 +1818,7 @@ describe('View', function() {
           let slider = document.createElement('div');
           let view = new View(slider, {
             scale: true,
-            valueLabel: true,
+            valueLabels: true,
             vertical: true
           });
           let presenter = {};
@@ -1850,7 +1850,7 @@ describe('View', function() {
       let slider = document.createElement('div');
       let view = new View(slider, {
         scale: true,
-        valueLabel: true,
+        valueLabels: true,
         range: true
       });
       let presenter = {};
@@ -1885,7 +1885,7 @@ describe('View', function() {
             let slider = document.createElement('div');
             let view = new View(slider, {
               scale: true,
-              valueLabel: true,
+              valueLabels: true,
               range: true,
               vertical: true
             });
@@ -1936,7 +1936,7 @@ describe('View', function() {
             let slider = document.createElement('div');
             let view = new View(slider, {
               scale: true,
-              valueLabel: true,
+              valueLabels: true,
               range: true,
               vertical: true
             });
@@ -2057,7 +2057,7 @@ describe('View', function() {
     let slider = document.createElement('div');
     let view = new View(slider, {
       range: true,
-      valueLabel: true
+      valueLabels: true
     });
 
     it('add necessary classes to thumb, range and label if side = left', function() {
@@ -2091,7 +2091,7 @@ describe('View', function() {
     let slider = document.createElement('div');
     let view = new View(slider, {
       range: true,
-      valueLabel: true
+      valueLabels: true
     });
 
     it('remove necessary classes from thumb, range and label if side = left', function() {
@@ -2128,7 +2128,7 @@ describe('View', function() {
     let slider = document.createElement('div');
     let view = new View(slider, {
       vertical: true,
-      valueLabel: true,
+      valueLabels: true,
       minMaxLabels: true
     });
     view.collectLabels = jest.fn();
@@ -2145,7 +2145,7 @@ describe('View', function() {
 
     let slider = document.createElement('div');
     let view = new View(slider, {
-      valueLabel: true,
+      valueLabels: true,
       minMaxLabels: true
     });
     view.collectLabels = jest.fn();
@@ -2163,7 +2163,7 @@ describe('View', function() {
     it('return array of labels except common label', function() {
       let slider = document.createElement('div');
       let view = new View(slider, {
-        valueLabel: true,
+        valueLabels: true,
         minMaxLabels: true,
         range: true
       });

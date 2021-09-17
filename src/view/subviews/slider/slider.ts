@@ -14,4 +14,8 @@ export class Slider {
   before(...elements: HTMLElement[]) {
     this.component.before(...elements);
   }
+
+  after(...elements: HTMLElement[]) {
+    this.component.after(...elements);
+  }
 }

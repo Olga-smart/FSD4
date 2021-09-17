@@ -28,18 +28,43 @@ export class Presenter {
       if (this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
         this.view.fixLabelsContainerWidthForVertical();
       }
+
+      if (view.panel) {
+        view.setPanelValues({
+          min: model.min,
+          max: model.max,
+          step: model.step,
+          from: model.leftValue,
+          to: model.rightValue ?? null,
+          vertical: view.vertical ?? false,
+          range: view.isRange,
+          scale: view.hasScale,
+          scaleIntervals: view.scaleIntervals ?? null,
+          valueLabels: view.valueLabelLeft ? true : false,
+          minMaxLabels: view.minLabel ? true : false
+        });
+        view.panel.registerWith(this.view);
+      }
     }
 
     handleLeftInput(px: number): void {
       let value = this.convertPxToValue(px);
       this.model.setLeftValue(value);
       this.view.setLeftValue(value, this.convertValueToPx(value));
+
+      if (this.view.panel) {
+        this.view.updatePanelFrom(value);
+      }
     }
 
     handleRightInput(px: number): void {
       let value = this.convertPxToValue(px);
       this.model.setRightValue(value);
       this.view.setRightValue(value, this.convertValueToPx(value));
+
+      if (this.view.panel) {
+        this.view.updatePanelTo(value);
+      }
     }
     
     passLeftValueToView(value: number): void {
@@ -103,4 +128,110 @@ export class Presenter {
       return +value.toFixed(10)
     }
 
+    changeLeftValueFromOutside(value: number): void {
+      this.model.setLeftValue(value);
+      this.view.setLeftValue(this.model.leftValue, this.convertValueToPx(this.model.leftValue));
+    }
+
+    changeRightValueFromOutside(value: number): void {
+      this.model.setRightValue(value);
+      this.view.setRightValue(this.model.rightValue!, this.convertValueToPx(this.model.rightValue!));
+    }
+
+    changeMinFromOutside(value: number): void {
+      this.model.changeMinFromOutside(value);
+      this.view.setMinValue(this.model.min);
+      this.passLeftValueToView(this.model.leftValue);
+      if (this.model.rightValue) {
+        this.passRightValueToView(this.model.rightValue);
+      }
+      this.view.removeScale();
+      this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
+    }
+
+    changeMaxFromOutside(value: number): void {
+      this.model.changeMaxFromOutside(value);
+      this.view.setMaxValue(this.model.max);
+      this.passLeftValueToView(this.model.leftValue);
+      if (this.model.rightValue) {
+        this.passRightValueToView(this.model.rightValue);
+      }
+      this.view.removeScale();
+      this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
+    }
+
+    changeStepFromOutside(value: number): void {
+      this.model.setStep(value);
+    }
+
+    handleViewOrientationChange(): void {
+      this.passLeftValueToView(this.model.leftValue);
+
+      if (this.view.isRange) {
+        this.passRightValueToView(this.model.rightValue!);
+      }
+
+      if (this.view.hasScale) {
+        this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
+      } 
+
+      if (!this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
+        this.view.fixLabelsContainerHeightForHorizontal();
+      }
+
+      if (this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
+        this.view.fixLabelsContainerWidthForVertical();
+      }
+
+    }
+
+    handleRangeToggle(): void {
+      this.model.isRange = !this.model.isRange;
+      this.passLeftValueToView(this.model.leftValue);
+
+      if (this.model.isRange) {
+        this.model.setRightValue();
+        this.passRightValueToView(this.model.rightValue!);
+        if (this.view.panel) {
+          this.view.updatePanelTo(this.model.rightValue!);
+        }
+      }
+
+      if (!this.model.isRange) {
+        this.model.removeRightValue();
+        this.view.updatePanelTo('');
+      }
+
+      if (this.view.hasScale) {
+        this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
+      }
+    }
+
+    handleScaleToggle(): void {
+      if (this.view.hasScale) {
+        this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals ?? 4);
+        this.view.updatePanelScaleIntervals(this.view.scaleIntervals ?? 4);
+      } 
+
+      if (!this.view.hasScale) {
+        this.view.removeScale();
+        this.view.updatePanelScaleIntervals('');
+      }
+    }
+
+    handleChangeScaleIntervals(): void {
+      this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
+    }
+
+    handleAddValueLabels(): void {
+      this.passLeftValueToView(this.model.leftValue);
+      if (this.view.isRange) {
+        this.passRightValueToView(this.model.rightValue!);
+      }  
+    }
+
+    handleAddMinMaxLabels(): void {
+      this.view.setMinValue(this.model.min);
+      this.view.setMaxValue(this.model.max);
+    }
   }

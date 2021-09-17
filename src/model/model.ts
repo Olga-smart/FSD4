@@ -43,11 +43,40 @@ export class Model {
       }
     }
     
-    setRightValue(value: number): void {
+    setRightValue(value: number = 75): void {
       if (value > this.max) {
         this.rightValue = this.max;
       } else {
         this.rightValue = Math.max(value, this.leftValue);
       }    
+    }
+
+    removeRightValue(): void {
+      this.rightValue = undefined;
+    }
+
+    changeMinFromOutside(value: number): void {
+      if (value <= this.leftValue) {
+        this.min = value;
+      }
+    }
+
+    changeMaxFromOutside(value: number): void {
+      if (!this.isRange) {
+        if (value >= this.leftValue) {
+          this.max = value;
+        }
+      }
+
+      if (this.isRange) {
+        if (value >= this.rightValue!) {
+          this.max = value;
+        }
+      }
+      
+    }
+
+    setStep(value: number): void {
+      this.step = value;
     }
   }

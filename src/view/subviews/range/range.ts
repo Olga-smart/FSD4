@@ -30,4 +30,16 @@ export class Range {
   setHeightInPx(px: number): void {
     this.component.style.height = `${px}px`;
   }
+
+  resetWidth(): void {
+    this.component.style.width = 'unset';
+  }
+
+  resetHeight(): void {
+    this.component.style.height = 'unset';
+  }
+
+  resetTopIndent(): void {
+    this.component.style.top = 'unset';
+  }
 }

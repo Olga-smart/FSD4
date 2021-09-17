@@ -71,7 +71,7 @@ describe('Presenter', function() {
       it('if slider has only value labels', function() {
         let model = new Model();
         let view = new View(slider, {
-          valueLabel: true
+          valueLabels: true
         });
         view.fixLabelsContainerHeightForHorizontal = jest.fn();
         let presenter = new Presenter(model, view);
@@ -93,7 +93,7 @@ describe('Presenter', function() {
       it('if slider has both value and min&max labels', function() {
         let model = new Model();
         let view = new View(slider, {
-          valueLabel: true,
+          valueLabels: true,
           minMaxLabels: true  
         });
         view.fixLabelsContainerHeightForHorizontal = jest.fn();
@@ -110,7 +110,7 @@ describe('Presenter', function() {
         let model = new Model();
         let view = new View(slider, {
           vertical: true,
-          valueLabel: true  
+          valueLabels: true  
         });
         view.fixLabelsContainerWidthForVertical = jest.fn();
         let presenter = new Presenter(model, view);
@@ -134,7 +134,7 @@ describe('Presenter', function() {
         let model = new Model();
         let view = new View(slider, {
           vertical: true,
-          valueLabel: true,
+          valueLabels: true,
           minMaxLabels: true  
         });
         view.fixLabelsContainerWidthForVertical = jest.fn();

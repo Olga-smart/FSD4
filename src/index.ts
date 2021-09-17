@@ -17,12 +17,13 @@ window.addEventListener('load', () => {
       });
       
       let view = new View(slider, {
-        minMaxLabels: true,
-        valueLabel: true,
-        vertical: true,
+        // minMaxLabels: true,
+        // valueLabels: true,
+        // vertical: true,
         range: true,
         scale: true,
-        scaleIntervals: 5
+        scaleIntervals: 5,
+        panel: true
       });
       
       let presenter = new Presenter(model, view);
