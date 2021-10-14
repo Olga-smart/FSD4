@@ -1,131 +1,113 @@
-import {Track} from './track';
-import {View} from '../../view';
+import { Track } from './track';
+import { View } from '../../view';
 
-describe('Track', function() {
-
-  describe('constructor()', function() {
-
+describe('Track', () => {
+  describe('constructor()', () => {
     jest.spyOn(Track.prototype, 'attachEventHandlers');
-    let track = new Track();
+    const track = new Track();
 
-    describe('set up component property with necessary classes', function() {      
-
-      it('common class', function() {        
+    describe('set up component property with necessary classes', () => {
+      it('common class', () => {
         expect(track.component.classList).toContain('range-slider__track');
       });
 
-      it('component property is div element', function() {
+      it('component property is div element', () => {
         expect(track.component).toBeInstanceOf(HTMLDivElement);
       });
-
     });
 
-    it('set up view property', function() {
+    it('set up view property', () => {
       expect(track).toHaveProperty('view');
     });
 
-    it('attach event handlers', function() {
+    it('attach event handlers', () => {
       expect(track.attachEventHandlers).toBeCalled();
     });
-
   });
 
-  describe('registerWith(view)', function() {
-
-    let track = new Track();
-    let view: any = {};
+  describe('registerWith(view)', () => {
+    const track = new Track();
+    const view: any = {};
     track.registerWith(view);
 
-    it('set up view', function() {
+    it('set up view', () => {
       expect(track.view).toBe(view);
     });
-
   });
 
-  describe('getOffsetWidth()', function() {
+  describe('getOffsetWidth()', () => {
+    const track = new Track();
+    const width = track.getOffsetWidth();
 
-    let track = new Track();
-    let width = track.getOffsetWidth();
-
-    it('return component width', function() {
+    it('return component width', () => {
       expect(width).toBe(track.component.offsetWidth);
     });
-
   });
 
-  describe('getOffsetHeight()', function() {
+  describe('getOffsetHeight()', () => {
+    const track = new Track();
+    const height = track.getOffsetHeight();
 
-    let track = new Track();
-    let height = track.getOffsetHeight();
-
-    it('return component height', function() {
+    it('return component height', () => {
       expect(height).toBe(track.component.offsetWidth);
     });
-
   });
 
-  describe('getBoundingClientRect()', function() {
+  describe('getBoundingClientRect()', () => {
+    const track = new Track();
+    const coords = track.getBoundingClientRect();
 
-    let track = new Track();
-    let coords = track.getBoundingClientRect();
-
-    it('return component coordinates', function() {
+    it('return component coordinates', () => {
       expect(coords).toEqual(track.component.getBoundingClientRect());
     });
-
   });
 
-  describe('append(...elements)', function() {
-
-    let track = new Track();
-    let div = document.createElement('div');
+  describe('append(...elements)', () => {
+    const track = new Track();
+    const div = document.createElement('div');
     jest.spyOn(HTMLElement.prototype, 'append');
     track.append(div);
 
-    it('append element to component', function() {
+    it('append element to component', () => {
       expect(div.parentNode).toBe(track.component);
     });
 
-    it('call built-in method append', function() {
+    it('call built-in method append', () => {
       expect(track.component.append).toBeCalledWith(div);
     });
 
-    it('work with multiple arguments', function() {
-      let div1 = document.createElement('div');
-      let div2 = document.createElement('div');
-      let div3 = document.createElement('div');
+    it('work with multiple arguments', () => {
+      const div1 = document.createElement('div');
+      const div2 = document.createElement('div');
+      const div3 = document.createElement('div');
       track.append(div1, div2, div3);
 
       expect(track.component.append).toBeCalledWith(div1, div2, div3);
     });
-
   });
 
-  describe('attachEventHandlers()', function() {
-
-    it('handle click', function() {
-      let track = new Track();
-      let view: any = {};
+  describe('attachEventHandlers()', () => {
+    it('handle click', () => {
+      const track = new Track();
+      const view: any = {};
       track.registerWith(view);
       track.view!.handleScaleOrTrackClick = jest.fn();
-      let event = new Event('click');
+      const event = new Event('click');
       track.component.dispatchEvent(event);
 
-      let x = (event as MouseEvent).clientX - track.getBoundingClientRect().left;
-      let y = (event as MouseEvent).clientY - track.getBoundingClientRect().top;
+      const x = (event as MouseEvent).clientX - track.getBoundingClientRect().left;
+      const y = (event as MouseEvent).clientY - track.getBoundingClientRect().top;
 
       expect(track.view!.handleScaleOrTrackClick).toBeCalledWith(x, y);
     });
 
-    it('if view is not registered nothing happens on click', function() {
-      let track = new Track();
-      let event = new Event('click');
+    it('if view is not registered nothing happens on click', () => {
+      const track = new Track();
+      const event = new Event('click');
       track.component.dispatchEvent(event);
       jest.spyOn(View.prototype, 'handleScaleOrTrackClick');
 
       expect(View.prototype.handleScaleOrTrackClick).not.toBeCalled();
     });
-
   });
-
 });

@@ -1,14 +1,15 @@
-import {Model} from '../model/model';
-import {View} from '../view/view';
+import { Model } from '../model/model';
+import { View } from '../view/view';
 
 export class Presenter {
     model: Model;
+
     view: View;
 
-    constructor(model: Model, view: View) {  
+    constructor(model: Model, view: View) {
       this.model = model;
       this.view = view;
-      
+
       this.view.setMinValue(model.min);
       this.view.setMaxValue(model.max);
       this.passLeftValueToView(model.leftValue);
@@ -19,7 +20,7 @@ export class Presenter {
 
       if (this.view.hasScale) {
         this.view.addScale(model.min, model.max, view.scaleIntervals!);
-      } 
+      }
 
       if (!this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
         this.view.fixLabelsContainerHeightForHorizontal();
@@ -40,15 +41,15 @@ export class Presenter {
           range: view.isRange,
           scale: view.hasScale,
           scaleIntervals: view.scaleIntervals ?? null,
-          valueLabels: view.valueLabelLeft ? true : false,
-          minMaxLabels: view.minLabel ? true : false
+          valueLabels: !!view.valueLabelLeft,
+          minMaxLabels: !!view.minLabel,
         });
         view.panel.registerWith(this.view);
       }
     }
 
     handleLeftInput(px: number): void {
-      let value = this.convertPxToValue(px);
+      const value = this.convertPxToValue(px);
       this.model.setLeftValue(value);
       this.view.setLeftValue(value, this.convertValueToPx(value));
 
@@ -58,7 +59,7 @@ export class Presenter {
     }
 
     handleRightInput(px: number): void {
-      let value = this.convertPxToValue(px);
+      const value = this.convertPxToValue(px);
       this.model.setRightValue(value);
       this.view.setRightValue(value, this.convertValueToPx(value));
 
@@ -66,30 +67,30 @@ export class Presenter {
         this.view.updatePanelTo(value);
       }
     }
-    
+
     passLeftValueToView(value: number): void {
-      let px = this.convertValueToPx(value);
+      const px = this.convertValueToPx(value);
       this.view.setLeftValue(value, px);
     }
 
     passRightValueToView(value: number): void {
-      let px = this.convertValueToPx(value);
+      const px = this.convertValueToPx(value);
       this.view.setRightValue(value, px);
     }
 
     convertValueToPx(value: number): number {
-      let min: number = this.model.min;
-      let max: number = this.model.max;
-      let percent: number = ((value - min) / (max - min)) * 100;
-      let px: number = 0; 
+      const { min } = this.model;
+      const { max } = this.model;
+      const percent: number = ((value - min) / (max - min)) * 100;
+      let px: number = 0;
 
       if (!this.view.vertical) {
-        let trackWidthInPx: number = +this.view.track.getOffsetWidth();
+        const trackWidthInPx: number = +this.view.track.getOffsetWidth();
         px = trackWidthInPx * percent / 100;
       }
-      
+
       if (this.view.vertical) {
-        let trackHeightInPx: number = +this.view.track.getOffsetHeight();
+        const trackHeightInPx: number = +this.view.track.getOffsetHeight();
         px = trackHeightInPx * percent / 100;
       }
 
@@ -97,17 +98,17 @@ export class Presenter {
     }
 
     convertPxToValue(px: number): number {
-      let min: number = this.model.min;
-      let max: number = this.model.max;
+      const { min } = this.model;
+      const { max } = this.model;
       let percent: number = 0;
-      
+
       if (!this.view.vertical) {
-        let trackWidthInPx: number = +this.view.track.getOffsetWidth();
+        const trackWidthInPx: number = +this.view.track.getOffsetWidth();
         percent = px * 100 / trackWidthInPx;
       }
 
       if (this.view.vertical) {
-        let trackHeightInPx: number = +this.view.track.getOffsetHeight();
+        const trackHeightInPx: number = +this.view.track.getOffsetHeight();
         percent = px * 100 / trackHeightInPx;
       }
 
@@ -124,8 +125,8 @@ export class Presenter {
       return result;
     }
 
-    removeCalcInaccuracy(value: number): number {
-      return +value.toFixed(10)
+    static removeCalcInaccuracy(value: number): number {
+      return +value.toFixed(10);
     }
 
     changeLeftValueFromOutside(value: number): void {
@@ -173,7 +174,7 @@ export class Presenter {
 
       if (this.view.hasScale) {
         this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
-      } 
+      }
 
       if (!this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
         this.view.fixLabelsContainerHeightForHorizontal();
@@ -182,7 +183,6 @@ export class Presenter {
       if (this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
         this.view.fixLabelsContainerWidthForVertical();
       }
-
     }
 
     handleRangeToggle(): void {
@@ -211,7 +211,7 @@ export class Presenter {
       if (this.view.hasScale) {
         this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals ?? 4);
         this.view.updatePanelScaleIntervals(this.view.scaleIntervals ?? 4);
-      } 
+      }
 
       if (!this.view.hasScale) {
         this.view.removeScale();
@@ -227,11 +227,11 @@ export class Presenter {
       this.passLeftValueToView(this.model.leftValue);
       if (this.view.isRange) {
         this.passRightValueToView(this.model.rightValue!);
-      }  
+      }
     }
 
     handleAddMinMaxLabels(): void {
       this.view.setMinValue(this.model.min);
       this.view.setMaxValue(this.model.max);
     }
-  }
+}

@@ -1,15 +1,22 @@
-import {createElement} from '../../helpers/createElement';
-import {View} from '../../view';
+import { createElement } from '../../helpers/createElement';
+import { View } from '../../view';
 
 export class Scale {
   view: View | null;
+
   component: HTMLElement;
+
   min: number;
+
   max: number;
+
   intervalsNumber: number;
+
   intervals: HTMLElement[];
+
   values: number[];
-  valueElements: HTMLElement[]; 
+
+  valueElements: HTMLElement[];
 
   constructor(min: number, max: number, intervalsNumber: number = 4) {
     this.view = null;
@@ -25,7 +32,7 @@ export class Scale {
     this.addMarksInIntervals();
     this.addValues();
     this.attachEventHandlers();
-  }    
+  }
 
   registerWith(view: View): void {
     this.view = view;
@@ -39,19 +46,19 @@ export class Scale {
   }
 
   addMarksInIntervals(): void {
-    this.intervals.forEach(item => {
-      let fragment = new DocumentFragment();
+    this.intervals.forEach((item) => {
+      const fragment = new DocumentFragment();
       if (this.intervalsNumber < 29) {
-        fragment.append( createElement('span', 'range-slider__scale-mark') );
+        fragment.append(createElement('span', 'range-slider__scale-mark'));
       }
       if (this.intervalsNumber < 15) {
-        fragment.append( createElement('span', 'range-slider__scale-mark') );
+        fragment.append(createElement('span', 'range-slider__scale-mark'));
       }
       if (this.intervalsNumber < 8) {
-        fragment.append( createElement('span', 'range-slider__scale-mark') );
+        fragment.append(createElement('span', 'range-slider__scale-mark'));
       }
       if (this.intervalsNumber < 5) {
-        fragment.append( createElement('span', 'range-slider__scale-mark') );
+        fragment.append(createElement('span', 'range-slider__scale-mark'));
       }
       item.append(fragment);
     });
@@ -59,21 +66,21 @@ export class Scale {
 
   addValues(): void {
     this.values[0] = this.min;
-    let step = Math.round( (this.max - this.min) / this.intervalsNumber );
+    const step = Math.round((this.max - this.min) / this.intervalsNumber);
     for (let i = 1; i < this.intervalsNumber; i++) {
       this.values[i] = i * step + this.min;
     }
     this.values.push(this.max);
 
-    let valueElement = createElement('span', 'range-slider__scale-interval-value range-slider__scale-interval-value_min');
+    const valueElement = createElement('span', 'range-slider__scale-interval-value range-slider__scale-interval-value_min');
     valueElement.textContent = `${this.values[0]}`;
-    this.intervals[0].append(valueElement);  
+    this.intervals[0].append(valueElement);
     this.valueElements.push(valueElement);
 
     for (let i = 1; i < this.values.length; i++) {
-      let valueElement = createElement('span', 'range-slider__scale-interval-value');
+      const valueElement = createElement('span', 'range-slider__scale-interval-value');
       valueElement.textContent = `${this.values[i]}`;
-      this.intervals[i-1].append(valueElement); 
+      this.intervals[i - 1].append(valueElement);
       this.valueElements.push(valueElement);
     }
   }
@@ -81,7 +88,7 @@ export class Scale {
   fitWidthForVertical() {
     let maxWidth = 0;
 
-    this.valueElements.forEach(valueElement => {
+    this.valueElements.forEach((valueElement) => {
       if (valueElement.offsetWidth > maxWidth) {
         maxWidth = valueElement.offsetWidth;
       }
@@ -93,12 +100,12 @@ export class Scale {
   fitHeightForHorizontal() {
     let maxHeight = 0;
 
-    this.valueElements.forEach(valueElement => {
+    this.valueElements.forEach((valueElement) => {
       if (valueElement.offsetHeight > maxHeight) {
         maxHeight = valueElement.offsetHeight;
       }
     });
-    
+
     this.component.style.paddingBottom = `${maxHeight + 3}px`;
   }
 
@@ -108,8 +115,8 @@ export class Scale {
 
   attachEventHandlers(): void {
     this.component.addEventListener('click', (event) => {
-      let x: number = event.clientX - this.getBoundingClientRect().left;
-      let y: number = event.clientY - this.getBoundingClientRect().top;
+      const x: number = event.clientX - this.getBoundingClientRect().left;
+      const y: number = event.clientY - this.getBoundingClientRect().top;
       this.view?.handleScaleOrTrackClick(x, y);
     });
   }

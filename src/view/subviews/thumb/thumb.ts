@@ -1,9 +1,11 @@
-import {createElement} from '../../helpers/createElement';
-import {View} from '../../view';
+import { createElement } from '../../helpers/createElement';
+import { View } from '../../view';
 
 export class Thumb {
   type: 'left' | 'right';
+
   component: HTMLElement;
+
   view: View | null;
 
   constructor(type: 'left' | 'right' = 'left') {
@@ -61,10 +63,10 @@ export class Thumb {
       this.component.setPointerCapture(event.pointerId);
       event.preventDefault(); // предотвратить запуск выделения (действие браузера)
 
-      let shiftX: number = event.clientX - this.getBoundingClientRect().left;
-      let shiftY: number = event.clientY - this.getBoundingClientRect().top;
-      
-      let handlePointerMove = (event: PointerEvent) => {
+      const shiftX: number = event.clientX - this.getBoundingClientRect().left;
+      const shiftY: number = event.clientY - this.getBoundingClientRect().top;
+
+      const handlePointerMove = (event: PointerEvent) => {
         if (this.type == 'left') {
           this.view?.handleLeftInput(event.clientX, event.clientY, shiftX, shiftY);
         }
@@ -73,7 +75,7 @@ export class Thumb {
         }
       };
 
-      let handlePointerUp = () => {
+      const handlePointerUp = () => {
         this.component.removeEventListener('pointermove', handlePointerMove);
         this.component.removeEventListener('pointerup', handlePointerUp);
       };
@@ -82,8 +84,6 @@ export class Thumb {
       this.component.addEventListener('pointerup', handlePointerUp);
     });
 
-    this.component.addEventListener('dragstart', () => {
-      return false;
-    });
+    this.component.addEventListener('dragstart', () => false);
   }
 }

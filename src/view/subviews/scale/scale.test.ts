@@ -1,63 +1,58 @@
-import {Scale} from "./scale";
+import { Scale } from './scale';
 
-describe('Scale', function() {
+describe('Scale', () => {
+  describe('constructor(min, max, intervalsNumber)', () => {
+    const scale = new Scale(0, 150, 4);
 
-  describe('constructor(min, max, intervalsNumber)', function() {
-
-    let scale = new Scale(0, 150, 4);
-
-    describe('set up necessary properties', function() {
-
-      it('set up view property', function() {
+    describe('set up necessary properties', () => {
+      it('set up view property', () => {
         expect(scale).toHaveProperty('view');
       });
-  
-      it('set up component property with necessary class', function() {
+
+      it('set up component property with necessary class', () => {
         expect(scale.component.classList).toContain('range-slider__scale');
       });
-  
-      it('set up min property', function() {
+
+      it('set up min property', () => {
         for (let i = -10; i <= 10; i++) {
-          let scale = new Scale(i, 150, 4);
+          const scale = new Scale(i, 150, 4);
           expect(scale.min).toBe(i);
-        }      
+        }
       });
-  
-      it('set up max property', function() {
+
+      it('set up max property', () => {
         for (let i = -10; i <= 10; i++) {
-          let scale = new Scale(-20, i, 4);
+          const scale = new Scale(-20, i, 4);
           expect(scale.max).toBe(i);
-        }      
+        }
       });
-  
-      it('set up intervalsNumber property', function() {
+
+      it('set up intervalsNumber property', () => {
         for (let i = 1; i <= 10; i++) {
-          let scale = new Scale(-20, 150, i);
+          const scale = new Scale(-20, 150, i);
           expect(scale.intervalsNumber).toBe(i);
-        }      
+        }
       });
-  
-      it('set up intervals property', function() {
-        expect(scale.intervals).toBeInstanceOf(Array);   
+
+      it('set up intervals property', () => {
+        expect(scale.intervals).toBeInstanceOf(Array);
       });
-  
-      it('set up values property', function() {
-        expect(scale.values).toBeInstanceOf(Array);   
+
+      it('set up values property', () => {
+        expect(scale.values).toBeInstanceOf(Array);
       });
-  
-      it('set up valueElements property', function() {
-        expect(scale.valueElements).toBeInstanceOf(Array);   
+
+      it('set up valueElements property', () => {
+        expect(scale.valueElements).toBeInstanceOf(Array);
       });
-  
-      it('default intervalsNumber is 4', function() {
-        let scale = new Scale(0, 150);
+
+      it('default intervalsNumber is 4', () => {
+        const scale = new Scale(0, 150);
         expect(scale.intervalsNumber).toBe(4);
       });
-
     });
 
-    describe('call necessary methods', function() {
-
+    describe('call necessary methods', () => {
       afterAll(() => {
         jest.restoreAllMocks();
       });
@@ -66,159 +61,148 @@ describe('Scale', function() {
       jest.spyOn(Scale.prototype, 'addMarksInIntervals');
       jest.spyOn(Scale.prototype, 'addValues');
       jest.spyOn(Scale.prototype, 'attachEventHandlers');
-      let scale = new Scale(0, 150, 4);
+      const scale = new Scale(0, 150, 4);
 
-      it('call createIntervals()', function() {
+      it('call createIntervals()', () => {
         expect(scale.createIntervals).toBeCalled();
       });
 
-      it('call addMarksInIntervals()', function() {
+      it('call addMarksInIntervals()', () => {
         expect(scale.addMarksInIntervals).toBeCalled();
       });
 
-      it('call addValues()', function() {
+      it('call addValues()', () => {
         expect(scale.addValues).toBeCalled();
       });
 
-      it('call attachEventHandlers()', function() {
+      it('call attachEventHandlers()', () => {
         expect(scale.attachEventHandlers).toBeCalled();
       });
-
     });
-
   });
 
-  describe('registerWith(view)', function() {
-
-    let scale = new Scale(0, 150, 4);
-    let view: any = {};
+  describe('registerWith(view)', () => {
+    const scale = new Scale(0, 150, 4);
+    const view: any = {};
     scale.registerWith(view);
 
-    it('set up view', function() {
+    it('set up view', () => {
       expect(scale.view).toBe(view);
     });
-
   });
 
-  describe('createIntervals()', function() {
-
-    it('create right amount of elements and push them into intervals property', function() {
+  describe('createIntervals()', () => {
+    it('create right amount of elements and push them into intervals property', () => {
       for (let i = 1; i <= 20; i++) {
-        let scale = new Scale(0, 150, i);
+        const scale = new Scale(0, 150, i);
         expect(scale.intervals).toHaveLength(i);
       }
     });
 
-    it('add necessary class to all elements', function() {
-      let scale = new Scale(0, 150, 10);
-      scale.intervals.forEach(item => {
+    it('add necessary class to all elements', () => {
+      const scale = new Scale(0, 150, 10);
+      scale.intervals.forEach((item) => {
         expect(item.classList).toContain('range-slider__scale-interval');
       });
     });
 
-    it('create right amount of elements and append them to component', function() {
+    it('create right amount of elements and append them to component', () => {
       for (let i = 1; i <= 20; i++) {
-        let scale = new Scale(0, 150, i);
+        const scale = new Scale(0, 150, i);
         expect(scale.component.querySelectorAll('.range-slider__scale-interval')).toHaveLength(i);
       }
     });
-
   });
 
-  describe('addMarksInIntervals()', function() {
-
-    it('if intervalsNumber < 5, add 4 marks', function() {
+  describe('addMarksInIntervals()', () => {
+    it('if intervalsNumber < 5, add 4 marks', () => {
       for (let i = 1; i < 5; i++) {
-        let scale = new Scale(0, 150, i);
-        scale.intervals.forEach(item => {
+        const scale = new Scale(0, 150, i);
+        scale.intervals.forEach((item) => {
           expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(4);
         });
-      }      
-    });
-
-    it('if intervalsNumber > 4 and < 8, add 3 marks', function() {
-      for (let i = 5; i < 8; i++) {
-        let scale = new Scale(0, 150, i);
-        scale.intervals.forEach(item => {
-          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(3);
-        });
-      }      
-    });
-
-    it('if intervalsNumber > 7 and < 15, add 2 marks', function() {
-      for (let i = 8; i < 15; i++) {
-        let scale = new Scale(0, 150, i);
-        scale.intervals.forEach(item => {
-          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(2);
-        });
-      }      
-    });
-
-    it('if intervalsNumber > 14 and < 29, add 1 mark', function() {
-      for (let i = 15; i < 29; i++) {
-        let scale = new Scale(0, 150, i);
-        scale.intervals.forEach(item => {
-          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(1);
-        });
-      }      
-    });
-
-    it('if intervalsNumber > 28, add no marks', function() {
-      let scale = new Scale(0, 150, 29);
-      scale.intervals.forEach(item => {
-        expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(0);
-      });
-    });
-
-  });
-
-  describe('addValues()', function() {
-      
-    it('values length is 1 more than intervals legth', function() {
-      for (let i = 1; i <= 10; i++) {
-        let scale = new Scale(0, 150, i);
-        expect(scale.values.length).toBe(i + 1); 
       }
     });
 
-    it('first value is min', function() {
+    it('if intervalsNumber > 4 and < 8, add 3 marks', () => {
+      for (let i = 5; i < 8; i++) {
+        const scale = new Scale(0, 150, i);
+        scale.intervals.forEach((item) => {
+          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(3);
+        });
+      }
+    });
+
+    it('if intervalsNumber > 7 and < 15, add 2 marks', () => {
+      for (let i = 8; i < 15; i++) {
+        const scale = new Scale(0, 150, i);
+        scale.intervals.forEach((item) => {
+          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(2);
+        });
+      }
+    });
+
+    it('if intervalsNumber > 14 and < 29, add 1 mark', () => {
+      for (let i = 15; i < 29; i++) {
+        const scale = new Scale(0, 150, i);
+        scale.intervals.forEach((item) => {
+          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(1);
+        });
+      }
+    });
+
+    it('if intervalsNumber > 28, add no marks', () => {
+      const scale = new Scale(0, 150, 29);
+      scale.intervals.forEach((item) => {
+        expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(0);
+      });
+    });
+  });
+
+  describe('addValues()', () => {
+    it('values length is 1 more than intervals legth', () => {
+      for (let i = 1; i <= 10; i++) {
+        const scale = new Scale(0, 150, i);
+        expect(scale.values.length).toBe(i + 1);
+      }
+    });
+
+    it('first value is min', () => {
       for (let i = -10; i <= 10; i++) {
-        let scale = new Scale(i, 150, 4);
+        const scale = new Scale(i, 150, 4);
         expect(scale.values[0]).toBe(i);
       }
     });
 
-    it('last value is max', function() {
+    it('last value is max', () => {
       for (let i = -10; i <= 10; i++) {
-        let scale = new Scale(-20, i, 4);
+        const scale = new Scale(-20, i, 4);
         expect(scale.values[scale.values.length - 1]).toBe(i);
       }
     });
 
-    it('every value element has special class', function() {
-      let scale = new Scale(0, 150, 4);
-      scale.valueElements.forEach(valueElement => {
+    it('every value element has special class', () => {
+      const scale = new Scale(0, 150, 4);
+      scale.valueElements.forEach((valueElement) => {
         expect(valueElement.classList).toContain('range-slider__scale-interval-value');
-      })
+      });
     });
 
-    it('first value element has special class', function() {
-      let scale = new Scale(0, 150, 4);
+    it('first value element has special class', () => {
+      const scale = new Scale(0, 150, 4);
       expect(scale.valueElements[0].classList).toContain('range-slider__scale-interval-value_min');
     });
 
-    it('every valueElement contains corresponding value', function() {
-      let scale = new Scale(0, 150, 4);
+    it('every valueElement contains corresponding value', () => {
+      const scale = new Scale(0, 150, 4);
       for (let i = 0; i < scale.valueElements.length; i++) {
         expect(scale.valueElements[i].textContent).toBe(`${scale.values[i]}`);
       }
     });
-
   });
 
-  describe('fitWidthForVertical()', function() {
-
-    let scale = new Scale(0, 150, 2);
+  describe('fitWidthForVertical()', () => {
+    const scale = new Scale(0, 150, 2);
 
     scale.valueElements[0].style.width = '100px';
     scale.valueElements[1].style.width = '200px';
@@ -226,23 +210,21 @@ describe('Scale', function() {
 
     Object.defineProperties(window.HTMLElement.prototype, {
       offsetWidth: {
-        get () {
-          return parseInt(this.style.width); 
-        }
-      }
+        get() {
+          return parseInt(this.style.width);
+        },
+      },
     });
 
     scale.fitWidthForVertical();
 
-    it('set up component padding right equal to width of valueElement with max width + 3px', function() {
-      expect(scale.component.style.paddingRight).toBe('303px'); 
+    it('set up component padding right equal to width of valueElement with max width + 3px', () => {
+      expect(scale.component.style.paddingRight).toBe('303px');
     });
-
   });
 
-  describe('fitHeightForHorizontal()', function() {
-
-    let scale = new Scale(0, 150, 2);
+  describe('fitHeightForHorizontal()', () => {
+    const scale = new Scale(0, 150, 2);
 
     scale.valueElements[0].style.height = '100px';
     scale.valueElements[1].style.height = '200px';
@@ -250,47 +232,41 @@ describe('Scale', function() {
 
     Object.defineProperties(window.HTMLElement.prototype, {
       offsetHeight: {
-        get () {
-          return parseInt(this.style.height); 
-        }
-      }
+        get() {
+          return parseInt(this.style.height);
+        },
+      },
     });
 
     scale.fitHeightForHorizontal();
 
-    it('set up component padding bottom equal to height of valueElement with max height + 3px', function() {
-      expect(scale.component.style.paddingBottom).toBe('303px'); 
+    it('set up component padding bottom equal to height of valueElement with max height + 3px', () => {
+      expect(scale.component.style.paddingBottom).toBe('303px');
     });
-
   });
 
-  describe('getBoundingClientRect()', function() {
+  describe('getBoundingClientRect()', () => {
+    const scale = new Scale(0, 150, 4);
+    const coords = scale.getBoundingClientRect();
 
-    let scale = new Scale(0, 150, 4);
-    let coords = scale.getBoundingClientRect();
-
-    it('return component coordinates', function() {
+    it('return component coordinates', () => {
       expect(coords).toEqual(scale.component.getBoundingClientRect());
     });
-
   });
 
-  describe('attachEventHandlers()', function() {
-
-    it('handle click', function() {
-      let scale = new Scale(0, 150, 4);
-      let view: any = {};
+  describe('attachEventHandlers()', () => {
+    it('handle click', () => {
+      const scale = new Scale(0, 150, 4);
+      const view: any = {};
       scale.registerWith(view);
       scale.view!.handleScaleOrTrackClick = jest.fn();
-      let event = new Event('click');
+      const event = new Event('click');
       scale.component.dispatchEvent(event);
 
-      let x = (event as MouseEvent).clientX - scale.getBoundingClientRect().left;
-      let y = (event as MouseEvent).clientY - scale.getBoundingClientRect().top;
+      const x = (event as MouseEvent).clientX - scale.getBoundingClientRect().left;
+      const y = (event as MouseEvent).clientY - scale.getBoundingClientRect().top;
 
       expect(scale.view!.handleScaleOrTrackClick).toBeCalledWith(x, y);
     });
-
   });
-
 });

@@ -1,5 +1,6 @@
 export class Label {
   type: 'left' | 'right' | 'common';
+
   component: HTMLElement;
 
   constructor(type: 'left' | 'right' | 'common' = 'left') {
@@ -13,7 +14,7 @@ export class Label {
 
   setValue(value: number | string): void {
     this.component.textContent = `${value}`;
-  } 
+  }
 
   getValue(): string | null {
     return this.component.textContent;
@@ -21,7 +22,7 @@ export class Label {
 
   getBoundingClientRect(): DOMRect {
     return this.component.getBoundingClientRect();
-  } 
+  }
 
   getOffsetWidth() {
     return this.component.offsetWidth;

@@ -1,5 +1,5 @@
-import {Label} from '../label/label';
-import {createElement} from '../../helpers/createElement';
+import { Label } from '../label/label';
+import { createElement } from '../../helpers/createElement';
 
 export class ValueLabel extends Label {
   component: HTMLElement;
