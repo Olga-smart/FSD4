@@ -18,7 +18,7 @@ type ViewOptions = {
   scale?: boolean,
   scaleIntervals?: number,
   panel?: boolean
-}
+};
 
 export class View {
   presenter: Presenter | null;

@@ -13,7 +13,7 @@ export type PanelOptions = {
   scaleIntervals: number | null,
   valueLabels: boolean,
   minMaxLabels: boolean
-}
+};
 
 export class Panel {
   view: View | null;
