@@ -1,5 +1,5 @@
-import { LabelsContainer } from './labelsContainer';
-import { Label } from '../label/label';
+import LabelsContainer from './labelsContainer';
+import Label from '../label/label';
 
 describe('LabelsContainer', () => {
   describe('constructor()', () => {

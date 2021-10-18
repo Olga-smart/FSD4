@@ -1,7 +1,7 @@
-import { Label } from '../label/label';
-import { createElement } from '../../helpers/createElement';
+import Label from '../label/label';
+import createElement from '../../helpers/createElement';
 
-export class MinMaxLabel extends Label {
+export default class MinMaxLabel extends Label {
   component: HTMLElement;
 
   constructor(type: 'left' | 'right' = 'left') {

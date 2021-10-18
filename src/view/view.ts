@@ -1,13 +1,12 @@
-import { Slider } from './subviews/slider/slider';
-import { Track } from './subviews/track/track';
-import { Range } from './subviews/range/range';
-import { Thumb } from './subviews/thumb/thumb';
-import { MinMaxLabel } from './subviews/minMaxLabel/minMaxLabel';
-import { ValueLabel } from './subviews/valueLabel/valueLabel';
-import { Scale } from './subviews/scale/scale';
-import { LabelsContainer } from './subviews/labelsContainer/labelsContainer';
-import { Presenter } from '../presenter/presenter';
-import { Label } from './subviews/label/label';
+import Slider from './subviews/slider/slider';
+import Track from './subviews/track/track';
+import Range from './subviews/range/range';
+import Thumb from './subviews/thumb/thumb';
+import MinMaxLabel from './subviews/minMaxLabel/minMaxLabel';
+import ValueLabel from './subviews/valueLabel/valueLabel';
+import Scale from './subviews/scale/scale';
+import LabelsContainer from './subviews/labelsContainer/labelsContainer';
+import Label from './subviews/label/label';
 import { Panel, PanelOptions } from './subviews/panel/panel';
 
 type ViewOptions = {
@@ -20,8 +19,8 @@ type ViewOptions = {
   panel?: boolean
 };
 
-export class View {
-  presenter: Presenter | null;
+export default class View {
+  presenter: any;
 
   component: Element;
 
@@ -116,7 +115,7 @@ export class View {
     this.render();
   }
 
-  registerWith(presenter: Presenter) {
+  registerWith(presenter: any) {
     this.presenter = presenter;
   }
 
@@ -144,7 +143,8 @@ export class View {
       this.labelsContainer!.append(this.valueLabelLeft.component);
 
       if (this.isRange) {
-        this.labelsContainer!.append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
+        this.labelsContainer!
+          .append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
       }
     }
 
@@ -205,7 +205,7 @@ export class View {
         this.valueLabelLeft.setLeftIndent(this.thumbLeft.getLeftIndent());
       }
 
-      if (parseInt(this.thumbLeft.getLeftIndent()) == this.track.getOffsetWidth()) {
+      if (parseInt(this.thumbLeft.getLeftIndent(), 10) === this.track.getOffsetWidth()) {
         this.thumbLeft.setZIndex(100);
       } else {
         this.thumbLeft.setZIndex(3);
@@ -228,7 +228,7 @@ export class View {
         this.valueLabelLeft.setTopIndent(this.thumbLeft.getTopIndent());
       }
 
-      if (parseInt(this.thumbLeft.getTopIndent()) == 0) {
+      if (parseInt(this.thumbLeft.getTopIndent(), 10) === 0) {
         this.thumbLeft.setZIndex(100);
       } else {
         this.thumbLeft.setZIndex(3);
@@ -312,13 +312,18 @@ export class View {
     this.valueLabelCommon?.setOpacity(1);
 
     if (!this.vertical) {
-      const distanceBetweenThumbsInPx = parseInt(this.thumbRight!.getLeftIndent()) - parseInt(this.thumbLeft.getLeftIndent());
-      this.valueLabelCommon?.setLeftIndent(`${parseInt(this.valueLabelLeft!.getLeftIndent()) + distanceBetweenThumbsInPx / 2}px`);
+      const distanceBetweenThumbsInPx = (
+        parseInt(this.thumbRight!.getLeftIndent(), 10)
+        - parseInt(this.thumbLeft.getLeftIndent(), 10)
+      );
+      this.valueLabelCommon?.setLeftIndent(`${parseInt(this.valueLabelLeft!.getLeftIndent(), 10) + distanceBetweenThumbsInPx / 2}px`);
     }
 
     if (this.vertical) {
-      const distanceBetweenThumbsInPx = parseInt(this.thumbRight!.getTopIndent()) - parseInt(this.thumbLeft.getTopIndent());
-      this.valueLabelCommon?.setTopIndent(`${parseInt(this.valueLabelRight!.getTopIndent()) - distanceBetweenThumbsInPx / 2}px`);
+      const distanceBetweenThumbsInPx = (
+        parseInt(this.thumbRight!.getTopIndent(), 10) - parseInt(this.thumbLeft.getTopIndent(), 10)
+      );
+      this.valueLabelCommon?.setTopIndent(`${parseInt(this.valueLabelRight!.getTopIndent(), 10) - distanceBetweenThumbsInPx / 2}px`);
     }
   }
 
@@ -329,31 +334,22 @@ export class View {
   }
 
   isTwoValueLabelsClose(): boolean | undefined {
-    if (!this.vertical) {
-      const leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
-      const rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().left;
-
-      return ((rightLabelEdge - leftLabelEdge) < 3);
-    }
-
     if (this.vertical) {
       const bottomLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
       const topLabelEdge = this.valueLabelRight!.getBoundingClientRect().bottom;
 
       return ((bottomLabelEdge - topLabelEdge) < 3);
     }
+
+    const leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
+    const rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().left;
+
+    return ((rightLabelEdge - leftLabelEdge) < 3);
   }
 
   isLeftValueLabelCloseToMinLabel(): boolean | undefined {
     let leftLabelEdge;
     let minLabelEdge;
-
-    if (!this.vertical) {
-      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().left;
-      minLabelEdge = this.minLabel!.getBoundingClientRect().right;
-
-      return ((leftLabelEdge - minLabelEdge) < 3);
-    }
 
     if (this.vertical) {
       leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().bottom;
@@ -361,18 +357,16 @@ export class View {
 
       return ((minLabelEdge - leftLabelEdge) < 3);
     }
+
+    leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().left;
+    minLabelEdge = this.minLabel!.getBoundingClientRect().right;
+
+    return ((leftLabelEdge - minLabelEdge) < 3);
   }
 
   isLeftValueLabelCloseToMaxLabel(): boolean | undefined {
     let leftLabelEdge;
     let maxLabelEdge;
-
-    if (!this.vertical) {
-      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
-      maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
-
-      return ((maxLabelEdge - leftLabelEdge) < 3);
-    }
 
     if (this.vertical) {
       leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
@@ -380,18 +374,16 @@ export class View {
 
       return ((leftLabelEdge - maxLabelEdge) < 3);
     }
+
+    leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
+    maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
+
+    return ((maxLabelEdge - leftLabelEdge) < 3);
   }
 
   isRightValueLabelCloseToMaxLabel(): boolean | undefined {
     let rightLabelEdge;
     let maxLabelEdge;
-
-    if (!this.vertical) {
-      rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().right;
-      maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
-
-      return ((maxLabelEdge - rightLabelEdge) < 3);
-    }
 
     if (this.vertical) {
       rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().top;
@@ -399,6 +391,11 @@ export class View {
 
       return ((rightLabelEdge - maxLabelEdge) < 3);
     }
+
+    rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().right;
+    maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
+
+    return ((maxLabelEdge - rightLabelEdge) < 3);
   }
 
   handleLeftInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
@@ -416,7 +413,7 @@ export class View {
       }
 
       if (this.isRange) {
-        const rightThumbPosition = parseInt(this.thumbRight!.getLeftIndent());
+        const rightThumbPosition = parseInt(this.thumbRight!.getLeftIndent(), 10);
         if (newLeft > rightThumbPosition) {
           newLeft = rightThumbPosition;
         }
@@ -439,7 +436,7 @@ export class View {
       }
 
       if (this.isRange) {
-        const rightThumbPosition = parseInt(this.thumbRight!.getTopIndent());
+        const rightThumbPosition = parseInt(this.thumbRight!.getTopIndent(), 10);
         if (newTop < rightThumbPosition) {
           newTop = rightThumbPosition;
         }
@@ -455,7 +452,7 @@ export class View {
     if (!this.vertical) {
       let newLeft = clientX - shiftX - this.track.getBoundingClientRect().left;
 
-      const leftThumbPosition = parseInt(this.thumbLeft.getLeftIndent());
+      const leftThumbPosition = parseInt(this.thumbLeft.getLeftIndent(), 10);
 
       if (newLeft < leftThumbPosition) {
         newLeft = leftThumbPosition;
@@ -471,7 +468,7 @@ export class View {
     if (this.vertical) {
       let newTop = clientY - shiftY - this.track.getBoundingClientRect().top;
 
-      const leftThumbPosition = parseInt(this.thumbLeft.getTopIndent());
+      const leftThumbPosition = parseInt(this.thumbLeft.getTopIndent(), 10);
 
       if (newTop < 0) {
         newTop = 0;
@@ -524,7 +521,7 @@ export class View {
     }
 
     if (this.isRange) {
-      if (this.whichThumbIsNearer(x, y) == 'left') {
+      if (this.whichThumbIsNearer(x, y) === 'left') {
         this.addSmoothTransition('left');
 
         if (!this.vertical) {
@@ -562,7 +559,9 @@ export class View {
 
     if (!this.vertical) {
       const leftThumbCenter = leftThumbCoords.left + leftThumbCoords.width / 2 - trackCoords.left;
-      const rightThumbCenter = rightThumbCoords.left + rightThumbCoords.width / 2 - trackCoords.left;
+      const rightThumbCenter = rightThumbCoords.left
+        + rightThumbCoords.width / 2
+        - trackCoords.left;
 
       distanceFromLeftThumbCenter = Math.abs(x - leftThumbCenter);
       distanceFromRightThumbCenter = Math.abs(x - rightThumbCenter);
@@ -583,7 +582,7 @@ export class View {
   }
 
   addSmoothTransition(side: 'left' | 'right' = 'left'): void {
-    if (side == 'left') {
+    if (side === 'left') {
       this.thumbLeft.component.classList.add('range-slider__thumb_smooth-transition');
       this.range.component.classList.add('range-slider__range_smooth-transition');
       if (this.valueLabelLeft) {
@@ -591,7 +590,7 @@ export class View {
       }
     }
 
-    if (side == 'right') {
+    if (side === 'right') {
       this.thumbRight!.component.classList.add('range-slider__thumb_smooth-transition');
       this.range.component.classList.add('range-slider__range_smooth-transition');
       if (this.valueLabelRight) {
@@ -601,7 +600,7 @@ export class View {
   }
 
   removeSmoothTransition(side: 'left' | 'right' = 'left'): void {
-    if (side == 'left') {
+    if (side === 'left') {
       this.thumbLeft.component.classList.remove('range-slider__thumb_smooth-transition');
       this.range.component.classList.remove('range-slider__range_smooth-transition');
       if (this.valueLabelLeft) {
@@ -609,7 +608,7 @@ export class View {
       }
     }
 
-    if (side == 'right') {
+    if (side === 'right') {
       this.thumbRight!.component.classList.remove('range-slider__thumb_smooth-transition');
       this.range.component.classList.remove('range-slider__range_smooth-transition');
       if (this.valueLabelRight) {
@@ -806,7 +805,8 @@ export class View {
       this.labelsContainer.append(this.valueLabelLeft.component);
 
       if (this.isRange) {
-        this.labelsContainer.append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
+        this.labelsContainer
+          .append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
       }
 
       this.presenter?.handleAddValueLabels();

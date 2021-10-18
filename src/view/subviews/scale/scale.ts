@@ -1,8 +1,7 @@
-import { createElement } from '../../helpers/createElement';
-import { View } from '../../view';
+import createElement from '../../helpers/createElement';
 
-export class Scale {
-  view: View | null;
+export default class Scale {
+  view: any;
 
   component: HTMLElement;
 
@@ -34,12 +33,12 @@ export class Scale {
     this.attachEventHandlers();
   }
 
-  registerWith(view: View): void {
+  registerWith(view: any): void {
     this.view = view;
   }
 
   createIntervals(): void {
-    for (let i = 0; i < this.intervalsNumber; i++) {
+    for (let i = 0; i < this.intervalsNumber; i += 1) {
       this.intervals[i] = createElement('div', 'range-slider__scale-interval');
       this.component.append(this.intervals[i]);
     }
@@ -67,7 +66,7 @@ export class Scale {
   addValues(): void {
     this.values[0] = this.min;
     const step = Math.round((this.max - this.min) / this.intervalsNumber);
-    for (let i = 1; i < this.intervalsNumber; i++) {
+    for (let i = 1; i < this.intervalsNumber; i += 1) {
       this.values[i] = i * step + this.min;
     }
     this.values.push(this.max);
@@ -77,11 +76,11 @@ export class Scale {
     this.intervals[0].append(valueElement);
     this.valueElements.push(valueElement);
 
-    for (let i = 1; i < this.values.length; i++) {
-      const valueElement = createElement('span', 'range-slider__scale-interval-value');
-      valueElement.textContent = `${this.values[i]}`;
-      this.intervals[i - 1].append(valueElement);
-      this.valueElements.push(valueElement);
+    for (let i = 1; i < this.values.length; i += 1) {
+      const newValueElement = createElement('span', 'range-slider__scale-interval-value');
+      newValueElement.textContent = `${this.values[i]}`;
+      this.intervals[i - 1].append(newValueElement);
+      this.valueElements.push(newValueElement);
     }
   }
 
@@ -113,11 +112,13 @@ export class Scale {
     return this.component.getBoundingClientRect();
   }
 
+  handleClick(event: MouseEvent): void {
+    const x: number = event.clientX - this.getBoundingClientRect().left;
+    const y: number = event.clientY - this.getBoundingClientRect().top;
+    this.view?.handleScaleOrTrackClick(x, y);
+  }
+
   attachEventHandlers(): void {
-    this.component.addEventListener('click', (event) => {
-      const x: number = event.clientX - this.getBoundingClientRect().left;
-      const y: number = event.clientY - this.getBoundingClientRect().top;
-      this.view?.handleScaleOrTrackClick(x, y);
-    });
+    this.component.addEventListener('click', this.handleClick.bind(this));
   }
 }

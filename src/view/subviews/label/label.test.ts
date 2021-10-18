@@ -1,4 +1,4 @@
-import { Label } from './label';
+import Label from './label';
 
 describe('Label', () => {
   describe('constructor(type)', () => {
@@ -9,23 +9,23 @@ describe('Label', () => {
     });
 
     it('set up type = left by default', () => {
-      const label = new Label();
-      expect(label.type).toBe('left');
+      const newLabel = new Label();
+      expect(newLabel.type).toBe('left');
     });
 
     it('set up type = right if the argument is "right"', () => {
-      const label = new Label('right');
-      expect(label.type).toBe('right');
+      const newLabel = new Label('right');
+      expect(newLabel.type).toBe('right');
     });
 
     it('set up type = left if the argument is "left"', () => {
-      const label = new Label('left');
-      expect(label.type).toBe('left');
+      const newLabel = new Label('left');
+      expect(newLabel.type).toBe('left');
     });
 
     it('set up type = common if the argument is "common"', () => {
-      const label = new Label('common');
-      expect(label.type).toBe('common');
+      const newLabel = new Label('common');
+      expect(newLabel.type).toBe('common');
     });
 
     it('set up component property', () => {
@@ -52,7 +52,7 @@ describe('Label', () => {
     const label = new Label();
 
     it('change textContent of component', () => {
-      for (let i = -50; i <= 50; i++) {
+      for (let i = -50; i <= 50; i += 1) {
         label.setValue(i);
         expect(label.component.textContent).toBe(`${i}`);
       }
@@ -63,7 +63,7 @@ describe('Label', () => {
     const label = new Label();
 
     it('return textContent of component', () => {
-      for (let i = -50; i <= 50; i++) {
+      for (let i = -50; i <= 50; i += 1) {
         label.component.textContent = `${i}`;
         const value = label.getValue();
         expect(value).toBe(`${i}`);

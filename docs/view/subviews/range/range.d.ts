@@ -1,4 +1,4 @@
-export declare class Range {
+export default class Range {
     component: HTMLElement;
     constructor();
     setLeftIndentInPx(px: number): void;

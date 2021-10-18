@@ -1,4 +1,3 @@
-import { View } from '../../view';
 export declare type PanelOptions = {
     min: number;
     max: number;
@@ -13,7 +12,7 @@ export declare type PanelOptions = {
     minMaxLabels: boolean;
 };
 export declare class Panel {
-    view: View | null;
+    view: any;
     component: HTMLElement;
     min: HTMLElement;
     max: HTMLElement;
@@ -27,16 +26,33 @@ export declare class Panel {
     valueLabels: HTMLElement;
     minMaxLabels: HTMLElement;
     constructor();
-    registerWith(view: View): void;
+    registerWith(view: any): void;
     render(): void;
-    setType(input: HTMLElement, type: string): HTMLElement;
-    addLabel(input: HTMLElement, name: string): HTMLElement;
-    wrap(input: HTMLElement): HTMLElement;
+    static addLabel(input: HTMLElement, name: string): HTMLElement;
+    static wrap(input: HTMLElement): HTMLElement;
+    setTypes(): void;
     setValues(options: PanelOptions): void;
     setAttributes(options: PanelOptions): void;
     updateFrom(value: number): void;
     updateTo(value: number | ''): void;
     updateScaleIntervals(value: number | ''): void;
+    handleMinInput(): void;
+    handleMinChange(): void;
+    handleMaxInput(): void;
+    handleMaxChange(): void;
+    handleStepInput(): void;
+    handleStepChange(): void;
+    handleFromInput(): void;
+    handleFromChange(): void;
+    handleToInput(): void;
+    handleToChange(): void;
+    handleVerticalChange(): void;
+    handleRangeChange(): void;
+    handleScaleChange(): void;
+    handleScaleIntervalsInput(): void;
+    handleScaleIntervalsChange(): void;
+    handleValueLabelsChange(): void;
+    handleMinMaxLabelsChange(): void;
     attachEventHandlers(): void;
 }
 //# sourceMappingURL=panel.d.ts.map

@@ -1,5 +1,5 @@
-import { Label } from '../label/label';
-export declare class LabelsContainer {
+import Label from '../label/label';
+export default class LabelsContainer {
     component: HTMLElement;
     constructor();
     append(...elements: HTMLElement[]): void;

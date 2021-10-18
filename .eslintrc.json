@@ -20,6 +20,5 @@
     "@typescript-eslint",
     "fsd"
   ],
-  "rules": {
-  }
+  "ignorePatterns": ["src/view/pages-for-puppeteer/*"]
 }

@@ -1,6 +1,6 @@
-import { createElement } from '../../helpers/createElement';
+import createElement from '../../helpers/createElement';
 
-export class Range {
+export default class Range {
   component: HTMLElement;
 
   constructor() {

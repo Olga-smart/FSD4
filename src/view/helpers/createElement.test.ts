@@ -1,4 +1,4 @@
-import { createElement } from './createElement';
+import createElement from './createElement';
 
 describe('createElement(tag, classname)', () => {
   it('create element with passed tag', () => {

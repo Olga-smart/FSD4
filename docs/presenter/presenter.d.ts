@@ -1,9 +1,10 @@
-import { Model } from '../model/model';
-import { View } from '../view/view';
-export declare class Presenter {
+import Model from '../model/model';
+import View from '../view/view';
+export default class Presenter {
     model: Model;
     view: View;
     constructor(model: Model, view: View);
+    hasViewLabels(): boolean;
     handleLeftInput(px: number): void;
     handleRightInput(px: number): void;
     passLeftValueToView(value: number): void;
@@ -11,7 +12,7 @@ export declare class Presenter {
     convertValueToPx(value: number): number;
     convertPxToValue(px: number): number;
     fitToStep(value: number): number;
-    removeCalcInaccuracy(value: number): number;
+    static removeCalcInaccuracy(value: number): number;
     changeLeftValueFromOutside(value: number): void;
     changeRightValueFromOutside(value: number): void;
     changeMinFromOutside(value: number): void;

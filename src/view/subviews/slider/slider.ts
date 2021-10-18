@@ -1,6 +1,6 @@
-import { createElement } from '../../helpers/createElement';
+import createElement from '../../helpers/createElement';
 
-export class Slider {
+export default class Slider {
   component: HTMLElement;
 
   constructor() {

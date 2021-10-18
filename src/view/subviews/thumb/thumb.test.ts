@@ -1,5 +1,5 @@
-import { Thumb } from './thumb';
-import { View } from '../../view';
+import Thumb from './thumb';
+import View from '../../view';
 
 describe('Thumb', () => {
   describe('constructor(type)', () => {
@@ -20,7 +20,7 @@ describe('Thumb', () => {
           expect(thumb.type).toBe('right');
         });
 
-        it('type = leftt if the argument is "left"', () => {
+        it('type = left if the argument is "left"', () => {
           const thumb = new Thumb('left');
           expect(thumb.type).toBe('left');
         });
@@ -89,7 +89,7 @@ describe('Thumb', () => {
     const thumb = new Thumb();
 
     it('set up left property of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         thumb.setLeftIndentInPx(i);
         expect(thumb.component.style.left).toBe(`${i}px`);
       }
@@ -100,7 +100,7 @@ describe('Thumb', () => {
     const thumb = new Thumb();
 
     it('set up top property of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         thumb.setTopIndentInPx(i);
         expect(thumb.component.style.top).toBe(`${i}px`);
       }
@@ -111,7 +111,7 @@ describe('Thumb', () => {
     const thumb = new Thumb();
 
     it('return left property of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         thumb.setLeftIndentInPx(i);
         const indent = thumb.getLeftIndent();
         expect(indent).toBe(`${i}px`);
@@ -123,7 +123,7 @@ describe('Thumb', () => {
     const thumb = new Thumb();
 
     it('return top property of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         thumb.setTopIndentInPx(i);
         const indent = thumb.getTopIndent();
         expect(indent).toBe(`${i}px`);
@@ -135,7 +135,7 @@ describe('Thumb', () => {
     const thumb = new Thumb();
 
     it('change z-index of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         thumb.setZIndex(i);
         expect(thumb.component.style.zIndex).toBe(`${i}`);
       }
@@ -189,47 +189,47 @@ describe('Thumb', () => {
 
     describe('handle dragging', () => {
       it('call handler for left input if thumb type is left', () => {
-        const thumb = new Thumb('left');
-        const view: any = {};
-        thumb.registerWith(view);
-        thumb.view!.handleLeftInput = jest.fn();
-        thumb.component.setPointerCapture = jest.fn();
+        const newThumb = new Thumb('left');
+        const newView: any = {};
+        newThumb.registerWith(newView);
+        newThumb.view!.handleLeftInput = jest.fn();
+        newThumb.component.setPointerCapture = jest.fn();
 
-        thumb.component.dispatchEvent(new Event('pointerdown'));
-        thumb.component.dispatchEvent(new Event('pointermove'));
+        newThumb.component.dispatchEvent(new Event('pointerdown'));
+        newThumb.component.dispatchEvent(new Event('pointermove'));
 
-        expect(thumb.view!.handleLeftInput).toBeCalled();
+        expect(newThumb.view!.handleLeftInput).toBeCalled();
       });
 
       it('call handler for right input if thumb type is right', () => {
-        const thumb = new Thumb('right');
-        const view: any = {};
-        thumb.registerWith(view);
-        thumb.view!.handleRightInput = jest.fn();
-        thumb.component.setPointerCapture = jest.fn();
+        const newThumb = new Thumb('right');
+        const newView: any = {};
+        newThumb.registerWith(newView);
+        newThumb.view!.handleRightInput = jest.fn();
+        newThumb.component.setPointerCapture = jest.fn();
 
-        thumb.component.dispatchEvent(new Event('pointerdown'));
-        thumb.component.dispatchEvent(new Event('pointermove'));
+        newThumb.component.dispatchEvent(new Event('pointerdown'));
+        newThumb.component.dispatchEvent(new Event('pointermove'));
 
-        expect(thumb.view!.handleRightInput).toBeCalled();
+        expect(newThumb.view!.handleRightInput).toBeCalled();
       });
 
       it('nothing happens if view is not registered', () => {
-        let thumb = new Thumb('left');
-        thumb.component.setPointerCapture = jest.fn();
+        let newThumb = new Thumb('left');
+        newThumb.component.setPointerCapture = jest.fn();
         jest.spyOn(View.prototype, 'handleLeftInput');
 
-        thumb.component.dispatchEvent(new Event('pointerdown'));
-        thumb.component.dispatchEvent(new Event('pointermove'));
+        newThumb.component.dispatchEvent(new Event('pointerdown'));
+        newThumb.component.dispatchEvent(new Event('pointermove'));
 
         expect(View.prototype.handleLeftInput).not.toBeCalled();
 
-        thumb = new Thumb('right');
-        thumb.component.setPointerCapture = jest.fn();
+        newThumb = new Thumb('right');
+        newThumb.component.setPointerCapture = jest.fn();
         jest.spyOn(View.prototype, 'handleRightInput');
 
-        thumb.component.dispatchEvent(new Event('pointerdown'));
-        thumb.component.dispatchEvent(new Event('pointermove'));
+        newThumb.component.dispatchEvent(new Event('pointerdown'));
+        newThumb.component.dispatchEvent(new Event('pointermove'));
 
         expect(View.prototype.handleRightInput).not.toBeCalled();
       });

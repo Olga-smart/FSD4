@@ -1,5 +1,5 @@
-import { Label } from '../label/label';
-export declare class ValueLabel extends Label {
+import Label from '../label/label';
+export default class ValueLabel extends Label {
     component: HTMLElement;
     constructor(type?: 'left' | 'right' | 'common');
     setLeftIndent(value: string): void;

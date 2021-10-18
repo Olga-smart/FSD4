@@ -1,7 +1,7 @@
-import { createElement } from '../../helpers/createElement';
-import { Label } from '../label/label';
+import createElement from '../../helpers/createElement';
+import Label from '../label/label';
 
-export class LabelsContainer {
+export default class LabelsContainer {
   component: HTMLElement;
 
   constructor() {

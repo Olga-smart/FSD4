@@ -1,13 +1,13 @@
-import { View } from './view';
-import { Presenter } from '../presenter/presenter';
-import { Slider } from './subviews/slider/slider';
-import { Track } from './subviews/track/track';
-import { Range } from './subviews/range/range';
-import { Thumb } from './subviews/thumb/thumb';
-import { LabelsContainer } from './subviews/labelsContainer/labelsContainer';
-import { MinMaxLabel } from './subviews/minMaxLabel/minMaxLabel';
-import { ValueLabel } from './subviews/valueLabel/valueLabel';
-import { Scale } from './subviews/scale/scale';
+import View from './view';
+import Presenter from '../presenter/presenter';
+import Slider from './subviews/slider/slider';
+import Track from './subviews/track/track';
+import Range from './subviews/range/range';
+import Thumb from './subviews/thumb/thumb';
+import LabelsContainer from './subviews/labelsContainer/labelsContainer';
+import MinMaxLabel from './subviews/minMaxLabel/minMaxLabel';
+import ValueLabel from './subviews/valueLabel/valueLabel';
+import Scale from './subviews/scale/scale';
 
 describe('View', () => {
   describe('constructor()', () => {
@@ -62,268 +62,268 @@ describe('View', () => {
       });
 
       it('set up right thumb if necessary', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           range: true,
         });
 
-        expect(view).toHaveProperty('thumbRight');
+        expect(newView).toHaveProperty('thumbRight');
       });
 
       it('thumbRight property is instance of Thumb', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           range: true,
         });
 
-        expect(view.thumbRight).toBeInstanceOf(Thumb);
+        expect(newView.thumbRight).toBeInstanceOf(Thumb);
       });
     });
 
     describe('set up isRange property', () => {
       it('true if options.range is true', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           range: true,
         });
 
-        expect(view.isRange).toBe(true);
+        expect(newView.isRange).toBe(true);
       });
 
       it('false if options.range is false', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           range: false,
         });
 
-        expect(view.isRange).toBe(false);
+        expect(newView.isRange).toBe(false);
       });
 
       it('false by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider);
 
-        expect(view.isRange).toBe(false);
+        expect(newView.isRange).toBe(false);
       });
     });
 
     describe('set up hasScale property', () => {
       it('true if options.scale is true', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           scale: true,
         });
 
-        expect(view.hasScale).toBe(true);
+        expect(newView.hasScale).toBe(true);
       });
 
       it('false if options.scale is false', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           scale: false,
         });
 
-        expect(view.hasScale).toBe(false);
+        expect(newView.hasScale).toBe(false);
       });
 
       it('false by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider);
 
-        expect(view.hasScale).toBe(false);
+        expect(newView.hasScale).toBe(false);
       });
     });
 
     describe('set up labelsContainer property if necessary', () => {
       it('if options.minMaxLabels is true', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           minMaxLabels: true,
         });
 
-        expect(view.labelsContainer).toBeInstanceOf(LabelsContainer);
+        expect(newView.labelsContainer).toBeInstanceOf(LabelsContainer);
       });
 
       it('if options.valueLabel is true', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           valueLabels: true,
         });
 
-        expect(view.labelsContainer).toBeInstanceOf(LabelsContainer);
+        expect(newView.labelsContainer).toBeInstanceOf(LabelsContainer);
       });
 
       it('do not set up if options.minMaxLabels and options.valueLabel are false', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           minMaxLabels: false,
           valueLabels: false,
         });
 
-        expect(view).not.toHaveProperty('labelsContainer');
+        expect(newView).not.toHaveProperty('labelsContainer');
       });
 
       it('do not set up by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider);
 
-        expect(view).not.toHaveProperty('labelsContainer');
+        expect(newView).not.toHaveProperty('labelsContainer');
       });
     });
 
     describe('set up scaleIntervals property if options.scale is true', () => {
       it('4 by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           scale: true,
         });
 
-        expect(view.scaleIntervals).toBe(4);
+        expect(newView.scaleIntervals).toBe(4);
       });
 
       it('certain number if options.scaleIntervals is set', () => {
-        const slider = document.createElement('div');
+        const newSlider = document.createElement('div');
 
-        for (let i = 1; i < 25; i++) {
-          const view = new View(slider, {
+        for (let i = 1; i < 25; i += 1) {
+          const newView = new View(newSlider, {
             scale: true,
             scaleIntervals: i,
           });
 
-          expect(view.scaleIntervals).toBe(i);
+          expect(newView.scaleIntervals).toBe(i);
         }
       });
     });
 
     describe('min and max properties', () => {
       it('set up properties for min and max labels if options.minMaxLabels is true', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           minMaxLabels: true,
         });
 
-        expect(view).toHaveProperty('minLabel');
-        expect(view).toHaveProperty('maxLabel');
+        expect(newView).toHaveProperty('minLabel');
+        expect(newView).toHaveProperty('maxLabel');
       });
 
       it('min and max properties are instancies of MinMaxLabel', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           minMaxLabels: true,
         });
 
-        expect(view.minLabel).toBeInstanceOf(MinMaxLabel);
-        expect(view.maxLabel).toBeInstanceOf(MinMaxLabel);
+        expect(newView.minLabel).toBeInstanceOf(MinMaxLabel);
+        expect(newView.maxLabel).toBeInstanceOf(MinMaxLabel);
       });
 
       it('do not set up properties for min and max labels if options.minMaxLabels is false', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           minMaxLabels: false,
         });
 
-        expect(view).not.toHaveProperty('minLabel');
-        expect(view).not.toHaveProperty('maxLabel');
+        expect(newView).not.toHaveProperty('minLabel');
+        expect(newView).not.toHaveProperty('maxLabel');
       });
 
       it('do not set up properties for min and max labels by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider);
 
-        expect(view).not.toHaveProperty('minLabel');
-        expect(view).not.toHaveProperty('maxLabel');
+        expect(newView).not.toHaveProperty('minLabel');
+        expect(newView).not.toHaveProperty('maxLabel');
       });
     });
 
     describe('properties for value labels', () => {
       describe('set up properties for value labels if options.valueLabel is true', () => {
         it('set up left value label', () => {
-          const slider = document.createElement('div');
-          const view = new View(slider, {
+          const newSlider = document.createElement('div');
+          const newView = new View(newSlider, {
             valueLabels: true,
           });
 
-          expect(view).toHaveProperty('valueLabelLeft');
+          expect(newView).toHaveProperty('valueLabelLeft');
         });
 
         it('set up right and common value labels if necessary', () => {
-          const slider = document.createElement('div');
-          const view = new View(slider, {
+          const newSlider = document.createElement('div');
+          const newView = new View(newSlider, {
             valueLabels: true,
             range: true,
           });
 
-          expect(view).toHaveProperty('valueLabelRight');
-          expect(view).toHaveProperty('valueLabelCommon');
+          expect(newView).toHaveProperty('valueLabelRight');
+          expect(newView).toHaveProperty('valueLabelCommon');
         });
 
         it('properties for value labels are instancies of ValueLabel', () => {
-          const slider = document.createElement('div');
-          const view = new View(slider, {
+          const newSlider = document.createElement('div');
+          const newView = new View(newSlider, {
             valueLabels: true,
             range: true,
           });
 
-          expect(view.valueLabelLeft).toBeInstanceOf(ValueLabel);
-          expect(view.valueLabelRight).toBeInstanceOf(ValueLabel);
-          expect(view.valueLabelCommon).toBeInstanceOf(ValueLabel);
+          expect(newView.valueLabelLeft).toBeInstanceOf(ValueLabel);
+          expect(newView.valueLabelRight).toBeInstanceOf(ValueLabel);
+          expect(newView.valueLabelCommon).toBeInstanceOf(ValueLabel);
         });
       });
 
       it('do not set up properties for value labels if options.valueLabel is false', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           valueLabels: false,
         });
 
-        expect(view).not.toHaveProperty('valueLabelLeft');
-        expect(view).not.toHaveProperty('valueLabelRight');
-        expect(view).not.toHaveProperty('valueLabelCommon');
+        expect(newView).not.toHaveProperty('valueLabelLeft');
+        expect(newView).not.toHaveProperty('valueLabelRight');
+        expect(newView).not.toHaveProperty('valueLabelCommon');
       });
 
       it('do not set up properties for value labels by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider);
 
-        expect(view).not.toHaveProperty('valueLabelLeft');
-        expect(view).not.toHaveProperty('valueLabelRight');
-        expect(view).not.toHaveProperty('valueLabelCommon');
+        expect(newView).not.toHaveProperty('valueLabelLeft');
+        expect(newView).not.toHaveProperty('valueLabelRight');
+        expect(newView).not.toHaveProperty('valueLabelCommon');
       });
     });
 
     describe('vertical property', () => {
       it('set up vertical property if options.vertical is true', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           vertical: true,
         });
 
-        expect(view.vertical).toBe(true);
+        expect(newView.vertical).toBe(true);
       });
 
       it('do not set up vertical property if options.vertical is false', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           vertical: false,
         });
 
-        expect(view).not.toHaveProperty('vertical');
+        expect(newView).not.toHaveProperty('vertical');
       });
 
       it('do not set up vertical property by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider);
 
-        expect(view).not.toHaveProperty('vertical');
+        expect(newView).not.toHaveProperty('vertical');
       });
     });
 
     it('call render() method', () => {
       const spy = jest.spyOn(View.prototype, 'render');
-      const slider = document.createElement('div');
-      new View(slider);
+      const newSlider = document.createElement('div');
+      const newView = new View(newSlider);
 
-      expect(spy).toBeCalled();
+      expect(newView.render).toBeCalled();
 
       spy.mockClear();
     });
@@ -361,99 +361,102 @@ describe('View', () => {
     });
 
     it('append thumbRight component to slider component if view.isRange', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
+      const newSlider = document.createElement('div');
+      const newView = new View(newSlider, {
         range: true,
       });
 
-      expect(view.slider.component.children).toContain(view.thumbRight!.component);
+      expect(newView.slider.component.children).toContain(newView.thumbRight!.component);
     });
 
     describe('set initial indent for range component if !view.isRange or by default', () => {
       it('set left indent = 0 if slider is horizontal or by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
-        view.range.setLeftIndentInPx = jest.fn();
-        view.render();
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider);
+        newView.range.setLeftIndentInPx = jest.fn();
+        newView.render();
 
-        expect(view.range.setLeftIndentInPx).toBeCalledWith(0);
+        expect(newView.range.setLeftIndentInPx).toBeCalledWith(0);
       });
 
       it('set bottom indent = 0 if slider is vertical', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           vertical: true,
         });
-        view.range.setBottomIndentInPx = jest.fn();
-        view.render();
+        newView.range.setBottomIndentInPx = jest.fn();
+        newView.render();
 
-        expect(view.range.setBottomIndentInPx).toBeCalledWith(0);
+        expect(newView.range.setBottomIndentInPx).toBeCalledWith(0);
       });
     });
 
     describe('append minLabel and maxLabel components to labelsContainer if necessary', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
+      const newSlider = document.createElement('div');
+      const newView = new View(newSlider, {
         minMaxLabels: true,
       });
 
       it('append minLabel', () => {
-        expect(view.labelsContainer!.component.children).toContain(view.minLabel!.component);
+        expect(newView.labelsContainer!.component.children).toContain(newView.minLabel!.component);
       });
 
       it('append maxLabel', () => {
-        expect(view.labelsContainer!.component.children).toContain(view.maxLabel!.component);
+        expect(newView.labelsContainer!.component.children).toContain(newView.maxLabel!.component);
       });
     });
 
     describe('append labels components to labelsContainer if necessary', () => {
       it('append valueLabelLeft component', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           valueLabels: true,
         });
 
-        expect(view.labelsContainer!.component.children).toContain(view.valueLabelLeft!.component);
+        expect(newView.labelsContainer!.component.children)
+          .toContain(newView.valueLabelLeft!.component);
       });
 
       it('append valueLabelRight component', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           valueLabels: true,
           range: true,
         });
 
-        expect(view.labelsContainer!.component.children).toContain(view.valueLabelRight!.component);
+        expect(newView.labelsContainer!.component.children)
+          .toContain(newView.valueLabelRight!.component);
       });
 
       it('append valueLabelCommon component', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           valueLabels: true,
           range: true,
         });
 
-        expect(view.labelsContainer!.component.children).toContain(view.valueLabelCommon!.component);
+        expect(newView.labelsContainer!.component.children)
+          .toContain(newView.valueLabelCommon!.component);
       });
     });
 
     it('append labelsContainer component to slider component if necessary', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
+      const newSlider = document.createElement('div');
+      const newView = new View(newSlider, {
         minMaxLabels: true,
         valueLabels: true,
       });
 
-      expect(view.component.children).toContain(view.labelsContainer!.component);
+      expect(newView.component.children).toContain(newView.labelsContainer!.component);
     });
 
     it('add necessary class to view component if slider is vertical', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
+      const newSlider = document.createElement('div');
+      const newView = new View(newSlider, {
         vertical: true,
       });
 
-      expect(view.component.classList).toContain('range-slider_vertical');
+      expect(newView.component.classList).toContain('range-slider_vertical');
     });
   });
 
@@ -465,7 +468,7 @@ describe('View', () => {
       });
       view.minLabel!.setValue = jest.fn();
 
-      for (let i = -100; i <= 100; i++) {
+      for (let i = -100; i <= 100; i += 1) {
         view.setMinValue(i);
         expect(view.minLabel!.setValue).toBeCalledWith(i);
       }
@@ -480,7 +483,7 @@ describe('View', () => {
       });
       view.maxLabel!.setValue = jest.fn();
 
-      for (let i = -100; i <= 100; i++) {
+      for (let i = -100; i <= 100; i += 1) {
         view.setMaxValue(i);
         expect(view.maxLabel!.setValue).toBeCalledWith(i);
       }
@@ -495,7 +498,7 @@ describe('View', () => {
           const view = new View(slider);
           view.thumbLeft.setLeftIndentInPx = jest.fn();
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setLeftValue(50, px);
             expect(view.thumbLeft.setLeftIndentInPx).toBeCalledWith(px);
           }
@@ -511,7 +514,7 @@ describe('View', () => {
           view.track.getOffsetHeight = jest.fn();
           (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setLeftValue(50, px);
             expect(view.thumbLeft.setTopIndentInPx).toBeCalledWith(trackHeight - px);
           }
@@ -526,7 +529,7 @@ describe('View', () => {
           view.track.getOffsetWidth = jest.fn();
           view.thumbLeft.setZIndex = jest.fn();
 
-          for (let px = 50; px <= 100; px++) {
+          for (let px = 50; px <= 100; px += 1) {
             (view.thumbLeft.getLeftIndent as jest.Mock).mockReturnValue(px);
             (view.track.getOffsetWidth as jest.Mock).mockReturnValue(px);
             view.setLeftValue(200, px);
@@ -557,7 +560,7 @@ describe('View', () => {
           const view = new View(slider);
           view.range.setWidthInPx = jest.fn();
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setLeftValue(50, px);
             expect(view.range.setWidthInPx).toBeCalledWith(px);
           }
@@ -570,7 +573,7 @@ describe('View', () => {
           });
           view.range.setLeftIndentInPx = jest.fn();
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setLeftValue(50, px);
             expect(view.range.setLeftIndentInPx).toBeCalledWith(px);
           }
@@ -585,7 +588,7 @@ describe('View', () => {
           });
           view.range.setHeightInPx = jest.fn();
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setLeftValue(50, px);
             expect(view.range.setHeightInPx).toBeCalledWith(px);
           }
@@ -599,7 +602,7 @@ describe('View', () => {
           });
           view.range.setBottomIndentInPx = jest.fn();
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setLeftValue(50, px);
             expect(view.range.setBottomIndentInPx).toBeCalledWith(px);
           }
@@ -616,7 +619,7 @@ describe('View', () => {
           });
           view.valueLabelLeft!.setValue = jest.fn();
 
-          for (let value = -100; value <= 100; value++) {
+          for (let value = -100; value <= 100; value += 1) {
             view.setLeftValue(value, 100);
             expect(view.valueLabelLeft!.setValue).toBeCalledWith(value);
           }
@@ -633,7 +636,7 @@ describe('View', () => {
           view.valueLabelRight!.getValue = jest.fn();
           (view.valueLabelRight!.getValue as jest.Mock).mockReturnValue(rightValue);
 
-          for (let value = -100; value <= 100; value++) {
+          for (let value = -100; value <= 100; value += 1) {
             view.setLeftValue(value, 100);
             expect(view.valueLabelCommon!.setValue).toBeCalledWith(`${value} - ${rightValue}`);
           }
@@ -648,7 +651,7 @@ describe('View', () => {
           });
           view.valueLabelLeft!.setLeftIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setLeftValue(50, px);
             expect(view.valueLabelLeft!.setLeftIndent).toBeCalledWith(`${px}px`);
           }
@@ -665,7 +668,7 @@ describe('View', () => {
           view.track.getOffsetHeight = jest.fn();
           (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setLeftValue(50, px);
             expect(view.valueLabelLeft!.setTopIndent).toBeCalledWith(`${trackHeight - px}px`);
           }
@@ -855,7 +858,7 @@ describe('View', () => {
           });
           view.thumbRight!.setLeftIndentInPx = jest.fn();
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setRightValue(50, px);
             expect(view.thumbRight!.setLeftIndentInPx).toBeCalledWith(px);
           }
@@ -872,7 +875,7 @@ describe('View', () => {
           view.track.getOffsetHeight = jest.fn();
           (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setRightValue(50, px);
             expect(view.thumbRight!.setTopIndentInPx).toBeCalledWith(trackHeight - px);
           }
@@ -891,7 +894,7 @@ describe('View', () => {
         view.track.getOffsetWidth = jest.fn();
         (view.track.getOffsetWidth as jest.Mock).mockReturnValue(trackHeight);
 
-        for (let px = 0; px <= 100; px++) {
+        for (let px = 0; px <= 100; px += 1) {
           view.setRightValue(50, px);
           expect(view.range.setRightIndentInPx).toBeCalledWith(trackHeight - px);
         }
@@ -908,7 +911,7 @@ describe('View', () => {
         view.track.getOffsetHeight = jest.fn();
         (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-        for (let px = 0; px <= 100; px++) {
+        for (let px = 0; px <= 100; px += 1) {
           view.setRightValue(50, px);
           expect(view.range.setTopIndentInPx).toBeCalledWith(trackHeight - px);
         }
@@ -925,7 +928,7 @@ describe('View', () => {
           });
           view.valueLabelRight!.setValue = jest.fn();
 
-          for (let value = -100; value <= 100; value++) {
+          for (let value = -100; value <= 100; value += 1) {
             view.setRightValue(value, 100);
             expect(view.valueLabelRight!.setValue).toBeCalledWith(value);
           }
@@ -942,7 +945,7 @@ describe('View', () => {
           view.valueLabelLeft!.getValue = jest.fn();
           (view.valueLabelLeft!.getValue as jest.Mock).mockReturnValue(leftValue);
 
-          for (let value = -100; value <= 100; value++) {
+          for (let value = -100; value <= 100; value += 1) {
             view.setRightValue(value, 100);
             expect(view.valueLabelCommon!.setValue).toBeCalledWith(`${leftValue} - ${value}`);
           }
@@ -958,7 +961,7 @@ describe('View', () => {
           });
           view.valueLabelRight!.setLeftIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setRightValue(50, px);
             expect(view.valueLabelRight!.setLeftIndent).toBeCalledWith(`${px}px`);
           }
@@ -976,7 +979,7 @@ describe('View', () => {
           view.track.getOffsetHeight = jest.fn();
           (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-          for (let px = 0; px <= 100; px++) {
+          for (let px = 0; px <= 100; px += 1) {
             view.setRightValue(50, px);
             expect(view.valueLabelRight!.setTopIndent).toBeCalledWith(`${trackHeight - px}px`);
           }
@@ -1473,24 +1476,24 @@ describe('View', () => {
       });
 
       it('if cursor is off right thumb position new left indent = right thumb indent', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const rangeSlider = document.createElement('div');
+        const rangeView = new View(rangeSlider, {
           range: true,
         });
-        const presenter: any = {};
-        view.registerWith(presenter);
-        view.presenter!.handleLeftInput = jest.fn();
+        const rangePresenter: any = {};
+        rangeView.registerWith(rangePresenter);
+        rangeView.presenter!.handleLeftInput = jest.fn();
 
-        view.track.getBoundingClientRect = jest.fn();
-        (view.track.getBoundingClientRect as jest.Mock).mockReturnValue({
+        rangeView.track.getBoundingClientRect = jest.fn();
+        (rangeView.track.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 200,
         });
 
-        view.thumbRight!.getLeftIndent = jest.fn();
-        (view.thumbRight!.getLeftIndent as jest.Mock).mockReturnValue(200);
-        view.handleLeftInput(500, 200);
+        rangeView.thumbRight!.getLeftIndent = jest.fn();
+        (rangeView.thumbRight!.getLeftIndent as jest.Mock).mockReturnValue(200);
+        rangeView.handleLeftInput(500, 200);
 
-        expect(view.presenter!.handleLeftInput).toBeCalledWith(200);
+        expect(rangeView.presenter!.handleLeftInput).toBeCalledWith(200);
       });
     });
 
@@ -1522,29 +1525,29 @@ describe('View', () => {
       });
 
       it('if cursor is off right thumb position new bottom indent = right thumb indent', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
+        const rangeSlider = document.createElement('div');
+        const rangeView = new View(rangeSlider, {
           vertical: true,
           range: true,
         });
-        const presenter: any = {};
-        view.registerWith(presenter);
-        view.presenter!.handleLeftInput = jest.fn();
+        const rangePresenter: any = {};
+        rangeView.registerWith(rangePresenter);
+        rangeView.presenter!.handleLeftInput = jest.fn();
 
-        view.track.getBoundingClientRect = jest.fn();
-        (view.track.getBoundingClientRect as jest.Mock).mockReturnValue({
+        rangeView.track.getBoundingClientRect = jest.fn();
+        (rangeView.track.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 200,
         });
 
-        const trackHeight = 500;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
+        const rangeTrackHeight = 500;
+        rangeView.track.getOffsetHeight = jest.fn();
+        (rangeView.track.getOffsetHeight as jest.Mock).mockReturnValue(rangeTrackHeight);
 
-        view.thumbRight!.getTopIndent = jest.fn();
-        (view.thumbRight!.getTopIndent as jest.Mock).mockReturnValue(200);
-        view.handleLeftInput(100, 300);
+        rangeView.thumbRight!.getTopIndent = jest.fn();
+        (rangeView.thumbRight!.getTopIndent as jest.Mock).mockReturnValue(200);
+        rangeView.handleLeftInput(100, 300);
 
-        expect(view.presenter!.handleLeftInput).toBeCalledWith(trackHeight - 200);
+        expect(rangeView.presenter!.handleLeftInput).toBeCalledWith(rangeTrackHeight - 200);
       });
     });
   });
@@ -1634,23 +1637,23 @@ describe('View', () => {
     });
 
     describe('all of above is also true for vertical slider', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
+      const newSlider = document.createElement('div');
+      const newView = new View(newSlider, {
         scale: true,
         vertical: true,
       });
-      view.addScale(0, 150, 4);
+      newView.addScale(0, 150, 4);
 
       it('set up scale property', () => {
-        expect(view).toHaveProperty('scale');
+        expect(newView).toHaveProperty('scale');
       });
 
       it('scale property is instance of Scale', () => {
-        expect(view.scale).toBeInstanceOf(Scale);
+        expect(newView.scale).toBeInstanceOf(Scale);
       });
 
       it('append scale component to this view component', () => {
-        expect(view.component.children).toContain(view.scale?.component);
+        expect(newView.component.children).toContain(newView.scale?.component);
       });
     });
   });
@@ -1679,20 +1682,20 @@ describe('View', () => {
         });
 
         it('if slider is vertical', () => {
-          const slider = document.createElement('div');
-          const view = new View(slider, {
+          const newSlider = document.createElement('div');
+          const newView = new View(newSlider, {
             scale: true,
             valueLabels: true,
             vertical: true,
           });
-          const presenter = {};
-          view.registerWith(presenter as Presenter);
-          (view.presenter as Presenter).handleLeftInput = jest.fn();
-          view.track.getOffsetHeight = jest.fn();
-          (view.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
-          view.handleScaleOrTrackClick(100, 100);
+          const newPresenter = {};
+          newView.registerWith(newPresenter as Presenter);
+          (newView.presenter as Presenter).handleLeftInput = jest.fn();
+          newView.track.getOffsetHeight = jest.fn();
+          (newView.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
+          newView.handleScaleOrTrackClick(100, 100);
 
-          expect((view.presenter as Presenter).handleLeftInput).toBeCalledWith(500 - 100);
+          expect((newView.presenter as Presenter).handleLeftInput).toBeCalledWith(500 - 100);
         });
       });
 
@@ -1741,23 +1744,23 @@ describe('View', () => {
           });
 
           it('if slider is vertical', () => {
-            const slider = document.createElement('div');
-            const view = new View(slider, {
+            const newSlider = document.createElement('div');
+            const newView = new View(newSlider, {
               scale: true,
               valueLabels: true,
               range: true,
               vertical: true,
             });
-            const presenter = {};
-            view.registerWith(presenter as Presenter);
-            (view.presenter as Presenter).handleLeftInput = jest.fn();
-            view.whichThumbIsNearer = jest.fn();
-            (view.whichThumbIsNearer as jest.Mock).mockReturnValue('left');
-            view.track.getOffsetHeight = jest.fn();
-            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
-            view.handleScaleOrTrackClick(100, 100);
+            const newPresenter = {};
+            newView.registerWith(newPresenter as Presenter);
+            (newView.presenter as Presenter).handleLeftInput = jest.fn();
+            newView.whichThumbIsNearer = jest.fn();
+            (newView.whichThumbIsNearer as jest.Mock).mockReturnValue('left');
+            newView.track.getOffsetHeight = jest.fn();
+            (newView.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
+            newView.handleScaleOrTrackClick(100, 100);
 
-            expect((view.presenter as Presenter).handleLeftInput).toBeCalledWith(400);
+            expect((newView.presenter as Presenter).handleLeftInput).toBeCalledWith(400);
           });
         });
 
@@ -1788,23 +1791,23 @@ describe('View', () => {
           });
 
           it('if slider is vertical', () => {
-            const slider = document.createElement('div');
-            const view = new View(slider, {
+            const newSlider = document.createElement('div');
+            const newView = new View(newSlider, {
               scale: true,
               valueLabels: true,
               range: true,
               vertical: true,
             });
-            const presenter = {};
-            view.registerWith(presenter as Presenter);
-            (view.presenter as Presenter).handleRightInput = jest.fn();
-            view.whichThumbIsNearer = jest.fn();
-            (view.whichThumbIsNearer as jest.Mock).mockReturnValue('right');
-            view.track.getOffsetHeight = jest.fn();
-            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
-            view.handleScaleOrTrackClick(100, 100);
+            const newPresenter = {};
+            newView.registerWith(newPresenter as Presenter);
+            (newView.presenter as Presenter).handleRightInput = jest.fn();
+            newView.whichThumbIsNearer = jest.fn();
+            (newView.whichThumbIsNearer as jest.Mock).mockReturnValue('right');
+            newView.track.getOffsetHeight = jest.fn();
+            (newView.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
+            newView.handleScaleOrTrackClick(100, 100);
 
-            expect((view.presenter as Presenter).handleRightInput).toBeCalledWith(400);
+            expect((newView.presenter as Presenter).handleRightInput).toBeCalledWith(400);
           });
         });
 

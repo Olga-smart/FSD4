@@ -1,4 +1,4 @@
-export declare class Slider {
+export default class Slider {
     component: HTMLElement;
     constructor();
     append(...elements: HTMLElement[]): void;

@@ -1,7 +1,7 @@
-import { Model } from '../model/model';
-import { View } from '../view/view';
+import Model from '../model/model';
+import View from '../view/view';
 
-export class Presenter {
+export default class Presenter {
   model: Model;
 
   view: View;
@@ -22,11 +22,11 @@ export class Presenter {
       this.view.addScale(model.min, model.max, view.scaleIntervals!);
     }
 
-    if (!this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
+    if (!this.view.vertical && this.hasViewLabels()) {
       this.view.fixLabelsContainerHeightForHorizontal();
     }
 
-    if (this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
+    if (this.view.vertical && this.hasViewLabels()) {
       this.view.fixLabelsContainerWidthForVertical();
     }
 
@@ -46,6 +46,13 @@ export class Presenter {
       });
       view.panel.registerWith(this.view);
     }
+  }
+
+  hasViewLabels(): boolean {
+    if (this.view.valueLabelLeft || this.view.minLabel) {
+      return true;
+    }
+    return false;
   }
 
   handleLeftInput(px: number): void {
@@ -86,12 +93,12 @@ export class Presenter {
 
     if (!this.view.vertical) {
       const trackWidthInPx: number = +this.view.track.getOffsetWidth();
-      px = trackWidthInPx * percent / 100;
+      px = (trackWidthInPx * percent) / 100;
     }
 
     if (this.view.vertical) {
       const trackHeightInPx: number = +this.view.track.getOffsetHeight();
-      px = trackHeightInPx * percent / 100;
+      px = (trackHeightInPx * percent) / 100;
     }
 
     return px;
@@ -104,24 +111,24 @@ export class Presenter {
 
     if (!this.view.vertical) {
       const trackWidthInPx: number = +this.view.track.getOffsetWidth();
-      percent = px * 100 / trackWidthInPx;
+      percent = (px * 100) / trackWidthInPx;
     }
 
     if (this.view.vertical) {
       const trackHeightInPx: number = +this.view.track.getOffsetHeight();
-      percent = px * 100 / trackHeightInPx;
+      percent = (px * 100) / trackHeightInPx;
     }
 
-    let value: number = ((max - min) * percent / 100 + min);
+    let value: number = ((max - min) * (percent / 100) + min);
     value = this.fitToStep(value);
-    value = this.removeCalcInaccuracy(value);
+    value = Presenter.removeCalcInaccuracy(value);
 
     return value;
   }
 
   fitToStep(value: number): number {
     let result = Math.round(value / this.model.step) * this.model.step;
-    result = this.removeCalcInaccuracy(result);
+    result = Presenter.removeCalcInaccuracy(result);
     return result;
   }
 
@@ -176,11 +183,11 @@ export class Presenter {
       this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
     }
 
-    if (!this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
+    if (!this.view.vertical && this.hasViewLabels()) {
       this.view.fixLabelsContainerHeightForHorizontal();
     }
 
-    if (this.view.vertical && (this.view.valueLabelLeft || this.view.minLabel)) {
+    if (this.view.vertical && this.hasViewLabels) {
       this.view.fixLabelsContainerWidthForVertical();
     }
   }

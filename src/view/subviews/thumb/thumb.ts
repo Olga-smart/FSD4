@@ -1,12 +1,11 @@
-import { createElement } from '../../helpers/createElement';
-import { View } from '../../view';
+import createElement from '../../helpers/createElement';
 
-export class Thumb {
+export default class Thumb {
   type: 'left' | 'right';
 
   component: HTMLElement;
 
-  view: View | null;
+  view: any;
 
   constructor(type: 'left' | 'right' = 'left') {
     this.view = null;
@@ -16,7 +15,7 @@ export class Thumb {
     this.attachEventHandlers();
   }
 
-  registerWith(view: View): void {
+  registerWith(view: any): void {
     this.view = view;
   }
 
@@ -44,46 +43,54 @@ export class Thumb {
     return this.component.getBoundingClientRect();
   }
 
+  handlePointerOver(): void {
+    this.component.classList.add('range-slider__thumb_hover');
+  }
+
+  handlePointerOut(): void {
+    this.component.classList.remove('range-slider__thumb_hover');
+  }
+
+  handlePointerDown(event: PointerEvent): void {
+    this.component.classList.add('range-slider__thumb_active');
+
+    this.component.setPointerCapture(event.pointerId);
+    event.preventDefault(); // предотвратить запуск выделения (действие браузера)
+
+    const shiftX: number = event.clientX - this.getBoundingClientRect().left;
+    const shiftY: number = event.clientY - this.getBoundingClientRect().top;
+
+    const handlePointerMove = (newEvent: PointerEvent) => {
+      if (this.type === 'left') {
+        this.view?.handleLeftInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
+      }
+      if (this.type === 'right') {
+        this.view?.handleRightInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
+      }
+    };
+
+    const handlePointerUp = () => {
+      this.component.removeEventListener('pointermove', handlePointerMove);
+      this.component.removeEventListener('pointerup', handlePointerUp);
+    };
+
+    this.component.addEventListener('pointermove', handlePointerMove);
+    this.component.addEventListener('pointerup', handlePointerUp);
+  }
+
+  handlePointerUp(): void {
+    this.component.classList.remove('range-slider__thumb_active');
+  }
+
+  static handleDragStart(): false {
+    return false;
+  }
+
   attachEventHandlers() {
-    this.component.addEventListener('pointerover', () => {
-      this.component.classList.add('range-slider__thumb_hover');
-    });
-    this.component.addEventListener('pointerout', () => {
-      this.component.classList.remove('range-slider__thumb_hover');
-    });
-
-    this.component.addEventListener('pointerdown', () => {
-      this.component.classList.add('range-slider__thumb_active');
-    });
-    this.component.addEventListener('pointerup', () => {
-      this.component.classList.remove('range-slider__thumb_active');
-    });
-
-    this.component.addEventListener('pointerdown', (event) => {
-      this.component.setPointerCapture(event.pointerId);
-      event.preventDefault(); // предотвратить запуск выделения (действие браузера)
-
-      const shiftX: number = event.clientX - this.getBoundingClientRect().left;
-      const shiftY: number = event.clientY - this.getBoundingClientRect().top;
-
-      const handlePointerMove = (event: PointerEvent) => {
-        if (this.type == 'left') {
-          this.view?.handleLeftInput(event.clientX, event.clientY, shiftX, shiftY);
-        }
-        if (this.type == 'right') {
-          this.view?.handleRightInput(event.clientX, event.clientY, shiftX, shiftY);
-        }
-      };
-
-      const handlePointerUp = () => {
-        this.component.removeEventListener('pointermove', handlePointerMove);
-        this.component.removeEventListener('pointerup', handlePointerUp);
-      };
-
-      this.component.addEventListener('pointermove', handlePointerMove);
-      this.component.addEventListener('pointerup', handlePointerUp);
-    });
-
-    this.component.addEventListener('dragstart', () => false);
+    this.component.addEventListener('pointerover', this.handlePointerOver.bind(this));
+    this.component.addEventListener('pointerout', this.handlePointerOut.bind(this));
+    this.component.addEventListener('pointerdown', this.handlePointerDown.bind(this));
+    this.component.addEventListener('pointerup', this.handlePointerUp.bind(this));
+    this.component.addEventListener('dragstart', Thumb.handleDragStart);
   }
 }

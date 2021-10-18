@@ -1,5 +1,5 @@
-import { ValueLabel } from './valueLabel';
-import { Label } from '../label/label';
+import ValueLabel from './valueLabel';
+import Label from '../label/label';
 
 describe('ValueLabel', () => {
   describe('constructor(type)', () => {
@@ -86,7 +86,7 @@ describe('ValueLabel', () => {
     const valueLabel = new ValueLabel();
 
     it('set up left property of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         valueLabel.setLeftIndent(`${i}px`);
         expect(valueLabel.component.style.left).toBe(`${i}px`);
       }
@@ -97,7 +97,7 @@ describe('ValueLabel', () => {
     const valueLabel = new ValueLabel();
 
     it('return left property of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         valueLabel.component.style.left = `${i}px`;
         expect(valueLabel.getLeftIndent()).toBe(`${i}px`);
       }
@@ -108,7 +108,7 @@ describe('ValueLabel', () => {
     const valueLabel = new ValueLabel();
 
     it('set up top property of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         valueLabel.setTopIndent(`${i}px`);
         expect(valueLabel.component.style.top).toBe(`${i}px`);
       }
@@ -119,7 +119,7 @@ describe('ValueLabel', () => {
     const valueLabel = new ValueLabel();
 
     it('return top property of component', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         valueLabel.component.style.top = `${i}px`;
         expect(valueLabel.getTopIndent()).toBe(`${i}px`);
       }

@@ -1,8 +1,7 @@
-import { createElement } from '../../helpers/createElement';
-import { View } from '../../view';
+import createElement from '../../helpers/createElement';
 
-export class Track {
-  view: View | null;
+export default class Track {
+  view: any;
 
   component: HTMLElement;
 
@@ -12,7 +11,7 @@ export class Track {
     this.attachEventHandlers();
   }
 
-  registerWith(view: View) {
+  registerWith(view: any) {
     this.view = view;
   }
 
@@ -32,11 +31,13 @@ export class Track {
     this.component.append(...elements);
   }
 
+  handleClick(event: MouseEvent): void {
+    const x: number = event.clientX - this.getBoundingClientRect().left;
+    const y: number = event.clientY - this.getBoundingClientRect().top;
+    this.view?.handleScaleOrTrackClick(x, y);
+  }
+
   attachEventHandlers() {
-    this.component.addEventListener('click', (event) => {
-      const x: number = event.clientX - this.getBoundingClientRect().left;
-      const y: number = event.clientY - this.getBoundingClientRect().top;
-      this.view?.handleScaleOrTrackClick(x, y);
-    });
+    this.component.addEventListener('click', this.handleClick.bind(this));
   }
 }

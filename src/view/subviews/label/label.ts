@@ -1,4 +1,4 @@
-export class Label {
+export default class Label {
   type: 'left' | 'right' | 'common';
 
   component: HTMLElement;

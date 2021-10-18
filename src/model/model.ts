@@ -7,7 +7,7 @@ type ModelOptions = {
   range?: boolean;
 };
 
-export class Model {
+export default class Model {
   min: number;
 
   max: number;

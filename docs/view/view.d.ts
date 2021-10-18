@@ -1,13 +1,12 @@
-import { Slider } from './subviews/slider/slider';
-import { Track } from './subviews/track/track';
-import { Range } from './subviews/range/range';
-import { Thumb } from './subviews/thumb/thumb';
-import { MinMaxLabel } from './subviews/minMaxLabel/minMaxLabel';
-import { ValueLabel } from './subviews/valueLabel/valueLabel';
-import { Scale } from './subviews/scale/scale';
-import { LabelsContainer } from './subviews/labelsContainer/labelsContainer';
-import { Presenter } from '../presenter/presenter';
-import { Label } from './subviews/label/label';
+import Slider from './subviews/slider/slider';
+import Track from './subviews/track/track';
+import Range from './subviews/range/range';
+import Thumb from './subviews/thumb/thumb';
+import MinMaxLabel from './subviews/minMaxLabel/minMaxLabel';
+import ValueLabel from './subviews/valueLabel/valueLabel';
+import Scale from './subviews/scale/scale';
+import LabelsContainer from './subviews/labelsContainer/labelsContainer';
+import Label from './subviews/label/label';
 import { Panel, PanelOptions } from './subviews/panel/panel';
 declare type ViewOptions = {
     minMaxLabels?: boolean;
@@ -18,8 +17,8 @@ declare type ViewOptions = {
     scaleIntervals?: number;
     panel?: boolean;
 };
-export declare class View {
-    presenter: Presenter | null;
+export default class View {
+    presenter: any;
     component: Element;
     slider: Slider;
     track: Track;
@@ -39,7 +38,7 @@ export declare class View {
     labelsContainer?: LabelsContainer;
     panel?: Panel;
     constructor(component: Element, options?: ViewOptions);
-    registerWith(presenter: Presenter): void;
+    registerWith(presenter: any): void;
     render(): void;
     destroy(): void;
     setMinValue(min: number): void;

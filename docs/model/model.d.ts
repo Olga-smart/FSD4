@@ -6,7 +6,7 @@ declare type ModelOptions = {
     step?: number;
     range?: boolean;
 };
-export declare class Model {
+export default class Model {
     min: number;
     max: number;
     leftValue: number;

@@ -1,4 +1,4 @@
-import { Scale } from './scale';
+import Scale from './scale';
 
 describe('Scale', () => {
   describe('constructor(min, max, intervalsNumber)', () => {
@@ -14,23 +14,23 @@ describe('Scale', () => {
       });
 
       it('set up min property', () => {
-        for (let i = -10; i <= 10; i++) {
-          const scale = new Scale(i, 150, 4);
-          expect(scale.min).toBe(i);
+        for (let i = -10; i <= 10; i += 1) {
+          const newScale = new Scale(i, 150, 4);
+          expect(newScale.min).toBe(i);
         }
       });
 
       it('set up max property', () => {
-        for (let i = -10; i <= 10; i++) {
-          const scale = new Scale(-20, i, 4);
-          expect(scale.max).toBe(i);
+        for (let i = -10; i <= 10; i += 1) {
+          const newScale = new Scale(-20, i, 4);
+          expect(newScale.max).toBe(i);
         }
       });
 
       it('set up intervalsNumber property', () => {
-        for (let i = 1; i <= 10; i++) {
-          const scale = new Scale(-20, 150, i);
-          expect(scale.intervalsNumber).toBe(i);
+        for (let i = 1; i <= 10; i += 1) {
+          const newScale = new Scale(-20, 150, i);
+          expect(newScale.intervalsNumber).toBe(i);
         }
       });
 
@@ -47,8 +47,8 @@ describe('Scale', () => {
       });
 
       it('default intervalsNumber is 4', () => {
-        const scale = new Scale(0, 150);
-        expect(scale.intervalsNumber).toBe(4);
+        const newScale = new Scale(0, 150);
+        expect(newScale.intervalsNumber).toBe(4);
       });
     });
 
@@ -61,22 +61,22 @@ describe('Scale', () => {
       jest.spyOn(Scale.prototype, 'addMarksInIntervals');
       jest.spyOn(Scale.prototype, 'addValues');
       jest.spyOn(Scale.prototype, 'attachEventHandlers');
-      const scale = new Scale(0, 150, 4);
+      const newScale = new Scale(0, 150, 4);
 
       it('call createIntervals()', () => {
-        expect(scale.createIntervals).toBeCalled();
+        expect(newScale.createIntervals).toBeCalled();
       });
 
       it('call addMarksInIntervals()', () => {
-        expect(scale.addMarksInIntervals).toBeCalled();
+        expect(newScale.addMarksInIntervals).toBeCalled();
       });
 
       it('call addValues()', () => {
-        expect(scale.addValues).toBeCalled();
+        expect(newScale.addValues).toBeCalled();
       });
 
       it('call attachEventHandlers()', () => {
-        expect(scale.attachEventHandlers).toBeCalled();
+        expect(newScale.attachEventHandlers).toBeCalled();
       });
     });
   });
@@ -93,7 +93,7 @@ describe('Scale', () => {
 
   describe('createIntervals()', () => {
     it('create right amount of elements and push them into intervals property', () => {
-      for (let i = 1; i <= 20; i++) {
+      for (let i = 1; i <= 20; i += 1) {
         const scale = new Scale(0, 150, i);
         expect(scale.intervals).toHaveLength(i);
       }
@@ -107,7 +107,7 @@ describe('Scale', () => {
     });
 
     it('create right amount of elements and append them to component', () => {
-      for (let i = 1; i <= 20; i++) {
+      for (let i = 1; i <= 20; i += 1) {
         const scale = new Scale(0, 150, i);
         expect(scale.component.querySelectorAll('.range-slider__scale-interval')).toHaveLength(i);
       }
@@ -116,7 +116,7 @@ describe('Scale', () => {
 
   describe('addMarksInIntervals()', () => {
     it('if intervalsNumber < 5, add 4 marks', () => {
-      for (let i = 1; i < 5; i++) {
+      for (let i = 1; i < 5; i += 1) {
         const scale = new Scale(0, 150, i);
         scale.intervals.forEach((item) => {
           expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(4);
@@ -125,7 +125,7 @@ describe('Scale', () => {
     });
 
     it('if intervalsNumber > 4 and < 8, add 3 marks', () => {
-      for (let i = 5; i < 8; i++) {
+      for (let i = 5; i < 8; i += 1) {
         const scale = new Scale(0, 150, i);
         scale.intervals.forEach((item) => {
           expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(3);
@@ -134,7 +134,7 @@ describe('Scale', () => {
     });
 
     it('if intervalsNumber > 7 and < 15, add 2 marks', () => {
-      for (let i = 8; i < 15; i++) {
+      for (let i = 8; i < 15; i += 1) {
         const scale = new Scale(0, 150, i);
         scale.intervals.forEach((item) => {
           expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(2);
@@ -143,7 +143,7 @@ describe('Scale', () => {
     });
 
     it('if intervalsNumber > 14 and < 29, add 1 mark', () => {
-      for (let i = 15; i < 29; i++) {
+      for (let i = 15; i < 29; i += 1) {
         const scale = new Scale(0, 150, i);
         scale.intervals.forEach((item) => {
           expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(1);
@@ -161,21 +161,21 @@ describe('Scale', () => {
 
   describe('addValues()', () => {
     it('values length is 1 more than intervals legth', () => {
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 10; i += 1) {
         const scale = new Scale(0, 150, i);
         expect(scale.values.length).toBe(i + 1);
       }
     });
 
     it('first value is min', () => {
-      for (let i = -10; i <= 10; i++) {
+      for (let i = -10; i <= 10; i += 1) {
         const scale = new Scale(i, 150, 4);
         expect(scale.values[0]).toBe(i);
       }
     });
 
     it('last value is max', () => {
-      for (let i = -10; i <= 10; i++) {
+      for (let i = -10; i <= 10; i += 1) {
         const scale = new Scale(-20, i, 4);
         expect(scale.values[scale.values.length - 1]).toBe(i);
       }
@@ -195,7 +195,7 @@ describe('Scale', () => {
 
     it('every valueElement contains corresponding value', () => {
       const scale = new Scale(0, 150, 4);
-      for (let i = 0; i < scale.valueElements.length; i++) {
+      for (let i = 0; i < scale.valueElements.length; i += 1) {
         expect(scale.valueElements[i].textContent).toBe(`${scale.values[i]}`);
       }
     });
@@ -211,7 +211,7 @@ describe('Scale', () => {
     Object.defineProperties(window.HTMLElement.prototype, {
       offsetWidth: {
         get() {
-          return parseInt(this.style.width);
+          return parseInt(this.style.width, 10);
         },
       },
     });
@@ -233,7 +233,7 @@ describe('Scale', () => {
     Object.defineProperties(window.HTMLElement.prototype, {
       offsetHeight: {
         get() {
-          return parseInt(this.style.height);
+          return parseInt(this.style.height, 10);
         },
       },
     });

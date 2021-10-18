@@ -1,6 +1,6 @@
-import { Model } from '../model/model';
-import { View } from '../view/view';
-import { Presenter } from './presenter';
+import Model from '../model/model';
+import View from '../view/view';
+import Presenter from './presenter';
 
 describe('Presenter', () => {
   jest.mock('../model/model');
@@ -22,121 +22,122 @@ describe('Presenter', () => {
 
     it('set min value for view', () => {
       view.setMinValue = jest.fn();
-      const presenter = new Presenter(model, view);
+      const newPresenter = new Presenter(model, view);
 
-      expect(presenter.view.setMinValue).toBeCalledWith(model.min);
+      expect(newPresenter.view.setMinValue).toBeCalledWith(model.min);
     });
 
     it('set max value for view', () => {
       view.setMaxValue = jest.fn();
-      const presenter = new Presenter(model, view);
+      const newPresenter = new Presenter(model, view);
 
-      expect(presenter.view.setMaxValue).toBeCalledWith(model.max);
+      expect(newPresenter.view.setMaxValue).toBeCalledWith(model.max);
     });
 
     it('set left value for view', () => {
       jest.spyOn(Presenter.prototype, 'passLeftValueToView');
-      const presenter = new Presenter(model, view);
+      const newPresenter = new Presenter(model, view);
 
-      expect(presenter.passLeftValueToView).toBeCalledWith(model.leftValue);
+      expect(newPresenter.passLeftValueToView).toBeCalledWith(model.leftValue);
     });
 
     it('set right value for view if range', () => {
-      const model = new Model({
+      const newModel = new Model({
         range: true,
       });
-      const view = new View(slider, {
+      const newView = new View(slider, {
         range: true,
       });
       jest.spyOn(Presenter.prototype, 'passRightValueToView');
-      const presenter = new Presenter(model, view);
+      const newPresenter = new Presenter(newModel, newView);
 
-      expect(presenter.passRightValueToView).toBeCalledWith(model.rightValue);
+      expect(newPresenter.passRightValueToView).toBeCalledWith(newModel.rightValue);
     });
 
     it('add scale for view if it has scale', () => {
-      const model = new Model();
-      const view = new View(slider, {
+      const newModel = new Model();
+      const newView = new View(slider, {
         scale: true,
       });
-      view.addScale = jest.fn();
-      const presenter = new Presenter(model, view);
+      newView.addScale = jest.fn();
+      const newPresenter = new Presenter(newModel, newView);
 
-      expect(presenter.view.addScale).toBeCalledWith(model.min, model.max, view.scaleIntervals);
+      expect(newPresenter.view.addScale)
+        .toBeCalledWith(newModel.min, newModel.max, newView.scaleIntervals);
     });
 
     describe('fix labels container height if slider is horizontal and has labels', () => {
       it('if slider has only value labels', () => {
-        const model = new Model();
-        const view = new View(slider, {
+        const newModel = new Model();
+        const newView = new View(slider, {
           valueLabels: true,
         });
-        view.fixLabelsContainerHeightForHorizontal = jest.fn();
-        const presenter = new Presenter(model, view);
+        newView.fixLabelsContainerHeightForHorizontal = jest.fn();
+        const newPresenter = new Presenter(newModel, newView);
 
-        expect(presenter.view.fixLabelsContainerHeightForHorizontal).toBeCalled();
+        expect(newPresenter.view.fixLabelsContainerHeightForHorizontal).toBeCalled();
       });
 
       it('if slider has only min&max labels', () => {
-        const model = new Model();
-        const view = new View(slider, {
+        const newModel = new Model();
+        const newView = new View(slider, {
           minMaxLabels: true,
         });
-        view.fixLabelsContainerHeightForHorizontal = jest.fn();
-        const presenter = new Presenter(model, view);
+        newView.fixLabelsContainerHeightForHorizontal = jest.fn();
+        const newPresenter = new Presenter(newModel, newView);
 
-        expect(presenter.view.fixLabelsContainerHeightForHorizontal).toBeCalled();
+        expect(newPresenter.view.fixLabelsContainerHeightForHorizontal).toBeCalled();
       });
 
       it('if slider has both value and min&max labels', () => {
-        const model = new Model();
-        const view = new View(slider, {
+        const newModel = new Model();
+        const newView = new View(slider, {
           valueLabels: true,
           minMaxLabels: true,
         });
-        view.fixLabelsContainerHeightForHorizontal = jest.fn();
-        const presenter = new Presenter(model, view);
+        newView.fixLabelsContainerHeightForHorizontal = jest.fn();
+        const newPresenter = new Presenter(newModel, newView);
 
-        expect(presenter.view.fixLabelsContainerHeightForHorizontal).toBeCalled();
+        expect(newPresenter.view.fixLabelsContainerHeightForHorizontal).toBeCalled();
       });
     });
 
     describe('fix labels container width if slider is vertical and has labels', () => {
       it('if slider has only value labels', () => {
-        const model = new Model();
-        const view = new View(slider, {
+        const newModel = new Model();
+        const newView = new View(slider, {
           vertical: true,
           valueLabels: true,
         });
-        view.fixLabelsContainerWidthForVertical = jest.fn();
-        const presenter = new Presenter(model, view);
+        newView.fixLabelsContainerWidthForVertical = jest.fn();
+        const newPresenter = new Presenter(newModel, newView);
 
-        expect(presenter.view.fixLabelsContainerWidthForVertical).toBeCalled();
+        expect(newPresenter.view.fixLabelsContainerWidthForVertical).toBeCalled();
       });
 
       it('if slider has only min&max labels', () => {
-        const model = new Model();
-        const view = new View(slider, {
+        const newModel = new Model();
+        const newView = new View(slider, {
           vertical: true,
           minMaxLabels: true,
         });
-        view.fixLabelsContainerWidthForVertical = jest.fn();
-        const presenter = new Presenter(model, view);
+        newView.fixLabelsContainerWidthForVertical = jest.fn();
+        const newPresenter = new Presenter(newModel, newView);
 
-        expect(presenter.view.fixLabelsContainerWidthForVertical).toBeCalled();
+        expect(newPresenter.view.fixLabelsContainerWidthForVertical).toBeCalled();
       });
 
       it('if slider has both value and min&max labels', () => {
-        const model = new Model();
-        const view = new View(slider, {
+        const newModel = new Model();
+        const newView = new View(slider, {
           vertical: true,
           valueLabels: true,
           minMaxLabels: true,
         });
-        view.fixLabelsContainerWidthForVertical = jest.fn();
-        const presenter = new Presenter(model, view);
+        newView.fixLabelsContainerWidthForVertical = jest.fn();
+        const newPresenter = new Presenter(newModel, newView);
 
-        expect(presenter.view.fixLabelsContainerWidthForVertical).toBeCalled();
+        expect(newPresenter.view.fixLabelsContainerWidthForVertical).toBeCalled();
       });
     });
   });
@@ -153,28 +154,28 @@ describe('Presenter', () => {
     view.setLeftValue = jest.fn();
 
     it('convert px to value', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.handleLeftInput(i);
         expect(presenter.convertPxToValue).toBeCalledWith(i);
       }
     });
 
     it('set left value for model', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.handleLeftInput(i);
         expect(model.setLeftValue).toBeCalledWith(presenter.convertPxToValue(i));
       }
     });
 
     it('convert value to px after converting px to value', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.handleLeftInput(i);
         expect(presenter.convertValueToPx).toBeCalledWith(presenter.convertPxToValue(i));
       }
     });
 
     it('set left value for view', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.handleLeftInput(i);
         const value = presenter.convertPxToValue(i);
         const px = presenter.convertValueToPx(value);
@@ -195,28 +196,28 @@ describe('Presenter', () => {
     view.setRightValue = jest.fn();
 
     it('convert px to value', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.handleRightInput(i);
         expect(presenter.convertPxToValue).toBeCalledWith(i);
       }
     });
 
     it('set right value for model', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.handleRightInput(i);
         expect(model.setRightValue).toBeCalledWith(presenter.convertPxToValue(i));
       }
     });
 
     it('convert value to px after converting px to value', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.handleRightInput(i);
         expect(presenter.convertValueToPx).toBeCalledWith(presenter.convertPxToValue(i));
       }
     });
 
     it('set right value for view', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.handleRightInput(i);
         const value = presenter.convertPxToValue(i);
         const px = presenter.convertValueToPx(value);
@@ -235,14 +236,14 @@ describe('Presenter', () => {
     view.setLeftValue = jest.fn();
 
     it('convert value to px', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.passLeftValueToView(i);
         expect(presenter.convertValueToPx).toBeCalledWith(i);
       }
     });
 
     it('set left value for view', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.passLeftValueToView(i);
         const px = presenter.convertValueToPx(i);
         expect(view.setLeftValue).toBeCalledWith(i, px);
@@ -260,14 +261,14 @@ describe('Presenter', () => {
     view.setRightValue = jest.fn();
 
     it('convert value to px', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.passRightValueToView(i);
         expect(presenter.convertValueToPx).toBeCalledWith(i);
       }
     });
 
     it('set left value for view', () => {
-      for (let i = 0; i <= 100; i++) {
+      for (let i = 0; i <= 100; i += 1) {
         presenter.passRightValueToView(i);
         const px = presenter.convertValueToPx(i);
         expect(view.setRightValue).toBeCalledWith(i, px);
@@ -288,7 +289,7 @@ describe('Presenter', () => {
         view.track.getOffsetWidth = jest.fn();
         (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertValueToPx(i)).toBeCloseTo(i);
         }
       });
@@ -299,7 +300,7 @@ describe('Presenter', () => {
         view.track.getOffsetWidth = jest.fn();
         (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertValueToPx(i)).toBeCloseTo(i / 2);
         }
       });
@@ -310,7 +311,7 @@ describe('Presenter', () => {
         view.track.getOffsetWidth = jest.fn();
         (view.track.getOffsetWidth as jest.Mock).mockReturnValue(200);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertValueToPx(i)).toBeCloseTo(i * 2);
         }
       });
@@ -320,9 +321,9 @@ describe('Presenter', () => {
         view.track.getOffsetWidth = jest.fn();
         (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let x = 1; x <= 10; x++) {
+        for (let x = 1; x <= 10; x += 1) {
           model.max = 100 * x;
-          for (let i = 0; i <= 100; i++) {
+          for (let i = 0; i <= 100; i += 1) {
             expect(presenter.convertValueToPx(i)).toBeCloseTo(i / x);
           }
         }
@@ -333,9 +334,9 @@ describe('Presenter', () => {
         model.max = 100;
         view.track.getOffsetWidth = jest.fn();
 
-        for (let x = 1; x <= 10; x++) {
+        for (let x = 1; x <= 10; x += 1) {
           (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100 * x);
-          for (let i = 0; i <= 100; i++) {
+          for (let i = 0; i <= 100; i += 1) {
             expect(presenter.convertValueToPx(i)).toBeCloseTo(i * x);
           }
         }
@@ -356,7 +357,7 @@ describe('Presenter', () => {
         view.track.getOffsetHeight = jest.fn();
         (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertValueToPx(i)).toBeCloseTo(i);
         }
       });
@@ -367,7 +368,7 @@ describe('Presenter', () => {
         view.track.getOffsetHeight = jest.fn();
         (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertValueToPx(i)).toBeCloseTo(i / 2);
         }
       });
@@ -378,7 +379,7 @@ describe('Presenter', () => {
         view.track.getOffsetHeight = jest.fn();
         (view.track.getOffsetHeight as jest.Mock).mockReturnValue(200);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertValueToPx(i)).toBeCloseTo(i * 2);
         }
       });
@@ -388,9 +389,9 @@ describe('Presenter', () => {
         view.track.getOffsetHeight = jest.fn();
         (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-        for (let x = 1; x <= 10; x++) {
+        for (let x = 1; x <= 10; x += 1) {
           model.max = 100 * x;
-          for (let i = 0; i <= 100; i++) {
+          for (let i = 0; i <= 100; i += 1) {
             expect(presenter.convertValueToPx(i)).toBeCloseTo(i / x);
           }
         }
@@ -401,9 +402,9 @@ describe('Presenter', () => {
         model.max = 100;
         view.track.getOffsetHeight = jest.fn();
 
-        for (let x = 1; x <= 10; x++) {
+        for (let x = 1; x <= 10; x += 1) {
           (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100 * x);
-          for (let i = 0; i <= 100; i++) {
+          for (let i = 0; i <= 100; i += 1) {
             expect(presenter.convertValueToPx(i)).toBeCloseTo(i * x);
           }
         }
@@ -424,7 +425,7 @@ describe('Presenter', () => {
         view.track.getOffsetWidth = jest.fn();
         (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertPxToValue(i)).toBeCloseTo(i);
         }
       });
@@ -435,7 +436,7 @@ describe('Presenter', () => {
         view.track.getOffsetWidth = jest.fn();
         (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertPxToValue(i)).toBeCloseTo(i * 2);
         }
       });
@@ -448,7 +449,7 @@ describe('Presenter', () => {
         const fitToStepOriginal = presenter.fitToStep;
         presenter.fitToStep = jest.fn();
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           (presenter.fitToStep as jest.Mock).mockReturnValue(i / 2);
           expect(presenter.convertPxToValue(i)).toBeCloseTo(i / 2);
         }
@@ -461,9 +462,9 @@ describe('Presenter', () => {
         view.track.getOffsetWidth = jest.fn();
         (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let x = 1; x <= 10; x++) {
+        for (let x = 1; x <= 10; x += 1) {
           model.max = 100 * x;
-          for (let i = 0; i <= 100; i++) {
+          for (let i = 0; i <= 100; i += 1) {
             expect(presenter.convertPxToValue(i)).toBeCloseTo(i * x);
           }
         }
@@ -476,9 +477,9 @@ describe('Presenter', () => {
         const fitToStepOriginal = presenter.fitToStep;
         presenter.fitToStep = jest.fn();
 
-        for (let x = 1; x <= 10; x++) {
+        for (let x = 1; x <= 10; x += 1) {
           (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100 * x);
-          for (let i = 0; i <= 100; i++) {
+          for (let i = 0; i <= 100; i += 1) {
             (presenter.fitToStep as jest.Mock).mockReturnValue(i / x);
             expect(presenter.convertPxToValue(i)).toBeCloseTo(i / x);
           }
@@ -502,7 +503,7 @@ describe('Presenter', () => {
         view.track.getOffsetHeight = jest.fn();
         (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertPxToValue(i)).toBeCloseTo(i);
         }
       });
@@ -513,7 +514,7 @@ describe('Presenter', () => {
         view.track.getOffsetHeight = jest.fn();
         (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           expect(presenter.convertPxToValue(i)).toBeCloseTo(i * 2);
         }
       });
@@ -526,7 +527,7 @@ describe('Presenter', () => {
         const fitToStepOriginal = presenter.fitToStep;
         presenter.fitToStep = jest.fn();
 
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i <= 100; i += 1) {
           (presenter.fitToStep as jest.Mock).mockReturnValue(i / 2);
           expect(presenter.convertPxToValue(i)).toBeCloseTo(i / 2);
         }
@@ -539,9 +540,9 @@ describe('Presenter', () => {
         view.track.getOffsetHeight = jest.fn();
         (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-        for (let x = 1; x <= 10; x++) {
+        for (let x = 1; x <= 10; x += 1) {
           model.max = 100 * x;
-          for (let i = 0; i <= 100; i++) {
+          for (let i = 0; i <= 100; i += 1) {
             expect(presenter.convertPxToValue(i)).toBeCloseTo(i * x);
           }
         }
@@ -554,9 +555,9 @@ describe('Presenter', () => {
         const fitToStepOriginal = presenter.fitToStep;
         presenter.fitToStep = jest.fn();
 
-        for (let x = 1; x <= 10; x++) {
+        for (let x = 1; x <= 10; x += 1) {
           (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100 * x);
-          for (let i = 0; i <= 100; i++) {
+          for (let i = 0; i <= 100; i += 1) {
             (presenter.fitToStep as jest.Mock).mockReturnValue(i / x);
             expect(presenter.convertPxToValue(i)).toBeCloseTo(i / x);
           }
@@ -569,7 +570,7 @@ describe('Presenter', () => {
 
   describe('fitToStep(value)', () => {
     it('if step = x, result % x = 0', () => {
-      for (let step = 1; step <= 100; step++) {
+      for (let step = 1; step <= 100; step += 1) {
         const slider = document.createElement('div');
         const model = new Model({
           step,
