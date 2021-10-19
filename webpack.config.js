@@ -31,7 +31,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       filename: 'index.html',
       template: './index.pug',
-//      inject: false
+      // inject: false
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
