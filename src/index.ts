@@ -20,16 +20,15 @@ function initSliders(): void {
     const view = new View(slider, {
       minMaxLabels: true,
       valueLabels: true,
-      vertical: true,
+      // vertical: true,
       range: true,
       scale: true,
       scaleIntervals: 5,
-      // panel: true,
+      panel: true,
     });
 
     const presenter = new Presenter(model, view);
-
-    view.registerWith(presenter);
+    presenter.view.eventManager.subscribe(presenter);
   });
 }
 

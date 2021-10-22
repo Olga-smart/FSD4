@@ -1,9 +1,11 @@
 import Model from '../model/model';
 import View from '../view/view';
-export default class Presenter {
+import { IEventListener } from '../eventManager/eventManager';
+export default class Presenter implements IEventListener {
     model: Model;
     view: View;
     constructor(model: Model, view: View);
+    inform(eventType: string, data: any): void;
     hasViewLabels(): boolean;
     handleLeftInput(px: number): void;
     handleRightInput(px: number): void;

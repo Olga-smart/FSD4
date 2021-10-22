@@ -1,5 +1,4 @@
 import View from './view';
-import Presenter from '../presenter/presenter';
 import Slider from './subviews/slider/slider';
 import Track from './subviews/track/track';
 import Range from './subviews/range/range';
@@ -13,10 +12,6 @@ describe('View', () => {
   describe('constructor()', () => {
     const slider = document.createElement('div');
     const view = new View(slider);
-
-    it('set up presenter property', () => {
-      expect(view).toHaveProperty('presenter');
-    });
 
     it('set up component property', () => {
       expect(view.component).toBe(slider);
@@ -326,17 +321,6 @@ describe('View', () => {
       expect(newView.render).toBeCalled();
 
       spy.mockClear();
-    });
-  });
-
-  describe('registerWith(presenter)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const presenter: any = {};
-    view.registerWith(presenter);
-
-    it('set up presenter', () => {
-      expect(view.presenter).toBe(presenter);
     });
   });
 
@@ -1454,9 +1438,7 @@ describe('View', () => {
     describe('calc new left indent if slider is horizontal', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
-      const presenter: any = {};
-      view.registerWith(presenter);
-      view.presenter!.handleLeftInput = jest.fn();
+      view.eventManager.notify = jest.fn();
 
       view.track.getBoundingClientRect = jest.fn();
       (view.track.getBoundingClientRect as jest.Mock).mockReturnValue({
@@ -1467,33 +1449,31 @@ describe('View', () => {
 
       it('if cursor is off left edge of track new left indent is 0', () => {
         view.handleLeftInput(100, 200);
-        expect(view.presenter!.handleLeftInput).toBeCalledWith(0);
+        expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', 0);
       });
 
       it('if cursor is off right edge of track new left indent = track width', () => {
         view.handleLeftInput(800, 200);
-        expect(view.presenter!.handleLeftInput).toBeCalledWith(500);
+        expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', 500);
       });
 
       it('if cursor is off right thumb position new left indent = right thumb indent', () => {
-        const rangeSlider = document.createElement('div');
-        const rangeView = new View(rangeSlider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           range: true,
         });
-        const rangePresenter: any = {};
-        rangeView.registerWith(rangePresenter);
-        rangeView.presenter!.handleLeftInput = jest.fn();
+        newView.eventManager.notify = jest.fn();
 
-        rangeView.track.getBoundingClientRect = jest.fn();
-        (rangeView.track.getBoundingClientRect as jest.Mock).mockReturnValue({
+        newView.track.getBoundingClientRect = jest.fn();
+        (newView.track.getBoundingClientRect as jest.Mock).mockReturnValue({
           left: 200,
         });
 
-        rangeView.thumbRight!.getLeftIndent = jest.fn();
-        (rangeView.thumbRight!.getLeftIndent as jest.Mock).mockReturnValue(200);
-        rangeView.handleLeftInput(500, 200);
+        newView.thumbRight!.getLeftIndent = jest.fn();
+        (newView.thumbRight!.getLeftIndent as jest.Mock).mockReturnValue(200);
+        newView.handleLeftInput(500, 200);
 
-        expect(rangeView.presenter!.handleLeftInput).toBeCalledWith(200);
+        expect(newView.eventManager.notify).toBeCalledWith('viewLeftInput', 200);
       });
     });
 
@@ -1502,9 +1482,7 @@ describe('View', () => {
       const view = new View(slider, {
         vertical: true,
       });
-      const presenter: any = {};
-      view.registerWith(presenter);
-      view.presenter!.handleLeftInput = jest.fn();
+      view.eventManager.notify = jest.fn();
 
       view.track.getBoundingClientRect = jest.fn();
       (view.track.getBoundingClientRect as jest.Mock).mockReturnValue({
@@ -1516,38 +1494,36 @@ describe('View', () => {
 
       it('if cursor is off bottom edge of track new bottom indent is 0', () => {
         view.handleLeftInput(100, 800);
-        expect(view.presenter!.handleLeftInput).toBeCalledWith(0);
+        expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', 0);
       });
 
       it('if cursor is off top edge of track new bottom indent = track height', () => {
         view.handleLeftInput(100, 100);
-        expect(view.presenter!.handleLeftInput).toBeCalledWith(trackHeight);
+        expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', trackHeight);
       });
 
       it('if cursor is off right thumb position new bottom indent = right thumb indent', () => {
-        const rangeSlider = document.createElement('div');
-        const rangeView = new View(rangeSlider, {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
           vertical: true,
           range: true,
         });
-        const rangePresenter: any = {};
-        rangeView.registerWith(rangePresenter);
-        rangeView.presenter!.handleLeftInput = jest.fn();
+        newView.eventManager.notify = jest.fn();
 
-        rangeView.track.getBoundingClientRect = jest.fn();
-        (rangeView.track.getBoundingClientRect as jest.Mock).mockReturnValue({
+        newView.track.getBoundingClientRect = jest.fn();
+        (newView.track.getBoundingClientRect as jest.Mock).mockReturnValue({
           top: 200,
         });
 
-        const rangeTrackHeight = 500;
-        rangeView.track.getOffsetHeight = jest.fn();
-        (rangeView.track.getOffsetHeight as jest.Mock).mockReturnValue(rangeTrackHeight);
+        const newTrackHeight = 500;
+        newView.track.getOffsetHeight = jest.fn();
+        (newView.track.getOffsetHeight as jest.Mock).mockReturnValue(newTrackHeight);
 
-        rangeView.thumbRight!.getTopIndent = jest.fn();
-        (rangeView.thumbRight!.getTopIndent as jest.Mock).mockReturnValue(200);
-        rangeView.handleLeftInput(100, 300);
+        newView.thumbRight!.getTopIndent = jest.fn();
+        (newView.thumbRight!.getTopIndent as jest.Mock).mockReturnValue(200);
+        newView.handleLeftInput(100, 300);
 
-        expect(rangeView.presenter!.handleLeftInput).toBeCalledWith(rangeTrackHeight - 200);
+        expect(newView.eventManager.notify).toBeCalledWith('viewLeftInput', newTrackHeight - 200);
       });
     });
   });
@@ -1558,9 +1534,7 @@ describe('View', () => {
       const view = new View(slider, {
         range: true,
       });
-      const presenter: any = {};
-      view.registerWith(presenter);
-      view.presenter!.handleRightInput = jest.fn();
+      view.eventManager.notify = jest.fn();
 
       view.track.getBoundingClientRect = jest.fn();
       (view.track.getBoundingClientRect as jest.Mock).mockReturnValue({
@@ -1576,12 +1550,12 @@ describe('View', () => {
         (view.thumbLeft.getLeftIndent as jest.Mock).mockReturnValue(100);
         view.handleRightInput(250, 200);
 
-        expect(view.presenter!.handleRightInput).toBeCalledWith(100);
+        expect(view.eventManager.notify).toBeCalledWith('viewRightInput', 100);
       });
 
       it('if cursor is off right edge of track new left indent = track width', () => {
         view.handleRightInput(800, 200);
-        expect(view.presenter!.handleRightInput).toBeCalledWith(trackWidth);
+        expect(view.eventManager.notify).toBeCalledWith('viewRightInput', trackWidth);
       });
     });
 
@@ -1591,9 +1565,7 @@ describe('View', () => {
         vertical: true,
         range: true,
       });
-      const presenter: any = {};
-      view.registerWith(presenter);
-      view.presenter!.handleRightInput = jest.fn();
+      view.eventManager.notify = jest.fn();
 
       view.track.getBoundingClientRect = jest.fn();
       (view.track.getBoundingClientRect as jest.Mock).mockReturnValue({
@@ -1607,12 +1579,12 @@ describe('View', () => {
         view.thumbLeft.getTopIndent = jest.fn();
         (view.thumbLeft.getTopIndent as jest.Mock).mockReturnValue(400);
         view.handleRightInput(100, 800);
-        expect(view.presenter!.handleRightInput).toBeCalledWith(trackHeight - 400);
+        expect(view.eventManager.notify).toBeCalledWith('viewRightInput', trackHeight - 400);
       });
 
       it('if cursor is off top edge of track new bottom indent = track height', () => {
         view.handleRightInput(100, 100);
-        expect(view.presenter!.handleRightInput).toBeCalledWith(trackHeight);
+        expect(view.eventManager.notify).toBeCalledWith('viewRightInput', trackHeight);
       });
     });
   });
@@ -1665,9 +1637,7 @@ describe('View', () => {
         scale: true,
         valueLabels: true,
       });
-      const presenter = {};
-      view.registerWith(presenter as Presenter);
-      (view.presenter as Presenter).handleLeftInput = jest.fn();
+      view.eventManager.notify = jest.fn();
       view.addSmoothTransition = jest.fn();
       view.removeSmoothTransition = jest.fn();
       view.handleScaleOrTrackClick(100, 100);
@@ -1678,7 +1648,7 @@ describe('View', () => {
 
       describe('call function to handle left input with proper argument', () => {
         it('if slider is horizontal', () => {
-          expect((view.presenter as Presenter).handleLeftInput).toBeCalledWith(100);
+          expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', 100);
         });
 
         it('if slider is vertical', () => {
@@ -1688,14 +1658,12 @@ describe('View', () => {
             valueLabels: true,
             vertical: true,
           });
-          const newPresenter = {};
-          newView.registerWith(newPresenter as Presenter);
-          (newView.presenter as Presenter).handleLeftInput = jest.fn();
+          newView.eventManager.notify = jest.fn();
           newView.track.getOffsetHeight = jest.fn();
           (newView.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
           newView.handleScaleOrTrackClick(100, 100);
 
-          expect((newView.presenter as Presenter).handleLeftInput).toBeCalledWith(500 - 100);
+          expect(newView.eventManager.notify).toBeCalledWith('viewLeftInput', 500 - 100);
         });
       });
 
@@ -1717,10 +1685,7 @@ describe('View', () => {
         valueLabels: true,
         range: true,
       });
-      const presenter = {};
-      view.registerWith(presenter as Presenter);
-      (view.presenter as Presenter).handleLeftInput = jest.fn();
-      (view.presenter as Presenter).handleRightInput = jest.fn();
+      view.eventManager.notify = jest.fn();
       view.addSmoothTransition = jest.fn();
       view.removeSmoothTransition = jest.fn();
       view.whichThumbIsNearer = jest.fn();
@@ -1740,7 +1705,7 @@ describe('View', () => {
 
         describe('call function to handle left input with proper argument', () => {
           it('if slider is horizontal', () => {
-            expect((view.presenter as Presenter).handleLeftInput).toBeCalledWith(100);
+            expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', 100);
           });
 
           it('if slider is vertical', () => {
@@ -1751,16 +1716,14 @@ describe('View', () => {
               range: true,
               vertical: true,
             });
-            const newPresenter = {};
-            newView.registerWith(newPresenter as Presenter);
-            (newView.presenter as Presenter).handleLeftInput = jest.fn();
+            newView.eventManager.notify = jest.fn();
             newView.whichThumbIsNearer = jest.fn();
             (newView.whichThumbIsNearer as jest.Mock).mockReturnValue('left');
             newView.track.getOffsetHeight = jest.fn();
             (newView.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
             newView.handleScaleOrTrackClick(100, 100);
 
-            expect((newView.presenter as Presenter).handleLeftInput).toBeCalledWith(400);
+            expect(newView.eventManager.notify).toBeCalledWith('viewLeftInput', 400);
           });
         });
 
@@ -1787,7 +1750,7 @@ describe('View', () => {
 
         describe('call function to handle right input with proper argument', () => {
           it('if slider is horizontal', () => {
-            expect((view.presenter as Presenter).handleRightInput).toBeCalledWith(100);
+            expect(view.eventManager.notify).toBeCalledWith('viewRightInput', 100);
           });
 
           it('if slider is vertical', () => {
@@ -1798,16 +1761,14 @@ describe('View', () => {
               range: true,
               vertical: true,
             });
-            const newPresenter = {};
-            newView.registerWith(newPresenter as Presenter);
-            (newView.presenter as Presenter).handleRightInput = jest.fn();
+            newView.eventManager.notify = jest.fn();
             newView.whichThumbIsNearer = jest.fn();
             (newView.whichThumbIsNearer as jest.Mock).mockReturnValue('right');
             newView.track.getOffsetHeight = jest.fn();
             (newView.track.getOffsetHeight as jest.Mock).mockReturnValue(500);
             newView.handleScaleOrTrackClick(100, 100);
 
-            expect((newView.presenter as Presenter).handleRightInput).toBeCalledWith(400);
+            expect(newView.eventManager.notify).toBeCalledWith('viewRightInput', 400);
           });
         });
 

@@ -8,6 +8,7 @@ import Scale from './subviews/scale/scale';
 import LabelsContainer from './subviews/labelsContainer/labelsContainer';
 import Label from './subviews/label/label';
 import { Panel, PanelOptions } from './subviews/panel/panel';
+import { EventManager } from '../eventManager/eventManager';
 declare type ViewOptions = {
     minMaxLabels?: boolean;
     valueLabels?: boolean;
@@ -18,8 +19,8 @@ declare type ViewOptions = {
     panel?: boolean;
 };
 export default class View {
-    presenter: any;
     component: Element;
+    eventManager: EventManager;
     slider: Slider;
     track: Track;
     range: Range;
@@ -38,7 +39,6 @@ export default class View {
     labelsContainer?: LabelsContainer;
     panel?: Panel;
     constructor(component: Element, options?: ViewOptions);
-    registerWith(presenter: any): void;
     render(): void;
     destroy(): void;
     setMinValue(min: number): void;

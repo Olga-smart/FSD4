@@ -8,6 +8,7 @@ import Scale from './subviews/scale/scale';
 import LabelsContainer from './subviews/labelsContainer/labelsContainer';
 import Label from './subviews/label/label';
 import { Panel, PanelOptions } from './subviews/panel/panel';
+import { EventManager } from '../eventManager/eventManager';
 
 type ViewOptions = {
   minMaxLabels?: boolean,
@@ -20,9 +21,9 @@ type ViewOptions = {
 };
 
 export default class View {
-  presenter: any;
-
   component: Element;
+
+  eventManager: EventManager;
 
   slider: Slider;
 
@@ -59,9 +60,8 @@ export default class View {
   panel?: Panel;
 
   constructor(component: Element, options: ViewOptions = {}) {
-    this.presenter = null;
-
     this.component = component;
+    this.eventManager = new EventManager();
 
     this.slider = new Slider();
     this.track = new Track();
@@ -113,10 +113,6 @@ export default class View {
     }
 
     this.render();
-  }
-
-  registerWith(presenter: any) {
-    this.presenter = presenter;
   }
 
   render(): void {
@@ -419,7 +415,7 @@ export default class View {
         }
       }
 
-      this.presenter?.handleLeftInput(newLeft);
+      this.eventManager.notify('viewLeftInput', newLeft);
     }
 
     if (this.vertical) {
@@ -444,7 +440,7 @@ export default class View {
 
       const newBottom = this.track.getOffsetHeight() - newTop;
 
-      this.presenter?.handleLeftInput(newBottom);
+      this.eventManager.notify('viewLeftInput', newBottom);
     }
   }
 
@@ -462,7 +458,7 @@ export default class View {
         newLeft = this.track.getOffsetWidth();
       }
 
-      this.presenter?.handleRightInput(newLeft);
+      this.eventManager.notify('viewRightInput', newLeft);
     }
 
     if (this.vertical) {
@@ -480,7 +476,7 @@ export default class View {
 
       const newBottom = this.track.getOffsetHeight() - newTop;
 
-      this.presenter?.handleRightInput(newBottom);
+      this.eventManager.notify('viewRightInput', newBottom);
     }
   }
 
@@ -510,9 +506,9 @@ export default class View {
       this.addSmoothTransition('left');
 
       if (!this.vertical) {
-        this.presenter?.handleLeftInput(x);
+        this.eventManager.notify('viewLeftInput', x);
       } else {
-        this.presenter?.handleLeftInput(this.track.getOffsetHeight() - y);
+        this.eventManager.notify('viewLeftInput', this.track.getOffsetHeight() - y);
       }
 
       setTimeout(() => {
@@ -525,9 +521,9 @@ export default class View {
         this.addSmoothTransition('left');
 
         if (!this.vertical) {
-          this.presenter?.handleLeftInput(x);
+          this.eventManager.notify('viewLeftInput', x);
         } else {
-          this.presenter?.handleLeftInput(this.track.getOffsetHeight() - y);
+          this.eventManager.notify('viewLeftInput', this.track.getOffsetHeight() - y);
         }
 
         setTimeout(() => {
@@ -537,9 +533,9 @@ export default class View {
         this.addSmoothTransition('right');
 
         if (!this.vertical) {
-          this.presenter?.handleRightInput(x);
+          this.eventManager.notify('viewRightInput', x);
         } else {
-          this.presenter?.handleRightInput(this.track.getOffsetHeight() - y);
+          this.eventManager.notify('viewRightInput', this.track.getOffsetHeight() - y);
         }
 
         setTimeout(() => {
@@ -663,23 +659,23 @@ export default class View {
   }
 
   changeLeftValueFromOutside(value: number): void {
-    this.presenter?.changeLeftValueFromOutside(value);
+    this.eventManager.notify('viewChangeLeftValueFromOutside', value);
   }
 
   changeRightValueFromOutside(value: number): void {
-    this.presenter?.changeRightValueFromOutside(value);
+    this.eventManager.notify('viewChangeRightValueFromOutside', value);
   }
 
   changeMinFromOutside(value: number): void {
-    this.presenter?.changeMinFromOutside(value);
+    this.eventManager.notify('viewChangeMinFromOutside', value);
   }
 
   changeMaxFromOutside(value: number): void {
-    this.presenter?.changeMaxFromOutside(value);
+    this.eventManager.notify('viewChangeMaxFromOutside', value);
   }
 
   changeStepFromOutside(value: number): void {
-    this.presenter?.changeStepFromOutside(value);
+    this.eventManager.notify('viewChangeStepFromOutside', value);
   }
 
   changeOrientationFromOutside(): void {
@@ -696,7 +692,7 @@ export default class View {
       this.valueLabelLeft?.setLeftIndent('unset');
       this.valueLabelRight?.setLeftIndent('unset');
       this.valueLabelCommon?.setLeftIndent('unset');
-      this.presenter?.handleViewOrientationChange();
+      this.eventManager.notify('viewChangeOrientationFromOutside');
       return;
     }
 
@@ -713,7 +709,7 @@ export default class View {
       this.valueLabelLeft?.setTopIndent('unset');
       this.valueLabelRight?.setTopIndent('unset');
       this.valueLabelCommon?.setTopIndent('unset');
-      this.presenter?.handleViewOrientationChange();
+      this.eventManager.notify('viewChangeOrientationFromOutside');
     }
   }
 
@@ -745,12 +741,12 @@ export default class View {
       this.render();
     }
 
-    this.presenter?.handleRangeToggle();
+    this.eventManager.notify('viewToggleRangeFromOutside');
   }
 
   toggleScaleFromOutside(): void {
     this.hasScale = !this.hasScale;
-    this.presenter?.handleScaleToggle();
+    this.eventManager.notify('viewToggleScaleFromOutside');
   }
 
   changeScaleIntervals(value: number): void {
@@ -758,7 +754,7 @@ export default class View {
       this.scaleIntervals = value;
     }
     this.removeScale();
-    this.presenter?.handleChangeScaleIntervals();
+    this.eventManager.notify('viewChangeScaleIntervals');
   }
 
   toggleValueLabels(): void {
@@ -809,7 +805,7 @@ export default class View {
           .append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
       }
 
-      this.presenter?.handleAddValueLabels();
+      this.eventManager.notify('viewAddValueLabels');
 
       if (!this.vertical) {
         this.fixLabelsContainerHeightForHorizontal();
@@ -858,7 +854,7 @@ export default class View {
 
       this.labelsContainer.append(this.minLabel.component, this.maxLabel.component);
 
-      this.presenter?.handleAddMinMaxLabels();
+      this.eventManager.notify('viewAddMinMaxLabels');
 
       if (!this.vertical) {
         this.fixLabelsContainerHeightForHorizontal();

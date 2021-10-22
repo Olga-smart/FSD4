@@ -1,7 +1,8 @@
 import Model from '../model/model';
 import View from '../view/view';
+import { IEventListener } from '../eventManager/eventManager';
 
-export default class Presenter {
+export default class Presenter implements IEventListener {
   model: Model;
 
   view: View;
@@ -9,6 +10,7 @@ export default class Presenter {
   constructor(model: Model, view: View) {
     this.model = model;
     this.view = view;
+    // this.view.eventManager.subscribe(this);
 
     this.view.setMinValue(model.min);
     this.view.setMaxValue(model.max);
@@ -45,6 +47,52 @@ export default class Presenter {
         minMaxLabels: !!view.minLabel,
       });
       view.panel.registerWith(this.view);
+    }
+  }
+
+  inform(eventType: string, data: any): void {
+    switch (eventType) {
+      case 'viewLeftInput':
+        this.handleLeftInput(data);
+        break;
+      case 'viewRightInput':
+        this.handleRightInput(data);
+        break;
+      case 'viewChangeLeftValueFromOutside':
+        this.changeLeftValueFromOutside(data);
+        break;
+      case 'viewChangeRightValueFromOutside':
+        this.changeRightValueFromOutside(data);
+        break;
+      case 'viewChangeMinFromOutside':
+        this.changeMinFromOutside(data);
+        break;
+      case 'viewChangeMaxFromOutside':
+        this.changeMaxFromOutside(data);
+        break;
+      case 'viewChangeStepFromOutside':
+        this.changeStepFromOutside(data);
+        break;
+      case 'viewChangeOrientationFromOutside':
+        this.handleViewOrientationChange();
+        break;
+      case 'viewToggleRangeFromOutside':
+        this.handleRangeToggle();
+        break;
+      case 'viewToggleScaleFromOutside':
+        this.handleScaleToggle();
+        return;
+      case 'viewChangeScaleIntervals':
+        this.handleChangeScaleIntervals();
+        return;
+      case 'viewAddValueLabels':
+        this.handleAddValueLabels();
+        return;
+      case 'viewAddMinMaxLabels':
+        this.handleAddMinMaxLabels();
+        break;
+      default:
+        break;
     }
   }
 
