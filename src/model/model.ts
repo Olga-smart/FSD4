@@ -1,3 +1,5 @@
+import { EventManager } from '../eventManager/eventManager';
+
 type ModelOptions = {
   min?: number;
   max?: number;
@@ -8,6 +10,8 @@ type ModelOptions = {
 };
 
 export default class Model {
+  eventManager: EventManager;
+
   min: number;
 
   max: number;
@@ -21,6 +25,8 @@ export default class Model {
   isRange: boolean;
 
   constructor(options: ModelOptions = {}) {
+    this.eventManager = new EventManager();
+
     this.min = options.min ?? 0;
     this.max = options.max ?? 150;
     this.leftValue = options.leftValue ?? 25;
@@ -46,6 +52,8 @@ export default class Model {
     if (this.isRange) {
       this.leftValue = Math.min(value, this.rightValue!);
     }
+
+    this.eventManager.notify('modelLeftSet');
   }
 
   setRightValue(value: number = 75): void {
@@ -54,6 +62,8 @@ export default class Model {
     } else {
       this.rightValue = Math.max(value, this.leftValue);
     }
+
+    this.eventManager.notify('modelRightSet');
   }
 
   removeRightValue(): void {
@@ -64,6 +74,8 @@ export default class Model {
     if (value <= this.leftValue) {
       this.min = value;
     }
+
+    this.eventManager.notify('modelChangeMin');
   }
 
   changeMaxFromOutside(value: number): void {
@@ -78,9 +90,17 @@ export default class Model {
         this.max = value;
       }
     }
+
+    this.eventManager.notify('modelChangeMax');
   }
 
   setStep(value: number): void {
     this.step = value;
+  }
+
+  toggleRange(): void {
+    this.isRange = !this.isRange;
+
+    this.eventManager.notify('modelRangeToggle');
   }
 }

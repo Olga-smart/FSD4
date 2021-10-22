@@ -29,6 +29,7 @@ function initSliders(): void {
 
     const presenter = new Presenter(model, view);
     presenter.view.eventManager.subscribe(presenter);
+    presenter.model.eventManager.subscribe(presenter);
   });
 }
 

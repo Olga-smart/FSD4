@@ -10,7 +10,6 @@ export default class Presenter implements IEventListener {
   constructor(model: Model, view: View) {
     this.model = model;
     this.view = view;
-    // this.view.eventManager.subscribe(this);
 
     this.view.setMinValue(model.min);
     this.view.setMaxValue(model.max);
@@ -53,10 +52,10 @@ export default class Presenter implements IEventListener {
   inform(eventType: string, data: any): void {
     switch (eventType) {
       case 'viewLeftInput':
-        this.handleLeftInput(data);
+        this.handleViewLeftInput(data);
         break;
       case 'viewRightInput':
-        this.handleRightInput(data);
+        this.handleViewRightInput(data);
         break;
       case 'viewChangeLeftValueFromOutside':
         this.changeLeftValueFromOutside(data);
@@ -65,19 +64,19 @@ export default class Presenter implements IEventListener {
         this.changeRightValueFromOutside(data);
         break;
       case 'viewChangeMinFromOutside':
-        this.changeMinFromOutside(data);
+        this.handleChangeViewMinFromOutside(data);
         break;
       case 'viewChangeMaxFromOutside':
-        this.changeMaxFromOutside(data);
+        this.handleChangeViewMaxFromOutside(data);
         break;
       case 'viewChangeStepFromOutside':
-        this.changeStepFromOutside(data);
+        this.handleChangeViewStepFromOutside(data);
         break;
       case 'viewChangeOrientationFromOutside':
         this.handleViewOrientationChange();
         break;
       case 'viewToggleRangeFromOutside':
-        this.handleRangeToggle();
+        this.handleViewRangeToggle();
         break;
       case 'viewToggleScaleFromOutside':
         this.handleScaleToggle();
@@ -91,6 +90,23 @@ export default class Presenter implements IEventListener {
       case 'viewAddMinMaxLabels':
         this.handleAddMinMaxLabels();
         break;
+
+      case 'modelLeftSet':
+        this.handleModelLeftSet();
+        break;
+      case 'modelRightSet':
+        this.handleModelRightSet();
+        break;
+      case 'modelChangeMin':
+        this.handleModelChangeMin();
+        break;
+      case 'modelChangeMax':
+        this.handleModelChangeMax();
+        break;
+      case 'modelRangeToggle':
+        this.handleModelRangeToggle();
+        break;
+
       default:
         break;
     }
@@ -103,9 +119,13 @@ export default class Presenter implements IEventListener {
     return false;
   }
 
-  handleLeftInput(px: number): void {
+  handleViewLeftInput(px: number): void {
     const value = this.convertPxToValue(px);
     this.model.setLeftValue(value);
+  }
+
+  handleModelLeftSet(): void {
+    const value = this.model.leftValue;
     this.view.setLeftValue(value, this.convertValueToPx(value));
 
     if (this.view.panel) {
@@ -113,9 +133,13 @@ export default class Presenter implements IEventListener {
     }
   }
 
-  handleRightInput(px: number): void {
+  handleViewRightInput(px: number): void {
     const value = this.convertPxToValue(px);
     this.model.setRightValue(value);
+  }
+
+  handleModelRightSet(): void {
+    const value = this.model.rightValue!;
     this.view.setRightValue(value, this.convertValueToPx(value));
 
     if (this.view.panel) {
@@ -186,16 +210,17 @@ export default class Presenter implements IEventListener {
 
   changeLeftValueFromOutside(value: number): void {
     this.model.setLeftValue(value);
-    this.view.setLeftValue(this.model.leftValue, this.convertValueToPx(this.model.leftValue));
   }
 
   changeRightValueFromOutside(value: number): void {
     this.model.setRightValue(value);
-    this.view.setRightValue(this.model.rightValue!, this.convertValueToPx(this.model.rightValue!));
   }
 
-  changeMinFromOutside(value: number): void {
+  handleChangeViewMinFromOutside(value: number): void {
     this.model.changeMinFromOutside(value);
+  }
+
+  handleModelChangeMin(): void {
     this.view.setMinValue(this.model.min);
     this.passLeftValueToView(this.model.leftValue);
     if (this.model.rightValue) {
@@ -205,8 +230,11 @@ export default class Presenter implements IEventListener {
     this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
   }
 
-  changeMaxFromOutside(value: number): void {
+  handleChangeViewMaxFromOutside(value: number): void {
     this.model.changeMaxFromOutside(value);
+  }
+
+  handleModelChangeMax(): void {
     this.view.setMaxValue(this.model.max);
     this.passLeftValueToView(this.model.leftValue);
     if (this.model.rightValue) {
@@ -216,7 +244,7 @@ export default class Presenter implements IEventListener {
     this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
   }
 
-  changeStepFromOutside(value: number): void {
+  handleChangeViewStepFromOutside(value: number): void {
     this.model.setStep(value);
   }
 
@@ -240,8 +268,11 @@ export default class Presenter implements IEventListener {
     }
   }
 
-  handleRangeToggle(): void {
-    this.model.isRange = !this.model.isRange;
+  handleViewRangeToggle(): void {
+    this.model.toggleRange();
+  }
+
+  handleModelRangeToggle(): void {
     this.passLeftValueToView(this.model.leftValue);
 
     if (this.model.isRange) {

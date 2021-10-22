@@ -1,3 +1,4 @@
+import { EventManager } from '../eventManager/eventManager';
 declare type ModelOptions = {
     min?: number;
     max?: number;
@@ -7,6 +8,7 @@ declare type ModelOptions = {
     range?: boolean;
 };
 export default class Model {
+    eventManager: EventManager;
     min: number;
     max: number;
     leftValue: number;
@@ -20,6 +22,7 @@ export default class Model {
     changeMinFromOutside(value: number): void;
     changeMaxFromOutside(value: number): void;
     setStep(value: number): void;
+    toggleRange(): void;
 }
 export {};
 //# sourceMappingURL=model.d.ts.map
