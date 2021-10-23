@@ -13,6 +13,7 @@ export default class Presenter implements IEventListener {
     handleModelRightSet(): void;
     passLeftValueToView(value: number): void;
     passRightValueToView(value: number): void;
+    updateViewInput(): void;
     convertValueToPx(value: number): number;
     convertPxToValue(px: number): number;
     fitToStep(value: number): number;

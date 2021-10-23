@@ -7,6 +7,7 @@ import ValueLabel from './subviews/valueLabel/valueLabel';
 import Scale from './subviews/scale/scale';
 import LabelsContainer from './subviews/labelsContainer/labelsContainer';
 import Label from './subviews/label/label';
+import Input from './subviews/input/input';
 import { Panel, PanelOptions } from './subviews/panel/panel';
 import { EventManager } from '../eventManager/eventManager';
 declare type ViewOptions = {
@@ -24,6 +25,7 @@ export default class View {
     slider: Slider;
     track: Track;
     range: Range;
+    input: Input;
     thumbLeft: Thumb;
     thumbRight?: Thumb;
     isRange: boolean;
@@ -45,6 +47,7 @@ export default class View {
     setMaxValue(max: number): void;
     setLeftValue(value: number, px: number): void;
     setRightValue(value: number, px: number): void;
+    updateInput(value1: number, value2?: number | null): void;
     mergeLabels(): void;
     splitLabels(): void;
     isTwoValueLabelsClose(): boolean | undefined;

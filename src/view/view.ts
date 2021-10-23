@@ -7,6 +7,7 @@ import ValueLabel from './subviews/valueLabel/valueLabel';
 import Scale from './subviews/scale/scale';
 import LabelsContainer from './subviews/labelsContainer/labelsContainer';
 import Label from './subviews/label/label';
+import Input from './subviews/input/input';
 import { Panel, PanelOptions } from './subviews/panel/panel';
 import { EventManager } from '../eventManager/eventManager';
 
@@ -30,6 +31,8 @@ export default class View {
   track: Track;
 
   range: Range;
+
+  input: Input;
 
   thumbLeft: Thumb;
 
@@ -70,6 +73,8 @@ export default class View {
 
     this.thumbLeft = new Thumb('left');
     this.thumbLeft.registerWith(this);
+
+    this.input = new Input();
 
     if (options.range) {
       this.isRange = true;
@@ -118,7 +123,7 @@ export default class View {
   render(): void {
     this.track.append(this.range.component);
     this.slider.append(this.track.component, this.thumbLeft.component);
-    this.component.append(this.slider.component);
+    this.component.append(this.slider.component, this.input.component);
 
     if (this.isRange) {
       this.slider.append(this.thumbRight!.component);
@@ -300,6 +305,10 @@ export default class View {
         this.maxLabel.setOpacity(1);
       }
     }
+  }
+
+  updateInput(value1: number, value2: number | null = null): void {
+    this.input.setValue(value1, value2);
   }
 
   mergeLabels(): void {

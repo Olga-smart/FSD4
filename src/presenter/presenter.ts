@@ -17,6 +17,9 @@ export default class Presenter implements IEventListener {
 
     if (this.view.isRange) {
       this.passRightValueToView(model.rightValue!);
+      this.view.updateInput(model.leftValue, model.rightValue!);
+    } else {
+      this.view.updateInput(model.leftValue);
     }
 
     if (this.view.hasScale) {
@@ -127,6 +130,7 @@ export default class Presenter implements IEventListener {
   handleModelLeftSet(): void {
     const value = this.model.leftValue;
     this.view.setLeftValue(value, this.convertValueToPx(value));
+    this.updateViewInput();
 
     if (this.view.panel) {
       this.view.updatePanelFrom(value);
@@ -141,6 +145,7 @@ export default class Presenter implements IEventListener {
   handleModelRightSet(): void {
     const value = this.model.rightValue!;
     this.view.setRightValue(value, this.convertValueToPx(value));
+    this.updateViewInput();
 
     if (this.view.panel) {
       this.view.updatePanelTo(value);
@@ -155,6 +160,16 @@ export default class Presenter implements IEventListener {
   passRightValueToView(value: number): void {
     const px = this.convertValueToPx(value);
     this.view.setRightValue(value, px);
+  }
+
+  updateViewInput(): void {
+    if (!this.view.isRange) {
+      this.view.updateInput(this.model.leftValue);
+    }
+
+    if (this.view.isRange) {
+      this.view.updateInput(this.model.leftValue, this.model.rightValue);
+    }
   }
 
   convertValueToPx(value: number): number {
