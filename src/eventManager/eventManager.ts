@@ -10,7 +10,7 @@ export class EventManager {
   }
 
   notify(eventType: string, data: any = null): void {
-    if (this.listeners.length === 0) return;
+    if (this.listeners.length === 0) { return; }
     this.listeners.forEach((item) => item.inform(eventType, data));
   }
 }

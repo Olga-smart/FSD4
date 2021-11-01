@@ -1,16 +1,16 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-      "target": "es6",
-      "strict": true,
-      "removeComments": true,
-      "allowJs": true,
-      "lib": ["dom", "es2015", "dom.iterable"],
-      "module": "esnext",
-      "outDir": "docs",
-      "sourceMap": true,
-      "declaration": true,
-      "declarationMap": true
+    "target": "es6",
+    // "strict": true,
+    "removeComments": true,
+    "allowJs": true,
+    "lib": ["dom", "es2015", "dom.iterable"],
+    "module": "esnext",
+    "outDir": "docs",
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "include": [
     "src/**/*.ts"
