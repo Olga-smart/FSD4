@@ -1,3 +1,6 @@
+/* eslint-disable no-new */
+/* eslint-disable func-names */
+/* eslint-disable no-param-reassign */
 import * as jQuery from 'jquery';
 import 'airbnb-browser-shims';
 import './style.scss';
@@ -39,17 +42,34 @@ import Presenter from './presenter/presenter';
 
 // window.addEventListener('load', initSliders);
 
+// -------------------------------------------------------
+
 declare global {
   interface JQuery {
-    rangeSlider(): (options: object) => JQuery<HTMLElement>;
+    rangeSlider: IRangeSlider;
   }
 
   interface IRangeSlider {
-    defaults: object,
+    (options?: object): JQuery<HTMLElement>;
+    defaults?: RangeSliderOptions;
   }
+
+  type RangeSliderOptions = {
+    min: number,
+    max: number,
+    leftValue: number,
+    rightValue: number,
+    range: boolean,
+    step: number,
+    minMaxLabels: boolean,
+    valueLabels: boolean,
+    vertical: boolean,
+    scale: boolean,
+    scaleIntervals: number,
+    panel: boolean,
+  };
 }
 
-// eslint-disable-next-line func-names
 (function ($) {
   class RangeSlider {
     element: HTMLElement;
@@ -60,7 +80,7 @@ declare global {
 
     presenter: Presenter;
 
-    constructor(element, options) {
+    constructor(element: HTMLElement, options: RangeSliderOptions) {
       this.element = element;
       this.model = new Model({
         min: options.min,
@@ -85,18 +105,14 @@ declare global {
     }
   }
 
-  // eslint-disable-next-line no-param-reassign
-  // eslint-disable-next-line func-names
-  $.fn.rangeSlider = function (options: object): JQuery<HTMLElement> {
+  $.fn.rangeSlider = function (options: object = {}): JQuery<HTMLElement> {
     const settings = $.extend({}, $.fn.rangeSlider.defaults, options);
 
-    // eslint-disable-next-line func-names
-    return this.each(function (): RangeSlider {
-      return new RangeSlider(this, settings);
+    return this.each(function () {
+      new RangeSlider(this, settings);
     });
   };
 
-  // eslint-disable-next-line no-param-reassign
   $.fn.rangeSlider.defaults = {
     min: 0,
     max: 100,
@@ -113,4 +129,4 @@ declare global {
   };
 }(jQuery));
 
-$('.js-range-slider').rangeSlider().css('background-color', 'yellow');
+$('.js-range-slider').rangeSlider();
