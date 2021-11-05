@@ -52,6 +52,7 @@ declare global {
   interface IRangeSlider {
     (options?: object): JQuery<HTMLElement>;
     defaults?: RangeSliderOptions;
+    settingsFromDataset?: object;
   }
 
   type RangeSliderOptions = {
@@ -106,9 +107,24 @@ declare global {
   }
 
   $.fn.rangeSlider = function (options: object = {}): JQuery<HTMLElement> {
-    const settings = $.extend({}, $.fn.rangeSlider.defaults, options);
-
     return this.each(function () {
+      const settingsFromDataset: RangeSliderOptions = {
+        min: $(this).data('min'),
+        max: $(this).data('max'),
+        range: $(this).data('range'),
+        leftValue: $(this).data('leftValue'),
+        rightValue: $(this).data('rightValue'),
+        step: $(this).data('step'),
+        minMaxLabels: $(this).data('minMaxLabels'),
+        valueLabels: $(this).data('valueLabels'),
+        vertical: $(this).data('vertical'),
+        scale: $(this).data('scale'),
+        scaleIntervals: $(this).data('scaleIntervals'),
+        panel: $(this).data('panel'),
+      };
+
+      const settings = $.extend({}, $.fn.rangeSlider.defaults, options, settingsFromDataset);
+
       new RangeSlider(this, settings);
     });
   };
@@ -129,4 +145,6 @@ declare global {
   };
 }(jQuery));
 
-$('.js-range-slider').rangeSlider();
+$(() => {
+  $('.js-range-slider').rangeSlider();
+});
