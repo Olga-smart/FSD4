@@ -7,7 +7,7 @@ declare global {
     interface IRangeSlider {
         (options?: object): JQuery<HTMLElement>;
         defaults?: RangeSliderOptions;
-        settingsFromDataset?: object;
+        validate?: (settings: RangeSliderOptions) => RangeSliderOptions;
     }
     type RangeSliderOptions = {
         min: number;

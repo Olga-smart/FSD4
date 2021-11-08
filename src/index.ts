@@ -52,7 +52,7 @@ declare global {
   interface IRangeSlider {
     (options?: object): JQuery<HTMLElement>;
     defaults?: RangeSliderOptions;
-    settingsFromDataset?: object;
+    validate?: (settings: RangeSliderOptions) => RangeSliderOptions;
   }
 
   type RangeSliderOptions = {
@@ -123,7 +123,8 @@ declare global {
         panel: $(this).data('panel'),
       };
 
-      const settings = $.extend({}, $.fn.rangeSlider.defaults, options, settingsFromDataset);
+      let settings = $.extend({}, $.fn.rangeSlider.defaults, options, settingsFromDataset);
+      settings = $.fn.rangeSlider.validate!(settings);
 
       new RangeSlider(this, settings);
     });
@@ -142,6 +143,61 @@ declare global {
     scale: true,
     scaleIntervals: 5,
     panel: false,
+  };
+
+  $.fn.rangeSlider.validate = (settings: RangeSliderOptions) => {
+    const fixedSettings: RangeSliderOptions = $.extend({}, settings);
+
+    function fixType(property: keyof RangeSliderOptions, type: string): void {
+      if (typeof settings[property] !== type) {
+        (fixedSettings as any)[property] = $.fn.rangeSlider.defaults![property];
+      }
+    }
+
+    function fixValues(): void {
+      if (fixedSettings.min > fixedSettings.max) {
+        [fixedSettings.min, fixedSettings.max] = [fixedSettings.max, fixedSettings.min];
+      }
+
+      if (fixedSettings.leftValue < fixedSettings.min) {
+        fixedSettings.leftValue = fixedSettings.min;
+      }
+
+      if (fixedSettings.rightValue > fixedSettings.max) {
+        fixedSettings.rightValue = fixedSettings.max;
+      }
+
+      if (fixedSettings.leftValue > fixedSettings.max) {
+        fixedSettings.leftValue = fixedSettings.max;
+      }
+
+      if (fixedSettings.leftValue > fixedSettings.rightValue) {
+        [fixedSettings.leftValue, fixedSettings.rightValue] = (
+          [fixedSettings.rightValue, fixedSettings.leftValue]
+        );
+      }
+    }
+
+    function checkTypes(): void {
+      fixType('min', 'number');
+      fixType('max', 'number');
+      fixType('leftValue', 'number');
+      fixType('rightValue', 'number');
+      fixType('range', 'boolean');
+      fixType('step', 'number');
+      fixType('minMaxLabels', 'boolean');
+      fixType('valueLabels', 'boolean');
+      fixType('vertical', 'boolean');
+      fixType('scale', 'boolean');
+      fixType('scaleIntervals', 'number');
+      fixType('panel', 'boolean');
+    }
+
+    checkTypes();
+
+    fixValues();
+
+    return fixedSettings;
   };
 }(jQuery));
 
