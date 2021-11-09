@@ -8,42 +8,6 @@ import Model from './model/model';
 import View from './view/view';
 import Presenter from './presenter/presenter';
 
-// function initSliders(): void {
-//   const sliders = document.querySelectorAll('.js-range-slider');
-
-//   sliders.forEach((slider) => {
-//     const model: Model = new Model({
-
-//       // min: 10,
-//       // max: 200,
-//       // leftValue: 125,
-//       // rightValue: 175,
-//       range: true,
-
-//       // step: 5
-//     });
-
-//     const view = new View(slider, {
-//       minMaxLabels: true,
-//       valueLabels: true,
-
-//       // vertical: true,
-//       range: true,
-//       scale: true,
-//       scaleIntervals: 5,
-//       panel: true,
-//     });
-
-//     const presenter = new Presenter(model, view);
-//     presenter.view.eventManager.subscribe(presenter);
-//     presenter.model.eventManager.subscribe(presenter);
-//   });
-// }
-
-// window.addEventListener('load', initSliders);
-
-// -------------------------------------------------------
-
 declare global {
   interface JQuery {
     rangeSlider: IRangeSlider;
@@ -104,6 +68,16 @@ declare global {
       this.presenter.view.eventManager.subscribe(this.presenter);
       this.presenter.model.eventManager.subscribe(this.presenter);
     }
+
+    setLeftValue(value: number): this {
+      this.presenter.changeLeftValueFromOutside(value);
+      return this;
+    }
+
+    setRightValue(value: number): this {
+      this.presenter.changeRightValueFromOutside(value);
+      return this;
+    }
   }
 
   $.fn.rangeSlider = function (options: object = {}): JQuery<HTMLElement> {
@@ -126,7 +100,7 @@ declare global {
       let settings = $.extend({}, $.fn.rangeSlider.defaults, options, settingsFromDataset);
       settings = $.fn.rangeSlider.validate!(settings);
 
-      new RangeSlider(this, settings);
+      $(this).data('rangeSlider', new RangeSlider(this, settings));
     });
   };
 
@@ -202,5 +176,8 @@ declare global {
 }(jQuery));
 
 $(() => {
+  // eslint-disable-next-line fsd/jq-cache-dom-elements
   $('.js-range-slider').rangeSlider();
+  const slider = $('.js-range-slider').data('rangeSlider');
+  slider.setLeftValue(50).setRightValue(80);
 });
