@@ -28,9 +28,10 @@ export declare class Panel {
     constructor();
     registerWith(view: any): void;
     render(): void;
-    static addLabel(input: HTMLElement, name: string): HTMLElement;
-    static wrap(input: HTMLElement): HTMLElement;
+    static addLabel(input: HTMLElement, name: string, className?: string): DocumentFragment;
+    static wrap(fragment: DocumentFragment, className?: string): HTMLElement;
     setTypes(): void;
+    setIds(): void;
     setValues(options: PanelOptions): void;
     setAttributes(options: PanelOptions): void;
     updateFrom(value: number): void;

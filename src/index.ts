@@ -177,7 +177,10 @@ declare global {
 
 $(() => {
   // eslint-disable-next-line fsd/jq-cache-dom-elements
-  $('.js-range-slider').rangeSlider();
+  $('.js-range-slider').rangeSlider({
+    panel: true,
+    vertical: false,
+  });
   const slider = $('.js-range-slider').data('rangeSlider');
   slider.setLeftValue(50).setRightValue(80);
 });

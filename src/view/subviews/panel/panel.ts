@@ -45,18 +45,18 @@ export class Panel {
     this.view = null;
     this.component = createElement('div', 'range-slider__panel panel');
 
-    this.min = createElement('input', 'panel__min');
-    this.max = createElement('input', 'panel__max');
-    this.step = createElement('input', 'panel__step');
-    this.from = createElement('input', 'panel__from');
-    this.to = createElement('input', 'panel__to');
+    this.min = createElement('input', 'panel__min panel__input');
+    this.max = createElement('input', 'panel__max panel__input');
+    this.step = createElement('input', 'panel__step panel__input');
+    this.from = createElement('input', 'panel__from panel__input');
+    this.to = createElement('input', 'panel__to panel__input');
 
-    this.vertical = createElement('input', 'panel__vertical');
-    this.range = createElement('input', 'panel__range');
-    this.scale = createElement('input', 'panel__scale');
-    this.scaleIntervals = createElement('input', 'panel__scale-intervals');
-    this.valueLabels = createElement('input', 'panel__value-labels');
-    this.minMaxLabels = createElement('input', 'panel__min-max-labels');
+    this.vertical = createElement('input', 'panel__vertical panel__checkbox');
+    this.range = createElement('input', 'panel__range panel__checkbox');
+    this.scale = createElement('input', 'panel__scale panel__checkbox');
+    this.scaleIntervals = createElement('input', 'panel__scale-intervals panel__input');
+    this.valueLabels = createElement('input', 'panel__value-labels panel__checkbox');
+    this.minMaxLabels = createElement('input', 'panel__min-max-labels panel__checkbox');
 
     this.render();
     this.attachEventHandlers();
@@ -68,32 +68,45 @@ export class Panel {
 
   render(): void {
     this.setTypes();
+    this.setIds();
     this.component.append(
+      Panel.wrap(Panel.addLabel(this.range, 'Range:', 'panel__label_for-checkbox')),
+      Panel.wrap(Panel.addLabel(this.vertical, 'Vertical:', 'panel__label_for-checkbox')),
+      Panel.wrap(Panel.addLabel(this.valueLabels, 'Value labels:', 'panel__label_for-checkbox')),
+      Panel.wrap(Panel.addLabel(this.minMaxLabels, 'Min&max labels:', 'panel__label_for-checkbox')),
+      Panel.wrap(Panel.addLabel(this.scale, 'Scale:', 'panel__label_for-checkbox')),
+      Panel.wrap(Panel.addLabel(this.scaleIntervals, 'Scale intervals:')),
       Panel.wrap(Panel.addLabel(this.min, 'Min:')),
       Panel.wrap(Panel.addLabel(this.max, 'Max:')),
-      Panel.wrap(Panel.addLabel(this.step, 'Step:')),
       Panel.wrap(Panel.addLabel(this.from, 'From:')),
       Panel.wrap(Panel.addLabel(this.to, 'To:')),
-      Panel.wrap(Panel.addLabel(this.vertical, 'Vertical:')),
-      Panel.wrap(Panel.addLabel(this.range, 'Range:')),
-      Panel.wrap(Panel.addLabel(this.scale, 'Scale:')),
-      Panel.wrap(Panel.addLabel(this.scaleIntervals, 'Scale intervals:')),
-      Panel.wrap(Panel.addLabel(this.valueLabels, 'Value labels:')),
-      Panel.wrap(Panel.addLabel(this.minMaxLabels, 'Min&max labels:')),
+      Panel.wrap(Panel.addLabel(this.step, 'Step:')),
     );
   }
 
-  static addLabel(input: HTMLElement, name: string): HTMLElement {
+  static addLabel(input: HTMLElement, name: string, className?: string): DocumentFragment {
     const label: HTMLElement = createElement('label', 'panel__label');
     label.textContent = name;
-    label.append(input);
+    label.setAttribute('for', input.id);
+    if (className) {
+      label.classList.add(className);
+    }
+    const fragment = new DocumentFragment();
 
-    return label;
+    if ((input as HTMLInputElement).type === 'checkbox') {
+      fragment.append(input);
+      fragment.append(label);
+    } else {
+      fragment.append(label);
+      fragment.append(input);
+    }
+
+    return fragment;
   }
 
-  static wrap(input: HTMLElement): HTMLElement {
-    const wrapper: HTMLElement = createElement('div', 'panel__input-wrapper');
-    wrapper.append(input);
+  static wrap(fragment: DocumentFragment, className?: string): HTMLElement {
+    const wrapper: HTMLElement = createElement('div', `panel__input-wrapper ${className}`);
+    wrapper.append(fragment);
 
     return wrapper;
   }
@@ -110,6 +123,20 @@ export class Panel {
     (this.scaleIntervals as HTMLInputElement).type = 'number';
     (this.valueLabels as HTMLInputElement).type = 'checkbox';
     (this.minMaxLabels as HTMLInputElement).type = 'checkbox';
+  }
+
+  setIds(): void {
+    this.range.id = 'range';
+    this.vertical.id = 'vertical';
+    this.valueLabels.id = 'valueLabels';
+    this.minMaxLabels.id = 'minMaxLabels';
+    this.scale.id = 'scale';
+    this.scaleIntervals.id = 'scaleIntervals';
+    this.min.id = 'min';
+    this.max.id = 'max';
+    this.from.id = 'from';
+    this.to.id = 'to';
+    this.step.id = 'step';
   }
 
   setValues(options: PanelOptions): void {
