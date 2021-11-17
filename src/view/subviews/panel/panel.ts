@@ -232,12 +232,12 @@ export class Panel {
   }
 
   handleStepChange(): void {
-    if (+(this.step as HTMLInputElement).value < +(this.step as HTMLInputElement).min) {
-      (this.step as HTMLInputElement).value = (this.step as HTMLInputElement).min;
-    }
-
     if (+(this.step as HTMLInputElement).value > +(this.step as HTMLInputElement).max) {
       (this.step as HTMLInputElement).value = (this.step as HTMLInputElement).max;
+    }
+
+    if (+(this.step as HTMLInputElement).value < +(this.step as HTMLInputElement).min) {
+      (this.step as HTMLInputElement).value = (this.step as HTMLInputElement).min;
     }
   }
 
@@ -250,12 +250,12 @@ export class Panel {
   }
 
   handleFromChange(): void {
-    if (+(this.from as HTMLInputElement).value < +(this.from as HTMLInputElement).min) {
-      (this.from as HTMLInputElement).value = (this.from as HTMLInputElement).min;
-    }
-
     if (+(this.from as HTMLInputElement).value > +(this.from as HTMLInputElement).max) {
       (this.from as HTMLInputElement).value = (this.from as HTMLInputElement).max;
+    }
+
+    if (+(this.from as HTMLInputElement).value < +(this.from as HTMLInputElement).min) {
+      (this.from as HTMLInputElement).value = (this.from as HTMLInputElement).min;
     }
   }
 
@@ -266,12 +266,12 @@ export class Panel {
   }
 
   handleToChange(): void {
-    if (+(this.to as HTMLInputElement).value < +(this.to as HTMLInputElement).min) {
-      (this.to as HTMLInputElement).value = (this.to as HTMLInputElement).min;
-    }
-
     if (+(this.to as HTMLInputElement).value > +(this.to as HTMLInputElement).max) {
       (this.to as HTMLInputElement).value = (this.to as HTMLInputElement).max;
+    }
+
+    if (+(this.to as HTMLInputElement).value < +(this.to as HTMLInputElement).min) {
+      (this.to as HTMLInputElement).value = (this.to as HTMLInputElement).min;
     }
   }
 
