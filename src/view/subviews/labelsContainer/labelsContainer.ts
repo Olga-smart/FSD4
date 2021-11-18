@@ -1,7 +1,7 @@
 import createElement from '../../helpers/createElement';
 import Label from '../label/label';
 
-export default class LabelsContainer {
+class LabelsContainer {
   component: HTMLElement;
 
   constructor() {
@@ -36,3 +36,5 @@ export default class LabelsContainer {
     this.component.style.paddingTop = `${maxHeight + 4}px`;
   }
 }
+
+export default LabelsContainer;

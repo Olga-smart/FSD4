@@ -1,6 +1,6 @@
 import createElement from '../../helpers/createElement';
 
-export default class Range {
+class Range {
   component: HTMLElement;
 
   constructor() {
@@ -43,3 +43,5 @@ export default class Range {
     this.component.style.top = 'unset';
   }
 }
+
+export default Range;

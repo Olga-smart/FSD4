@@ -1,6 +1,6 @@
 import createElement from '../../helpers/createElement';
 
-export type PanelOptions = {
+type PanelOptions = {
   min: number,
   max: number,
   step: number,
@@ -14,7 +14,7 @@ export type PanelOptions = {
   minMaxLabels: boolean
 };
 
-export class Panel {
+class Panel {
   view: any;
 
   component: HTMLElement;
@@ -335,3 +335,5 @@ export class Panel {
     this.minMaxLabels.addEventListener('change', this.handleMinMaxLabelsChange.bind(this));
   }
 }
+
+export { PanelOptions, Panel };

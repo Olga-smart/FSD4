@@ -1,6 +1,6 @@
 import createElement from '../../helpers/createElement';
 
-export default class Thumb {
+class Thumb {
   type: 'left' | 'right';
 
   component: HTMLElement;
@@ -94,3 +94,5 @@ export default class Thumb {
     this.component.addEventListener('dragstart', Thumb.handleDragStart);
   }
 }
+
+export default Thumb;

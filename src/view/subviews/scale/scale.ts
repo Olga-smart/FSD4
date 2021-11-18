@@ -1,6 +1,6 @@
 import createElement from '../../helpers/createElement';
 
-export default class Scale {
+class Scale {
   view: any;
 
   component: HTMLElement;
@@ -122,3 +122,5 @@ export default class Scale {
     this.component.addEventListener('click', this.handleClick.bind(this));
   }
 }
+
+export default Scale;

@@ -1,6 +1,6 @@
 import createElement from '../../helpers/createElement';
 
-export default class Track {
+class Track {
   view: any;
 
   component: HTMLElement;
@@ -41,3 +41,5 @@ export default class Track {
     this.component.addEventListener('click', this.handleClick.bind(this));
   }
 }
+
+export default Track;

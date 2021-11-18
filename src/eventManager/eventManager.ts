@@ -1,4 +1,4 @@
-export class EventManager {
+class EventManager {
   listeners: IEventListener[] = [];
 
   subscribe(listener: IEventListener): void {
@@ -15,8 +15,8 @@ export class EventManager {
   }
 }
 
-export interface IEventListener {
+interface IEventListener {
   inform(eventType: string, data: any): void;
 }
 
-// export { EventManager, IEventListener };
+export { EventManager, IEventListener };

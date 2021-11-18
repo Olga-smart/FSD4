@@ -1,6 +1,6 @@
 import createElement from '../../helpers/createElement';
 
-export default class Input {
+class Input {
   component: HTMLElement;
 
   constructor() {
@@ -25,3 +25,5 @@ export default class Input {
     }
   }
 }
+
+export default Input;

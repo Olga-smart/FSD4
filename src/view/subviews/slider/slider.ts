@@ -1,6 +1,6 @@
 import createElement from '../../helpers/createElement';
 
-export default class Slider {
+class Slider {
   component: HTMLElement;
 
   constructor() {
@@ -19,3 +19,5 @@ export default class Slider {
     this.component.after(...elements);
   }
 }
+
+export default Slider;

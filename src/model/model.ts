@@ -9,7 +9,7 @@ type ModelOptions = {
   range?: boolean;
 };
 
-export default class Model {
+class Model {
   eventManager: EventManager;
 
   min: number;
@@ -104,3 +104,5 @@ export default class Model {
     this.eventManager.notify('modelRangeToggle');
   }
 }
+
+export default Model;

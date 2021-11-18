@@ -21,7 +21,7 @@ type ViewOptions = {
   panel?: boolean
 };
 
-export default class View {
+class View {
   component: Element;
 
   eventManager: EventManager;
@@ -875,3 +875,5 @@ export default class View {
     }
   }
 }
+
+export default View;

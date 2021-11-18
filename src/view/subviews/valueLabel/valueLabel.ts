@@ -1,7 +1,7 @@
 import Label from '../label/label';
 import createElement from '../../helpers/createElement';
 
-export default class ValueLabel extends Label {
+class ValueLabel extends Label {
   component: HTMLElement;
 
   constructor(type: 'left' | 'right' | 'common' = 'left') {
@@ -25,3 +25,5 @@ export default class ValueLabel extends Label {
     return this.component.style.top;
   }
 }
+
+export default ValueLabel;

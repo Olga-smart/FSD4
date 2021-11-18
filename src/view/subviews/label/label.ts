@@ -1,4 +1,4 @@
-export default class Label {
+class Label {
   type: 'left' | 'right' | 'common';
 
   component: HTMLElement;
@@ -32,3 +32,5 @@ export default class Label {
     return this.component.offsetHeight;
   }
 }
+
+export default Label;

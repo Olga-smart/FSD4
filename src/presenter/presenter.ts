@@ -2,7 +2,7 @@ import Model from '../model/model';
 import View from '../view/view';
 import { IEventListener } from '../eventManager/eventManager';
 
-export default class Presenter implements IEventListener {
+class Presenter implements IEventListener {
   model: Model;
 
   view: View;
@@ -336,3 +336,5 @@ export default class Presenter implements IEventListener {
     this.view.setMaxValue(this.model.max);
   }
 }
+
+export default Presenter;
