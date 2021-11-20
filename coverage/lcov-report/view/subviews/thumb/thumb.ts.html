@@ -153,9 +153,13 @@
 <a name='L94'></a><a href='#L94'>94</a>
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -195,10 +199,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -207,13 +207,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -249,9 +255,11 @@
 <span class="cline-any cline-yes">338x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import createElement from '../../helpers/createElement';
 &nbsp;
-export default class Thumb {
+class Thumb {
   type: 'left' | 'right';
 &nbsp;
   component: HTMLElement;
@@ -294,22 +302,24 @@ export default class Thumb {
     return this.component.getBoundingClientRect();
   }
 &nbsp;
-  handlePointerOver(): void {
-    this.component.classList.add('range-slider__thumb_hover');
+  static handlePointerOver(event: PointerEvent): void {
+    (event.currentTarget as Element).classList.add('range-slider__thumb_hover');
   }
 &nbsp;
-  handlePointerOut(): void {
-    this.component.classList.remove('range-slider__thumb_hover');
+  static handlePointerOut(event: PointerEvent): void {
+    (event.currentTarget as Element).classList.remove('range-slider__thumb_hover');
   }
 &nbsp;
   handlePointerDown(event: PointerEvent): void {
-    this.component.classList.add('range-slider__thumb_active');
+    (event.currentTarget as Element).classList.add('range-slider__thumb_active');
 &nbsp;
-    this.component.setPointerCapture(event.pointerId);
+    (event.currentTarget as Element).setPointerCapture(event.pointerId);
     event.preventDefault(); // предотвратить запуск выделения (действие браузера)
 &nbsp;
-    const shiftX: number = event.clientX - this.getBoundingClientRect().left;
-    const shiftY: number = event.clientY - this.getBoundingClientRect().top;
+    const shiftX: number = event.clientX
+                         - (event.currentTarget as Element).getBoundingClientRect().left;
+    const shiftY: number = event.clientY
+                         - (event.currentTarget as Element).getBoundingClientRect().top;
 &nbsp;
     const handlePointerMove = (newEvent: PointerEvent) =&gt; {
       if (this.type === 'left') {
@@ -329,8 +339,8 @@ export default class Thumb {
     this.component.addEventListener('pointerup', handlePointerUp);
   }
 &nbsp;
-  handlePointerUp(): void {
-    this.component.classList.remove('range-slider__thumb_active');
+  static handlePointerUp(event: PointerEvent): void {
+    (event.currentTarget as Element).classList.remove('range-slider__thumb_active');
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  static </span>handleDragStart(): false {
@@ -338,13 +348,15 @@ export default class Thumb {
   }
 &nbsp;
   attachEventHandlers() {
-    this.component.addEventListener('pointerover', this.handlePointerOver.bind(this));
-    this.component.addEventListener('pointerout', this.handlePointerOut.bind(this));
+    this.component.addEventListener('pointerover', Thumb.handlePointerOver);
+    this.component.addEventListener('pointerout', Thumb.handlePointerOut);
     this.component.addEventListener('pointerdown', this.handlePointerDown.bind(this));
-    this.component.addEventListener('pointerup', this.handlePointerUp.bind(this));
+    this.component.addEventListener('pointerup', Thumb.handlePointerUp);
     this.component.addEventListener('dragstart', Thumb.handleDragStart);
   }
 }
+&nbsp;
+export default Thumb;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -352,7 +364,7 @@ export default class Thumb {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Nov 17 2021 22:58:35 GMT+0700 (Новосибирск, стандартное время)
+                at Sat Nov 20 2021 23:13:13 GMT+0700 (Новосибирск, стандартное время)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

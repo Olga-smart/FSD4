@@ -160,7 +160,7 @@ describe('Scale', () => {
   });
 
   describe('addValues()', () => {
-    it('values length is 1 more than intervals legth', () => {
+    it('values length is 1 more than intervals length', () => {
       for (let i = 1; i <= 10; i += 1) {
         const scale = new Scale(0, 150, i);
         expect(scale.values.length).toBe(i + 1);
@@ -245,15 +245,6 @@ describe('Scale', () => {
     });
   });
 
-  describe('getBoundingClientRect()', () => {
-    const scale = new Scale(0, 150, 4);
-    const coords = scale.getBoundingClientRect();
-
-    it('return component coordinates', () => {
-      expect(coords).toEqual(scale.component.getBoundingClientRect());
-    });
-  });
-
   describe('attachEventHandlers()', () => {
     it('handle click', () => {
       const scale = new Scale(0, 150, 4);
@@ -263,8 +254,10 @@ describe('Scale', () => {
       const event = new Event('click');
       scale.component.dispatchEvent(event);
 
-      const x = (event as MouseEvent).clientX - scale.getBoundingClientRect().left;
-      const y = (event as MouseEvent).clientY - scale.getBoundingClientRect().top;
+      const x = (event as MouseEvent).clientX
+              - scale.component.getBoundingClientRect().left;
+      const y = (event as MouseEvent).clientY
+              - scale.component.getBoundingClientRect().top;
 
       expect(scale.view!.handleScaleOrTrackClick).toBeCalledWith(x, y);
     });

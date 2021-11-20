@@ -32,8 +32,8 @@ class Track {
   }
 
   handleClick(event: MouseEvent): void {
-    const x: number = event.clientX - this.getBoundingClientRect().left;
-    const y: number = event.clientY - this.getBoundingClientRect().top;
+    const x: number = event.clientX - (event.currentTarget as Element).getBoundingClientRect().left;
+    const y: number = event.clientY - (event.currentTarget as Element).getBoundingClientRect().top;
     this.view?.handleScaleOrTrackClick(x, y);
   }
 
