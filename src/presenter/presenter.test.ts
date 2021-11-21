@@ -166,22 +166,6 @@ describe('Presenter', () => {
         expect(model.setLeftValue).toBeCalledWith(presenter.convertPxToValue(i));
       }
     });
-
-    it('convert value to px after converting px to value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.handleViewLeftInput(i);
-        expect(presenter.convertValueToPx).toBeCalledWith(presenter.convertPxToValue(i));
-      }
-    });
-
-    it('set left value for view', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.handleViewLeftInput(i);
-        const value = presenter.convertPxToValue(i);
-        const px = presenter.convertValueToPx(value);
-        expect(view.setLeftValue).toBeCalledWith(value, px);
-      }
-    });
   });
 
   describe('handleViewRightInput(px)', () => {
@@ -206,22 +190,6 @@ describe('Presenter', () => {
       for (let i = 0; i <= 100; i += 1) {
         presenter.handleViewRightInput(i);
         expect(model.setRightValue).toBeCalledWith(presenter.convertPxToValue(i));
-      }
-    });
-
-    it('convert value to px after converting px to value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.handleViewRightInput(i);
-        expect(presenter.convertValueToPx).toBeCalledWith(presenter.convertPxToValue(i));
-      }
-    });
-
-    it('set right value for view', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.handleViewRightInput(i);
-        const value = presenter.convertPxToValue(i);
-        const px = presenter.convertValueToPx(value);
-        expect(view.setRightValue).toBeCalledWith(value, px);
       }
     });
   });
