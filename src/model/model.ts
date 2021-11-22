@@ -71,25 +71,22 @@ class Model {
   }
 
   changeMinFromOutside(value: number): void {
-    if (value <= this.leftValue) {
-      this.min = value;
-    }
+    if (value > this.leftValue) return;
+    this.min = value;
 
     this.eventManager.notify('modelChangeMin');
   }
 
   changeMaxFromOutside(value: number): void {
     if (!this.isRange) {
-      if (value >= this.leftValue) {
-        this.max = value;
-      }
+      if (value < this.leftValue) return;
     }
 
     if (this.isRange) {
-      if (value >= this.rightValue!) {
-        this.max = value;
-      }
+      if (value < this.rightValue!) return;
     }
+
+    this.max = value;
 
     this.eventManager.notify('modelChangeMax');
   }
