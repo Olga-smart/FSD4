@@ -26,12 +26,14 @@ class Presenter implements IEventListener {
       this.view.addScale(model.min, model.max, view.scaleIntervals!);
     }
 
-    if (!this.view.vertical && this.hasViewLabels()) {
-      this.view.fixLabelsContainerHeightForHorizontal();
-    }
+    if (this.hasViewLabels()) {
+      if (!this.view.vertical) {
+        this.view.fixLabelsContainerHeightForHorizontal();
+      }
 
-    if (this.view.vertical && this.hasViewLabels()) {
-      this.view.fixLabelsContainerWidthForVertical();
+      if (this.view.vertical) {
+        this.view.fixLabelsContainerWidthForVertical();
+      }
     }
 
     if (view.panel) {
@@ -274,12 +276,14 @@ class Presenter implements IEventListener {
       this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
     }
 
-    if (!this.view.vertical && this.hasViewLabels()) {
-      this.view.fixLabelsContainerHeightForHorizontal();
-    }
+    if (this.hasViewLabels()) {
+      if (!this.view.vertical) {
+        this.view.fixLabelsContainerHeightForHorizontal();
+      }
 
-    if (this.view.vertical && this.hasViewLabels) {
-      this.view.fixLabelsContainerWidthForVertical();
+      if (this.view.vertical) {
+        this.view.fixLabelsContainerWidthForVertical();
+      }
     }
   }
 
