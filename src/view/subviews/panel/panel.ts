@@ -88,9 +88,11 @@ class Panel {
     const label: HTMLElement = createElement('label', 'panel__label');
     label.textContent = name;
     label.setAttribute('for', input.id);
+
     if (className) {
       label.classList.add(className);
     }
+
     const fragment = new DocumentFragment();
 
     if ((input as HTMLInputElement).type === 'checkbox') {

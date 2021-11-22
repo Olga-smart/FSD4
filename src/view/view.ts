@@ -473,11 +473,11 @@ class View {
     if (this.vertical) {
       let newTop = clientY - shiftY - this.track.getBoundingClientRect().top;
 
-      const leftThumbPosition = parseInt(this.thumbLeft.getTopIndent(), 10);
-
       if (newTop < 0) {
         newTop = 0;
       }
+
+      const leftThumbPosition = parseInt(this.thumbLeft.getTopIndent(), 10);
 
       if (newTop > leftThumbPosition) {
         newTop = leftThumbPosition;

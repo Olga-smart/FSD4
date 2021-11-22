@@ -192,8 +192,6 @@ class Presenter implements IEventListener {
   }
 
   convertPxToValue(px: number): number {
-    const { min } = this.model;
-    const { max } = this.model;
     let percent: number = 0;
 
     if (!this.view.vertical) {
@@ -206,6 +204,8 @@ class Presenter implements IEventListener {
       percent = (px * 100) / trackHeightInPx;
     }
 
+    const { min } = this.model;
+    const { max } = this.model;
     let value: number = ((max - min) * (percent / 100) + min);
     value = this.fitToStep(value);
     value = Presenter.removeCalcInaccuracy(value);
