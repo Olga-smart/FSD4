@@ -1,4 +1,4 @@
-export default function createElement(tag: string, className?: string): HTMLElement {
+function createElement(tag: string, className?: string): HTMLElement {
   const element = document.createElement(tag);
   if (className) {
     element.className = className;
@@ -6,3 +6,5 @@ export default function createElement(tag: string, className?: string): HTMLElem
 
   return element;
 }
+
+export default createElement;
