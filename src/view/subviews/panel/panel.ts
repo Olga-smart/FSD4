@@ -186,95 +186,115 @@ class Panel {
 
   updateFrom(value: number): void {
     (this.from as HTMLInputElement).value = `${value}`;
-    if (this.view?.isRange) {
-      (this.to as HTMLInputElement).min = `${value}`;
-    }
+    this.updateAttributesAfterFromChange();
   }
 
   updateTo(value: number | ''): void {
     (this.to as HTMLInputElement).value = `${value}`;
-    (this.from as HTMLInputElement).max = `${value}`;
+    this.updateAttributesAfterToChange();
   }
 
   updateScaleIntervals(value: number | ''): void {
     (this.scaleIntervals as HTMLInputElement).value = `${value}`;
   }
 
-  handleMinInput(): void {
-    this.view?.changeMinFromOutside(+(this.min as HTMLInputElement).value);
+  updateAttributesAfterFromChange(): void {
+    const from = this.from as HTMLInputElement;
+
+    (this.min as HTMLInputElement).max = from.value;
+
+    if (this.view?.isRange) {
+      (this.to as HTMLInputElement).min = from.value;
+    }
+
+    if (!this.view?.isRange) {
+      (this.max as HTMLInputElement).min = from.value;
+    }
+  }
+
+  updateAttributesAfterToChange(): void {
+    const to = this.to as HTMLInputElement;
+
+    (this.from as HTMLInputElement).max = to.value;
+    (this.max as HTMLInputElement).min = to.value;
   }
 
   handleMinChange(): void {
-    if (+(this.min as HTMLInputElement).value > +(this.from as HTMLInputElement).value) {
-      (this.min as HTMLInputElement).value = (this.from as HTMLInputElement).value;
-    }
-  }
+    const min = this.min as HTMLInputElement;
+    const from = this.from as HTMLInputElement;
 
-  handleMaxInput(): void {
-    this.view?.changeMaxFromOutside(+(this.max as HTMLInputElement).value);
-    (this.step as HTMLInputElement).max = (this.max as HTMLInputElement).value;
+    if (+min.value > +from.value) {
+      min.value = from.value;
+    }
+
+    this.view?.changeMinFromOutside(+min.value);
   }
 
   handleMaxChange(): void {
+    const max = this.max as HTMLInputElement;
+
     if (!this.view?.isRange) {
-      if (+(this.max as HTMLInputElement).value < +(this.from as HTMLInputElement).value) {
-        (this.max as HTMLInputElement).value = (this.from as HTMLInputElement).value;
+      const from = this.from as HTMLInputElement;
+
+      if (+max.value < +from.value) {
+        max.value = from.value;
       }
     }
 
     if (this.view?.isRange) {
-      if (+(this.max as HTMLInputElement).value < +(this.to as HTMLInputElement).value) {
-        (this.max as HTMLInputElement).value = (this.to as HTMLInputElement).value;
+      const to = this.to as HTMLInputElement;
+
+      if (+max.value < +to.value) {
+        max.value = to.value;
       }
     }
-  }
 
-  handleStepInput(): void {
-    this.view?.changeStepFromOutside(+(this.step as HTMLInputElement).value);
+    this.view?.changeMaxFromOutside(+max.value);
+    (this.step as HTMLInputElement).max = max.value;
   }
 
   handleStepChange(): void {
-    if (+(this.step as HTMLInputElement).value > +(this.step as HTMLInputElement).max) {
-      (this.step as HTMLInputElement).value = (this.step as HTMLInputElement).max;
+    const step = this.step as HTMLInputElement;
+
+    if (+step.value > +step.max) {
+      step.value = step.max;
     }
 
-    if (+(this.step as HTMLInputElement).value < +(this.step as HTMLInputElement).min) {
-      (this.step as HTMLInputElement).value = (this.step as HTMLInputElement).min;
+    if (+step.value < +step.min) {
+      step.value = step.min;
     }
-  }
 
-  handleFromInput(): void {
-    this.view?.changeLeftValueFromOutside(+(this.from as HTMLInputElement).value);
-
-    if (this.view?.isRange) {
-      (this.to as HTMLInputElement).min = `${(this.from as HTMLInputElement).value}`;
-    }
+    this.view?.changeStepFromOutside(+step.value);
   }
 
   handleFromChange(): void {
-    if (+(this.from as HTMLInputElement).value > +(this.from as HTMLInputElement).max) {
-      (this.from as HTMLInputElement).value = (this.from as HTMLInputElement).max;
+    const from = this.from as HTMLInputElement;
+
+    if (+from.value > +from.max) {
+      from.value = from.max;
     }
 
-    if (+(this.from as HTMLInputElement).value < +(this.from as HTMLInputElement).min) {
-      (this.from as HTMLInputElement).value = (this.from as HTMLInputElement).min;
+    if (+from.value < +from.min) {
+      from.value = from.min;
     }
-  }
 
-  handleToInput(): void {
-    this.view?.changeRightValueFromOutside(+(this.to as HTMLInputElement).value);
-
-    (this.from as HTMLInputElement).max = (this.to as HTMLInputElement).value;
+    this.view?.changeLeftValueFromOutside(+from.value);
+    this.updateAttributesAfterFromChange();
   }
 
   handleToChange(): void {
-    if (+(this.to as HTMLInputElement).value > +(this.to as HTMLInputElement).max) {
-      (this.to as HTMLInputElement).value = (this.to as HTMLInputElement).max;
+    const to = this.to as HTMLInputElement;
+
+    if (+to.value > +to.max) {
+      to.value = to.max;
     }
 
-    if (+(this.to as HTMLInputElement).value < +(this.to as HTMLInputElement).min) {
-      (this.to as HTMLInputElement).value = (this.to as HTMLInputElement).min;
+    if (+to.value < +to.min) {
+      to.value = to.min;
     }
+
+    this.view?.changeRightValueFromOutside(+to.value);
+    this.updateAttributesAfterToChange();
   }
 
   handleVerticalChange(): void {
@@ -283,30 +303,26 @@ class Panel {
 
   handleRangeChange(): void {
     this.view?.toggleRangeFromOutside();
-    (this.to as HTMLInputElement).disabled = !(this.to as HTMLInputElement).disabled;
+
+    const to = this.to as HTMLInputElement;
+    to.disabled = !to.disabled;
   }
 
   handleScaleChange(): void {
     this.view?.toggleScaleFromOutside();
-    (this.scaleIntervals as HTMLInputElement).disabled = (
-      !(this.scaleIntervals as HTMLInputElement).disabled
-    );
-  }
 
-  handleScaleIntervalsInput(): void {
-    this.view?.changeScaleIntervals(+(this.scaleIntervals as HTMLInputElement).value);
+    const scaleIntervals = this.scaleIntervals as HTMLInputElement;
+    scaleIntervals.disabled = !scaleIntervals.disabled;
   }
 
   handleScaleIntervalsChange(): void {
-    if (
-      +(this.scaleIntervals as HTMLInputElement).value
-      < +(this.scaleIntervals as HTMLInputElement).min
-    ) {
-      (this.scaleIntervals as HTMLInputElement).value = (
-        (this.scaleIntervals as HTMLInputElement).min
-      );
-      this.view?.changeScaleIntervals(+(this.scaleIntervals as HTMLInputElement).value);
+    const scaleIntervals = this.scaleIntervals as HTMLInputElement;
+
+    if (+scaleIntervals.value < +scaleIntervals.min) {
+      scaleIntervals.value = scaleIntervals.min;
     }
+
+    this.view?.changeScaleIntervals(+scaleIntervals.value);
   }
 
   handleValueLabelsChange(): void {
@@ -318,20 +334,14 @@ class Panel {
   }
 
   attachEventHandlers(): void {
-    this.min.addEventListener('input', this.handleMinInput.bind(this));
     this.min.addEventListener('change', this.handleMinChange.bind(this));
-    this.max.addEventListener('input', this.handleMaxInput.bind(this));
     this.max.addEventListener('change', this.handleMaxChange.bind(this));
-    this.step.addEventListener('input', this.handleStepInput.bind(this));
     this.step.addEventListener('change', this.handleStepChange.bind(this));
-    this.from.addEventListener('input', this.handleFromInput.bind(this));
     this.from.addEventListener('change', this.handleFromChange.bind(this));
-    this.to.addEventListener('input', this.handleToInput.bind(this));
     this.to.addEventListener('change', this.handleToChange.bind(this));
     this.vertical.addEventListener('change', this.handleVerticalChange.bind(this));
     this.range.addEventListener('change', this.handleRangeChange.bind(this));
     this.scale.addEventListener('change', this.handleScaleChange.bind(this));
-    this.scaleIntervals.addEventListener('input', this.handleScaleIntervalsInput.bind(this));
     this.scaleIntervals.addEventListener('change', this.handleScaleIntervalsChange.bind(this));
     this.valueLabels.addEventListener('change', this.handleValueLabelsChange.bind(this));
     this.minMaxLabels.addEventListener('change', this.handleMinMaxLabelsChange.bind(this));

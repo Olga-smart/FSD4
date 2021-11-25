@@ -371,31 +371,6 @@ describe('Panel', () => {
     });
   });
 
-  describe('handleMinInput()', () => {
-    const panel = new Panel();
-    const view = {};
-    panel.registerWith(view);
-    panel.setValues({
-      min: 10,
-      max: 100,
-      step: 5,
-      from: 20,
-      to: 60,
-      vertical: false,
-      range: true,
-      scale: true,
-      scaleIntervals: 6,
-      valueLabels: true,
-      minMaxLabels: true,
-    });
-    panel.view.changeMinFromOutside = jest.fn();
-    panel.handleMinInput();
-
-    it('call view.changeMinFromOutside() with proper value', () => {
-      expect(panel.view.changeMinFromOutside).toBeCalledWith(10);
-    });
-  });
-
   describe('handleMinChange()', () => {
     it('set up min.value = from.value, if min.value > from.value', () => {
       const panel = new Panel();
@@ -414,34 +389,17 @@ describe('Panel', () => {
 
       expect((panel.min as HTMLInputElement).value).toBe('20');
     });
-  });
 
-  describe('handleMaxInput()', () => {
-    const panel = new Panel();
-    const view = {};
-    panel.registerWith(view);
-    panel.setValues({
-      min: 10,
-      max: 100,
-      step: 5,
-      from: 20,
-      to: 60,
-      vertical: false,
-      range: true,
-      scale: true,
-      scaleIntervals: 6,
-      valueLabels: true,
-      minMaxLabels: true,
-    });
-    panel.view.changeMaxFromOutside = jest.fn();
-    panel.handleMaxInput();
+    it('call view.changeMinFromOutside() with proper value', () => {
+      const panel = new Panel();
+      const view = {};
+      panel.registerWith(view);
+      (panel.from as HTMLInputElement).value = '20';
+      (panel.min as HTMLInputElement).value = '10';
+      panel.view.changeMinFromOutside = jest.fn();
+      panel.handleMinChange();
 
-    it('call view.changeMaxFromOutside() with proper value', () => {
-      expect(panel.view.changeMaxFromOutside).toBeCalledWith(100);
-    });
-
-    it('update step.max', () => {
-      expect((panel.step as HTMLInputElement).max).toBe('100');
+      expect(panel.view.changeMinFromOutside).toBeCalledWith(10);
     });
   });
 
@@ -452,6 +410,7 @@ describe('Panel', () => {
         isRange: false,
       };
       panel.registerWith(view);
+      panel.view.changeMaxFromOutside = jest.fn();
 
       it('set up max.value = from.value, if max.value < from.value', () => {
         (panel.from as HTMLInputElement).value = '100';
@@ -476,6 +435,7 @@ describe('Panel', () => {
         isRange: true,
       };
       panel.registerWith(view);
+      panel.view.changeMaxFromOutside = jest.fn();
 
       it('set up max.value = to.value, if max.value < to.value', () => {
         (panel.to as HTMLInputElement).value = '100';
@@ -493,128 +453,146 @@ describe('Panel', () => {
         expect((panel.max as HTMLInputElement).value).toBe('100');
       });
     });
-  });
 
-  describe('handleStepInput()', () => {
-    const panel = new Panel();
-    const view = {};
-    panel.registerWith(view);
-    panel.setValues({
-      min: 10,
-      max: 100,
-      step: 5,
-      from: 20,
-      to: 60,
-      vertical: false,
-      range: true,
-      scale: true,
-      scaleIntervals: 6,
-      valueLabels: true,
-      minMaxLabels: true,
+    it('call view.changeMaxFromOutside() with proper value', () => {
+      const panel = new Panel();
+      const view = {};
+      panel.registerWith(view);
+      (panel.to as HTMLInputElement).value = '50';
+      (panel.max as HTMLInputElement).value = '100';
+      panel.view.changeMaxFromOutside = jest.fn();
+      panel.handleMaxChange();
+
+      expect(panel.view.changeMaxFromOutside).toBeCalledWith(100);
     });
-    panel.view.changeStepFromOutside = jest.fn();
-    panel.handleStepInput();
 
-    it('call view.changeStepFromOutside() with proper value', () => {
-      expect(panel.view.changeStepFromOutside).toBeCalledWith(5);
+    it('update step.max', () => {
+      const panel = new Panel();
+      (panel.to as HTMLInputElement).value = '50';
+      (panel.max as HTMLInputElement).value = '100';
+      panel.handleMaxChange();
+
+      expect((panel.step as HTMLInputElement).max).toBe('100');
     });
   });
 
   describe('handleStepChange()', () => {
     const panel = new Panel();
+    const step = panel.step as HTMLInputElement;
 
     it('set up step.value = step.min, if step.value < step.min', () => {
-      (panel.step as HTMLInputElement).min = '2';
-      (panel.step as HTMLInputElement).value = '1';
+      step.min = '1';
+      step.value = '-1';
       panel.handleStepChange();
 
-      expect((panel.step as HTMLInputElement).value).toBe('2');
+      expect(step.value).toBe('1');
     });
 
     it('set up step.value = step.max, if step.value > step.max', () => {
-      (panel.step as HTMLInputElement).max = '100';
-      (panel.step as HTMLInputElement).value = '150';
+      step.max = '100';
+      step.value = '150';
       panel.handleStepChange();
 
-      expect((panel.step as HTMLInputElement).value).toBe('100');
-    });
-  });
-
-  describe('handleFromInput()', () => {
-    const panel = new Panel();
-    const view = {
-      isRange: true,
-    };
-    panel.registerWith(view);
-    panel.view.changeLeftValueFromOutside = jest.fn();
-    (panel.from as HTMLInputElement).value = '10';
-    panel.handleFromInput();
-
-    it('call view.changeLeftValueFromOutside() with proper value', () => {
-      expect(panel.view.changeLeftValueFromOutside).toBeCalledWith(10);
+      expect(step.value).toBe('100');
     });
 
-    it('set up to.min = from.value, if !this.view.isRange', () => {
-      expect((panel.to as HTMLInputElement).min).toBe('10');
+    it('call view.changeStepFromOutside() with proper value', () => {
+      const view = {};
+      panel.registerWith(view);
+      step.value = '5';
+      panel.view.changeStepFromOutside = jest.fn();
+      panel.handleStepChange();
+
+      expect(panel.view.changeStepFromOutside).toBeCalledWith(5);
     });
   });
 
   describe('handleFromChange()', () => {
     const panel = new Panel();
+    const from = panel.from as HTMLInputElement;
 
     it('set up from.value = from.min, if from.value < from.min', () => {
-      (panel.from as HTMLInputElement).min = '20';
-      (panel.from as HTMLInputElement).value = '10';
+      from.min = '20';
+      from.value = '10';
       panel.handleFromChange();
 
-      expect((panel.from as HTMLInputElement).value).toBe('20');
+      expect(from.value).toBe('20');
     });
 
     it('set up from.value = from.max, if from.value > from.max', () => {
-      (panel.from as HTMLInputElement).max = '100';
-      (panel.from as HTMLInputElement).value = '150';
+      from.max = '100';
+      from.value = '150';
       panel.handleFromChange();
 
-      expect((panel.from as HTMLInputElement).value).toBe('100');
-    });
-  });
-
-  describe('handleToInput()', () => {
-    const panel = new Panel();
-    const view = {
-      isRange: true,
-    };
-    panel.registerWith(view);
-    panel.view.changeRightValueFromOutside = jest.fn();
-    (panel.to as HTMLInputElement).value = '100';
-    panel.handleToInput();
-
-    it('call view.changeRightValueFromOutside() with proper value', () => {
-      expect(panel.view.changeRightValueFromOutside).toBeCalledWith(100);
+      expect(from.value).toBe('100');
     });
 
-    it('set up from.max = to.value', () => {
-      expect((panel.from as HTMLInputElement).max).toBe('100');
+    it('call view.changeLeftValueFromOutside() with proper value', () => {
+      const view = {};
+      panel.registerWith(view);
+      panel.view.changeLeftValueFromOutside = jest.fn();
+      from.min = '0';
+      from.value = '10';
+      panel.handleFromChange();
+
+      expect(panel.view.changeLeftValueFromOutside).toBeCalledWith(10);
+    });
+
+    it('set up to.min = from.value, if !this.view.isRange', () => {
+      const view = {
+        isRange: true,
+      };
+      panel.registerWith(view);
+      panel.view.changeLeftValueFromOutside = jest.fn();
+      from.min = '0';
+      from.value = '10';
+      panel.handleFromChange();
+
+      expect((panel.to as HTMLInputElement).min).toBe('10');
     });
   });
 
   describe('handleToChange()', () => {
     const panel = new Panel();
+    const to = panel.to as HTMLInputElement;
 
     it('set up to.value = to.max, if to.value > to.max', () => {
-      (panel.to as HTMLInputElement).max = '100';
-      (panel.to as HTMLInputElement).value = '110';
+      to.max = '100';
+      to.value = '110';
       panel.handleToChange();
 
-      expect((panel.to as HTMLInputElement).value).toBe('100');
+      expect(to.value).toBe('100');
     });
 
     it('set up to.value = to.min, if to.value < to.min', () => {
-      (panel.to as HTMLInputElement).min = '50';
-      (panel.to as HTMLInputElement).value = '40';
+      to.min = '50';
+      to.value = '40';
       panel.handleToChange();
 
-      expect((panel.to as HTMLInputElement).value).toBe('50');
+      expect(to.value).toBe('50');
+    });
+
+    it('call view.changeRightValueFromOutside() with proper value', () => {
+      const view = {
+        isRange: true,
+      };
+      panel.registerWith(view);
+      panel.view.changeRightValueFromOutside = jest.fn();
+      to.min = '0';
+      to.max = '200';
+      to.value = '100';
+      panel.handleToChange();
+
+      expect(panel.view.changeRightValueFromOutside).toBeCalledWith(100);
+    });
+
+    it('set up from.max = to.value', () => {
+      to.min = '0';
+      to.max = '200';
+      to.value = '100';
+      panel.handleToChange();
+
+      expect((panel.from as HTMLInputElement).max).toBe('100');
     });
   });
 
@@ -676,34 +654,27 @@ describe('Panel', () => {
     });
   });
 
-  describe('handleScaleIntervalsInput()', () => {
-    const panel = new Panel();
-    const view = {};
-    panel.registerWith(view);
-    panel.view.changeScaleIntervals = jest.fn();
-    (panel.scaleIntervals as HTMLInputElement).value = '7';
-    panel.handleScaleIntervalsInput();
-
-    it('call view.changeScaleIntervals() with proper value', () => {
-      expect(panel.view.changeScaleIntervals).toBeCalledWith(7);
-    });
-  });
-
   describe('handleScaleIntervalsChange()', () => {
     const panel = new Panel();
     const view = {};
     panel.registerWith(view);
     panel.view.changeScaleIntervals = jest.fn();
-    (panel.scaleIntervals as HTMLInputElement).min = '1';
-    (panel.scaleIntervals as HTMLInputElement).value = '-1';
-    panel.handleScaleIntervalsChange();
+    const scaleIntervals = panel.scaleIntervals as HTMLInputElement;
 
     it('set up scaleIntervals.value = scaleIntervals.min, if scaleIntervals.value < scaleIntervals.min', () => {
-      expect((panel.scaleIntervals as HTMLInputElement).value).toBe('1');
+      scaleIntervals.min = '1';
+      scaleIntervals.value = '-1';
+      panel.handleScaleIntervalsChange();
+
+      expect(scaleIntervals.value).toBe('1');
     });
 
     it('call view.changeScaleIntervals() with proper value', () => {
-      expect(panel.view.changeScaleIntervals).toBeCalledWith(1);
+      scaleIntervals.min = '1';
+      scaleIntervals.value = '5';
+      panel.handleScaleIntervalsChange();
+
+      expect(panel.view.changeScaleIntervals).toBeCalledWith(5);
     });
   });
 
