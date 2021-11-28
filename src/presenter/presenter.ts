@@ -11,28 +11,35 @@ class Presenter implements IEventListener {
     this.model = model;
     this.view = view;
 
-    this.view.setMinValue(model.min);
-    this.view.setMaxValue(model.max);
+    this.initViewValues();
+  }
+
+  initViewValues() {
+    const { model } = this;
+    const { view } = this;
+
+    view.setMinValue(model.min);
+    view.setMaxValue(model.max);
     this.passLeftValueToView(model.leftValue);
 
-    if (this.view.isRange) {
+    if (view.isRange) {
       this.passRightValueToView(model.rightValue!);
-      this.view.updateInput(model.leftValue, model.rightValue!);
+      view.updateInput(model.leftValue, model.rightValue!);
     } else {
-      this.view.updateInput(model.leftValue);
+      view.updateInput(model.leftValue);
     }
 
-    if (this.view.hasScale) {
-      this.view.addScale(model.min, model.max, view.scaleIntervals!);
+    if (view.hasScale) {
+      view.addScale(model.min, model.max, view.scaleIntervals!);
     }
 
     if (this.hasViewLabels()) {
-      if (!this.view.vertical) {
-        this.view.fixLabelsContainerHeightForHorizontal();
+      if (!view.vertical) {
+        view.fixLabelsContainerHeightForHorizontal();
       }
 
-      if (this.view.vertical) {
-        this.view.fixLabelsContainerWidthForVertical();
+      if (view.vertical) {
+        view.fixLabelsContainerWidthForVertical();
       }
     }
 
@@ -50,7 +57,7 @@ class Presenter implements IEventListener {
         valueLabels: !!view.valueLabelLeft,
         minMaxLabels: !!view.minLabel,
       });
-      view.panel.registerWith(this.view);
+      view.panel.registerWith(view);
     }
   }
 
