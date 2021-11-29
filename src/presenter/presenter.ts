@@ -14,7 +14,7 @@ class Presenter implements IEventListener {
     this.initViewValues();
   }
 
-  initViewValues() {
+  initViewValues(): void {
     const { model } = this;
     const { view } = this;
 

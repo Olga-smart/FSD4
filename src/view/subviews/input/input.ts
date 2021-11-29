@@ -9,19 +9,20 @@ class Input {
   }
 
   setAttributes(): void {
-    const { component } = this;
-    (component as HTMLInputElement).type = 'text';
+    const component = this.component as HTMLInputElement;
+
+    component.type = 'text';
     component.tabIndex = -1;
-    (component as HTMLInputElement).readOnly = true;
+    component.readOnly = true;
   }
 
   setValue(value1: number, value2: number | null = null): void {
-    if (value2 === null) {
-      (this.component as HTMLInputElement).value = `${value1}`;
-    }
+    const component = this.component as HTMLInputElement;
 
-    if (value2 !== null) {
-      (this.component as HTMLInputElement).value = `${value1} - ${value2}`;
+    if (value2 === null) {
+      component.value = `${value1}`;
+    } else {
+      component.value = `${value1} - ${value2}`;
     }
   }
 }
