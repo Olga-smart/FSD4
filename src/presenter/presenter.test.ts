@@ -6,9 +6,18 @@ describe('Presenter', () => {
   jest.mock('../model/model');
   jest.mock('../view/view');
 
+  const defaultModelOptions = {
+    min: 10,
+    max: 100,
+    leftValue: 25,
+    rightValue: 75,
+    step: 5,
+    range: true,
+  };
+
   describe('constructor()', () => {
     const slider = document.createElement('div');
-    const model = new Model();
+    const model = new Model(defaultModelOptions);
     const view = new View(slider);
     const presenter = new Presenter(model, view);
 
@@ -42,9 +51,7 @@ describe('Presenter', () => {
     });
 
     it('set right value for view if range', () => {
-      const newModel = new Model({
-        range: true,
-      });
+      const newModel = new Model({ ...defaultModelOptions, range: true });
       const newView = new View(slider, {
         range: true,
       });
@@ -55,7 +62,7 @@ describe('Presenter', () => {
     });
 
     it('add scale for view if it has scale', () => {
-      const newModel = new Model();
+      const newModel = new Model(defaultModelOptions);
       const newView = new View(slider, {
         scale: true,
       });
@@ -68,7 +75,7 @@ describe('Presenter', () => {
 
     describe('fix labels container height if slider is horizontal and has labels', () => {
       it('if slider has only value labels', () => {
-        const newModel = new Model();
+        const newModel = new Model(defaultModelOptions);
         const newView = new View(slider, {
           valueLabels: true,
         });
@@ -79,7 +86,7 @@ describe('Presenter', () => {
       });
 
       it('if slider has only min&max labels', () => {
-        const newModel = new Model();
+        const newModel = new Model(defaultModelOptions);
         const newView = new View(slider, {
           minMaxLabels: true,
         });
@@ -90,7 +97,7 @@ describe('Presenter', () => {
       });
 
       it('if slider has both value and min&max labels', () => {
-        const newModel = new Model();
+        const newModel = new Model(defaultModelOptions);
         const newView = new View(slider, {
           valueLabels: true,
           minMaxLabels: true,
@@ -104,7 +111,7 @@ describe('Presenter', () => {
 
     describe('fix labels container width if slider is vertical and has labels', () => {
       it('if slider has only value labels', () => {
-        const newModel = new Model();
+        const newModel = new Model(defaultModelOptions);
         const newView = new View(slider, {
           vertical: true,
           valueLabels: true,
@@ -116,7 +123,7 @@ describe('Presenter', () => {
       });
 
       it('if slider has only min&max labels', () => {
-        const newModel = new Model();
+        const newModel = new Model(defaultModelOptions);
         const newView = new View(slider, {
           vertical: true,
           minMaxLabels: true,
@@ -128,7 +135,7 @@ describe('Presenter', () => {
       });
 
       it('if slider has both value and min&max labels', () => {
-        const newModel = new Model();
+        const newModel = new Model(defaultModelOptions);
         const newView = new View(slider, {
           vertical: true,
           valueLabels: true,
@@ -144,7 +151,7 @@ describe('Presenter', () => {
 
   describe('handleViewLeftInput(px)', () => {
     const slider = document.createElement('div');
-    const model = new Model();
+    const model = new Model(defaultModelOptions);
     const view = new View(slider);
     const presenter = new Presenter(model, view);
 
@@ -170,7 +177,7 @@ describe('Presenter', () => {
 
   describe('handleViewRightInput(px)', () => {
     const slider = document.createElement('div');
-    const model = new Model();
+    const model = new Model(defaultModelOptions);
     const view = new View(slider);
     const presenter = new Presenter(model, view);
 
@@ -196,7 +203,7 @@ describe('Presenter', () => {
 
   describe('passLeftValueToView(value)', () => {
     const slider = document.createElement('div');
-    const model = new Model();
+    const model = new Model(defaultModelOptions);
     const view = new View(slider);
     const presenter = new Presenter(model, view);
 
@@ -221,7 +228,7 @@ describe('Presenter', () => {
 
   describe('passRightValueToView(value)', () => {
     const slider = document.createElement('div');
-    const model = new Model();
+    const model = new Model(defaultModelOptions);
     const view = new View(slider);
     const presenter = new Presenter(model, view);
 
@@ -247,7 +254,7 @@ describe('Presenter', () => {
   describe('convertValueToPx(value)', () => {
     describe('if slider is horizontal', () => {
       const slider = document.createElement('div');
-      const model = new Model();
+      const model = new Model(defaultModelOptions);
       const view = new View(slider);
       const presenter = new Presenter(model, view);
 
@@ -313,7 +320,7 @@ describe('Presenter', () => {
 
     describe('if slider is vertical', () => {
       const slider = document.createElement('div');
-      const model = new Model();
+      const model = new Model(defaultModelOptions);
       const view = new View(slider, {
         vertical: true,
       });
@@ -383,7 +390,7 @@ describe('Presenter', () => {
   describe('convertPxToValue(value)', () => {
     describe('if slider is horizontal', () => {
       const slider = document.createElement('div');
-      const model = new Model();
+      const model = new Model({ ...defaultModelOptions, step: 1 });
       const view = new View(slider);
       const presenter = new Presenter(model, view);
 
@@ -459,7 +466,7 @@ describe('Presenter', () => {
 
     describe('if slider is vertical', () => {
       const slider = document.createElement('div');
-      const model = new Model();
+      const model = new Model({ ...defaultModelOptions, step: 1 });
       const view = new View(slider, {
         vertical: true,
       });
@@ -540,9 +547,7 @@ describe('Presenter', () => {
     it('if step = x, result % x = 0', () => {
       for (let step = 1; step <= 100; step += 1) {
         const slider = document.createElement('div');
-        const model = new Model({
-          step,
-        });
+        const model = new Model({ ...defaultModelOptions, step });
         const view = new View(slider);
         const presenter = new Presenter(model, view);
 
@@ -555,9 +560,7 @@ describe('Presenter', () => {
     it('also works with fractional step', () => {
       for (let step = 0.1; step <= 0.9; step += 0.1) {
         const slider = document.createElement('div');
-        const model = new Model({
-          step,
-        });
+        const model = new Model({ ...defaultModelOptions, step });
         const view = new View(slider);
         const presenter = new Presenter(model, view);
 
