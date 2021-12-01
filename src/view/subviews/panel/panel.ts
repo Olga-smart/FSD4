@@ -170,7 +170,8 @@ class Panel {
     (this.min as HTMLInputElement).max = `${options.from}`;
     (this.max as HTMLInputElement).min = options.range ? `${options.to}` : `${options.from}`;
 
-    (this.step as HTMLInputElement).min = '1';
+    (this.step as HTMLInputElement).min = `${Panel.calcStepMin(options.step)}`;
+    (this.step as HTMLInputElement).step = (this.step as HTMLInputElement).min;
     (this.step as HTMLInputElement).max = `${options.max}`;
 
     if (!options.range) {
@@ -182,6 +183,21 @@ class Panel {
     if (!options.scale) {
       (this.scaleIntervals as HTMLInputElement).disabled = true;
     }
+  }
+
+  static calcStepMin(step: number): number {
+    if (Number.isInteger(step)) {
+      return 1;
+    }
+
+    const numberOfSymbolsAfterComma = step.toString().split('.')[1].length;
+    let result: string = '1';
+    for (let i = numberOfSymbolsAfterComma; i > 1; i -= 1) {
+      result = `0${result}`;
+    }
+    result = `0.${result}`;
+
+    return +result;
   }
 
   updateFrom(value: number): void {
@@ -260,11 +276,14 @@ class Panel {
       step.value = step.max;
     }
 
-    if (+step.value < +step.min) {
+    if (+step.value < 0) {
       step.value = step.min;
     }
 
     this.view?.changeStepFromOutside(+step.value);
+
+    (this.step as HTMLInputElement).min = `${Panel.calcStepMin(+step.value)}`;
+    (this.step as HTMLInputElement).step = `${Panel.calcStepMin(+step.value)}`;
   }
 
   handleFromChange(): void {
