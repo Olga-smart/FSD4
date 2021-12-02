@@ -3,10 +3,11 @@
 /* eslint-disable no-param-reassign */
 import * as jQuery from 'jquery';
 import 'airbnb-browser-shims';
-import './style.scss';
+
 import Model from './model/model';
 import View from './view/view';
 import Presenter from './presenter/presenter';
+import './style.scss';
 
 declare global {
   interface JQuery {
