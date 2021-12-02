@@ -17,7 +17,7 @@ class Scale {
 
   valueElements: HTMLElement[];
 
-  constructor(min: number, max: number, intervalsNumber: number = 4) {
+  constructor(min: number, max: number, intervalsNumber: number) {
     this.view = null;
     this.component = createElement('div', 'range-slider__scale');
     this.min = min;

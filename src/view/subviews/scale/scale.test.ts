@@ -45,11 +45,6 @@ describe('Scale', () => {
       it('set up valueElements property', () => {
         expect(scale.valueElements).toBeInstanceOf(Array);
       });
-
-      it('default intervalsNumber is 4', () => {
-        const newScale = new Scale(0, 150);
-        expect(newScale.intervalsNumber).toBe(4);
-      });
     });
 
     describe('call necessary methods', () => {
