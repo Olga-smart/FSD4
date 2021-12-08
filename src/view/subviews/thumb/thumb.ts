@@ -10,7 +10,7 @@ class Thumb {
   constructor(type: 'left' | 'right' = 'left') {
     this.view = null;
     this.type = type;
-    this.component = createElement('div', `range-slider__thumb range-slider__thumb_${type} js-range-slider__thumb_${type}`);
+    this.component = createElement('div', `range-slider__thumb range-slider__thumb_${type}`);
 
     this.attachEventHandlers();
   }

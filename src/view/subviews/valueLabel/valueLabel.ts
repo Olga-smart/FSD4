@@ -6,7 +6,7 @@ class ValueLabel extends Label {
 
   constructor(type: 'left' | 'right' | 'common' = 'left') {
     super(type);
-    this.component = createElement('div', `range-slider__value-label range-slider__value-label_${type} js-range-slider__value-label_${type}`);
+    this.component = createElement('div', `range-slider__value-label range-slider__value-label_${type}`);
   }
 
   setLeftIndent(value: string): void {

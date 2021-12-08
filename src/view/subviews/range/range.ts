@@ -4,7 +4,7 @@ class Range {
   component: HTMLElement;
 
   constructor() {
-    this.component = createElement('div', 'range-slider__range js-range-slider__range');
+    this.component = createElement('div', 'range-slider__range');
   }
 
   setLeftIndentInPx(px: number): void {
