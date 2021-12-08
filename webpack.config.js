@@ -31,6 +31,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       filename: 'index.html',
       template: './index.pug',
+      scriptLoading: 'blocking',
       // inject: false
     }),
     new CleanWebpackPlugin(),
