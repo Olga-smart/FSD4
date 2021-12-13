@@ -8,7 +8,7 @@ class Input {
     this.setAttributes();
   }
 
-  setAttributes(): void {
+  private setAttributes(): void {
     const component = this.component as HTMLInputElement;
 
     component.type = 'text';
