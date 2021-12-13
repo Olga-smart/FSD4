@@ -44,10 +44,10 @@ describe('Presenter', () => {
     });
 
     it('set left value for view', () => {
-      jest.spyOn(Presenter.prototype, 'passLeftValueToView');
+      view.setLeftValue = jest.fn();
       const newPresenter = new Presenter(model, view);
 
-      expect(newPresenter.passLeftValueToView).toBeCalledWith(model.leftValue);
+      expect(newPresenter.view.setLeftValue).toBeCalled();
     });
 
     it('set right value for view if range', () => {
@@ -55,10 +55,10 @@ describe('Presenter', () => {
       const newView = new View(slider, {
         range: true,
       });
-      jest.spyOn(Presenter.prototype, 'passRightValueToView');
+      newView.setRightValue = jest.fn();
       const newPresenter = new Presenter(newModel, newView);
 
-      expect(newPresenter.passRightValueToView).toBeCalledWith(newModel.rightValue);
+      expect(newPresenter.view.setRightValue).toBeCalled();
     });
 
     it('add scale for view if it has scale', () => {
@@ -147,427 +147,1102 @@ describe('Presenter', () => {
         expect(newPresenter.view.fixLabelsContainerWidthForVertical).toBeCalled();
       });
     });
-  });
 
-  describe('handleViewLeftInput(px)', () => {
-    const slider = document.createElement('div');
-    const model = new Model(defaultModelOptions);
-    const view = new View(slider);
-    const presenter = new Presenter(model, view);
+    describe('if view has panel', () => {
+      const newSlider = document.createElement('div');
+      const newModel = new Model(defaultModelOptions);
+      const newView = new View(newSlider, {
+        panel: true,
+      });
+      newView.setPanelValues = jest.fn();
+      newView.panel!.registerWith = jest.fn();
+      const newPresenter = new Presenter(newModel, newView);
 
-    presenter.convertPxToValue = jest.fn();
-    presenter.convertValueToPx = jest.fn();
-    model.setLeftValue = jest.fn();
-    view.setLeftValue = jest.fn();
+      it('set panel values', () => {
+        expect(newPresenter.view.setPanelValues).toBeCalled();
+      });
 
-    it('convert px to value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.handleViewLeftInput(i);
-        expect(presenter.convertPxToValue).toBeCalledWith(i);
-      }
-    });
-
-    it('set left value for model', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.handleViewLeftInput(i);
-        expect(model.setLeftValue).toBeCalledWith(presenter.convertPxToValue(i));
-      }
+      it('bind panel with view', () => {
+        expect(newPresenter.view.panel?.registerWith).toBeCalledWith(newView);
+      });
     });
   });
 
-  describe('handleViewRightInput(px)', () => {
-    const slider = document.createElement('div');
-    const model = new Model(defaultModelOptions);
-    const view = new View(slider);
-    const presenter = new Presenter(model, view);
+  describe('inform(eventType, data)', () => {
+    describe('if eventType is "viewLeftInput"', () => {
+      describe('convert px to value and pass it to model', () => {
+        describe('if slider is horizontal', () => {
+          const slider = document.createElement('div');
+          const model = new Model({ ...defaultModelOptions, step: 1 });
+          const view = new View(slider);
+          const presenter = new Presenter(model, view);
+          presenter.model.setLeftValue = jest.fn();
 
-    presenter.convertPxToValue = jest.fn();
-    presenter.convertValueToPx = jest.fn();
-    model.setRightValue = jest.fn();
-    view.setRightValue = jest.fn();
+          it('value match px if track length is 100 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-    it('convert px to value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.handleViewRightInput(i);
-        expect(presenter.convertPxToValue).toBeCalledWith(i);
-      }
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewLeftInput', i);
+              expect(presenter.model.setLeftValue).toBeCalledWith(i);
+            }
+          });
+
+          it('value match px * 2 if track length is 100 and min = 0 and max = 200', () => {
+            model.min = 0;
+            model.max = 200;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewLeftInput', i);
+              expect(presenter.model.setLeftValue).toBeCalledWith(i * 2);
+            }
+          });
+
+          it('value match px / 2 if track length is 200 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(200);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewLeftInput', i);
+              expect(presenter.model.setLeftValue).toBeCalledWith(Math.round(i / 2));
+            }
+          });
+
+          it('value match px * x if track length is 100 and min = 0 and max = 100 * x', () => {
+            model.min = 0;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+
+            for (let x = 1; x <= 10; x += 1) {
+              model.max = 100 * x;
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.inform('viewLeftInput', i);
+                expect(presenter.model.setLeftValue).toBeCalledWith(i * x);
+              }
+            }
+          });
+
+          it('value match px / x if track length is 100 * x and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+
+            for (let x = 1; x <= 10; x += 1) {
+              (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100 * x);
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.inform('viewLeftInput', i);
+                expect(presenter.model.setLeftValue).toBeCalledWith(Math.round(i / x));
+              }
+            }
+          });
+        });
+
+        describe('if slider is vertical', () => {
+          const slider = document.createElement('div');
+          const model = new Model({ ...defaultModelOptions, step: 1 });
+          const view = new View(slider, {
+            vertical: true,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.model.setLeftValue = jest.fn();
+
+          it('value match px if track height is 100 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewLeftInput', i);
+              expect(presenter.model.setLeftValue).toBeCalledWith(i);
+            }
+          });
+
+          it('value match px * 2 if track height is 100 and min = 0 and max = 200', () => {
+            model.min = 0;
+            model.max = 200;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewLeftInput', i);
+              expect(presenter.model.setLeftValue).toBeCalledWith(i * 2);
+            }
+          });
+
+          it('value match px / 2 if track height is 200 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(200);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewLeftInput', i);
+              expect(presenter.model.setLeftValue).toBeCalledWith(Math.round(i / 2));
+            }
+          });
+
+          it('value match px * x if track height is 100 and min = 0 and max = 100 * x', () => {
+            model.min = 0;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let x = 1; x <= 10; x += 1) {
+              model.max = 100 * x;
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.inform('viewLeftInput', i);
+                expect(presenter.model.setLeftValue).toBeCalledWith(i * x);
+              }
+            }
+          });
+
+          it('value match px / x if track height is 100 * x and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+
+            for (let x = 1; x <= 10; x += 1) {
+              (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100 * x);
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.inform('viewLeftInput', i);
+                expect(presenter.model.setLeftValue).toBeCalledWith(Math.round(i / x));
+              }
+            }
+          });
+        });
+      });
     });
 
-    it('set right value for model', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.handleViewRightInput(i);
-        expect(model.setRightValue).toBeCalledWith(presenter.convertPxToValue(i));
-      }
+    describe('if eventType is "viewRightInput"', () => {
+      describe('convert px to value and pass it to model', () => {
+        describe('if slider is horizontal', () => {
+          const slider = document.createElement('div');
+          const model = new Model({ ...defaultModelOptions, step: 1 });
+          const view = new View(slider);
+          const presenter = new Presenter(model, view);
+          presenter.model.setRightValue = jest.fn();
+
+          it('value match px if track length is 100 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewRightInput', i);
+              expect(presenter.model.setRightValue).toBeCalledWith(i);
+            }
+          });
+
+          it('value match px * 2 if track length is 100 and min = 0 and max = 200', () => {
+            model.min = 0;
+            model.max = 200;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewRightInput', i);
+              expect(presenter.model.setRightValue).toBeCalledWith(i * 2);
+            }
+          });
+
+          it('value match px / 2 if track length is 200 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(200);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewRightInput', i);
+              expect(presenter.model.setRightValue).toBeCalledWith(Math.round(i / 2));
+            }
+          });
+
+          it('value match px * x if track length is 100 and min = 0 and max = 100 * x', () => {
+            model.min = 0;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+
+            for (let x = 1; x <= 10; x += 1) {
+              model.max = 100 * x;
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.inform('viewRightInput', i);
+                expect(presenter.model.setRightValue).toBeCalledWith(i * x);
+              }
+            }
+          });
+
+          it('value match px / x if track length is 100 * x and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+
+            for (let x = 1; x <= 10; x += 1) {
+              (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100 * x);
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.inform('viewRightInput', i);
+                expect(presenter.model.setRightValue).toBeCalledWith(Math.round(i / x));
+              }
+            }
+          });
+        });
+
+        describe('if slider is vertical', () => {
+          const slider = document.createElement('div');
+          const model = new Model({ ...defaultModelOptions, step: 1 });
+          const view = new View(slider, {
+            vertical: true,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.model.setRightValue = jest.fn();
+
+          it('value match px if track height is 100 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewRightInput', i);
+              expect(presenter.model.setRightValue).toBeCalledWith(i);
+            }
+          });
+
+          it('value match px * 2 if track height is 100 and min = 0 and max = 200', () => {
+            model.min = 0;
+            model.max = 200;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewRightInput', i);
+              expect(presenter.model.setRightValue).toBeCalledWith(i * 2);
+            }
+          });
+
+          it('value match px / 2 if track height is 200 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(200);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.inform('viewRightInput', i);
+              expect(presenter.model.setRightValue).toBeCalledWith(Math.round(i / 2));
+            }
+          });
+
+          it('value match px * x if track height is 100 and min = 0 and max = 100 * x', () => {
+            model.min = 0;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let x = 1; x <= 10; x += 1) {
+              model.max = 100 * x;
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.inform('viewRightInput', i);
+                expect(presenter.model.setRightValue).toBeCalledWith(i * x);
+              }
+            }
+          });
+
+          it('value match px / x if track height is 100 * x and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+
+            for (let x = 1; x <= 10; x += 1) {
+              (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100 * x);
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.inform('viewRightInput', i);
+                expect(presenter.model.setRightValue).toBeCalledWith(Math.round(i / x));
+              }
+            }
+          });
+        });
+      });
     });
-  });
 
-  describe('passLeftValueToView(value)', () => {
-    const slider = document.createElement('div');
-    const model = new Model(defaultModelOptions);
-    const view = new View(slider);
-    const presenter = new Presenter(model, view);
+    describe('if eventType is "viewChangeLeftValueFromOutside"', () => {
+      it('pass value to model', () => {
+        const slider = document.createElement('div');
+        const model = new Model({ ...defaultModelOptions, step: 1 });
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.model.setLeftValue = jest.fn();
 
-    presenter.convertValueToPx = jest.fn();
-    view.setLeftValue = jest.fn();
-
-    it('convert value to px', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.passLeftValueToView(i);
-        expect(presenter.convertValueToPx).toBeCalledWith(i);
-      }
+        for (let i = 0; i <= 100; i += 1) {
+          presenter.inform('viewChangeLeftValueFromOutside', i);
+          expect(presenter.model.setLeftValue).toBeCalledWith(i);
+        }
+      });
     });
 
-    it('set left value for view', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.passLeftValueToView(i);
-        const px = presenter.convertValueToPx(i);
-        expect(view.setLeftValue).toBeCalledWith(i, px);
-      }
-    });
-  });
+    describe('if eventType is "viewChangeRightValueFromOutside"', () => {
+      it('pass value to model', () => {
+        const slider = document.createElement('div');
+        const model = new Model({ ...defaultModelOptions, step: 1 });
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.model.setRightValue = jest.fn();
 
-  describe('passRightValueToView(value)', () => {
-    const slider = document.createElement('div');
-    const model = new Model(defaultModelOptions);
-    const view = new View(slider);
-    const presenter = new Presenter(model, view);
-
-    presenter.convertValueToPx = jest.fn();
-    view.setRightValue = jest.fn();
-
-    it('convert value to px', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.passRightValueToView(i);
-        expect(presenter.convertValueToPx).toBeCalledWith(i);
-      }
+        for (let i = 0; i <= 100; i += 1) {
+          presenter.inform('viewChangeRightValueFromOutside', i);
+          expect(presenter.model.setRightValue).toBeCalledWith(i);
+        }
+      });
     });
 
-    it('set left value for view', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        presenter.passRightValueToView(i);
-        const px = presenter.convertValueToPx(i);
-        expect(view.setRightValue).toBeCalledWith(i, px);
-      }
-    });
-  });
+    describe('if eventType is "viewChangeMinFromOutside"', () => {
+      it('pass value to model', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.model.changeMinFromOutside = jest.fn();
 
-  describe('convertValueToPx(value)', () => {
-    describe('if slider is horizontal', () => {
+        for (let i = 0; i <= 100; i += 1) {
+          presenter.inform('viewChangeMinFromOutside', i);
+          expect(presenter.model.changeMinFromOutside).toBeCalledWith(i);
+        }
+      });
+    });
+
+    describe('if eventType is "viewChangeMaxFromOutside"', () => {
+      it('pass value to model', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.model.changeMaxFromOutside = jest.fn();
+
+        for (let i = 0; i <= 100; i += 1) {
+          presenter.inform('viewChangeMaxFromOutside', i);
+          expect(presenter.model.changeMaxFromOutside).toBeCalledWith(i);
+        }
+      });
+    });
+
+    describe('if eventType is "viewChangeStepFromOutside"', () => {
+      it('pass value to model', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.model.setStep = jest.fn();
+
+        for (let i = 0; i <= 100; i += 1) {
+          presenter.inform('viewChangeStepFromOutside', i);
+          expect(presenter.model.setStep).toBeCalledWith(i);
+        }
+      });
+    });
+
+    describe('if eventType is "viewChangeOrientationFromOutside"', () => {
+      it('pass left value to view', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.view.setLeftValue = jest.fn();
+        presenter.inform('viewChangeOrientationFromOutside', null);
+
+        expect(presenter.view.setLeftValue).toBeCalled();
+      });
+
+      it('pass right value to view if slider is range', () => {
+        const slider = document.createElement('div');
+        const model = new Model({ ...defaultModelOptions, range: true });
+        const view = new View(slider, { range: true });
+        const presenter = new Presenter(model, view);
+        presenter.view.setRightValue = jest.fn();
+        presenter.inform('viewChangeOrientationFromOutside', null);
+
+        expect(presenter.view.setRightValue).toBeCalled();
+      });
+
+      it('add scale to view if view has scale', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, { scale: true });
+        const presenter = new Presenter(model, view);
+        presenter.view.addScale = jest.fn();
+        presenter.inform('viewChangeOrientationFromOutside', null);
+
+        expect(presenter.view.addScale).toBeCalled();
+      });
+
+      describe('fix labels container width or height if view has labels', () => {
+        it('if view is horizontal', () => {
+          const slider = document.createElement('div');
+          const model = new Model(defaultModelOptions);
+          const view = new View(slider, {
+            valueLabels: true,
+            vertical: false,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.view.fixLabelsContainerHeightForHorizontal = jest.fn();
+          presenter.inform('viewChangeOrientationFromOutside', null);
+
+          expect(presenter.view.fixLabelsContainerHeightForHorizontal).toBeCalled();
+        });
+
+        it('if view is vertical', () => {
+          const slider = document.createElement('div');
+          const model = new Model(defaultModelOptions);
+          const view = new View(slider, {
+            valueLabels: true,
+            vertical: true,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.view.fixLabelsContainerWidthForVertical = jest.fn();
+          presenter.inform('viewChangeOrientationFromOutside', null);
+
+          expect(presenter.view.fixLabelsContainerWidthForVertical).toBeCalled();
+        });
+      });
+    });
+
+    describe('if eventType is "viewToggleRangeFromOutside"', () => {
+      it('say model that it should toggle range', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.model.toggleRange = jest.fn();
+        presenter.inform('viewToggleRangeFromOutside', null);
+
+        expect(presenter.model.toggleRange).toBeCalled();
+      });
+    });
+
+    describe('if eventType is "viewToggleScaleFromOutside"', () => {
+      describe('if view now has scale', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, { scale: true });
+        const presenter = new Presenter(model, view);
+        presenter.view.addScale = jest.fn();
+        presenter.view.updatePanelScaleIntervals = jest.fn();
+        presenter.inform('viewToggleScaleFromOutside', null);
+
+        it('add scale to view', () => {
+          expect(presenter.view.addScale).toBeCalled();
+        });
+
+        it('say view that it should update scaleIntervals field in panel if it has it', () => {
+          expect(presenter.view.updatePanelScaleIntervals).toBeCalled();
+        });
+      });
+
+      describe('if view now has no scale', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, { scale: false });
+        const presenter = new Presenter(model, view);
+        presenter.view.removeScale = jest.fn();
+        presenter.view.updatePanelScaleIntervals = jest.fn();
+        presenter.inform('viewToggleScaleFromOutside', null);
+
+        it('remove scale from view', () => {
+          expect(presenter.view.removeScale).toBeCalled();
+        });
+
+        it('say view that it should update scaleIntervals field in panel if it has it', () => {
+          expect(presenter.view.updatePanelScaleIntervals).toBeCalled();
+        });
+      });
+    });
+
+    describe('if eventType is "viewChangeScaleIntervals"', () => {
+      it('add scale to view', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, { scale: true });
+        const presenter = new Presenter(model, view);
+        presenter.view.addScale = jest.fn();
+        presenter.inform('viewChangeScaleIntervals', null);
+
+        expect(presenter.view.addScale).toBeCalled();
+      });
+    });
+
+    describe('if eventType is "viewAddValueLabels"', () => {
+      it('pass left value to view', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.view.setLeftValue = jest.fn();
+        presenter.inform('viewAddValueLabels', null);
+
+        expect(presenter.view.setLeftValue).toBeCalled();
+      });
+
+      it('pass right value to view if slider is range', () => {
+        const slider = document.createElement('div');
+        const model = new Model({ ...defaultModelOptions, range: true });
+        const view = new View(slider, { range: true });
+        const presenter = new Presenter(model, view);
+        presenter.view.setRightValue = jest.fn();
+        presenter.inform('viewAddValueLabels', null);
+
+        expect(presenter.view.setRightValue).toBeCalled();
+      });
+    });
+
+    describe('if eventType is "viewAddMinMaxLabels"', () => {
       const slider = document.createElement('div');
       const model = new Model(defaultModelOptions);
       const view = new View(slider);
       const presenter = new Presenter(model, view);
+      presenter.view.setMinValue = jest.fn();
+      presenter.view.setMaxValue = jest.fn();
+      presenter.inform('viewAddMinMaxLabels', null);
 
-      it('px match value if track length is 100 and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
-
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertValueToPx(i)).toBeCloseTo(i);
-        }
+      it('pass min value from model to view', () => {
+        expect(presenter.view.setMinValue).toBeCalledWith(presenter.model.min);
       });
 
-      it('px match value / 2 if track length is 100 and min = 0 and max = 200', () => {
-        model.min = 0;
-        model.max = 200;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
-
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertValueToPx(i)).toBeCloseTo(i / 2);
-        }
-      });
-
-      it('px match value * 2 if track length is 200 and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(200);
-
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertValueToPx(i)).toBeCloseTo(i * 2);
-        }
-      });
-
-      it('px match value / x if track length is 100 and min = 0 and max = 100 * x', () => {
-        model.min = 0;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
-
-        for (let x = 1; x <= 10; x += 1) {
-          model.max = 100 * x;
-          for (let i = 0; i <= 100; i += 1) {
-            expect(presenter.convertValueToPx(i)).toBeCloseTo(i / x);
-          }
-        }
-      });
-
-      it('px match value * x if track length is 100 * x and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetWidth = jest.fn();
-
-        for (let x = 1; x <= 10; x += 1) {
-          (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100 * x);
-          for (let i = 0; i <= 100; i += 1) {
-            expect(presenter.convertValueToPx(i)).toBeCloseTo(i * x);
-          }
-        }
+      it('pass max value from model to view', () => {
+        expect(presenter.view.setMaxValue).toBeCalledWith(presenter.model.max);
       });
     });
 
-    describe('if slider is vertical', () => {
-      const slider = document.createElement('div');
-      const model = new Model(defaultModelOptions);
-      const view = new View(slider, {
-        vertical: true,
-      });
-      const presenter = new Presenter(model, view);
+    describe('if eventType is "modelLeftSet"', () => {
+      describe('convert value to px and pass it to view', () => {
+        describe('if slider is horizontal', () => {
+          const slider = document.createElement('div');
+          const model = new Model(defaultModelOptions);
+          const view = new View(slider, {
+            vertical: false,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.view.setLeftValue = jest.fn();
 
-      it('px match value if track height is 100 and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+          it('px match value if track length is 100 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertValueToPx(i)).toBeCloseTo(i);
-        }
-      });
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.leftValue = i;
+              presenter.inform('modelLeftSet', null);
+              expect(presenter.view.setLeftValue).toBeCalledWith(i, i);
+            }
+          });
 
-      it('px match value / 2 if track height is 100 and min = 0 and max = 200', () => {
-        model.min = 0;
-        model.max = 200;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+          it('px match value / 2 if track length is 100 and min = 0 and max = 200', () => {
+            model.min = 0;
+            model.max = 200;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertValueToPx(i)).toBeCloseTo(i / 2);
-        }
-      });
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.leftValue = i;
+              presenter.inform('modelLeftSet', null);
+              expect(presenter.view.setLeftValue).toBeCalledWith(i, Math.round(i / 2));
+            }
+          });
 
-      it('px match value * 2 if track height is 200 and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(200);
+          it('px match value * 2 if track length is 200 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(200);
 
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertValueToPx(i)).toBeCloseTo(i * 2);
-        }
-      });
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.leftValue = i;
+              presenter.inform('modelLeftSet', null);
+              expect(presenter.view.setLeftValue).toBeCalledWith(i, i * 2);
+            }
+          });
 
-      it('px match value / x if track height is 100 and min = 0 and max = 100 * x', () => {
-        model.min = 0;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+          it('px match value / x if track length is 100 and min = 0 and max = 100 * x', () => {
+            model.min = 0;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
 
-        for (let x = 1; x <= 10; x += 1) {
-          model.max = 100 * x;
-          for (let i = 0; i <= 100; i += 1) {
-            expect(presenter.convertValueToPx(i)).toBeCloseTo(i / x);
-          }
-        }
-      });
+            for (let x = 1; x <= 10; x += 1) {
+              model.max = 100 * x;
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.model.leftValue = i;
+                presenter.inform('modelLeftSet', null);
+                expect(presenter.view.setLeftValue).toBeCalledWith(i, Math.round(i / x));
+              }
+            }
+          });
 
-      it('px match value * x if track height is 100 * x and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetHeight = jest.fn();
+          it('px match value * x if track length is 100 * x and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
 
-        for (let x = 1; x <= 10; x += 1) {
-          (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100 * x);
-          for (let i = 0; i <= 100; i += 1) {
-            expect(presenter.convertValueToPx(i)).toBeCloseTo(i * x);
-          }
-        }
-      });
-    });
-  });
+            for (let x = 1; x <= 10; x += 1) {
+              (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100 * x);
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.model.leftValue = i;
+                presenter.inform('modelLeftSet', null);
+                expect(presenter.view.setLeftValue).toBeCalledWith(i, i * x);
+              }
+            }
+          });
+        });
 
-  describe('convertPxToValue(value)', () => {
-    describe('if slider is horizontal', () => {
-      const slider = document.createElement('div');
-      const model = new Model({ ...defaultModelOptions, step: 1 });
-      const view = new View(slider);
-      const presenter = new Presenter(model, view);
+        describe('if slider is vertical', () => {
+          const slider = document.createElement('div');
+          const model = new Model(defaultModelOptions);
+          const view = new View(slider, {
+            vertical: true,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.view.setLeftValue = jest.fn();
 
-      it('value match px if track length is 100 and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+          it('px match value if track height is 100 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertPxToValue(i)).toBeCloseTo(i);
-        }
-      });
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.leftValue = i;
+              presenter.inform('modelLeftSet', null);
+              expect(presenter.view.setLeftValue).toBeCalledWith(i, i);
+            }
+          });
 
-      it('value match px * 2 if track length is 100 and min = 0 and max = 200', () => {
-        model.min = 0;
-        model.max = 200;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+          it('px match value / 2 if track height is 100 and min = 0 and max = 200', () => {
+            model.min = 0;
+            model.max = 200;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertPxToValue(i)).toBeCloseTo(i * 2);
-        }
-      });
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.leftValue = i;
+              presenter.inform('modelLeftSet', null);
+              expect(presenter.view.setLeftValue).toBeCalledWith(i, Math.round(i / 2));
+            }
+          });
 
-      it('value match px / 2 if track length is 200 and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(200);
-        const fitToStepOriginal = presenter.fitToStep;
-        presenter.fitToStep = jest.fn();
+          it('px match value * 2 if track height is 200 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(200);
 
-        for (let i = 0; i <= 100; i += 1) {
-          (presenter.fitToStep as jest.Mock).mockReturnValue(i / 2);
-          expect(presenter.convertPxToValue(i)).toBeCloseTo(i / 2);
-        }
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.leftValue = i;
+              presenter.inform('modelLeftSet', null);
+              expect(presenter.view.setLeftValue).toBeCalledWith(i, i * 2);
+            }
+          });
 
-        presenter.fitToStep = fitToStepOriginal;
-      });
+          it('px match value / x if track height is 100 and min = 0 and max = 100 * x', () => {
+            model.min = 0;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
 
-      it('value match px * x if track length is 100 and min = 0 and max = 100 * x', () => {
-        model.min = 0;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+            for (let x = 1; x <= 10; x += 1) {
+              model.max = 100 * x;
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.model.leftValue = i;
+                presenter.inform('modelLeftSet', null);
+                expect(presenter.view.setLeftValue).toBeCalledWith(i, Math.round(i / x));
+              }
+            }
+          });
 
-        for (let x = 1; x <= 10; x += 1) {
-          model.max = 100 * x;
-          for (let i = 0; i <= 100; i += 1) {
-            expect(presenter.convertPxToValue(i)).toBeCloseTo(i * x);
-          }
-        }
-      });
+          it('px match value * x if track height is 100 * x and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
 
-      it('value match px / x if track length is 100 * x and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetWidth = jest.fn();
-        const fitToStepOriginal = presenter.fitToStep;
-        presenter.fitToStep = jest.fn();
-
-        for (let x = 1; x <= 10; x += 1) {
-          (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100 * x);
-          for (let i = 0; i <= 100; i += 1) {
-            (presenter.fitToStep as jest.Mock).mockReturnValue(i / x);
-            expect(presenter.convertPxToValue(i)).toBeCloseTo(i / x);
-          }
-        }
-
-        presenter.fitToStep = fitToStepOriginal;
-      });
-    });
-
-    describe('if slider is vertical', () => {
-      const slider = document.createElement('div');
-      const model = new Model({ ...defaultModelOptions, step: 1 });
-      const view = new View(slider, {
-        vertical: true,
-      });
-      const presenter = new Presenter(model, view);
-
-      it('value match px if track height is 100 and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
-
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertPxToValue(i)).toBeCloseTo(i);
-        }
+            for (let x = 1; x <= 10; x += 1) {
+              (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100 * x);
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.model.leftValue = i;
+                presenter.inform('modelLeftSet', null);
+                expect(presenter.view.setLeftValue).toBeCalledWith(i, i * x);
+              }
+            }
+          });
+        });
       });
 
-      it('value match px * 2 if track height is 100 and min = 0 and max = 200', () => {
-        model.min = 0;
-        model.max = 200;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
-
-        for (let i = 0; i <= 100; i += 1) {
-          expect(presenter.convertPxToValue(i)).toBeCloseTo(i * 2);
-        }
-      });
-
-      it('value match px / 2 if track height is 200 and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(200);
-        const fitToStepOriginal = presenter.fitToStep;
-        presenter.fitToStep = jest.fn();
-
-        for (let i = 0; i <= 100; i += 1) {
-          (presenter.fitToStep as jest.Mock).mockReturnValue(i / 2);
-          expect(presenter.convertPxToValue(i)).toBeCloseTo(i / 2);
-        }
-
-        presenter.fitToStep = fitToStepOriginal;
-      });
-
-      it('value match px * x if track height is 100 and min = 0 and max = 100 * x', () => {
-        model.min = 0;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
-
-        for (let x = 1; x <= 10; x += 1) {
-          model.max = 100 * x;
-          for (let i = 0; i <= 100; i += 1) {
-            expect(presenter.convertPxToValue(i)).toBeCloseTo(i * x);
-          }
-        }
-      });
-
-      it('value match px / x if track height is 100 * x and min = 0 and max = 100', () => {
-        model.min = 0;
-        model.max = 100;
-        view.track.getOffsetHeight = jest.fn();
-        const fitToStepOriginal = presenter.fitToStep;
-        presenter.fitToStep = jest.fn();
-
-        for (let x = 1; x <= 10; x += 1) {
-          (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100 * x);
-          for (let i = 0; i <= 100; i += 1) {
-            (presenter.fitToStep as jest.Mock).mockReturnValue(i / x);
-            expect(presenter.convertPxToValue(i)).toBeCloseTo(i / x);
-          }
-        }
-
-        presenter.fitToStep = fitToStepOriginal;
-      });
-    });
-  });
-
-  describe('fitToStep(value)', () => {
-    it('if step = x, result % x = 0', () => {
-      for (let step = 1; step <= 100; step += 1) {
+      it('say view that it should update panel field if view has panel', () => {
         const slider = document.createElement('div');
-        const model = new Model({ ...defaultModelOptions, step });
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, {
+          panel: true,
+        });
+        const presenter = new Presenter(model, view);
+        presenter.view.updatePanelFrom = jest.fn();
+        presenter.inform('modelLeftSet', null);
+
+        expect(presenter.view.updatePanelFrom).toBeCalled();
+      });
+    });
+
+    describe('if eventType is "modelRightSet"', () => {
+      describe('convert value to px and pass it to view', () => {
+        describe('if slider is horizontal', () => {
+          const slider = document.createElement('div');
+          const model = new Model(defaultModelOptions);
+          const view = new View(slider, {
+            vertical: false,
+            range: true,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.view.setRightValue = jest.fn();
+
+          it('px match value if track length is 100 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.rightValue = i;
+              presenter.inform('modelRightSet', null);
+              expect(presenter.view.setRightValue).toBeCalledWith(i, i);
+            }
+          });
+
+          it('px match value / 2 if track length is 100 and min = 0 and max = 200', () => {
+            model.min = 0;
+            model.max = 200;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.rightValue = i;
+              presenter.inform('modelRightSet', null);
+              expect(presenter.view.setRightValue).toBeCalledWith(i, Math.round(i / 2));
+            }
+          });
+
+          it('px match value * 2 if track length is 200 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(200);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.rightValue = i;
+              presenter.inform('modelRightSet', null);
+              expect(presenter.view.setRightValue).toBeCalledWith(i, i * 2);
+            }
+          });
+
+          it('px match value / x if track length is 100 and min = 0 and max = 100 * x', () => {
+            model.min = 0;
+            view.track.getOffsetWidth = jest.fn();
+            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100);
+
+            for (let x = 1; x <= 10; x += 1) {
+              model.max = 100 * x;
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.model.rightValue = i;
+                presenter.inform('modelRightSet', null);
+                expect(presenter.view.setRightValue).toBeCalledWith(i, Math.round(i / x));
+              }
+            }
+          });
+
+          it('px match value * x if track length is 100 * x and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetWidth = jest.fn();
+
+            for (let x = 1; x <= 10; x += 1) {
+              (view.track.getOffsetWidth as jest.Mock).mockReturnValue(100 * x);
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.model.rightValue = i;
+                presenter.inform('modelRightSet', null);
+                expect(presenter.view.setRightValue).toBeCalledWith(i, i * x);
+              }
+            }
+          });
+        });
+
+        describe('if slider is vertical', () => {
+          const slider = document.createElement('div');
+          const model = new Model(defaultModelOptions);
+          const view = new View(slider, {
+            vertical: true,
+            range: true,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.view.setRightValue = jest.fn();
+
+          it('px match value if track height is 100 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.rightValue = i;
+              presenter.inform('modelRightSet', null);
+              expect(presenter.view.setRightValue).toBeCalledWith(i, i);
+            }
+          });
+
+          it('px match value / 2 if track height is 100 and min = 0 and max = 200', () => {
+            model.min = 0;
+            model.max = 200;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.rightValue = i;
+              presenter.inform('modelRightSet', null);
+              expect(presenter.view.setRightValue).toBeCalledWith(i, Math.round(i / 2));
+            }
+          });
+
+          it('px match value * 2 if track height is 200 and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(200);
+
+            for (let i = 0; i <= 100; i += 1) {
+              presenter.model.rightValue = i;
+              presenter.inform('modelRightSet', null);
+              expect(presenter.view.setRightValue).toBeCalledWith(i, i * 2);
+            }
+          });
+
+          it('px match value / x if track height is 100 and min = 0 and max = 100 * x', () => {
+            model.min = 0;
+            view.track.getOffsetHeight = jest.fn();
+            (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100);
+
+            for (let x = 1; x <= 10; x += 1) {
+              model.max = 100 * x;
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.model.rightValue = i;
+                presenter.inform('modelRightSet', null);
+                expect(presenter.view.setRightValue).toBeCalledWith(i, Math.round(i / x));
+              }
+            }
+          });
+
+          it('px match value * x if track height is 100 * x and min = 0 and max = 100', () => {
+            model.min = 0;
+            model.max = 100;
+            view.track.getOffsetHeight = jest.fn();
+
+            for (let x = 1; x <= 10; x += 1) {
+              (view.track.getOffsetHeight as jest.Mock).mockReturnValue(100 * x);
+              for (let i = 0; i <= 100; i += 1) {
+                presenter.model.rightValue = i;
+                presenter.inform('modelRightSet', null);
+                expect(presenter.view.setRightValue).toBeCalledWith(i, i * x);
+              }
+            }
+          });
+        });
+      });
+
+      it('say view that it should update panel field if view has panel', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, {
+          panel: true,
+        });
+        const presenter = new Presenter(model, view);
+        presenter.view.updatePanelTo = jest.fn();
+        presenter.inform('modelRightSet', null);
+
+        expect(presenter.view.updatePanelTo).toBeCalled();
+      });
+    });
+
+    describe('if eventType is "modelChangeMin"', () => {
+      it('pass min value from model to view', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
         const view = new View(slider);
         const presenter = new Presenter(model, view);
+        presenter.view.setMinValue = jest.fn();
+        presenter.inform('modelChangeMin', null);
 
-        for (let value = 0; value <= 100; value += 0.1) {
-          expect(presenter.fitToStep(value) % step).toBe(0);
-        }
-      }
-    });
+        expect(presenter.view.setMinValue).toBeCalledWith(presenter.model.min);
+      });
 
-    it('also works with fractional step', () => {
-      for (let step = 0.1; step <= 0.9; step += 0.1) {
+      it('pass left value from model to view', () => {
         const slider = document.createElement('div');
-        const model = new Model({ ...defaultModelOptions, step });
+        const model = new Model(defaultModelOptions);
         const view = new View(slider);
         const presenter = new Presenter(model, view);
+        presenter.view.setLeftValue = jest.fn();
+        presenter.inform('modelChangeMin', null);
 
-        for (let value = 0; value <= 100; value += 0.1) {
-          expect(Math.floor(presenter.fitToStep(value) % step)).toBeCloseTo(0);
-        }
-      }
+        expect(presenter.view.setLeftValue)
+          .toBeCalledWith(presenter.model.leftValue, expect.any(Number));
+      });
+
+      it('pass right value from model to view if slider is range', () => {
+        const slider = document.createElement('div');
+        const model = new Model({ ...defaultModelOptions, range: true });
+        const view = new View(slider, {
+          range: true,
+        });
+        const presenter = new Presenter(model, view);
+        presenter.view.setRightValue = jest.fn();
+        presenter.inform('modelChangeMin', null);
+
+        expect(presenter.view.setRightValue)
+          .toBeCalledWith(presenter.model.rightValue, expect.any(Number));
+      });
+
+      it('rerender scale if view has scale', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, {
+          scale: true,
+        });
+        const presenter = new Presenter(model, view);
+        presenter.view.removeScale = jest.fn();
+        presenter.view.addScale = jest.fn();
+        presenter.inform('modelChangeMin', null);
+
+        expect(presenter.view.removeScale).toBeCalled();
+        expect(presenter.view.addScale).toBeCalled();
+      });
+    });
+
+    describe('if eventType is "modelChangeMax"', () => {
+      it('pass max value from model to view', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.view.setMaxValue = jest.fn();
+        presenter.inform('modelChangeMax', null);
+
+        expect(presenter.view.setMaxValue).toBeCalledWith(presenter.model.max);
+      });
+
+      it('pass left value from model to view', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.view.setLeftValue = jest.fn();
+        presenter.inform('modelChangeMax', null);
+
+        expect(presenter.view.setLeftValue)
+          .toBeCalledWith(presenter.model.leftValue, expect.any(Number));
+      });
+
+      it('pass right value from model to view if slider is range', () => {
+        const slider = document.createElement('div');
+        const model = new Model({ ...defaultModelOptions, range: true });
+        const view = new View(slider, {
+          range: true,
+        });
+        const presenter = new Presenter(model, view);
+        presenter.view.setRightValue = jest.fn();
+        presenter.inform('modelChangeMax', null);
+
+        expect(presenter.view.setRightValue)
+          .toBeCalledWith(presenter.model.rightValue, expect.any(Number));
+      });
+
+      it('rerender scale if view has scale', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, {
+          scale: true,
+        });
+        const presenter = new Presenter(model, view);
+        presenter.view.removeScale = jest.fn();
+        presenter.view.addScale = jest.fn();
+        presenter.inform('modelChangeMax', null);
+
+        expect(presenter.view.removeScale).toBeCalled();
+        expect(presenter.view.addScale).toBeCalled();
+      });
+    });
+
+    describe('if eventType is "modelRangeToggle"', () => {
+      it('pass left value from model to view', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider);
+        const presenter = new Presenter(model, view);
+        presenter.view.setLeftValue = jest.fn();
+        presenter.inform('modelRangeToggle', null);
+
+        expect(presenter.view.setLeftValue)
+          .toBeCalledWith(presenter.model.leftValue, expect.any(Number));
+      });
+
+      describe('if model is range now', () => {
+        it('say model to set right value', () => {
+          const slider = document.createElement('div');
+          const model = new Model({ ...defaultModelOptions, range: true });
+          const view = new View(slider);
+          const presenter = new Presenter(model, view);
+          presenter.model.setRightValue = jest.fn();
+          presenter.inform('modelRangeToggle', null);
+
+          expect(presenter.model.setRightValue).toBeCalled();
+        });
+      });
+
+      describe('if model is not range now', () => {
+        it('say model to remove right value', () => {
+          const slider = document.createElement('div');
+          const model = new Model({ ...defaultModelOptions, range: false });
+          const view = new View(slider);
+          const presenter = new Presenter(model, view);
+          presenter.model.removeRightValue = jest.fn();
+          presenter.inform('modelRangeToggle', null);
+
+          expect(presenter.model.removeRightValue).toBeCalled();
+        });
+      });
+
+      describe('say view to update panel field if view has panel', () => {
+        it('if slider is range', () => {
+          const slider = document.createElement('div');
+          const model = new Model({ ...defaultModelOptions, range: true });
+          const view = new View(slider, {
+            panel: true,
+            range: true,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.view.updatePanelTo = jest.fn();
+          presenter.inform('modelRangeToggle', null);
+
+          expect(presenter.view.updatePanelTo).toBeCalled();
+        });
+
+        it('if slider is not range', () => {
+          const slider = document.createElement('div');
+          const model = new Model({ ...defaultModelOptions, range: false });
+          const view = new View(slider, {
+            panel: true,
+            range: false,
+          });
+          const presenter = new Presenter(model, view);
+          presenter.view.updatePanelTo = jest.fn();
+          presenter.inform('modelRangeToggle', null);
+
+          expect(presenter.view.updatePanelTo).toBeCalled();
+        });
+      });
     });
   });
 });

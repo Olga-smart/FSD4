@@ -71,12 +71,12 @@ declare global {
     }
 
     setLeftValue(value: number): this {
-      this.presenter.changeLeftValueFromOutside(value);
+      this.view.changeLeftValueFromOutside(value);
       return this;
     }
 
     setRightValue(value: number): this {
-      this.presenter.changeRightValueFromOutside(value);
+      this.view.changeRightValueFromOutside(value);
       return this;
     }
   }
