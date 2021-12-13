@@ -17,22 +17,9 @@ describe('MinMaxLabel', () => {
         expect(label.component.classList).toContain('range-slider__min-max-label_left');
       });
 
-      it('set up js-class for left label if argument "type" == "left" or by default', () => {
-        let label = new MinMaxLabel();
-        expect(label.component.classList).toContain('js-range-slider__min-max-label_left');
-
-        label = new MinMaxLabel('left');
-        expect(label.component.classList).toContain('js-range-slider__min-max-label_left');
-      });
-
       it('set up class for right label if argument "type" == "right"', () => {
         const label = new MinMaxLabel('right');
         expect(label.component.classList).toContain('range-slider__min-max-label_right');
-      });
-
-      it('set up js-class for right label if argument "type" == "right"', () => {
-        const label = new MinMaxLabel('right');
-        expect(label.component.classList).toContain('js-range-slider__min-max-label_right');
       });
 
       it('component property is div element', () => {
