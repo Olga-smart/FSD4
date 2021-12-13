@@ -1,0 +1,57 @@
+declare type PanelOptions = {
+    min: number;
+    max: number;
+    step: number;
+    from: number;
+    to: number | null;
+    vertical: boolean;
+    range: boolean;
+    scale: boolean;
+    scaleIntervals: number | null;
+    valueLabels: boolean;
+    minMaxLabels: boolean;
+};
+declare class Panel {
+    view: any;
+    component: HTMLElement;
+    min: HTMLElement;
+    max: HTMLElement;
+    step: HTMLElement;
+    from: HTMLElement;
+    to: HTMLElement;
+    vertical: HTMLElement;
+    range: HTMLElement;
+    scale: HTMLElement;
+    scaleIntervals: HTMLElement;
+    valueLabels: HTMLElement;
+    minMaxLabels: HTMLElement;
+    constructor();
+    registerWith(view: any): void;
+    render(): void;
+    static addLabel(input: HTMLElement, name: string, className?: string): DocumentFragment;
+    static wrap(fragment: DocumentFragment, className?: string): HTMLElement;
+    setTypes(): void;
+    setIds(): void;
+    setValues(options: PanelOptions): void;
+    setAttributes(options: PanelOptions): void;
+    static calcStepMin(step: number): number;
+    updateFrom(value: number): void;
+    updateTo(value: number | ''): void;
+    updateScaleIntervals(value: number | ''): void;
+    updateAttributesAfterFromChange(): void;
+    updateAttributesAfterToChange(): void;
+    handleMinChange(): void;
+    handleMaxChange(): void;
+    handleStepChange(): void;
+    handleFromChange(): void;
+    handleToChange(): void;
+    handleVerticalChange(): void;
+    handleRangeChange(): void;
+    handleScaleChange(): void;
+    handleScaleIntervalsChange(): void;
+    handleValueLabelsChange(): void;
+    handleMinMaxLabelsChange(): void;
+    attachEventHandlers(): void;
+}
+export { PanelOptions, Panel };
+//# sourceMappingURL=panel.d.ts.map
