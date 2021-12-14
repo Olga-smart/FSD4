@@ -309,6 +309,7 @@ class Presenter implements IEventListener {
     if (this.model.isRange) {
       this.model.setRightValue();
       this.passRightValueToView(this.model.rightValue!);
+      this.view.updateInput(this.model.leftValue, this.model.rightValue);
       if (this.view.panel) {
         this.view.updatePanelTo(this.model.rightValue!);
       }
@@ -316,6 +317,7 @@ class Presenter implements IEventListener {
 
     if (!this.model.isRange) {
       this.model.removeRightValue();
+      this.view.updateInput(this.model.leftValue);
       if (this.view.panel) {
         this.view.updatePanelTo('');
       }
