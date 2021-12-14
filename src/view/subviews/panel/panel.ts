@@ -325,6 +325,14 @@ class Panel {
 
     const to = this.to as HTMLInputElement;
     to.disabled = !to.disabled;
+
+    const from = this.from as HTMLInputElement;
+    const range = this.range as HTMLInputElement;
+    if (range.checked) {
+      from.max = to.value;
+    } else {
+      from.max = (this.max as HTMLInputElement).value;
+    }
   }
 
   handleScaleChange(): void {
