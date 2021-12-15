@@ -10,7 +10,7 @@
     "start": "cross-env NODE_ENV=development webpack serve --mode development --open",
     "test": "jest --detectOpenHandles",
     "testpresenter": "jest --detectOpenHandles src/presenter/presenter.test.ts",
-    "testminmaxlabel": "jest --detectOpenHandles src/view/subviews/minmaxlabel/minmaxlabel.test.ts"
+    "testpanel": "jest --detectOpenHandles src/view/subviews/panel/panel.test.ts"
   },
   "repository": {
     "type": "git",
