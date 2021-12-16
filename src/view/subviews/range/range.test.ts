@@ -9,10 +9,6 @@ describe('Range', () => {
         expect(range.component.classList).toContain('range-slider__range');
       });
 
-      it('js-class', () => {
-        expect(range.component.classList).toContain('js-range-slider__range');
-      });
-
       it('component property is div element', () => {
         expect(range.component).toBeInstanceOf(HTMLDivElement);
       });
