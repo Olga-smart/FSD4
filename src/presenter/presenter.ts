@@ -284,10 +284,6 @@ class Presenter implements IEventListener {
       this.passRightValueToView(this.model.rightValue!);
     }
 
-    if (this.view.hasScale) {
-      this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
-    }
-
     if (this.hasViewLabels()) {
       if (!this.view.vertical) {
         this.view.fixLabelsContainerHeightForHorizontal();

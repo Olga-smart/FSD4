@@ -160,6 +160,10 @@ class View {
     if (this.panel) {
       this.component.append(this.panel.component);
     }
+
+    if (this.scale) {
+      this.slider.after(this.scale.component);
+    }
   }
 
   destroy(): void {
