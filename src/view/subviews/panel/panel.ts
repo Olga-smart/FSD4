@@ -360,7 +360,7 @@ class Panel {
     this.view?.toggleMinMaxLabels();
   }
 
-  attachEventHandlers(): void {
+  private attachEventHandlers(): void {
     this.min.addEventListener('change', this.handleMinChange.bind(this));
     this.max.addEventListener('change', this.handleMaxChange.bind(this));
     this.step.addEventListener('change', this.handleStepChange.bind(this));

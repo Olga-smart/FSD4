@@ -153,15 +153,6 @@ describe('Panel', () => {
         expect(panel.component.contains(panel.step)).toBe(true);
       });
     });
-
-    it('attach event handlers', () => {
-      jest.spyOn(Panel.prototype, 'attachEventHandlers');
-      const panel = new Panel();
-
-      expect(panel.attachEventHandlers).toBeCalled();
-
-      jest.restoreAllMocks();
-    });
   });
 
   describe('registerWith(view)', () => {
