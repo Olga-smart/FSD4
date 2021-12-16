@@ -2,9 +2,9 @@ import Scale from './scale';
 
 describe('Scale', () => {
   describe('constructor(min, max, intervalsNumber)', () => {
-    const scale = new Scale(0, 150, 4);
-
     describe('set up necessary properties', () => {
+      const scale = new Scale(0, 150, 4);
+
       it('set up view property', () => {
         expect(scale).toHaveProperty('view');
       });
@@ -47,31 +47,113 @@ describe('Scale', () => {
       });
     });
 
-    describe('call necessary methods', () => {
-      afterAll(() => {
-        jest.restoreAllMocks();
+    describe('create intervals', () => {
+      it('create right amount of elements and push them into intervals property', () => {
+        for (let i = 1; i <= 20; i += 1) {
+          const scale = new Scale(0, 150, i);
+          expect(scale.intervals).toHaveLength(i);
+        }
       });
 
-      jest.spyOn(Scale.prototype, 'createIntervals');
-      jest.spyOn(Scale.prototype, 'addMarksInIntervals');
-      jest.spyOn(Scale.prototype, 'addValues');
-      jest.spyOn(Scale.prototype, 'attachEventHandlers');
-      const newScale = new Scale(0, 150, 4);
-
-      it('call createIntervals()', () => {
-        expect(newScale.createIntervals).toBeCalled();
+      it('add necessary class to all elements', () => {
+        const scale = new Scale(0, 150, 10);
+        scale.intervals.forEach((item) => {
+          expect(item.classList).toContain('range-slider__scale-interval');
+        });
       });
 
-      it('call addMarksInIntervals()', () => {
-        expect(newScale.addMarksInIntervals).toBeCalled();
+      it('create right amount of elements and append them to component', () => {
+        for (let i = 1; i <= 20; i += 1) {
+          const scale = new Scale(0, 150, i);
+          expect(scale.component.querySelectorAll('.range-slider__scale-interval')).toHaveLength(i);
+        }
+      });
+    });
+
+    describe('add marks in intervals', () => {
+      it('if intervalsNumber < 5, add 4 marks', () => {
+        for (let i = 1; i < 5; i += 1) {
+          const scale = new Scale(0, 150, i);
+          scale.intervals.forEach((item) => {
+            expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(4);
+          });
+        }
       });
 
-      it('call addValues()', () => {
-        expect(newScale.addValues).toBeCalled();
+      it('if intervalsNumber > 4 and < 8, add 3 marks', () => {
+        for (let i = 5; i < 8; i += 1) {
+          const scale = new Scale(0, 150, i);
+          scale.intervals.forEach((item) => {
+            expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(3);
+          });
+        }
       });
 
-      it('call attachEventHandlers()', () => {
-        expect(newScale.attachEventHandlers).toBeCalled();
+      it('if intervalsNumber > 7 and < 15, add 2 marks', () => {
+        for (let i = 8; i < 15; i += 1) {
+          const scale = new Scale(0, 150, i);
+          scale.intervals.forEach((item) => {
+            expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(2);
+          });
+        }
+      });
+
+      it('if intervalsNumber > 14 and < 29, add 1 mark', () => {
+        for (let i = 15; i < 29; i += 1) {
+          const scale = new Scale(0, 150, i);
+          scale.intervals.forEach((item) => {
+            expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(1);
+          });
+        }
+      });
+
+      it('if intervalsNumber > 28, add no marks', () => {
+        const scale = new Scale(0, 150, 29);
+        scale.intervals.forEach((item) => {
+          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(0);
+        });
+      });
+    });
+
+    describe('add values', () => {
+      it('values length is 1 more than intervals length', () => {
+        for (let i = 1; i <= 10; i += 1) {
+          const scale = new Scale(0, 150, i);
+          expect(scale.values.length).toBe(i + 1);
+        }
+      });
+
+      it('first value is min', () => {
+        for (let i = -10; i <= 10; i += 1) {
+          const scale = new Scale(i, 150, 4);
+          expect(scale.values[0]).toBe(i);
+        }
+      });
+
+      it('last value is max', () => {
+        for (let i = -10; i <= 10; i += 1) {
+          const scale = new Scale(-20, i, 4);
+          expect(scale.values[scale.values.length - 1]).toBe(i);
+        }
+      });
+
+      it('every value element has special class', () => {
+        const scale = new Scale(0, 150, 4);
+        scale.valueElements.forEach((valueElement) => {
+          expect(valueElement.classList).toContain('range-slider__scale-interval-value');
+        });
+      });
+
+      it('first value element has special class', () => {
+        const scale = new Scale(0, 150, 4);
+        expect(scale.valueElements[0].classList).toContain('range-slider__scale-interval-value_min');
+      });
+
+      it('every valueElement contains corresponding value', () => {
+        const scale = new Scale(0, 150, 4);
+        for (let i = 0; i < scale.valueElements.length; i += 1) {
+          expect(scale.valueElements[i].textContent).toBe(`${scale.values[i]}`);
+        }
       });
     });
   });
@@ -83,116 +165,6 @@ describe('Scale', () => {
 
     it('set up view', () => {
       expect(scale.view).toBe(view);
-    });
-  });
-
-  describe('createIntervals()', () => {
-    it('create right amount of elements and push them into intervals property', () => {
-      for (let i = 1; i <= 20; i += 1) {
-        const scale = new Scale(0, 150, i);
-        expect(scale.intervals).toHaveLength(i);
-      }
-    });
-
-    it('add necessary class to all elements', () => {
-      const scale = new Scale(0, 150, 10);
-      scale.intervals.forEach((item) => {
-        expect(item.classList).toContain('range-slider__scale-interval');
-      });
-    });
-
-    it('create right amount of elements and append them to component', () => {
-      for (let i = 1; i <= 20; i += 1) {
-        const scale = new Scale(0, 150, i);
-        expect(scale.component.querySelectorAll('.range-slider__scale-interval')).toHaveLength(i);
-      }
-    });
-  });
-
-  describe('addMarksInIntervals()', () => {
-    it('if intervalsNumber < 5, add 4 marks', () => {
-      for (let i = 1; i < 5; i += 1) {
-        const scale = new Scale(0, 150, i);
-        scale.intervals.forEach((item) => {
-          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(4);
-        });
-      }
-    });
-
-    it('if intervalsNumber > 4 and < 8, add 3 marks', () => {
-      for (let i = 5; i < 8; i += 1) {
-        const scale = new Scale(0, 150, i);
-        scale.intervals.forEach((item) => {
-          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(3);
-        });
-      }
-    });
-
-    it('if intervalsNumber > 7 and < 15, add 2 marks', () => {
-      for (let i = 8; i < 15; i += 1) {
-        const scale = new Scale(0, 150, i);
-        scale.intervals.forEach((item) => {
-          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(2);
-        });
-      }
-    });
-
-    it('if intervalsNumber > 14 and < 29, add 1 mark', () => {
-      for (let i = 15; i < 29; i += 1) {
-        const scale = new Scale(0, 150, i);
-        scale.intervals.forEach((item) => {
-          expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(1);
-        });
-      }
-    });
-
-    it('if intervalsNumber > 28, add no marks', () => {
-      const scale = new Scale(0, 150, 29);
-      scale.intervals.forEach((item) => {
-        expect(item.querySelectorAll('.range-slider__scale-mark')).toHaveLength(0);
-      });
-    });
-  });
-
-  describe('addValues()', () => {
-    it('values length is 1 more than intervals length', () => {
-      for (let i = 1; i <= 10; i += 1) {
-        const scale = new Scale(0, 150, i);
-        expect(scale.values.length).toBe(i + 1);
-      }
-    });
-
-    it('first value is min', () => {
-      for (let i = -10; i <= 10; i += 1) {
-        const scale = new Scale(i, 150, 4);
-        expect(scale.values[0]).toBe(i);
-      }
-    });
-
-    it('last value is max', () => {
-      for (let i = -10; i <= 10; i += 1) {
-        const scale = new Scale(-20, i, 4);
-        expect(scale.values[scale.values.length - 1]).toBe(i);
-      }
-    });
-
-    it('every value element has special class', () => {
-      const scale = new Scale(0, 150, 4);
-      scale.valueElements.forEach((valueElement) => {
-        expect(valueElement.classList).toContain('range-slider__scale-interval-value');
-      });
-    });
-
-    it('first value element has special class', () => {
-      const scale = new Scale(0, 150, 4);
-      expect(scale.valueElements[0].classList).toContain('range-slider__scale-interval-value_min');
-    });
-
-    it('every valueElement contains corresponding value', () => {
-      const scale = new Scale(0, 150, 4);
-      for (let i = 0; i < scale.valueElements.length; i += 1) {
-        expect(scale.valueElements[i].textContent).toBe(`${scale.values[i]}`);
-      }
     });
   });
 
@@ -240,7 +212,7 @@ describe('Scale', () => {
     });
   });
 
-  describe('attachEventHandlers()', () => {
+  describe('handle events', () => {
     it('handle click', () => {
       const scale = new Scale(0, 150, 4);
       const view: any = {};
