@@ -10,7 +10,7 @@
     "start": "cross-env NODE_ENV=development webpack serve --mode development --open",
     "test": "jest --detectOpenHandles",
     "testpresenter": "jest --detectOpenHandles src/presenter/presenter.test.ts",
-    "testthumb": "jest --detectOpenHandles src/view/subviews/thumb/thumb.test.ts"
+    "testtrack": "jest --detectOpenHandles src/view/subviews/track/track.test.ts"
   },
   "repository": {
     "type": "git",

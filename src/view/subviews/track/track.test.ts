@@ -3,7 +3,6 @@ import View from '../../view';
 
 describe('Track', () => {
   describe('constructor()', () => {
-    jest.spyOn(Track.prototype, 'attachEventHandlers');
     const track = new Track();
 
     describe('set up component property with necessary classes', () => {
@@ -18,10 +17,6 @@ describe('Track', () => {
 
     it('set up view property', () => {
       expect(track).toHaveProperty('view');
-    });
-
-    it('attach event handlers', () => {
-      expect(track.attachEventHandlers).toBeCalled();
     });
   });
 
@@ -86,7 +81,7 @@ describe('Track', () => {
     });
   });
 
-  describe('attachEventHandlers()', () => {
+  describe('handle events', () => {
     it('handle click', () => {
       const track = new Track();
       const view: any = {};

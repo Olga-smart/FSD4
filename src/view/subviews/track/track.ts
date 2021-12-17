@@ -31,13 +31,13 @@ class Track {
     this.component.append(...elements);
   }
 
-  handleClick(event: MouseEvent): void {
+  private handleClick(event: MouseEvent): void {
     const x: number = event.clientX - (event.currentTarget as Element).getBoundingClientRect().left;
     const y: number = event.clientY - (event.currentTarget as Element).getBoundingClientRect().top;
     this.view?.handleScaleOrTrackClick(x, y);
   }
 
-  attachEventHandlers() {
+  private attachEventHandlers() {
     this.component.addEventListener('click', this.handleClick.bind(this));
   }
 }
