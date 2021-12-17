@@ -66,4 +66,28 @@ describe('Slider', () => {
       expect(slider.component.before).toBeCalledWith(div1, div2, div3);
     });
   });
+
+  describe('after(...elements)', () => {
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+
+    const slider = new Slider();
+    const div = document.createElement('div');
+    slider.component.after = jest.fn();
+    slider.after(div);
+
+    it('call built-in method after', () => {
+      expect(slider.component.after).toBeCalledWith(div);
+    });
+
+    it('work with multiple arguments', () => {
+      const div1 = document.createElement('div');
+      const div2 = document.createElement('div');
+      const div3 = document.createElement('div');
+      slider.after(div1, div2, div3);
+
+      expect(slider.component.after).toBeCalledWith(div1, div2, div3);
+    });
+  });
 });
