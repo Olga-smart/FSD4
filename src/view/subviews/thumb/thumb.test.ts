@@ -40,22 +40,9 @@ describe('Thumb', () => {
           expect(thumb.component.classList).toContain('range-slider__thumb_left');
         });
 
-        it('js-class for left thumb if argument "type" == "left" or by default', () => {
-          let thumb = new Thumb();
-          expect(thumb.component.classList).toContain('js-range-slider__thumb_left');
-
-          thumb = new Thumb('left');
-          expect(thumb.component.classList).toContain('js-range-slider__thumb_left');
-        });
-
         it('class for right thumb if argument "type" == "right"', () => {
           const thumb = new Thumb('right');
           expect(thumb.component.classList).toContain('range-slider__thumb_right');
-        });
-
-        it('js-class for right thumb if argument "type" == "right"', () => {
-          const thumb = new Thumb('right');
-          expect(thumb.component.classList).toContain('js-range-slider__thumb_right');
         });
 
         it('component property is div element', () => {
@@ -63,15 +50,6 @@ describe('Thumb', () => {
           expect(thumb.component).toBeInstanceOf(HTMLDivElement);
         });
       });
-    });
-
-    it('attach event handlers', () => {
-      jest.spyOn(Thumb.prototype, 'attachEventHandlers');
-      const thumb = new Thumb();
-
-      expect(thumb.attachEventHandlers).toBeCalled();
-
-      jest.restoreAllMocks();
     });
   });
 
@@ -151,7 +129,7 @@ describe('Thumb', () => {
     });
   });
 
-  describe('attachEventHandlers()', () => {
+  describe('handle events', () => {
     const thumb = new Thumb();
     const view: any = {};
     thumb.registerWith(view);

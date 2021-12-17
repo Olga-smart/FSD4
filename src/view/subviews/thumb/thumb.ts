@@ -43,15 +43,15 @@ class Thumb {
     return this.component.getBoundingClientRect();
   }
 
-  static handlePointerOver(event: PointerEvent): void {
+  private static handlePointerOver(event: PointerEvent): void {
     (event.currentTarget as Element).classList.add('range-slider__thumb_hover');
   }
 
-  static handlePointerOut(event: PointerEvent): void {
+  private static handlePointerOut(event: PointerEvent): void {
     (event.currentTarget as Element).classList.remove('range-slider__thumb_hover');
   }
 
-  handlePointerDown(event: PointerEvent): void {
+  private handlePointerDown(event: PointerEvent): void {
     (event.currentTarget as Element).classList.add('range-slider__thumb_active');
 
     (event.currentTarget as Element).setPointerCapture(event.pointerId);
@@ -80,15 +80,15 @@ class Thumb {
     this.component.addEventListener('pointerup', handlePointerUp);
   }
 
-  static handlePointerUp(event: PointerEvent): void {
+  private static handlePointerUp(event: PointerEvent): void {
     (event.currentTarget as Element).classList.remove('range-slider__thumb_active');
   }
 
-  static handleDragStart(): false {
+  private static handleDragStart(): false {
     return false;
   }
 
-  attachEventHandlers() {
+  private attachEventHandlers() {
     this.component.addEventListener('pointerover', Thumb.handlePointerOver);
     this.component.addEventListener('pointerout', Thumb.handlePointerOut);
     this.component.addEventListener('pointerdown', this.handlePointerDown.bind(this));
