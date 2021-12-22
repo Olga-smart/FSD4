@@ -120,68 +120,6 @@ class View {
     this.render();
   }
 
-  render(): void {
-    this.track.append(this.range.component);
-    this.slider.append(this.track.component, this.thumbLeft.component);
-    this.component.append(this.slider.component, this.input.component);
-
-    if (this.isRange) {
-      this.slider.append(this.thumbRight!.component);
-    } else {
-      if (!this.vertical) {
-        this.range.setLeftIndentInPx(0);
-      }
-      if (this.vertical) {
-        this.range.setBottomIndentInPx(0);
-      }
-    }
-
-    if (this.minLabel && this.maxLabel) {
-      this.labelsContainer!.append(this.minLabel.component, this.maxLabel.component);
-    }
-
-    if (this.valueLabelLeft) {
-      this.labelsContainer!.append(this.valueLabelLeft.component);
-
-      if (this.isRange) {
-        this.labelsContainer!
-          .append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
-      }
-    }
-
-    if (this.labelsContainer) {
-      this.slider.before(this.labelsContainer.component);
-    }
-
-    if (this.vertical) {
-      this.component.classList.add('range-slider_vertical');
-    }
-
-    if (this.panel) {
-      this.component.append(this.panel.component);
-    }
-
-    if (this.scale) {
-      this.slider.after(this.scale.component);
-    }
-  }
-
-  destroy(): void {
-    if (this.labelsContainer) {
-      Array.from(this.labelsContainer.component.children).forEach((element) => {
-        element.remove();
-      });
-    }
-
-    Array.from(this.slider.component.children).forEach((element) => {
-      element.remove();
-    });
-
-    Array.from(this.component.children).forEach((element) => {
-      element.remove();
-    });
-  }
-
   setMinValue(min: number): void {
     if (this.minLabel) {
       this.minLabel.setValue(min);
@@ -313,98 +251,6 @@ class View {
 
   updateInput(value1: number, value2: number | null = null): void {
     this.input.setValue(value1, value2);
-  }
-
-  mergeLabels(): void {
-    this.valueLabelLeft?.setOpacity(0);
-    this.valueLabelRight?.setOpacity(0);
-    this.valueLabelCommon?.setOpacity(1);
-
-    if (!this.vertical) {
-      const distanceBetweenThumbsInPx = (
-        parseInt(this.thumbRight!.getLeftIndent(), 10)
-        - parseInt(this.thumbLeft.getLeftIndent(), 10)
-      );
-      this.valueLabelCommon?.setLeftIndent(`${parseInt(this.valueLabelLeft!.getLeftIndent(), 10) + distanceBetweenThumbsInPx / 2}px`);
-    }
-
-    if (this.vertical) {
-      const distanceBetweenThumbsInPx = (
-        parseInt(this.thumbRight!.getTopIndent(), 10) - parseInt(this.thumbLeft.getTopIndent(), 10)
-      );
-      this.valueLabelCommon?.setTopIndent(`${parseInt(this.valueLabelRight!.getTopIndent(), 10) - distanceBetweenThumbsInPx / 2}px`);
-    }
-  }
-
-  splitLabels(): void {
-    this.valueLabelCommon?.setOpacity(0);
-    this.valueLabelLeft?.setOpacity(1);
-    this.valueLabelRight?.setOpacity(1);
-  }
-
-  isTwoValueLabelsClose(): boolean | undefined {
-    if (this.vertical) {
-      const bottomLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
-      const topLabelEdge = this.valueLabelRight!.getBoundingClientRect().bottom;
-
-      return ((bottomLabelEdge - topLabelEdge) < 3);
-    }
-
-    const leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
-    const rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().left;
-
-    return ((rightLabelEdge - leftLabelEdge) < 3);
-  }
-
-  isLeftValueLabelCloseToMinLabel(): boolean | undefined {
-    let leftLabelEdge;
-    let minLabelEdge;
-
-    if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().bottom;
-      minLabelEdge = this.minLabel!.getBoundingClientRect().top;
-
-      return ((minLabelEdge - leftLabelEdge) < 3);
-    }
-
-    leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().left;
-    minLabelEdge = this.minLabel!.getBoundingClientRect().right;
-
-    return ((leftLabelEdge - minLabelEdge) < 3);
-  }
-
-  isLeftValueLabelCloseToMaxLabel(): boolean | undefined {
-    let leftLabelEdge;
-    let maxLabelEdge;
-
-    if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel!.getBoundingClientRect().bottom;
-
-      return ((leftLabelEdge - maxLabelEdge) < 3);
-    }
-
-    leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
-    maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
-
-    return ((maxLabelEdge - leftLabelEdge) < 3);
-  }
-
-  isRightValueLabelCloseToMaxLabel(): boolean | undefined {
-    let rightLabelEdge;
-    let maxLabelEdge;
-
-    if (this.vertical) {
-      rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel!.getBoundingClientRect().bottom;
-
-      return ((rightLabelEdge - maxLabelEdge) < 3);
-    }
-
-    rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().right;
-    maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
-
-    return ((maxLabelEdge - rightLabelEdge) < 3);
   }
 
   handleLeftInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
@@ -558,74 +404,6 @@ class View {
     }
   }
 
-  whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
-    const leftThumbCoords = this.thumbLeft.getBoundingClientRect();
-    const rightThumbCoords = this.thumbRight!.getBoundingClientRect();
-    const trackCoords = this.track.getBoundingClientRect();
-
-    let distanceFromLeftThumbCenter: number = 0;
-    let distanceFromRightThumbCenter: number = 0;
-
-    if (!this.vertical) {
-      const leftThumbCenter = leftThumbCoords.left + leftThumbCoords.width / 2 - trackCoords.left;
-      const rightThumbCenter = rightThumbCoords.left
-        + rightThumbCoords.width / 2
-        - trackCoords.left;
-
-      distanceFromLeftThumbCenter = Math.abs(x - leftThumbCenter);
-      distanceFromRightThumbCenter = Math.abs(x - rightThumbCenter);
-    }
-
-    if (this.vertical) {
-      const leftThumbCenter = leftThumbCoords.top + leftThumbCoords.height / 2 - trackCoords.top;
-      const rightThumbCenter = rightThumbCoords.top + rightThumbCoords.height / 2 - trackCoords.top;
-
-      distanceFromLeftThumbCenter = Math.abs(y - leftThumbCenter);
-      distanceFromRightThumbCenter = Math.abs(y - rightThumbCenter);
-    }
-
-    if (distanceFromLeftThumbCenter <= distanceFromRightThumbCenter) {
-      return 'left';
-    }
-    return 'right';
-  }
-
-  addSmoothTransition(side: 'left' | 'right' = 'left'): void {
-    if (side === 'left') {
-      this.thumbLeft.component.classList.add('range-slider__thumb_smooth-transition');
-      this.range.component.classList.add('range-slider__range_smooth-transition');
-      if (this.valueLabelLeft) {
-        this.valueLabelLeft.component.classList.add('range-slider__value-label_smooth-transition');
-      }
-    }
-
-    if (side === 'right') {
-      this.thumbRight!.component.classList.add('range-slider__thumb_smooth-transition');
-      this.range.component.classList.add('range-slider__range_smooth-transition');
-      if (this.valueLabelRight) {
-        this.valueLabelRight.component.classList.add('range-slider__value-label_smooth-transition');
-      }
-    }
-  }
-
-  removeSmoothTransition(side: 'left' | 'right' = 'left'): void {
-    if (side === 'left') {
-      this.thumbLeft.component.classList.remove('range-slider__thumb_smooth-transition');
-      this.range.component.classList.remove('range-slider__range_smooth-transition');
-      if (this.valueLabelLeft) {
-        this.valueLabelLeft.component.classList.remove('range-slider__value-label_smooth-transition');
-      }
-    }
-
-    if (side === 'right') {
-      this.thumbRight!.component.classList.remove('range-slider__thumb_smooth-transition');
-      this.range.component.classList.remove('range-slider__range_smooth-transition');
-      if (this.valueLabelRight) {
-        this.valueLabelRight.component.classList.remove('range-slider__value-label_smooth-transition');
-      }
-    }
-  }
-
   fixLabelsContainerWidthForVertical(): void {
     const labels: Label[] = this.collectLabels();
     this.labelsContainer?.fixWidthForVertical(labels);
@@ -634,25 +412,6 @@ class View {
   fixLabelsContainerHeightForHorizontal(): void {
     const labels: Label[] = this.collectLabels();
     this.labelsContainer?.fixHeightForHorizontal(labels);
-  }
-
-  collectLabels(): Label[] {
-    const labels: Label[] = [];
-
-    if (this.minLabel && this.maxLabel) {
-      labels.push(this.minLabel);
-      labels.push(this.maxLabel);
-    }
-
-    if (this.valueLabelLeft) {
-      labels.push(this.valueLabelLeft);
-    }
-
-    if (this.valueLabelRight) {
-      labels.push(this.valueLabelRight);
-    }
-
-    return labels;
   }
 
   setPanelValues(options: PanelOptions): void {
@@ -763,9 +522,9 @@ class View {
   }
 
   changeScaleIntervals(value: number): void {
-    if (value > 0) {
-      this.scaleIntervals = value;
-    }
+    if (value <= 0) return;
+
+    this.scaleIntervals = value;
     this.removeScale();
     this.eventManager.notify('viewChangeScaleIntervals');
   }
@@ -877,6 +636,247 @@ class View {
         this.fixLabelsContainerWidthForVertical();
       }
     }
+  }
+
+  private render(): void {
+    this.track.append(this.range.component);
+    this.slider.append(this.track.component, this.thumbLeft.component);
+    this.component.append(this.slider.component, this.input.component);
+
+    if (this.isRange) {
+      this.slider.append(this.thumbRight!.component);
+    } else {
+      if (!this.vertical) {
+        this.range.setLeftIndentInPx(0);
+      }
+      if (this.vertical) {
+        this.range.setBottomIndentInPx(0);
+      }
+    }
+
+    if (this.minLabel && this.maxLabel) {
+      this.labelsContainer!.append(this.minLabel.component, this.maxLabel.component);
+    }
+
+    if (this.valueLabelLeft) {
+      this.labelsContainer!.append(this.valueLabelLeft.component);
+
+      if (this.isRange) {
+        this.labelsContainer!
+          .append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
+      }
+    }
+
+    if (this.labelsContainer) {
+      this.slider.before(this.labelsContainer.component);
+    }
+
+    if (this.vertical) {
+      this.component.classList.add('range-slider_vertical');
+    }
+
+    if (this.panel) {
+      this.component.append(this.panel.component);
+    }
+
+    if (this.scale) {
+      this.slider.after(this.scale.component);
+    }
+  }
+
+  private destroy(): void {
+    if (this.labelsContainer) {
+      Array.from(this.labelsContainer.component.children).forEach((element) => {
+        element.remove();
+      });
+    }
+
+    Array.from(this.slider.component.children).forEach((element) => {
+      element.remove();
+    });
+
+    Array.from(this.component.children).forEach((element) => {
+      element.remove();
+    });
+  }
+
+  private mergeLabels(): void {
+    this.valueLabelLeft?.setOpacity(0);
+    this.valueLabelRight?.setOpacity(0);
+    this.valueLabelCommon?.setOpacity(1);
+
+    if (!this.vertical) {
+      const distanceBetweenThumbsInPx = (
+        parseInt(this.thumbRight!.getLeftIndent(), 10)
+        - parseInt(this.thumbLeft.getLeftIndent(), 10)
+      );
+      this.valueLabelCommon?.setLeftIndent(`${parseInt(this.valueLabelLeft!.getLeftIndent(), 10) + distanceBetweenThumbsInPx / 2}px`);
+    }
+
+    if (this.vertical) {
+      const distanceBetweenThumbsInPx = (
+        parseInt(this.thumbRight!.getTopIndent(), 10) - parseInt(this.thumbLeft.getTopIndent(), 10)
+      );
+      this.valueLabelCommon?.setTopIndent(`${parseInt(this.valueLabelRight!.getTopIndent(), 10) - distanceBetweenThumbsInPx / 2}px`);
+    }
+  }
+
+  private splitLabels(): void {
+    this.valueLabelCommon?.setOpacity(0);
+    this.valueLabelLeft?.setOpacity(1);
+    this.valueLabelRight?.setOpacity(1);
+  }
+
+  private isTwoValueLabelsClose(): boolean | undefined {
+    if (this.vertical) {
+      const bottomLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
+      const topLabelEdge = this.valueLabelRight!.getBoundingClientRect().bottom;
+
+      return ((bottomLabelEdge - topLabelEdge) < 3);
+    }
+
+    const leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
+    const rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().left;
+
+    return ((rightLabelEdge - leftLabelEdge) < 3);
+  }
+
+  private isLeftValueLabelCloseToMinLabel(): boolean | undefined {
+    let leftLabelEdge;
+    let minLabelEdge;
+
+    if (this.vertical) {
+      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().bottom;
+      minLabelEdge = this.minLabel!.getBoundingClientRect().top;
+
+      return ((minLabelEdge - leftLabelEdge) < 3);
+    }
+
+    leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().left;
+    minLabelEdge = this.minLabel!.getBoundingClientRect().right;
+
+    return ((leftLabelEdge - minLabelEdge) < 3);
+  }
+
+  private isLeftValueLabelCloseToMaxLabel(): boolean | undefined {
+    let leftLabelEdge;
+    let maxLabelEdge;
+
+    if (this.vertical) {
+      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel!.getBoundingClientRect().bottom;
+
+      return ((leftLabelEdge - maxLabelEdge) < 3);
+    }
+
+    leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
+    maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
+
+    return ((maxLabelEdge - leftLabelEdge) < 3);
+  }
+
+  private isRightValueLabelCloseToMaxLabel(): boolean | undefined {
+    let rightLabelEdge;
+    let maxLabelEdge;
+
+    if (this.vertical) {
+      rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().top;
+      maxLabelEdge = this.maxLabel!.getBoundingClientRect().bottom;
+
+      return ((rightLabelEdge - maxLabelEdge) < 3);
+    }
+
+    rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().right;
+    maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
+
+    return ((maxLabelEdge - rightLabelEdge) < 3);
+  }
+
+  private whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
+    const leftThumbCoords = this.thumbLeft.getBoundingClientRect();
+    const rightThumbCoords = this.thumbRight!.getBoundingClientRect();
+    const trackCoords = this.track.getBoundingClientRect();
+
+    let distanceFromLeftThumbCenter: number = 0;
+    let distanceFromRightThumbCenter: number = 0;
+
+    if (!this.vertical) {
+      const leftThumbCenter = leftThumbCoords.left + leftThumbCoords.width / 2 - trackCoords.left;
+      const rightThumbCenter = rightThumbCoords.left
+        + rightThumbCoords.width / 2
+        - trackCoords.left;
+
+      distanceFromLeftThumbCenter = Math.abs(x - leftThumbCenter);
+      distanceFromRightThumbCenter = Math.abs(x - rightThumbCenter);
+    }
+
+    if (this.vertical) {
+      const leftThumbCenter = leftThumbCoords.top + leftThumbCoords.height / 2 - trackCoords.top;
+      const rightThumbCenter = rightThumbCoords.top + rightThumbCoords.height / 2 - trackCoords.top;
+
+      distanceFromLeftThumbCenter = Math.abs(y - leftThumbCenter);
+      distanceFromRightThumbCenter = Math.abs(y - rightThumbCenter);
+    }
+
+    if (distanceFromLeftThumbCenter <= distanceFromRightThumbCenter) {
+      return 'left';
+    }
+    return 'right';
+  }
+
+  private addSmoothTransition(side: 'left' | 'right' = 'left'): void {
+    if (side === 'left') {
+      this.thumbLeft.component.classList.add('range-slider__thumb_smooth-transition');
+      this.range.component.classList.add('range-slider__range_smooth-transition');
+      if (this.valueLabelLeft) {
+        this.valueLabelLeft.component.classList.add('range-slider__value-label_smooth-transition');
+      }
+    }
+
+    if (side === 'right') {
+      this.thumbRight!.component.classList.add('range-slider__thumb_smooth-transition');
+      this.range.component.classList.add('range-slider__range_smooth-transition');
+      if (this.valueLabelRight) {
+        this.valueLabelRight.component.classList.add('range-slider__value-label_smooth-transition');
+      }
+    }
+  }
+
+  private removeSmoothTransition(side: 'left' | 'right' = 'left'): void {
+    if (side === 'left') {
+      this.thumbLeft.component.classList.remove('range-slider__thumb_smooth-transition');
+      this.range.component.classList.remove('range-slider__range_smooth-transition');
+      if (this.valueLabelLeft) {
+        this.valueLabelLeft.component.classList.remove('range-slider__value-label_smooth-transition');
+      }
+    }
+
+    if (side === 'right') {
+      this.thumbRight!.component.classList.remove('range-slider__thumb_smooth-transition');
+      this.range.component.classList.remove('range-slider__range_smooth-transition');
+      if (this.valueLabelRight) {
+        this.valueLabelRight.component.classList.remove('range-slider__value-label_smooth-transition');
+      }
+    }
+  }
+
+  private collectLabels(): Label[] {
+    const labels: Label[] = [];
+
+    if (this.minLabel && this.maxLabel) {
+      labels.push(this.minLabel);
+      labels.push(this.maxLabel);
+    }
+
+    if (this.valueLabelLeft) {
+      labels.push(this.valueLabelLeft);
+    }
+
+    if (this.valueLabelRight) {
+      labels.push(this.valueLabelRight);
+    }
+
+    return labels;
   }
 }
 
