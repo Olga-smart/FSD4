@@ -17,22 +17,9 @@ describe('ValueLabel', () => {
         expect(valueLabel.component.classList).toContain('range-slider__value-label_left');
       });
 
-      it('set up js-class for left label if argument "type" == "left" or by default', () => {
-        let valueLabel = new ValueLabel();
-        expect(valueLabel.component.classList).toContain('js-range-slider__value-label_left');
-
-        valueLabel = new ValueLabel('left');
-        expect(valueLabel.component.classList).toContain('js-range-slider__value-label_left');
-      });
-
       it('set up class for right label if argument "type" == "right"', () => {
         const valueLabel = new ValueLabel('right');
         expect(valueLabel.component.classList).toContain('range-slider__value-label_right');
-      });
-
-      it('set up js-class for right label if argument "type" == "right"', () => {
-        const valueLabel = new ValueLabel('right');
-        expect(valueLabel.component.classList).toContain('js-range-slider__value-label_right');
       });
 
       it('component property is div element', () => {
