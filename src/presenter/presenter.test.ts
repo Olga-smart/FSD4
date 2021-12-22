@@ -567,17 +567,6 @@ describe('Presenter', () => {
         expect(presenter.view.setRightValue).toBeCalled();
       });
 
-      it('add scale to view if view has scale', () => {
-        const slider = document.createElement('div');
-        const model = new Model(defaultModelOptions);
-        const view = new View(slider, { scale: true });
-        const presenter = new Presenter(model, view);
-        presenter.view.addScale = jest.fn();
-        presenter.inform('viewChangeOrientationFromOutside', null);
-
-        expect(presenter.view.addScale).toBeCalled();
-      });
-
       describe('fix labels container width or height if view has labels', () => {
         it('if view is horizontal', () => {
           const slider = document.createElement('div');
