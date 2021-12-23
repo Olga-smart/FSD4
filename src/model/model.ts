@@ -42,21 +42,20 @@ class Model {
   setLeftValue(value: number): void {
     if (value < this.min) {
       this.leftValue = this.min;
-      return;
-    }
+    } else {
+      if (!this.isRange) {
+        this.leftValue = Math.min(value, this.max);
+      }
 
-    if (!this.isRange) {
-      this.leftValue = Math.min(value, this.max);
-    }
-
-    if (this.isRange) {
-      this.leftValue = Math.min(value, this.rightValue!);
+      if (this.isRange) {
+        this.leftValue = Math.min(value, this.rightValue!);
+      }
     }
 
     this.eventManager.notify('modelLeftSet');
   }
 
-  setRightValue(value: number = 75): void {
+  setRightValue(value: number): void {
     if (value > this.max) {
       this.rightValue = this.max;
     } else {

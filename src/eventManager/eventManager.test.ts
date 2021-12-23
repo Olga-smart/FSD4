@@ -1,6 +1,6 @@
 import { EventManager } from './eventManager';
 
-describe('EvenManager', () => {
+describe('EventManager', () => {
   describe('subscribe(listener)', () => {
     it('add listener to listeners array', () => {
       const eventManager = new EventManager();
