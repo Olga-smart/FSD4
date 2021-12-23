@@ -55,7 +55,7 @@ class Model {
     this.eventManager.notify('modelLeftSet');
   }
 
-  setRightValue(value: number): void {
+  setRightValue(value: number = this.max): void {
     if (value > this.max) {
       this.rightValue = this.max;
     } else {
