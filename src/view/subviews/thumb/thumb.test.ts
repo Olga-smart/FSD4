@@ -63,24 +63,24 @@ describe('Thumb', () => {
     });
   });
 
-  describe('setLeftIndentInPx(px)', () => {
+  describe('setLeftIndent(percent)', () => {
     const thumb = new Thumb();
 
     it('set up left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        thumb.setLeftIndentInPx(i);
-        expect(thumb.component.style.left).toBe(`${i}px`);
+        thumb.setLeftIndent(i);
+        expect(thumb.component.style.left).toBe(`${i}%`);
       }
     });
   });
 
-  describe('setTopIndentInPx(px)', () => {
+  describe('setTopIndent(percent)', () => {
     const thumb = new Thumb();
 
     it('set up top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        thumb.setTopIndentInPx(i);
-        expect(thumb.component.style.top).toBe(`${i}px`);
+        thumb.setTopIndent(i);
+        expect(thumb.component.style.top).toBe(`${i}%`);
       }
     });
   });
@@ -90,9 +90,9 @@ describe('Thumb', () => {
 
     it('return left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        thumb.setLeftIndentInPx(i);
+        thumb.setLeftIndent(i);
         const indent = thumb.getLeftIndent();
-        expect(indent).toBe(`${i}px`);
+        expect(indent).toBe(`${i}%`);
       }
     });
   });
@@ -102,9 +102,9 @@ describe('Thumb', () => {
 
     it('return top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        thumb.setTopIndentInPx(i);
+        thumb.setTopIndent(i);
         const indent = thumb.getTopIndent();
-        expect(indent).toBe(`${i}px`);
+        expect(indent).toBe(`${i}%`);
       }
     });
   });

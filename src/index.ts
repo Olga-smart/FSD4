@@ -181,7 +181,7 @@ $(() => {
   $('.js-range-slider').rangeSlider({
     panel: true,
     vertical: false,
-    range: false,
+    range: true,
   });
   // const slider = $('.js-range-slider').data('rangeSlider');
   // slider.setLeftValue(50).setRightValue(80);

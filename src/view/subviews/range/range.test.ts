@@ -15,68 +15,68 @@ describe('Range', () => {
     });
   });
 
-  describe('setLeftIndentInPx(px)', () => {
+  describe('setLeftIndent(percent)', () => {
     const range = new Range();
 
     it('set up left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        range.setLeftIndentInPx(i);
-        expect(range.component.style.left).toBe(`${i}px`);
+        range.setLeftIndent(i);
+        expect(range.component.style.left).toBe(`${i}%`);
       }
     });
   });
 
-  describe('setRightIndentInPx(px)', () => {
+  describe('setRightIndent(percent)', () => {
     const range = new Range();
 
     it('set up right property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        range.setRightIndentInPx(i);
-        expect(range.component.style.right).toBe(`${i}px`);
+        range.setRightIndent(i);
+        expect(range.component.style.right).toBe(`${i}%`);
       }
     });
   });
 
-  describe('setTopIndentInPx(px)', () => {
+  describe('setTopIndent(percent)', () => {
     const range = new Range();
 
     it('set up top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        range.setTopIndentInPx(i);
-        expect(range.component.style.top).toBe(`${i}px`);
+        range.setTopIndent(i);
+        expect(range.component.style.top).toBe(`${i}%`);
       }
     });
   });
 
-  describe('setBottomIndentInPx(px)', () => {
+  describe('setBottomIndent(percent)', () => {
     const range = new Range();
 
     it('set up bottom property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        range.setBottomIndentInPx(i);
-        expect(range.component.style.bottom).toBe(`${i}px`);
+        range.setBottomIndent(i);
+        expect(range.component.style.bottom).toBe(`${i}%`);
       }
     });
   });
 
-  describe('setWidthInPx(px)', () => {
+  describe('setWidth(percent)', () => {
     const range = new Range();
 
     it('set up width property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        range.setWidthInPx(i);
-        expect(range.component.style.width).toBe(`${i}px`);
+        range.setWidth(i);
+        expect(range.component.style.width).toBe(`${i}%`);
       }
     });
   });
 
-  describe('setHeightInPx(px)', () => {
+  describe('setHeight(percent)', () => {
     const range = new Range();
 
     it('set up height property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        range.setHeightInPx(i);
-        expect(range.component.style.height).toBe(`${i}px`);
+        range.setHeight(i);
+        expect(range.component.style.height).toBe(`${i}%`);
       }
     });
   });

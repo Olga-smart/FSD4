@@ -19,12 +19,12 @@ class Thumb {
     this.view = view;
   }
 
-  setLeftIndentInPx(px: number): void {
-    this.component.style.left = `${px}px`;
+  setLeftIndent(percent: number): void {
+    this.component.style.left = `${percent}%`;
   }
 
-  setTopIndentInPx(px: number): void {
-    this.component.style.top = `${px}px`;
+  setTopIndent(percent: number): void {
+    this.component.style.top = `${percent}%`;
   }
 
   getLeftIndent(): string {
@@ -41,6 +41,14 @@ class Thumb {
 
   getBoundingClientRect(): DOMRect {
     return this.component.getBoundingClientRect();
+  }
+
+  getWidth(): number {
+    return this.component.offsetWidth;
+  }
+
+  getHeight(): number {
+    return this.component.offsetHeight;
   }
 
   private static handlePointerOver(event: PointerEvent): void {

@@ -138,7 +138,7 @@ class Presenter implements IEventListener {
 
   private handleModelLeftSet(): void {
     const value = this.model.leftValue;
-    this.view.setLeftValue(value, this.convertValueToPx(value));
+    this.view.setLeftValue(value, this.convertValueToPercent(value));
     this.updateViewInput();
 
     if (this.view.panel) {
@@ -153,7 +153,7 @@ class Presenter implements IEventListener {
 
   private handleModelRightSet(): void {
     const value = this.model.rightValue!;
-    this.view.setRightValue(value, this.convertValueToPx(value));
+    this.view.setRightValue(value, this.convertValueToPercent(value));
     this.updateViewInput();
 
     if (this.view.panel) {
@@ -162,13 +162,13 @@ class Presenter implements IEventListener {
   }
 
   private passLeftValueToView(value: number): void {
-    const px = this.convertValueToPx(value);
-    this.view.setLeftValue(value, px);
+    const percent = this.convertValueToPercent(value);
+    this.view.setLeftValue(value, percent);
   }
 
   private passRightValueToView(value: number): void {
-    const px = this.convertValueToPx(value);
-    this.view.setRightValue(value, px);
+    const percent = this.convertValueToPercent(value);
+    this.view.setRightValue(value, percent);
   }
 
   private updateViewInput(): void {
@@ -181,24 +181,13 @@ class Presenter implements IEventListener {
     }
   }
 
-  private convertValueToPx(value: number): number {
+  private convertValueToPercent(value: number): number {
     const { min } = this.model;
     const { max } = this.model;
     let percent: number = ((value - min) / (max - min)) * 100;
     percent = Presenter.removeCalcInaccuracy(percent);
-    let px: number = 0;
 
-    if (!this.view.vertical) {
-      const trackWidthInPx: number = +this.view.track.getOffsetWidth();
-      px = (trackWidthInPx * percent) / 100;
-    }
-
-    if (this.view.vertical) {
-      const trackHeightInPx: number = +this.view.track.getOffsetHeight();
-      px = (trackHeightInPx * percent) / 100;
-    }
-
-    return Math.round(px);
+    return percent;
   }
 
   private convertPxToValue(px: number): number {

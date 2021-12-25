@@ -132,23 +132,23 @@ class View {
     }
   }
 
-  setLeftValue(value: number, px: number): void {
+  setLeftValue(value: number, percent: number): void {
     if (!this.vertical) {
-      this.thumbLeft.setLeftIndentInPx(px);
+      this.thumbLeft.setLeftIndent(percent);
 
       if (!this.isRange) {
-        this.range.setWidthInPx(px);
+        this.range.setWidth(percent);
       }
 
       if (this.isRange) {
-        this.range.setLeftIndentInPx(px);
+        this.range.setLeftIndent(percent);
       }
 
       if (this.valueLabelLeft) {
         this.valueLabelLeft.setLeftIndent(this.thumbLeft.getLeftIndent());
       }
 
-      if (parseInt(this.thumbLeft.getLeftIndent(), 10) === this.track.getOffsetWidth()) {
+      if (this.thumbLeft.getLeftIndent() === '100%') {
         this.thumbLeft.setZIndex(100);
       } else {
         this.thumbLeft.setZIndex(3);
@@ -156,22 +156,21 @@ class View {
     }
 
     if (this.vertical) {
-      const pxFromTop = this.track.getOffsetHeight() - px;
-      this.thumbLeft.setTopIndentInPx(pxFromTop);
+      this.thumbLeft.setTopIndent(100 - percent);
 
       if (!this.isRange) {
-        this.range.setHeightInPx(px);
+        this.range.setHeight(percent);
       }
 
       if (this.isRange) {
-        this.range.setBottomIndentInPx(px);
+        this.range.setBottomIndent(percent);
       }
 
       if (this.valueLabelLeft) {
         this.valueLabelLeft.setTopIndent(this.thumbLeft.getTopIndent());
       }
 
-      if (parseInt(this.thumbLeft.getTopIndent(), 10) === 0) {
+      if (this.thumbLeft.getTopIndent() === '0%') {
         this.thumbLeft.setZIndex(100);
       } else {
         this.thumbLeft.setZIndex(3);
@@ -209,10 +208,10 @@ class View {
     }
   }
 
-  setRightValue(value: number, px: number): void {
+  setRightValue(value: number, percent: number): void {
     if (!this.vertical) {
-      this.thumbRight?.setLeftIndentInPx(px);
-      this.range.setRightIndentInPx(this.track.getOffsetWidth() - px);
+      this.thumbRight?.setLeftIndent(percent);
+      this.range.setRightIndent(100 - percent);
 
       if (this.valueLabelRight) {
         this.valueLabelRight.setLeftIndent(this.thumbRight!.getLeftIndent());
@@ -220,9 +219,8 @@ class View {
     }
 
     if (this.vertical) {
-      const pxFromTop = this.track.getOffsetHeight() - px;
-      this.thumbRight?.setTopIndentInPx(pxFromTop);
-      this.range.setTopIndentInPx(pxFromTop);
+      this.thumbRight?.setTopIndent(100 - percent);
+      this.range.setTopIndent(100 - percent);
 
       if (this.valueLabelRight) {
         this.valueLabelRight.setTopIndent(this.thumbRight!.getTopIndent());
@@ -255,20 +253,25 @@ class View {
 
   handleLeftInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
     if (!this.vertical) {
-      let newLeft = clientX - shiftX - this.track.getBoundingClientRect().left;
+      const trackShift = this.track.getBoundingClientRect().left;
+      let newLeft = clientX - shiftX - trackShift;
 
       if (newLeft < 0) {
         newLeft = 0;
       }
 
       if (!this.isRange) {
-        if (newLeft > this.track.getOffsetWidth()) {
-          newLeft = this.track.getOffsetWidth();
+        const trackWidth = this.track.getOffsetWidth();
+
+        if (newLeft > trackWidth) {
+          newLeft = trackWidth;
         }
       }
 
       if (this.isRange) {
-        const rightThumbPosition = parseInt(this.thumbRight!.getLeftIndent(), 10);
+        const rightThumbShift = this.thumbRight!.getBoundingClientRect().left;
+        const rightThumbPosition = rightThumbShift + this.thumbRight!.getWidth() / 2 - trackShift;
+
         if (newLeft > rightThumbPosition) {
           newLeft = rightThumbPosition;
         }
@@ -278,10 +281,12 @@ class View {
     }
 
     if (this.vertical) {
-      let newTop = clientY - shiftY - this.track.getBoundingClientRect().top;
+      const trackShift = this.track.getBoundingClientRect().top;
+      let newTop = clientY - shiftY - trackShift;
 
-      if (newTop > this.track.getOffsetHeight()) {
-        newTop = this.track.getOffsetHeight();
+      const trackHeight = this.track.getOffsetHeight();
+      if (newTop > trackHeight) {
+        newTop = trackHeight;
       }
 
       if (!this.isRange) {
@@ -291,13 +296,15 @@ class View {
       }
 
       if (this.isRange) {
-        const rightThumbPosition = parseInt(this.thumbRight!.getTopIndent(), 10);
+        const rightThumbShift = this.thumbRight!.getBoundingClientRect().top;
+        const rightThumbPosition = rightThumbShift + this.thumbRight!.getHeight() / 2 - trackShift;
+
         if (newTop < rightThumbPosition) {
           newTop = rightThumbPosition;
         }
       }
 
-      const newBottom = this.track.getOffsetHeight() - newTop;
+      const newBottom = trackHeight - newTop;
 
       this.eventManager.notify('viewLeftInput', newBottom);
     }
@@ -305,29 +312,35 @@ class View {
 
   handleRightInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
     if (!this.vertical) {
-      let newLeft = clientX - shiftX - this.track.getBoundingClientRect().left;
+      const trackShift = this.track.getBoundingClientRect().left;
+      let newLeft = clientX - shiftX - trackShift;
 
-      const leftThumbPosition = parseInt(this.thumbLeft.getLeftIndent(), 10);
+      const leftThumbShift = this.thumbLeft.getBoundingClientRect().left;
+      const leftThumbPosition = leftThumbShift + this.thumbLeft.getWidth() / 2 - trackShift;
 
       if (newLeft < leftThumbPosition) {
         newLeft = leftThumbPosition;
       }
 
-      if (newLeft > this.track.getOffsetWidth()) {
-        newLeft = this.track.getOffsetWidth();
+      const trackWidth = this.track.getOffsetWidth();
+
+      if (newLeft > trackWidth) {
+        newLeft = trackWidth;
       }
 
       this.eventManager.notify('viewRightInput', newLeft);
     }
 
     if (this.vertical) {
-      let newTop = clientY - shiftY - this.track.getBoundingClientRect().top;
+      const trackShift = this.track.getBoundingClientRect().top;
+      let newTop = clientY - shiftY - trackShift;
 
       if (newTop < 0) {
         newTop = 0;
       }
 
-      const leftThumbPosition = parseInt(this.thumbLeft.getTopIndent(), 10);
+      const leftThumbShift = this.thumbLeft.getBoundingClientRect().top;
+      const leftThumbPosition = leftThumbShift + this.thumbLeft.getHeight() / 2 - trackShift;
 
       if (newTop > leftThumbPosition) {
         newTop = leftThumbPosition;
@@ -455,10 +468,10 @@ class View {
       this.vertical = true;
       this.destroy();
       this.render();
-      this.thumbLeft.setLeftIndentInPx(0);
-      this.thumbRight?.setLeftIndentInPx(0);
-      this.range.setLeftIndentInPx(0);
-      this.range.setRightIndentInPx(0);
+      this.thumbLeft.setLeftIndent(0);
+      this.thumbRight?.setLeftIndent(0);
+      this.range.setLeftIndent(0);
+      this.range.setRightIndent(0);
       this.range.resetTopIndent();
       this.range.resetWidth();
       this.valueLabelLeft?.setLeftIndent('unset');
@@ -473,10 +486,10 @@ class View {
       this.component.classList.remove('range-slider_vertical');
       this.destroy();
       this.render();
-      this.thumbLeft.setTopIndentInPx(0);
-      this.thumbRight?.setTopIndentInPx(0);
-      this.range.setBottomIndentInPx(0);
-      this.range.setTopIndentInPx(0);
+      this.thumbLeft.setTopIndent(0);
+      this.thumbRight?.setTopIndent(0);
+      this.range.setBottomIndent(0);
+      this.range.setTopIndent(0);
       this.range.resetHeight();
       this.valueLabelLeft?.setTopIndent('unset');
       this.valueLabelRight?.setTopIndent('unset');
@@ -647,10 +660,10 @@ class View {
       this.slider.append(this.thumbRight!.component);
     } else {
       if (!this.vertical) {
-        this.range.setLeftIndentInPx(0);
+        this.range.setLeftIndent(0);
       }
       if (this.vertical) {
-        this.range.setBottomIndentInPx(0);
+        this.range.setBottomIndent(0);
       }
     }
 
@@ -706,18 +719,18 @@ class View {
     this.valueLabelCommon?.setOpacity(1);
 
     if (!this.vertical) {
-      const distanceBetweenThumbsInPx = (
+      const distanceBetweenThumbs = (
         parseInt(this.thumbRight!.getLeftIndent(), 10)
         - parseInt(this.thumbLeft.getLeftIndent(), 10)
       );
-      this.valueLabelCommon?.setLeftIndent(`${parseInt(this.valueLabelLeft!.getLeftIndent(), 10) + distanceBetweenThumbsInPx / 2}px`);
+      this.valueLabelCommon?.setLeftIndent(`${parseInt(this.valueLabelLeft!.getLeftIndent(), 10) + distanceBetweenThumbs / 2}%`);
     }
 
     if (this.vertical) {
-      const distanceBetweenThumbsInPx = (
+      const distanceBetweenThumbs = (
         parseInt(this.thumbRight!.getTopIndent(), 10) - parseInt(this.thumbLeft.getTopIndent(), 10)
       );
-      this.valueLabelCommon?.setTopIndent(`${parseInt(this.valueLabelRight!.getTopIndent(), 10) - distanceBetweenThumbsInPx / 2}px`);
+      this.valueLabelCommon?.setTopIndent(`${parseInt(this.valueLabelRight!.getTopIndent(), 10) - distanceBetweenThumbs / 2}%`);
     }
   }
 

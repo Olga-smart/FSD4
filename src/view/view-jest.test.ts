@@ -6,7 +6,6 @@ import Thumb from './subviews/thumb/thumb';
 import LabelsContainer from './subviews/labelsContainer/labelsContainer';
 import MinMaxLabel from './subviews/minMaxLabel/minMaxLabel';
 import ValueLabel from './subviews/valueLabel/valueLabel';
-import Label from './subviews/label/label';
 import Scale from './subviews/scale/scale';
 
 describe('View', () => {
@@ -349,20 +348,20 @@ describe('View', () => {
 
         it('set left indent = 0 if slider is horizontal or by default', () => {
           const newSlider = document.createElement('div');
-          jest.spyOn(Range.prototype, 'setLeftIndentInPx');
+          jest.spyOn(Range.prototype, 'setLeftIndent');
           const newView = new View(newSlider);
 
-          expect(newView.range.setLeftIndentInPx).toBeCalledWith(0);
+          expect(newView.range.setLeftIndent).toBeCalledWith(0);
         });
 
         it('set bottom indent = 0 if slider is vertical', () => {
           const newSlider = document.createElement('div');
-          jest.spyOn(Range.prototype, 'setBottomIndentInPx');
+          jest.spyOn(Range.prototype, 'setBottomIndent');
           const newView = new View(newSlider, {
             vertical: true,
           });
 
-          expect(newView.range.setBottomIndentInPx).toBeCalledWith(0);
+          expect(newView.range.setBottomIndent).toBeCalledWith(0);
         });
       });
 
@@ -499,17 +498,17 @@ describe('View', () => {
     });
   });
 
-  describe('setLeftValue(value, px)', () => {
+  describe('setLeftValue(value, percent)', () => {
     describe('do necessary actions with thumb', () => {
       describe('set up left thumb position', () => {
         it('change left indent if slider is horizontal', () => {
           const slider = document.createElement('div');
           const view = new View(slider);
-          view.thumbLeft.setLeftIndentInPx = jest.fn();
+          view.thumbLeft.setLeftIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setLeftValue(50, px);
-            expect(view.thumbLeft.setLeftIndentInPx).toBeCalledWith(px);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(view.thumbLeft.setLeftIndent).toBeCalledWith(i);
           }
         });
 
@@ -518,14 +517,11 @@ describe('View', () => {
           const view = new View(slider, {
             vertical: true,
           });
-          view.thumbLeft.setTopIndentInPx = jest.fn();
-          const trackHeight = 500;
-          view.track.getOffsetHeight = jest.fn();
-          (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
+          view.thumbLeft.setTopIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setLeftValue(50, px);
-            expect(view.thumbLeft.setTopIndentInPx).toBeCalledWith(trackHeight - px);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(view.thumbLeft.setTopIndent).toBeCalledWith(100 - i);
           }
         });
       });
@@ -534,17 +530,14 @@ describe('View', () => {
         it('if slider is horizontal', () => {
           const slider = document.createElement('div');
           const view = new View(slider);
+
           view.thumbLeft.getLeftIndent = jest.fn();
-          view.track.getOffsetWidth = jest.fn();
+          (view.thumbLeft.getLeftIndent as jest.Mock).mockReturnValue('100%');
           view.thumbLeft.setZIndex = jest.fn();
 
-          for (let px = 50; px <= 100; px += 1) {
-            (view.thumbLeft.getLeftIndent as jest.Mock).mockReturnValue(px);
-            (view.track.getOffsetWidth as jest.Mock).mockReturnValue(px);
-            view.setLeftValue(200, px);
+          view.setLeftValue(200, 100);
 
-            expect(view.thumbLeft.setZIndex).toBeCalledWith(100);
-          }
+          expect(view.thumbLeft.setZIndex).toBeCalledWith(100);
         });
 
         it('if slider is vertical', () => {
@@ -553,10 +546,10 @@ describe('View', () => {
             vertical: true,
           });
           view.thumbLeft.getTopIndent = jest.fn();
-          (view.thumbLeft.getTopIndent as jest.Mock).mockReturnValue(0);
+          (view.thumbLeft.getTopIndent as jest.Mock).mockReturnValue('0%');
           view.thumbLeft.setZIndex = jest.fn();
 
-          view.setLeftValue(200, 200);
+          view.setLeftValue(200, 0);
           expect(view.thumbLeft.setZIndex).toBeCalledWith(100);
         });
       });
@@ -567,11 +560,11 @@ describe('View', () => {
         it('set up range width if !view.isRange', () => {
           const slider = document.createElement('div');
           const view = new View(slider);
-          view.range.setWidthInPx = jest.fn();
+          view.range.setWidth = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setLeftValue(50, px);
-            expect(view.range.setWidthInPx).toBeCalledWith(px);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(view.range.setWidth).toBeCalledWith(i);
           }
         });
 
@@ -580,11 +573,11 @@ describe('View', () => {
           const view = new View(slider, {
             range: true,
           });
-          view.range.setLeftIndentInPx = jest.fn();
+          view.range.setLeftIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setLeftValue(50, px);
-            expect(view.range.setLeftIndentInPx).toBeCalledWith(px);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(view.range.setLeftIndent).toBeCalledWith(i);
           }
         });
       });
@@ -595,11 +588,11 @@ describe('View', () => {
           const view = new View(slider, {
             vertical: true,
           });
-          view.range.setHeightInPx = jest.fn();
+          view.range.setHeight = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setLeftValue(50, px);
-            expect(view.range.setHeightInPx).toBeCalledWith(px);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(view.range.setHeight).toBeCalledWith(i);
           }
         });
 
@@ -609,17 +602,17 @@ describe('View', () => {
             vertical: true,
             range: true,
           });
-          view.range.setBottomIndentInPx = jest.fn();
+          view.range.setBottomIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setLeftValue(50, px);
-            expect(view.range.setBottomIndentInPx).toBeCalledWith(px);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(view.range.setBottomIndent).toBeCalledWith(i);
           }
         });
       });
     });
 
-    describe('do necessary actions with labels if slider has labels', () => {
+    describe('do necessary actions with labels, if slider has labels', () => {
       describe('set up labels value', () => {
         it('set up left label value', () => {
           const slider = document.createElement('div');
@@ -634,7 +627,7 @@ describe('View', () => {
           }
         });
 
-        it('set up common label value is view.isRange', () => {
+        it('set up common label value, if view.isRange', () => {
           const slider = document.createElement('div');
           const view = new View(slider, {
             valueLabels: true,
@@ -653,39 +646,36 @@ describe('View', () => {
       });
 
       describe('set up left value label position', () => {
-        it('change left indent if slider is horizontal', () => {
+        it('change left indent, if slider is horizontal', () => {
           const slider = document.createElement('div');
           const view = new View(slider, {
             valueLabels: true,
           });
           view.valueLabelLeft!.setLeftIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setLeftValue(50, px);
-            expect(view.valueLabelLeft!.setLeftIndent).toBeCalledWith(`${px}px`);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(view.valueLabelLeft!.setLeftIndent).toBeCalledWith(`${i}%`);
           }
         });
 
-        it('change top indent if slider is vertical', () => {
+        it('change top indent, if slider is vertical', () => {
           const slider = document.createElement('div');
           const view = new View(slider, {
             vertical: true,
             valueLabels: true,
           });
           view.valueLabelLeft!.setTopIndent = jest.fn();
-          const trackHeight = 500;
-          view.track.getOffsetHeight = jest.fn();
-          (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setLeftValue(50, px);
-            expect(view.valueLabelLeft!.setTopIndent).toBeCalledWith(`${trackHeight - px}px`);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(view.valueLabelLeft!.setTopIndent).toBeCalledWith(`${100 - i}%`);
           }
         });
       });
 
-      describe('check if 2 value labels close to each other if view.isRange', () => {
-        describe('merge labels if 2 value labels is close to each other', () => {
+      describe('check if 2 value labels close to each other, if view.isRange', () => {
+        describe('merge labels, if 2 value labels is close to each other', () => {
           describe('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -753,7 +743,7 @@ describe('View', () => {
           });
         });
 
-        describe('split labels if 2 value labels is not close to each other', () => {
+        describe('split labels, if 2 value labels is not close to each other', () => {
           describe('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -822,8 +812,8 @@ describe('View', () => {
         });
       });
 
-      describe('check if left value label close to min label if slider has min and max labels', () => {
-        describe('make min label transparent if left value label is close to it', () => {
+      describe('check if left value label close to min label, if slider has min and max labels', () => {
+        describe('make min label transparent, if left value label is close to it', () => {
           it('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -867,7 +857,7 @@ describe('View', () => {
           });
         });
 
-        describe('make min label not transparent if left value label is not close to it', () => {
+        describe('make min label not transparent, if left value label is not close to it', () => {
           it('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -912,8 +902,8 @@ describe('View', () => {
         });
       });
 
-      describe('check if left value label close to max label if slider has min and max labels and !view.isRange', () => {
-        describe('make max label transparent if left value label is close to it', () => {
+      describe('check if left value label close to max label, if slider has min and max labels and !view.isRange', () => {
+        describe('make max label transparent, if left value label is close to it', () => {
           it('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -957,7 +947,7 @@ describe('View', () => {
           });
         });
 
-        describe('make max label not transparent if left value label is not close to it', () => {
+        describe('make max label not transparent, if left value label is not close to it', () => {
           it('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -1004,77 +994,68 @@ describe('View', () => {
     });
   });
 
-  describe('setRightValue(value, px)', () => {
+  describe('setRightValue(value, percent)', () => {
     describe('do necessary actions with thumb', () => {
       describe('set up left thumb position', () => {
-        it('change left indent if slider is horizontal', () => {
+        it('change left indent, if slider is horizontal', () => {
           const slider = document.createElement('div');
           const view = new View(slider, {
             range: true,
           });
-          view.thumbRight!.setLeftIndentInPx = jest.fn();
+          view.thumbRight!.setLeftIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setRightValue(50, px);
-            expect(view.thumbRight!.setLeftIndentInPx).toBeCalledWith(px);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setRightValue(50, i);
+            expect(view.thumbRight!.setLeftIndent).toBeCalledWith(i);
           }
         });
 
-        it('change top indent if slider is vertical', () => {
+        it('change top indent, if slider is vertical', () => {
           const slider = document.createElement('div');
           const view = new View(slider, {
             range: true,
             vertical: true,
           });
-          view.thumbRight!.setTopIndentInPx = jest.fn();
-          const trackHeight = 500;
-          view.track.getOffsetHeight = jest.fn();
-          (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
+          view.thumbRight!.setTopIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setRightValue(50, px);
-            expect(view.thumbRight!.setTopIndentInPx).toBeCalledWith(trackHeight - px);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setRightValue(50, i);
+            expect(view.thumbRight!.setTopIndent).toBeCalledWith(100 - i);
           }
         });
       });
     });
 
     describe('do necessary actions with range', () => {
-      it('set up range right indent if slider is horizontal', () => {
+      it('set up range right indent, if slider is horizontal', () => {
         const slider = document.createElement('div');
         const view = new View(slider, {
           range: true,
         });
-        view.range.setRightIndentInPx = jest.fn();
-        const trackHeight = 500;
-        view.track.getOffsetWidth = jest.fn();
-        (view.track.getOffsetWidth as jest.Mock).mockReturnValue(trackHeight);
+        view.range.setRightIndent = jest.fn();
 
-        for (let px = 0; px <= 100; px += 1) {
-          view.setRightValue(50, px);
-          expect(view.range.setRightIndentInPx).toBeCalledWith(trackHeight - px);
+        for (let i = 0; i <= 100; i += 1) {
+          view.setRightValue(50, i);
+          expect(view.range.setRightIndent).toBeCalledWith(100 - i);
         }
       });
 
-      it('set up range top indent if slider is vertical', () => {
+      it('set up range top indent, if slider is vertical', () => {
         const slider = document.createElement('div');
         const view = new View(slider, {
           vertical: true,
           range: true,
         });
-        view.range.setTopIndentInPx = jest.fn();
-        const trackHeight = 500;
-        view.track.getOffsetHeight = jest.fn();
-        (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
+        view.range.setTopIndent = jest.fn();
 
-        for (let px = 0; px <= 100; px += 1) {
-          view.setRightValue(50, px);
-          expect(view.range.setTopIndentInPx).toBeCalledWith(trackHeight - px);
+        for (let i = 0; i <= 100; i += 1) {
+          view.setRightValue(50, i);
+          expect(view.range.setTopIndent).toBeCalledWith(100 - i);
         }
       });
     });
 
-    describe('do necessary actions with labels if slider has labels', () => {
+    describe('do necessary actions with labels, if slider has labels', () => {
       describe('set up labels value', () => {
         it('set up right label value', () => {
           const slider = document.createElement('div');
@@ -1109,7 +1090,7 @@ describe('View', () => {
       });
 
       describe('set up right value label position', () => {
-        it('change left indent if slider is horizontal', () => {
+        it('change left indent, if slider is horizontal', () => {
           const slider = document.createElement('div');
           const view = new View(slider, {
             range: true,
@@ -1117,13 +1098,13 @@ describe('View', () => {
           });
           view.valueLabelRight!.setLeftIndent = jest.fn();
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setRightValue(50, px);
-            expect(view.valueLabelRight!.setLeftIndent).toBeCalledWith(`${px}px`);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setRightValue(50, i);
+            expect(view.valueLabelRight!.setLeftIndent).toBeCalledWith(`${i}%`);
           }
         });
 
-        it('change top indent if slider is vertical', () => {
+        it('change top indent, if slider is vertical', () => {
           const slider = document.createElement('div');
           const view = new View(slider, {
             range: true,
@@ -1131,19 +1112,16 @@ describe('View', () => {
             valueLabels: true,
           });
           view.valueLabelRight!.setTopIndent = jest.fn();
-          const trackHeight = 500;
-          view.track.getOffsetHeight = jest.fn();
-          (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-          for (let px = 0; px <= 100; px += 1) {
-            view.setRightValue(50, px);
-            expect(view.valueLabelRight!.setTopIndent).toBeCalledWith(`${trackHeight - px}px`);
+          for (let i = 0; i <= 100; i += 1) {
+            view.setRightValue(50, i);
+            expect(view.valueLabelRight!.setTopIndent).toBeCalledWith(`${100 - i}%`);
           }
         });
       });
 
       describe('check if 2 value labels close to each other', () => {
-        describe('merge labels if 2 value labels is close to each other', () => {
+        describe('merge labels, if 2 value labels is close to each other', () => {
           describe('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -1211,7 +1189,7 @@ describe('View', () => {
           });
         });
 
-        describe('split labels if 2 value labels is not close to each other', () => {
+        describe('split labels, if 2 value labels is not close to each other', () => {
           describe('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -1280,8 +1258,8 @@ describe('View', () => {
         });
       });
 
-      describe('check if right value label close to max label if slider has min and max labels', () => {
-        describe('make max label transparent if right value label is close to it', () => {
+      describe('check if right value label close to max label, if slider has min and max labels', () => {
+        describe('make max label transparent, if right value label is close to it', () => {
           it('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -1327,7 +1305,7 @@ describe('View', () => {
           });
         });
 
-        describe('make max label not transparent if right value label is not close to it', () => {
+        describe('make max label not transparent, if right value label is not close to it', () => {
           it('if slider is horizontal', () => {
             const slider = document.createElement('div');
             const view = new View(slider, {
@@ -1393,7 +1371,7 @@ describe('View', () => {
   });
 
   describe('handleLeftInput(clientX, clientY, shiftX, shiftY)', () => {
-    describe('calc new left indent if slider is horizontal', () => {
+    describe('calc new left indent, if slider is horizontal', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       view.eventManager.notify = jest.fn();
@@ -1405,17 +1383,17 @@ describe('View', () => {
       view.track.getOffsetWidth = jest.fn();
       (view.track.getOffsetWidth as jest.Mock).mockReturnValue(500);
 
-      it('if cursor is off left edge of track new left indent is 0', () => {
+      it('if cursor is off left edge of track, new left indent is 0', () => {
         view.handleLeftInput(100, 200);
         expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', 0);
       });
 
-      it('if cursor is off right edge of track new left indent = track width', () => {
+      it('if cursor is off right edge of track, new left indent = track width', () => {
         view.handleLeftInput(800, 200);
         expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', 500);
       });
 
-      it('if cursor is off right thumb position new left indent = right thumb indent', () => {
+      it('if cursor is off right thumb position, new left indent = right thumb indent', () => {
         const newSlider = document.createElement('div');
         const newView = new View(newSlider, {
           range: true,
@@ -1427,15 +1405,19 @@ describe('View', () => {
           left: 200,
         });
 
-        newView.thumbRight!.getLeftIndent = jest.fn();
-        (newView.thumbRight!.getLeftIndent as jest.Mock).mockReturnValue(200);
-        newView.handleLeftInput(500, 200);
+        newView.thumbRight!.getBoundingClientRect = jest.fn();
+        (newView.thumbRight!.getBoundingClientRect as jest.Mock).mockReturnValue({
+          left: 400,
+        });
+        newView.thumbRight!.getWidth = jest.fn();
+        (newView.thumbRight!.getWidth as jest.Mock).mockReturnValue(16);
+        newView.handleLeftInput(409, 200);
 
-        expect(newView.eventManager.notify).toBeCalledWith('viewLeftInput', 200);
+        expect(newView.eventManager.notify).toBeCalledWith('viewLeftInput', 208);
       });
     });
 
-    describe('calc new bottom indent if slider is vertical', () => {
+    describe('calc new bottom indent, if slider is vertical', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
         vertical: true,
@@ -1450,17 +1432,17 @@ describe('View', () => {
       view.track.getOffsetHeight = jest.fn();
       (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-      it('if cursor is off bottom edge of track new bottom indent is 0', () => {
+      it('if cursor is off bottom edge of track, new bottom indent is 0', () => {
         view.handleLeftInput(100, 800);
         expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', 0);
       });
 
-      it('if cursor is off top edge of track new bottom indent = track height', () => {
+      it('if cursor is off top edge of track, new bottom indent = track height', () => {
         view.handleLeftInput(100, 100);
         expect(view.eventManager.notify).toBeCalledWith('viewLeftInput', trackHeight);
       });
 
-      it('if cursor is off right thumb position new bottom indent = right thumb indent', () => {
+      it('if cursor is off right thumb position, new bottom indent = right thumb indent', () => {
         const newSlider = document.createElement('div');
         const newView = new View(newSlider, {
           vertical: true,
@@ -1477,17 +1459,22 @@ describe('View', () => {
         newView.track.getOffsetHeight = jest.fn();
         (newView.track.getOffsetHeight as jest.Mock).mockReturnValue(newTrackHeight);
 
-        newView.thumbRight!.getTopIndent = jest.fn();
-        (newView.thumbRight!.getTopIndent as jest.Mock).mockReturnValue(200);
-        newView.handleLeftInput(100, 300);
+        newView.thumbRight!.getBoundingClientRect = jest.fn();
+        (newView.thumbRight!.getBoundingClientRect as jest.Mock).mockReturnValue({
+          top: 300,
+        });
+        newView.thumbRight!.getHeight = jest.fn();
+        (newView.thumbRight!.getHeight as jest.Mock).mockReturnValue(16);
 
-        expect(newView.eventManager.notify).toBeCalledWith('viewLeftInput', newTrackHeight - 200);
+        newView.handleLeftInput(100, 307);
+
+        expect(newView.eventManager.notify).toBeCalledWith('viewLeftInput', newTrackHeight - 108);
       });
     });
   });
 
   describe('handleRightInput(clientX, clientY, shiftX, shiftY)', () => {
-    describe('calc new left indent if slider is horizontal', () => {
+    describe('calc new left indent, if slider is horizontal', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
         range: true,
@@ -1503,21 +1490,25 @@ describe('View', () => {
       view.track.getOffsetWidth = jest.fn();
       (view.track.getOffsetWidth as jest.Mock).mockReturnValue(trackWidth);
 
-      it('if cursor is off left thumb position new left indent = left thumb indent', () => {
-        view.thumbLeft.getLeftIndent = jest.fn();
-        (view.thumbLeft.getLeftIndent as jest.Mock).mockReturnValue(100);
-        view.handleRightInput(250, 200);
+      it('if cursor is off left thumb position, new left indent = left thumb indent', () => {
+        view.thumbLeft.getBoundingClientRect = jest.fn();
+        (view.thumbLeft.getBoundingClientRect as jest.Mock).mockReturnValue({
+          left: 300,
+        });
+        view.thumbLeft.getWidth = jest.fn();
+        (view.thumbLeft.getWidth as jest.Mock).mockReturnValue(16);
+        view.handleRightInput(307, 100);
 
-        expect(view.eventManager.notify).toBeCalledWith('viewRightInput', 100);
+        expect(view.eventManager.notify).toBeCalledWith('viewRightInput', 108);
       });
 
-      it('if cursor is off right edge of track new left indent = track width', () => {
+      it('if cursor is off right edge of track, new left indent = track width', () => {
         view.handleRightInput(800, 200);
         expect(view.eventManager.notify).toBeCalledWith('viewRightInput', trackWidth);
       });
     });
 
-    describe('calc new bottom indent if slider is vertical', () => {
+    describe('calc new bottom indent, if slider is vertical', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
         vertical: true,
@@ -1533,14 +1524,20 @@ describe('View', () => {
       view.track.getOffsetHeight = jest.fn();
       (view.track.getOffsetHeight as jest.Mock).mockReturnValue(trackHeight);
 
-      it('if cursor is off left thumb position new bottom indent = left thumb indent', () => {
-        view.thumbLeft.getTopIndent = jest.fn();
-        (view.thumbLeft.getTopIndent as jest.Mock).mockReturnValue(400);
-        view.handleRightInput(100, 800);
-        expect(view.eventManager.notify).toBeCalledWith('viewRightInput', trackHeight - 400);
+      it('if cursor is off left thumb position, new bottom indent = left thumb indent', () => {
+        view.thumbLeft.getBoundingClientRect = jest.fn();
+        (view.thumbLeft.getBoundingClientRect as jest.Mock).mockReturnValue({
+          top: 500,
+        });
+        view.thumbLeft.getHeight = jest.fn();
+        (view.thumbLeft.getHeight as jest.Mock).mockReturnValue(16);
+
+        view.handleRightInput(100, 509);
+
+        expect(view.eventManager.notify).toBeCalledWith('viewRightInput', trackHeight - 308);
       });
 
-      it('if cursor is off top edge of track new bottom indent = track height', () => {
+      it('if cursor is off top edge of track, new bottom indent = track height', () => {
         view.handleRightInput(100, 100);
         expect(view.eventManager.notify).toBeCalledWith('viewRightInput', trackHeight);
       });
@@ -2161,10 +2158,10 @@ describe('View', () => {
         valueLabels: true,
       });
 
-      view.thumbLeft.setLeftIndentInPx = jest.fn();
-      view.thumbRight!.setLeftIndentInPx = jest.fn();
-      view.range.setLeftIndentInPx = jest.fn();
-      view.range.setRightIndentInPx = jest.fn();
+      view.thumbLeft.setLeftIndent = jest.fn();
+      view.thumbRight!.setLeftIndent = jest.fn();
+      view.range.setLeftIndent = jest.fn();
+      view.range.setRightIndent = jest.fn();
       view.range.resetTopIndent = jest.fn();
       view.range.resetWidth = jest.fn();
       view.valueLabelLeft!.setLeftIndent = jest.fn();
@@ -2180,21 +2177,21 @@ describe('View', () => {
 
       describe('set thumbs left indents to 0', () => {
         it('for left thumb', () => {
-          expect(view.thumbLeft.setLeftIndentInPx).toBeCalledWith(0);
+          expect(view.thumbLeft.setLeftIndent).toBeCalledWith(0);
         });
 
         it('for right thumb', () => {
-          expect(view.thumbRight?.setLeftIndentInPx).toBeCalledWith(0);
+          expect(view.thumbRight?.setLeftIndent).toBeCalledWith(0);
         });
       });
 
       describe('make necessary transformations with range', () => {
         it('set left indent to 0', () => {
-          expect(view.range.setLeftIndentInPx).toBeCalledWith(0);
+          expect(view.range.setLeftIndent).toBeCalledWith(0);
         });
 
         it('set right indent to 0', () => {
-          expect(view.range.setRightIndentInPx).toBeCalledWith(0);
+          expect(view.range.setRightIndent).toBeCalledWith(0);
         });
 
         it('reset top indent', () => {
@@ -2233,10 +2230,10 @@ describe('View', () => {
         valueLabels: true,
       });
 
-      view.thumbLeft.setTopIndentInPx = jest.fn();
-      view.thumbRight!.setTopIndentInPx = jest.fn();
-      view.range.setBottomIndentInPx = jest.fn();
-      view.range.setTopIndentInPx = jest.fn();
+      view.thumbLeft.setTopIndent = jest.fn();
+      view.thumbRight!.setTopIndent = jest.fn();
+      view.range.setBottomIndent = jest.fn();
+      view.range.setTopIndent = jest.fn();
       view.range.resetHeight = jest.fn();
       view.valueLabelLeft!.setTopIndent = jest.fn();
       view.valueLabelRight!.setTopIndent = jest.fn();
@@ -2251,21 +2248,21 @@ describe('View', () => {
 
       describe('set thumbs top indents to 0', () => {
         it('for left thumb', () => {
-          expect(view.thumbLeft.setTopIndentInPx).toBeCalledWith(0);
+          expect(view.thumbLeft.setTopIndent).toBeCalledWith(0);
         });
 
         it('for right thumb', () => {
-          expect(view.thumbRight?.setTopIndentInPx).toBeCalledWith(0);
+          expect(view.thumbRight?.setTopIndent).toBeCalledWith(0);
         });
       });
 
       describe('make necessary transformations with range', () => {
         it('set bottom indent to 0', () => {
-          expect(view.range.setBottomIndentInPx).toBeCalledWith(0);
+          expect(view.range.setBottomIndent).toBeCalledWith(0);
         });
 
         it('set top indent to 0', () => {
-          expect(view.range.setTopIndentInPx).toBeCalledWith(0);
+          expect(view.range.setTopIndent).toBeCalledWith(0);
         });
 
         it('reset height', () => {
@@ -2710,7 +2707,7 @@ describe('View', () => {
 
         it('labels was appended to labels container', () => {
           const labelsContainerChildren = view.labelsContainer?.component.children;
-          
+
           expect(labelsContainerChildren).toContain(view.valueLabelLeft?.component);
           expect(labelsContainerChildren).toContain(view.valueLabelRight?.component);
           expect(labelsContainerChildren).toContain(view.valueLabelCommon?.component);
