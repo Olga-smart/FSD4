@@ -24,13 +24,4 @@
     "fsd"
   ],
   "ignorePatterns": ["src/view/pages-for-puppeteer/*", "webpack.config.js"]
-  // "overrides": [
-  //   {
-  //     "files": ["src/index.ts"],
-  //     "extends": ["jquery"],
-  //     "rules": {
-  //       "quotes": ["error", "single"]
-  //     }
-  //   }
-  // ]
 }

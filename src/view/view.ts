@@ -699,16 +699,16 @@ class View {
 
   private destroy(): void {
     if (this.labelsContainer) {
-      Array.from(this.labelsContainer.component.children).forEach((element) => {
+      [...this.labelsContainer.component.children].forEach((element) => {
         element.remove();
       });
     }
 
-    Array.from(this.slider.component.children).forEach((element) => {
+    [...this.slider.component.children].forEach((element) => {
       element.remove();
     });
 
-    Array.from(this.component.children).forEach((element) => {
+    [...this.component.children].forEach((element) => {
       element.remove();
     });
   }
