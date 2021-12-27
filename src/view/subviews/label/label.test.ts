@@ -1,4 +1,4 @@
-import Label from './label';
+import Label from './Label';
 
 describe('Label', () => {
   describe('constructor(type)', () => {

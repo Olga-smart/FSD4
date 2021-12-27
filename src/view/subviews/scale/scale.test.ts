@@ -1,4 +1,4 @@
-import Scale from './scale';
+import Scale from './Scale';
 
 describe('Scale', () => {
   describe('constructor(min, max, intervalsNumber)', () => {

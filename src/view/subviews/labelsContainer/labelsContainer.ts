@@ -1,5 +1,5 @@
 import createElement from '../../helpers/createElement';
-import Label from '../label/label';
+import Label from '../Label/Label';
 
 class LabelsContainer {
   component: HTMLElement;

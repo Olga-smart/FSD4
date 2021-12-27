@@ -1,15 +1,15 @@
-import Slider from './subviews/slider/slider';
-import Track from './subviews/track/track';
-import Range from './subviews/range/range';
-import Thumb from './subviews/thumb/thumb';
-import MinMaxLabel from './subviews/minMaxLabel/minMaxLabel';
-import ValueLabel from './subviews/valueLabel/valueLabel';
-import Scale from './subviews/scale/scale';
-import LabelsContainer from './subviews/labelsContainer/labelsContainer';
-import Label from './subviews/label/label';
-import Input from './subviews/input/input';
-import { Panel, PanelOptions } from './subviews/panel/panel';
-import { EventManager } from '../eventManager/eventManager';
+import Slider from './subviews/Slider/Slider';
+import Track from './subviews/Track/Track';
+import Range from './subviews/Range/Range';
+import Thumb from './subviews/Thumb/Thumb';
+import MinMaxLabel from './subviews/MinMaxLabel/MinMaxLabel';
+import ValueLabel from './subviews/ValueLabel/ValueLabel';
+import Scale from './subviews/Scale/Scale';
+import LabelsContainer from './subviews/LabelsContainer/LabelsContainer';
+import Label from './subviews/Label/Label';
+import Input from './subviews/Input/Input';
+import { Panel, PanelOptions } from './subviews/Panel/Panel';
+import { EventManager } from '../EventManager/EventManager';
 
 type ViewOptions = {
   minMaxLabels?: boolean,

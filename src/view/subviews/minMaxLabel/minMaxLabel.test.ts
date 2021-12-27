@@ -1,5 +1,5 @@
-import MinMaxLabel from './minMaxLabel';
-import Label from '../label/label';
+import MinMaxLabel from './MinMaxLabel';
+import Label from '../Label/Label';
 
 describe('MinMaxLabel', () => {
   describe('constructor(type)', () => {

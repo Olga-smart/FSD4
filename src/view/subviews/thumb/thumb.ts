@@ -63,7 +63,9 @@ class Thumb {
     (event.currentTarget as Element).classList.add('range-slider__thumb_active');
 
     (event.currentTarget as Element).setPointerCapture(event.pointerId);
-    event.preventDefault(); // предотвратить запуск выделения (действие браузера)
+
+    // prevent selection (browser action)
+    event.preventDefault();
 
     const shiftX: number = event.clientX
                          - (event.currentTarget as Element).getBoundingClientRect().left;

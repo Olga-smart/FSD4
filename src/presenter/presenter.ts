@@ -1,6 +1,6 @@
-import Model from '../model/model';
-import View from '../view/view';
-import { IEventListener } from '../eventManager/eventManager';
+import Model from '../Model/Model';
+import View from '../View/View';
+import { IEventListener } from '../EventManager/EventManager';
 
 class Presenter implements IEventListener {
   model: Model;

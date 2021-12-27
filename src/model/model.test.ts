@@ -1,4 +1,4 @@
-import Model from './model';
+import Model from './Model';
 
 describe('Model', () => {
   const defaultOptions = {

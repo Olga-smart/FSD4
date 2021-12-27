@@ -1,6 +1,6 @@
-import Model from '../model/model';
-import View from '../view/view';
-import Presenter from './presenter';
+import Model from '../Model/Model';
+import View from '../View/View';
+import Presenter from './Presenter';
 
 describe('Presenter', () => {
   jest.mock('../model/model');
@@ -749,7 +749,7 @@ describe('Presenter', () => {
               for (let i = 0; i <= 100; i += 1) {
                 presenter.model.leftValue = i;
                 presenter.inform('modelLeftSet', null);
-                expect(presenter.view.setLeftValue).toBeCalledWith(i, +(i / x).toFixed(10));
+                expect(presenter.view.setLeftValue).toBeCalledWith(i, Number((i / x).toFixed(10)));
               }
             }
           });
@@ -797,7 +797,7 @@ describe('Presenter', () => {
                 presenter.model.leftValue = i;
                 presenter.inform('modelLeftSet', null);
 
-                expect(presenter.view.setLeftValue).toBeCalledWith(i, +(i / x).toFixed(10));
+                expect(presenter.view.setLeftValue).toBeCalledWith(i, Number((i / x).toFixed(10)));
               }
             }
           });
@@ -862,7 +862,7 @@ describe('Presenter', () => {
               for (let i = 0; i <= 100; i += 1) {
                 presenter.model.rightValue = i;
                 presenter.inform('modelRightSet', null);
-                expect(presenter.view.setRightValue).toBeCalledWith(i, +(i / x).toFixed(10));
+                expect(presenter.view.setRightValue).toBeCalledWith(i, Number((i / x).toFixed(10)));
               }
             }
           });
@@ -911,7 +911,7 @@ describe('Presenter', () => {
                 presenter.model.rightValue = i;
                 presenter.inform('modelRightSet', null);
 
-                expect(presenter.view.setRightValue).toBeCalledWith(i, +(i / x).toFixed(10));
+                expect(presenter.view.setRightValue).toBeCalledWith(i, Number((i / x).toFixed(10)));
               }
             }
           });

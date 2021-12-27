@@ -1,5 +1,5 @@
-import Thumb from './thumb';
-import View from '../../view';
+import Thumb from './Thumb';
+import View from '../../View';
 
 describe('Thumb', () => {
   describe('constructor(type)', () => {

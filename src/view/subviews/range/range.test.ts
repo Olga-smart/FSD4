@@ -1,4 +1,4 @@
-import Range from './range';
+import Range from './Range';
 
 describe('Range', () => {
   describe('constructor()', () => {

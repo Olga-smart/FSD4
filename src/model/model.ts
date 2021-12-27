@@ -1,4 +1,4 @@
-import { EventManager } from '../eventManager/eventManager';
+import { EventManager } from '../EventManager/EventManager';
 
 type ModelOptions = {
   min: number;

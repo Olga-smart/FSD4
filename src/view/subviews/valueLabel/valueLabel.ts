@@ -1,4 +1,4 @@
-import Label from '../label/label';
+import Label from '../Label/Label';
 import createElement from '../../helpers/createElement';
 
 class ValueLabel extends Label {

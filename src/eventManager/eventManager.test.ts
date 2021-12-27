@@ -1,4 +1,4 @@
-import { EventManager } from './eventManager';
+import { EventManager } from './EventManager';
 
 describe('EventManager', () => {
   describe('subscribe(listener)', () => {

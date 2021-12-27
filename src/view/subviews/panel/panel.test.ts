@@ -1,4 +1,4 @@
-import { Panel } from './panel';
+import { Panel } from './Panel';
 
 describe('Panel', () => {
   describe('constructor()', () => {

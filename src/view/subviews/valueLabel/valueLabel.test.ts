@@ -1,5 +1,5 @@
-import ValueLabel from './valueLabel';
-import Label from '../label/label';
+import ValueLabel from './ValueLabel';
+import Label from '../Label/Label';
 
 describe('ValueLabel', () => {
   describe('constructor(type)', () => {

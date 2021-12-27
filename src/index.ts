@@ -4,9 +4,9 @@
 import * as jQuery from 'jquery';
 import 'airbnb-browser-shims';
 
-import Model from './model/model';
-import View from './view/view';
-import Presenter from './presenter/presenter';
+import Model from './Model/Model';
+import View from './View/View';
+import Presenter from './Presenter/Presenter';
 import './style.scss';
 
 declare global {

@@ -1,5 +1,5 @@
-import Track from './track';
-import View from '../../view';
+import Track from './Track';
+import View from '../../View';
 
 describe('Track', () => {
   describe('constructor()', () => {
