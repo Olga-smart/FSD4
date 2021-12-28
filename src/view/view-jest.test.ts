@@ -2156,7 +2156,9 @@ describe('View', () => {
         vertical: false,
         range: true,
         valueLabels: true,
+        scale: true,
       });
+      view.addScale(0, 100, 4);
 
       view.thumbLeft.setLeftIndent = jest.fn();
       view.thumbRight!.setLeftIndent = jest.fn();
@@ -2167,6 +2169,7 @@ describe('View', () => {
       view.valueLabelLeft!.setLeftIndent = jest.fn();
       view.valueLabelRight!.setLeftIndent = jest.fn();
       view.valueLabelCommon!.setLeftIndent = jest.fn();
+      view.scale!.handleSwitchFromHorizontalToVertical = jest.fn();
       view.eventManager.notify = jest.fn();
 
       view.changeOrientationFromOutside();
@@ -2217,6 +2220,10 @@ describe('View', () => {
         });
       });
 
+      it('fit scale to vertical view', () => {
+        expect(view.scale?.handleSwitchFromHorizontalToVertical).toBeCalled();
+      });
+
       it('say subscribers that orientation was changed', () => {
         expect(view.eventManager.notify).toBeCalledWith('viewChangeOrientationFromOutside');
       });
@@ -2228,7 +2235,9 @@ describe('View', () => {
         vertical: true,
         range: true,
         valueLabels: true,
+        scale: true,
       });
+      view.addScale(0, 100, 4);
 
       view.thumbLeft.setTopIndent = jest.fn();
       view.thumbRight!.setTopIndent = jest.fn();
@@ -2238,6 +2247,7 @@ describe('View', () => {
       view.valueLabelLeft!.setTopIndent = jest.fn();
       view.valueLabelRight!.setTopIndent = jest.fn();
       view.valueLabelCommon!.setTopIndent = jest.fn();
+      view.scale!.handleSwitchFromVerticalToHorizontal = jest.fn();
       view.eventManager.notify = jest.fn();
 
       view.changeOrientationFromOutside();
@@ -2282,6 +2292,10 @@ describe('View', () => {
         it('for common label', () => {
           expect(view.valueLabelLeft?.setTopIndent).toBeCalledWith('unset');
         });
+      });
+
+      it('fit scale to horizontal view', () => {
+        expect(view.scale?.handleSwitchFromVerticalToHorizontal).toBeCalled();
       });
 
       it('say subscribers that orientation was changed', () => {
