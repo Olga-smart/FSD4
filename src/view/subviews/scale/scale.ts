@@ -61,6 +61,16 @@ class Scale {
     this.component.style.paddingBottom = `${maxHeight + 3}px`;
   }
 
+  handleSwitchFromHorizontalToVertical() {
+    this.component.style.paddingBottom = 'unset';
+    this.fitWidthForVertical();
+  }
+
+  handleSwitchFromVerticalToHorizontal() {
+    this.component.style.paddingRight = 'unset';
+    this.fitHeightForHorizontal();
+  }
+
   private createIntervals(): void {
     for (let i = 0; i < this.intervalsNumber; i += 1) {
       this.intervals[i] = createElement('div', 'range-slider__scale-interval');

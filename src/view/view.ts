@@ -477,6 +477,7 @@ class View {
       this.valueLabelLeft?.setLeftIndent('unset');
       this.valueLabelRight?.setLeftIndent('unset');
       this.valueLabelCommon?.setLeftIndent('unset');
+      this.scale?.handleSwitchFromHorizontalToVertical();
       this.eventManager.notify('viewChangeOrientationFromOutside');
       return;
     }
@@ -494,6 +495,7 @@ class View {
       this.valueLabelLeft?.setTopIndent('unset');
       this.valueLabelRight?.setTopIndent('unset');
       this.valueLabelCommon?.setTopIndent('unset');
+      this.scale?.handleSwitchFromVerticalToHorizontal();
       this.eventManager.notify('viewChangeOrientationFromOutside');
     }
   }

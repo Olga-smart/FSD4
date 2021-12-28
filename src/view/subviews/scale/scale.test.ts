@@ -212,6 +212,34 @@ describe('Scale', () => {
     });
   });
 
+  describe('handleSwitchFromHorizontalToVertical()', () => {
+    const scale = new Scale(0, 150, 2);
+    scale.fitWidthForVertical = jest.fn();
+    scale.handleSwitchFromHorizontalToVertical();
+
+    it('reset bottom padding', () => {
+      expect(scale.component.style.paddingBottom).toBe('');
+    });
+
+    it('fit width', () => {
+      expect(scale.fitWidthForVertical).toBeCalled();
+    });
+  });
+
+  describe('handleSwitchFromVerticalToHorizontal()', () => {
+    const scale = new Scale(0, 150, 2);
+    scale.fitHeightForHorizontal = jest.fn();
+    scale.handleSwitchFromVerticalToHorizontal();
+
+    it('reset right padding', () => {
+      expect(scale.component.style.paddingRight).toBe('');
+    });
+
+    it('fit width', () => {
+      expect(scale.fitHeightForHorizontal).toBeCalled();
+    });
+  });
+
   describe('handle events', () => {
     it('handle click', () => {
       const scale = new Scale(0, 150, 4);
