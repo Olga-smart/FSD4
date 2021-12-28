@@ -539,7 +539,7 @@ class View {
   changeScaleIntervals(value: number): void {
     if (value <= 0) return;
 
-    this.scaleIntervals = value;
+    this.scaleIntervals = Math.floor(value);
     this.removeScale();
     this.eventManager.notify('viewChangeScaleIntervals');
   }

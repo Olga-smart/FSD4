@@ -22,7 +22,7 @@ class Scale {
     this.component = createElement('div', 'range-slider__scale');
     this.min = min;
     this.max = max;
-    this.intervalsNumber = intervalsNumber;
+    this.intervalsNumber = Math.floor(intervalsNumber);
     this.intervals = [];
     this.values = [];
     this.valueElements = [];

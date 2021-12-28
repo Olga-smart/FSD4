@@ -349,6 +349,10 @@ class Panel {
       scaleIntervals.value = scaleIntervals.min;
     }
 
+    if (!Number.isInteger(scaleIntervals.value)) {
+      scaleIntervals.value = `${Math.floor(Number(scaleIntervals.value))}`;
+    }
+
     this.view?.changeScaleIntervals(+scaleIntervals.value);
   }
 
