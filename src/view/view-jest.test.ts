@@ -2889,4 +2889,48 @@ describe('View', () => {
       });
     });
   });
+
+  describe('hasLabels()', () => {
+    describe('return true, if slider has any labels', () => {
+      it('only min-max labels', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          minMaxLabels: true,
+        });
+
+        expect(view.hasLabels()).toBe(true);
+      });
+
+      it('only left value label', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          range: false,
+          valueLabels: true,
+        });
+
+        expect(view.hasLabels()).toBe(true);
+      });
+
+      it('all possible labels', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          range: true,
+          valueLabels: true,
+          minMaxLabels: true,
+        });
+
+        expect(view.hasLabels()).toBe(true);
+      });
+    });
+
+    it('return false, if slider has no labels', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        minMaxLabels: false,
+        valueLabels: false,
+      });
+
+      expect(view.hasLabels()).toBe(false);
+    });
+  });
 });

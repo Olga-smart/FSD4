@@ -96,7 +96,7 @@ class Presenter implements IEventListener {
       view.addScale(model.min, model.max, view.scaleIntervals!);
     }
 
-    if (this.hasViewLabels()) {
+    if (this.view.hasLabels()) {
       if (!view.vertical) {
         view.fixLabelsContainerHeightForHorizontal();
       }
@@ -122,13 +122,6 @@ class Presenter implements IEventListener {
       });
       view.panel.registerWith(view);
     }
-  }
-
-  private hasViewLabels(): boolean {
-    if (this.view.valueLabelLeft || this.view.minLabel) {
-      return true;
-    }
-    return false;
   }
 
   private handleViewLeftInput(px: number): void {
@@ -273,7 +266,7 @@ class Presenter implements IEventListener {
       this.passRightValueToView(this.model.rightValue!);
     }
 
-    if (this.hasViewLabels()) {
+    if (this.view.hasLabels()) {
       if (!this.view.vertical) {
         this.view.fixLabelsContainerHeightForHorizontal();
       }

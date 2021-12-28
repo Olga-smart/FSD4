@@ -653,6 +653,13 @@ class View {
     }
   }
 
+  hasLabels(): boolean {
+    if (this.valueLabelLeft || this.minLabel) {
+      return true;
+    }
+    return false;
+  }
+
   private render(): void {
     this.track.append(this.range.component);
     this.slider.append(this.track.component, this.thumbLeft.component);

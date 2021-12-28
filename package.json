@@ -9,7 +9,7 @@
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
     "start": "cross-env NODE_ENV=development webpack serve --mode development --open",
     "test": "jest --detectOpenHandles",
-    "testpresenter": "jest --detectOpenHandles src/presenter/presenter.test.ts",
+    "testview": "jest --detectOpenHandles src/view/view-jest.test.ts",
     "testscale": "jest --detectOpenHandles src/view/subviews/scale/scale.test.ts"
   },
   "repository": {
