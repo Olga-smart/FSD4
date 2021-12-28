@@ -18,14 +18,12 @@ body {
   width: 50%;
   max-width: 500px;
   min-width: 300px;
-  height: 50vh;
   // display: grid;
   // grid-template-columns: 0.5fr 1fr 0.5fr;
   // display: flex;
 }
 
 .range-slider {
-  position: relative;
   display: flex;
   flex-direction: column;
   user-select: none;
@@ -181,7 +179,6 @@ body {
     flex-direction: row;
     .range-slider {
       &__slider {
-        height: 100%;
         padding-left: 5px;
         padding-right: 5px;
         padding-top: unset;
@@ -234,7 +231,6 @@ body {
         top: 0;
         padding-left: 8px;
         padding-top: unset;
-        height: 100%;
         flex-direction: column-reverse;
         &-interval {
           border-right: unset;
