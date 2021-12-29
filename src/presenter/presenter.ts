@@ -187,12 +187,12 @@ class Presenter implements IEventListener {
     let percent: number = 0;
 
     if (!this.view.vertical) {
-      const trackWidthInPx: number = +this.view.track.getOffsetWidth();
+      const trackWidthInPx: number = this.view.track.getOffsetWidth();
       percent = (px * 100) / trackWidthInPx;
     }
 
     if (this.view.vertical) {
-      const trackHeightInPx: number = +this.view.track.getOffsetHeight();
+      const trackHeightInPx: number = this.view.track.getOffsetHeight();
       percent = (px * 100) / trackHeightInPx;
     }
 
@@ -212,7 +212,7 @@ class Presenter implements IEventListener {
   }
 
   static removeCalcInaccuracy(value: number): number {
-    return +value.toFixed(10);
+    return Number(value.toFixed(10));
   }
 
   private handleChangeLeftValueFromOutside(value: number): void {

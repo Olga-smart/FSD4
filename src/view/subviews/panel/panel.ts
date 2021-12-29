@@ -211,7 +211,7 @@ class Panel {
     }
     result = `0.${result}`;
 
-    return +result;
+    return Number(result);
   }
 
   private updateAttributesAfterFromChange(): void {
@@ -239,11 +239,11 @@ class Panel {
     const min = this.min as HTMLInputElement;
     const from = this.from as HTMLInputElement;
 
-    if (+min.value > +from.value) {
+    if (Number(min.value) > Number(from.value)) {
       min.value = from.value;
     }
 
-    this.view?.changeMinFromOutside(+min.value);
+    this.view?.changeMinFromOutside(Number(min.value));
   }
 
   private handleMaxChange(): void {
@@ -252,7 +252,7 @@ class Panel {
     if (!this.view?.isRange) {
       const from = this.from as HTMLInputElement;
 
-      if (+max.value < +from.value) {
+      if (Number(max.value) < Number(from.value)) {
         max.value = from.value;
       }
     }
@@ -260,59 +260,59 @@ class Panel {
     if (this.view?.isRange) {
       const to = this.to as HTMLInputElement;
 
-      if (+max.value < +to.value) {
+      if (Number(max.value) < Number(to.value)) {
         max.value = to.value;
       }
     }
 
-    this.view?.changeMaxFromOutside(+max.value);
+    this.view?.changeMaxFromOutside(Number(max.value));
     (this.step as HTMLInputElement).max = max.value;
   }
 
   private handleStepChange(): void {
     const step = this.step as HTMLInputElement;
 
-    if (+step.value > +step.max) {
+    if (Number(step.value) > Number(step.max)) {
       step.value = step.max;
     }
 
-    if (+step.value < 0) {
+    if (Number(step.value) <= 0) {
       step.value = step.min;
     }
 
-    this.view?.changeStepFromOutside(+step.value);
+    this.view?.changeStepFromOutside(Number(step.value));
 
-    (this.step as HTMLInputElement).min = `${Panel.calcStepMin(+step.value)}`;
-    (this.step as HTMLInputElement).step = `${Panel.calcStepMin(+step.value)}`;
+    (this.step as HTMLInputElement).min = `${Panel.calcStepMin(Number(step.value))}`;
+    (this.step as HTMLInputElement).step = `${Panel.calcStepMin(Number(step.value))}`;
   }
 
   private handleFromChange(): void {
     const from = this.from as HTMLInputElement;
 
-    if (+from.value > +from.max) {
+    if (Number(from.value) > Number(from.max)) {
       from.value = from.max;
     }
 
-    if (+from.value < +from.min) {
+    if (Number(from.value) < Number(from.min)) {
       from.value = from.min;
     }
 
-    this.view?.changeLeftValueFromOutside(+from.value);
+    this.view?.changeLeftValueFromOutside(Number(from.value));
     this.updateAttributesAfterFromChange();
   }
 
   private handleToChange(): void {
     const to = this.to as HTMLInputElement;
 
-    if (+to.value > +to.max) {
+    if (Number(to.value) > Number(to.max)) {
       to.value = to.max;
     }
 
-    if (+to.value < +to.min) {
+    if (Number(to.value) < Number(to.min)) {
       to.value = to.min;
     }
 
-    this.view?.changeRightValueFromOutside(+to.value);
+    this.view?.changeRightValueFromOutside(Number(to.value));
     this.updateAttributesAfterToChange();
   }
 
@@ -345,7 +345,7 @@ class Panel {
   private handleScaleIntervalsChange(): void {
     const scaleIntervals = this.scaleIntervals as HTMLInputElement;
 
-    if (+scaleIntervals.value < +scaleIntervals.min) {
+    if (Number(scaleIntervals.value) < Number(scaleIntervals.min)) {
       scaleIntervals.value = scaleIntervals.min;
     }
 
@@ -353,7 +353,7 @@ class Panel {
       scaleIntervals.value = `${Math.floor(Number(scaleIntervals.value))}`;
     }
 
-    this.view?.changeScaleIntervals(+scaleIntervals.value);
+    this.view?.changeScaleIntervals(Number(scaleIntervals.value));
   }
 
   private handleValueLabelsChange(): void {

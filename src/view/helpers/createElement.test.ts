@@ -1,6 +1,6 @@
 import createElement from './createElement';
 
-describe('createElement(tag, classname)', () => {
+describe('createElement(tag, className)', () => {
   it('create element with passed tag', () => {
     const tags = ['DIN', 'SPAN', 'A', 'H1', 'INPUT'];
     tags.forEach((tag) => {
