@@ -1109,5 +1109,20 @@ describe('Presenter', () => {
         });
       });
     });
+
+    describe('if eventType is "modelStepSet"', () => {
+      it('pass value from model to view, if view has panel', () => {
+        const slider = document.createElement('div');
+        const model = new Model(defaultModelOptions);
+        const view = new View(slider, {
+          panel: true,
+        });
+        const presenter = new Presenter(model, view);
+        presenter.view.updatePanelStep = jest.fn();
+        presenter.inform('modelStepSet', null);
+
+        expect(presenter.view.updatePanelStep).toBeCalledWith(presenter.model.step);
+      });
+    });
   });
 });

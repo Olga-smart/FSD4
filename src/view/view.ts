@@ -443,6 +443,10 @@ class View {
     this.panel?.updateScaleIntervals(value);
   }
 
+  updatePanelStep(value: number): void {
+    this.panel?.updateStep(value);
+  }
+
   changeLeftValueFromOutside(value: number): void {
     this.eventManager.notify('viewChangeLeftValueFromOutside', value);
   }

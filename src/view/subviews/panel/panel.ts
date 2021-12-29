@@ -92,6 +92,11 @@ class Panel {
     this.updateAttributesAfterToChange();
   }
 
+  updateStep(value: number): void {
+    (this.step as HTMLInputElement).value = `${value}`;
+    this.updateAttributesAfterStepChange();
+  }
+
   updateScaleIntervals(value: number | ''): void {
     (this.scaleIntervals as HTMLInputElement).value = `${value}`;
   }
@@ -282,8 +287,14 @@ class Panel {
 
     this.view?.changeStepFromOutside(Number(step.value));
 
-    (this.step as HTMLInputElement).min = `${Panel.calcStepMin(Number(step.value))}`;
-    (this.step as HTMLInputElement).step = `${Panel.calcStepMin(Number(step.value))}`;
+    this.updateAttributesAfterStepChange();
+  }
+
+  private updateAttributesAfterStepChange(): void {
+    const step = this.step as HTMLInputElement;
+
+    step.min = `${Panel.calcStepMin(Number(step.value))}`;
+    step.step = `${Panel.calcStepMin(Number(step.value))}`;
   }
 
   private handleFromChange(): void {

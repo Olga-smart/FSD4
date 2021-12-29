@@ -79,6 +79,11 @@ declare global {
       this.view.changeRightValueFromOutside(value);
       return this;
     }
+
+    setStep(value: number): this {
+      this.view.changeStepFromOutside(value);
+      return this;
+    }
   }
 
   $.fn.rangeSlider = function (options: object = {}): JQuery<HTMLElement> {
@@ -183,6 +188,6 @@ $(() => {
     vertical: false,
     range: true,
   });
-  // const slider = $('.js-range-slider').data('rangeSlider');
-  // slider.setLeftValue(50).setRightValue(80);
+  const slider = $('.js-range-slider').data('rangeSlider');
+  slider.setLeftValue(50).setRightValue(80).setStep(10);
 });

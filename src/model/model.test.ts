@@ -98,6 +98,14 @@ describe('Model', () => {
       expect(model.rightValue).toBe(100);
     });
 
+    it('set up right value = max, if value is not passed', () => {
+      const model = new Model(defaultOptions);
+      model.max = 100;
+      model.setRightValue();
+
+      expect(model.rightValue).toBe(100);
+    });
+
     it('set up right value = left value, if user is trying to set right value < left value', () => {
       const model = new Model(defaultOptions);
       model.setRightValue(20);
@@ -194,10 +202,35 @@ describe('Model', () => {
     });
   });
 
-  describe('setStep()', () => {
+  describe('setStep(value)', () => {
     it('set up step value', () => {
       const model = new Model(defaultOptions);
       model.setStep(10);
+
+      expect(model.step).toBe(10);
+    });
+
+    it('nothing happens, if value = 0', () => {
+      const model = new Model(defaultOptions);
+      model.setStep(10);
+      model.setStep(0);
+
+      expect(model.step).toBe(10);
+    });
+
+    it('nothing happens, if value < 0', () => {
+      const model = new Model(defaultOptions);
+      model.setStep(10);
+      model.setStep(-5);
+
+      expect(model.step).toBe(10);
+    });
+
+    it('nothing happens, if value > max', () => {
+      const model = new Model(defaultOptions);
+      model.max = 100;
+      model.setStep(10);
+      model.setStep(110);
 
       expect(model.step).toBe(10);
     });

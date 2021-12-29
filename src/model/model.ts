@@ -91,7 +91,12 @@ class Model {
   }
 
   setStep(value: number): void {
+    if (value <= 0) return;
+    if (value > this.max) return;
+
     this.step = value;
+
+    this.eventManager.notify('modelStepSet');
   }
 
   toggleRange(): void {

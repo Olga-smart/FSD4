@@ -372,6 +372,15 @@ describe('Panel', () => {
     });
   });
 
+  describe('updateStep(value)', () => {
+    const panel = new Panel();
+    panel.updateStep(10);
+
+    it('set up step.value', () => {
+      expect((panel.step as HTMLInputElement).value).toBe('10');
+    });
+  });
+
   describe('updateScaleIntervals(value)', () => {
     const panel = new Panel();
     panel.updateScaleIntervals(10);

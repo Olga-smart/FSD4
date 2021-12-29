@@ -2084,6 +2084,21 @@ describe('View', () => {
     });
   });
 
+  describe('updatePanelStep(value)', () => {
+    const slider = document.createElement('div');
+    const view = new View(slider, {
+      panel: true,
+    });
+    view.panel!.updateStep = jest.fn();
+
+    it('pass call to panel with received value', () => {
+      for (let i = 0; i <= 10; i += 1) {
+        view.updatePanelStep(i);
+        expect(view.panel?.updateStep).toBeCalledWith(i);
+      }
+    });
+  });
+
   describe('changeLeftValueFromOutside(value)', () => {
     const slider = document.createElement('div');
     const view = new View(slider);

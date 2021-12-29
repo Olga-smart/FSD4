@@ -71,6 +71,9 @@ class Presenter implements IEventListener {
       case 'modelRangeToggle':
         this.handleModelRangeToggle();
         break;
+      case 'modelStepSet':
+        this.handleModelStepSet();
+        break;
 
       default:
         break;
@@ -299,6 +302,12 @@ class Presenter implements IEventListener {
       if (this.view.panel) {
         this.view.updatePanelTo('');
       }
+    }
+  }
+
+  private handleModelStepSet(): void {
+    if (this.view.panel) {
+      this.view.updatePanelStep(this.model.step);
     }
   }
 
