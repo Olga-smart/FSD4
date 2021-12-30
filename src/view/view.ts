@@ -665,9 +665,11 @@ class View {
   }
 
   private render(): void {
+    const fragment = new DocumentFragment();
+
     this.track.append(this.range.component);
     this.slider.append(this.track.component, this.thumbLeft.component);
-    this.component.append(this.slider.component, this.input.component);
+    fragment.append(this.slider.component, this.input.component);
 
     if (this.isRange) {
       this.slider.append(this.thumbRight!.component);
@@ -702,12 +704,14 @@ class View {
     }
 
     if (this.panel) {
-      this.component.append(this.panel.component);
+      fragment.append(this.panel.component);
     }
 
     if (this.scale) {
       this.slider.after(this.scale.component);
     }
+
+    this.component.append(fragment);
   }
 
   private destroy(): void {
