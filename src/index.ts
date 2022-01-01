@@ -156,6 +156,10 @@ declare global {
           [fixedSettings.rightValue, fixedSettings.leftValue]
         );
       }
+
+      if (fixedSettings.step > Math.abs(fixedSettings.max - fixedSettings.min)) {
+        fixedSettings.step = Math.abs(fixedSettings.max - fixedSettings.min);
+      }
     }
 
     function checkTypes(): void {

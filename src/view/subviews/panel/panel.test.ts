@@ -492,11 +492,12 @@ describe('Panel', () => {
       it('update step.max', () => {
         const panel = new Panel();
         (panel.to as HTMLInputElement).value = '50';
+        (panel.min as HTMLInputElement).value = '10';
         (panel.max as HTMLInputElement).value = '100';
         const event = new Event('change');
         panel.max.dispatchEvent(event);
 
-        expect((panel.step as HTMLInputElement).max).toBe('100');
+        expect((panel.step as HTMLInputElement).max).toBe('90');
       });
     });
 

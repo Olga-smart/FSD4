@@ -191,7 +191,7 @@ class Panel {
 
     (this.step as HTMLInputElement).min = `${Panel.calcStepMin(options.step)}`;
     (this.step as HTMLInputElement).step = (this.step as HTMLInputElement).min;
-    (this.step as HTMLInputElement).max = `${options.max}`;
+    (this.step as HTMLInputElement).max = `${Math.abs(options.max - options.min)}`;
 
     if (!options.range) {
       (this.to as HTMLInputElement).disabled = true;
@@ -271,7 +271,9 @@ class Panel {
     }
 
     this.view?.changeMaxFromOutside(Number(max.value));
-    (this.step as HTMLInputElement).max = max.value;
+
+    const min = this.min as HTMLInputElement;
+    (this.step as HTMLInputElement).max = `${Math.abs(Number(max.value) - Number(min.value))}`;
   }
 
   private handleStepChange(): void {

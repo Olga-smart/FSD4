@@ -226,11 +226,12 @@ describe('Model', () => {
       expect(model.step).toBe(10);
     });
 
-    it('nothing happens, if value > max', () => {
+    it('nothing happens, if value > |max - min|', () => {
       const model = new Model(defaultOptions);
+      model.min = 10;
       model.max = 100;
       model.setStep(10);
-      model.setStep(110);
+      model.setStep(100);
 
       expect(model.step).toBe(10);
     });

@@ -92,7 +92,7 @@ class Model {
 
   setStep(value: number): void {
     if (value <= 0) return;
-    if (value > this.max) return;
+    if (value > Math.abs(this.max - this.min)) return;
 
     this.step = value;
 
