@@ -251,6 +251,16 @@ class Panel {
     (this.from as HTMLInputElement).min = (this.min as HTMLInputElement).value;
   }
 
+  private updateAttributesAfterMaxChange(): void {
+    if (!this.view?.isRange) {
+      (this.from as HTMLInputElement).max = (this.max as HTMLInputElement).value;
+    }
+
+    if (this.view?.isRange) {
+      (this.to as HTMLInputElement).max = (this.max as HTMLInputElement).value;
+    }
+  }
+
   private handleMinChange(): void {
     const min = this.min as HTMLInputElement;
     const from = this.from as HTMLInputElement;
@@ -286,6 +296,8 @@ class Panel {
 
     const min = this.min as HTMLInputElement;
     (this.step as HTMLInputElement).max = `${Math.abs(Number(max.value) - Number(min.value))}`;
+
+    this.updateAttributesAfterMaxChange();
   }
 
   private handleStepChange(): void {

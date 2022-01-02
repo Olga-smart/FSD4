@@ -422,7 +422,7 @@ describe('Panel', () => {
         expect(panel.view.changeMinFromOutside).toBeCalledWith(10);
       });
 
-      it('set up from.min = min.value', () => {
+      it('update from.min', () => {
         (panel.min as HTMLInputElement).value = '20';
         panel.min.dispatchEvent(event);
 
@@ -455,6 +455,13 @@ describe('Panel', () => {
 
           expect((panel.max as HTMLInputElement).value).toBe('100');
         });
+
+        it('update from.max', () => {
+          (panel.max as HTMLInputElement).value = '50';
+          panel.max.dispatchEvent(event);
+
+          expect((panel.from as HTMLInputElement).max).toBe('50');
+        });
       });
 
       describe('if this.view.isRange', () => {
@@ -480,6 +487,13 @@ describe('Panel', () => {
           panel.max.dispatchEvent(event);
 
           expect((panel.max as HTMLInputElement).value).toBe('100');
+        });
+
+        it('update to.max', () => {
+          (panel.max as HTMLInputElement).value = '50';
+          panel.max.dispatchEvent(event);
+
+          expect((panel.to as HTMLInputElement).max).toBe('50');
         });
       });
 
