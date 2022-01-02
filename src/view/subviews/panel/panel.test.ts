@@ -421,6 +421,13 @@ describe('Panel', () => {
 
         expect(panel.view.changeMinFromOutside).toBeCalledWith(10);
       });
+
+      it('set up from.min = min.value', () => {
+        (panel.min as HTMLInputElement).value = '20';
+        panel.min.dispatchEvent(event);
+
+        expect((panel.from as HTMLInputElement).min).toBe('20');
+      });
     });
 
     describe('handle max change', () => {

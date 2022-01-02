@@ -240,6 +240,17 @@ class Panel {
     (this.max as HTMLInputElement).min = to.value;
   }
 
+  private updateAttributesAfterStepChange(): void {
+    const step = this.step as HTMLInputElement;
+
+    step.min = `${Panel.calcStepMin(Number(step.value))}`;
+    step.step = `${Panel.calcStepMin(Number(step.value))}`;
+  }
+
+  private updateAttributesAfterMinChange(): void {
+    (this.from as HTMLInputElement).min = (this.min as HTMLInputElement).value;
+  }
+
   private handleMinChange(): void {
     const min = this.min as HTMLInputElement;
     const from = this.from as HTMLInputElement;
@@ -249,6 +260,7 @@ class Panel {
     }
 
     this.view?.changeMinFromOutside(Number(min.value));
+    this.updateAttributesAfterMinChange();
   }
 
   private handleMaxChange(): void {
@@ -290,13 +302,6 @@ class Panel {
     this.view?.changeStepFromOutside(Number(step.value));
 
     this.updateAttributesAfterStepChange();
-  }
-
-  private updateAttributesAfterStepChange(): void {
-    const step = this.step as HTMLInputElement;
-
-    step.min = `${Panel.calcStepMin(Number(step.value))}`;
-    step.step = `${Panel.calcStepMin(Number(step.value))}`;
   }
 
   private handleFromChange(): void {
