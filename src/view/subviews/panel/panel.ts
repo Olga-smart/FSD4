@@ -79,6 +79,7 @@ class Panel {
     (this.valueLabels as HTMLInputElement).checked = options.valueLabels;
     (this.minMaxLabels as HTMLInputElement).checked = options.minMaxLabels;
 
+    this.setCheckMarks();
     this.setAttributes(options);
   }
 
@@ -103,49 +104,32 @@ class Panel {
 
   private render(): void {
     this.setTypes();
-    this.setIds();
     this.component.append(
-      Panel.wrap(Panel.addLabel(this.range, 'Range:', 'panel__label_for-checkbox')),
-      Panel.wrap(Panel.addLabel(this.vertical, 'Vertical:', 'panel__label_for-checkbox')),
-      Panel.wrap(Panel.addLabel(this.valueLabels, 'Value labels:', 'panel__label_for-checkbox')),
-      Panel.wrap(Panel.addLabel(this.minMaxLabels, 'Min&max labels:', 'panel__label_for-checkbox')),
-      Panel.wrap(Panel.addLabel(this.scale, 'Scale:', 'panel__label_for-checkbox')),
-      Panel.wrap(Panel.addLabel(this.scaleIntervals, 'Scale intervals:')),
-      Panel.wrap(Panel.addLabel(this.min, 'Min:')),
-      Panel.wrap(Panel.addLabel(this.max, 'Max:')),
-      Panel.wrap(Panel.addLabel(this.from, 'From:')),
-      Panel.wrap(Panel.addLabel(this.to, 'To:')),
-      Panel.wrap(Panel.addLabel(this.step, 'Step:')),
+      Panel.addLabel(this.range, 'Range:', 'panel__label_for-checkbox'),
+      Panel.addLabel(this.vertical, 'Vertical:', 'panel__label_for-checkbox'),
+      Panel.addLabel(this.valueLabels, 'Value labels:', 'panel__label_for-checkbox'),
+      Panel.addLabel(this.minMaxLabels, 'Min&max labels:', 'panel__label_for-checkbox'),
+      Panel.addLabel(this.scale, 'Scale:', 'panel__label_for-checkbox'),
+      Panel.addLabel(this.scaleIntervals, 'Scale intervals:'),
+      Panel.addLabel(this.min, 'Min:'),
+      Panel.addLabel(this.max, 'Max:'),
+      Panel.addLabel(this.from, 'From:'),
+      Panel.addLabel(this.to, 'To:'),
+      Panel.addLabel(this.step, 'Step:'),
     );
   }
 
-  private static addLabel(input: HTMLElement, name: string, className?: string): DocumentFragment {
+  private static addLabel(input: HTMLElement, name: string, className?: string): HTMLElement {
     const label: HTMLElement = createElement('label', 'panel__label');
     label.textContent = name;
-    label.setAttribute('for', input.id);
 
     if (className) {
       label.classList.add(className);
     }
 
-    const fragment = new DocumentFragment();
+    label.append(input);
 
-    if ((input as HTMLInputElement).type === 'checkbox') {
-      fragment.append(input);
-      fragment.append(label);
-    } else {
-      fragment.append(label);
-      fragment.append(input);
-    }
-
-    return fragment;
-  }
-
-  private static wrap(fragment: DocumentFragment, className?: string): HTMLElement {
-    const wrapper: HTMLElement = createElement('div', `panel__input-wrapper ${className}`);
-    wrapper.append(fragment);
-
-    return wrapper;
+    return label;
   }
 
   private setTypes(): void {
@@ -160,20 +144,6 @@ class Panel {
     (this.scaleIntervals as HTMLInputElement).type = 'number';
     (this.valueLabels as HTMLInputElement).type = 'checkbox';
     (this.minMaxLabels as HTMLInputElement).type = 'checkbox';
-  }
-
-  private setIds(): void {
-    this.range.id = 'range';
-    this.vertical.id = 'vertical';
-    this.valueLabels.id = 'valueLabels';
-    this.minMaxLabels.id = 'minMaxLabels';
-    this.scale.id = 'scale';
-    this.scaleIntervals.id = 'scaleIntervals';
-    this.min.id = 'min';
-    this.max.id = 'max';
-    this.from.id = 'from';
-    this.to.id = 'to';
-    this.step.id = 'step';
   }
 
   private setAttributes(options: PanelOptions): void {
@@ -202,6 +172,21 @@ class Panel {
     if (!options.scale) {
       (this.scaleIntervals as HTMLInputElement).disabled = true;
     }
+  }
+
+  private setCheckMarks(): void {
+    const checkboxes = [
+      this.vertical,
+      this.range,
+      this.scale,
+      this.valueLabels,
+      this.minMaxLabels,
+    ];
+    checkboxes.forEach((checkbox) => {
+      if ((checkbox as HTMLInputElement).checked) {
+        Panel.toggleCheckbox(checkbox);
+      }
+    });
   }
 
   private static calcStepMin(step: number): number {
@@ -348,6 +333,7 @@ class Panel {
 
   private handleVerticalChange(): void {
     this.view?.changeOrientationFromOutside();
+    Panel.toggleCheckbox(this.vertical);
   }
 
   private handleRangeChange(): void {
@@ -358,11 +344,14 @@ class Panel {
 
     const from = this.from as HTMLInputElement;
     const range = this.range as HTMLInputElement;
+
     if (range.checked) {
       from.max = to.value;
     } else {
       from.max = (this.max as HTMLInputElement).value;
     }
+
+    Panel.toggleCheckbox(this.range);
   }
 
   private handleScaleChange(): void {
@@ -370,6 +359,8 @@ class Panel {
 
     const scaleIntervals = this.scaleIntervals as HTMLInputElement;
     scaleIntervals.disabled = !scaleIntervals.disabled;
+
+    Panel.toggleCheckbox(this.scale);
   }
 
   private handleScaleIntervalsChange(): void {
@@ -388,10 +379,17 @@ class Panel {
 
   private handleValueLabelsChange(): void {
     this.view?.toggleValueLabels();
+    Panel.toggleCheckbox(this.valueLabels);
   }
 
   private handleMinMaxLabelsChange(): void {
     this.view?.toggleMinMaxLabels();
+    Panel.toggleCheckbox(this.minMaxLabels);
+  }
+
+  private static toggleCheckbox(input: HTMLElement): void {
+    const label: HTMLLabelElement | null = input.closest('label');
+    label?.classList.toggle('panel__label_for-checkbox_checked');
   }
 
   private attachEventHandlers(): void {
