@@ -121,15 +121,11 @@ class View {
   }
 
   setMinValue(min: number): void {
-    if (this.minLabel) {
-      this.minLabel.setValue(min);
-    }
+    this.minLabel?.setValue(min);
   }
 
   setMaxValue(max: number): void {
-    if (this.maxLabel) {
-      this.maxLabel.setValue(max);
-    }
+    this.maxLabel?.setValue(max);
   }
 
   setLeftValue(value: number, percent: number): void {
@@ -144,9 +140,7 @@ class View {
         this.range.setLeftIndent(percent);
       }
 
-      if (this.valueLabelLeft) {
-        this.valueLabelLeft.setLeftIndent(this.thumbLeft.getLeftIndent());
-      }
+      this.valueLabelLeft?.setLeftIndent(this.thumbLeft.getLeftIndent());
 
       if (this.thumbLeft.getLeftIndent() === '100%') {
         this.thumbLeft.setZIndex(100);
@@ -166,9 +160,7 @@ class View {
         this.range.setBottomIndent(percent);
       }
 
-      if (this.valueLabelLeft) {
-        this.valueLabelLeft.setTopIndent(this.thumbLeft.getTopIndent());
-      }
+      this.valueLabelLeft?.setTopIndent(this.thumbLeft.getTopIndent());
 
       if (this.thumbLeft.getTopIndent() === '0%') {
         this.thumbLeft.setZIndex(100);
@@ -213,18 +205,14 @@ class View {
       this.thumbRight?.setLeftIndent(percent);
       this.range.setRightIndent(100 - percent);
 
-      if (this.valueLabelRight) {
-        this.valueLabelRight.setLeftIndent(this.thumbRight!.getLeftIndent());
-      }
+      this.valueLabelRight?.setLeftIndent(this.thumbRight!.getLeftIndent());
     }
 
     if (this.vertical) {
       this.thumbRight?.setTopIndent(100 - percent);
       this.range.setTopIndent(100 - percent);
 
-      if (this.valueLabelRight) {
-        this.valueLabelRight.setTopIndent(this.thumbRight!.getTopIndent());
-      }
+      this.valueLabelRight?.setTopIndent(this.thumbRight!.getTopIndent());
     }
 
     if (this.valueLabelRight) {
@@ -289,10 +277,8 @@ class View {
         newTop = trackHeight;
       }
 
-      if (!this.isRange) {
-        if (newTop < 0) {
-          newTop = 0;
-        }
+      if (!this.isRange && newTop < 0) {
+        newTop = 0;
       }
 
       if (this.isRange) {
@@ -757,69 +743,46 @@ class View {
     this.valueLabelRight?.setOpacity(1);
   }
 
-  private isTwoValueLabelsClose(): boolean | undefined {
+  private isTwoLabelsClose(label1: Label, label2: Label): boolean {
     if (this.vertical) {
-      const bottomLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
-      const topLabelEdge = this.valueLabelRight!.getBoundingClientRect().bottom;
+      const bottomLabelEdge = label1.getBoundingClientRect().top;
+      const topLabelEdge = label2.getBoundingClientRect().bottom;
 
       return ((bottomLabelEdge - topLabelEdge) < 3);
     }
 
-    const leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
-    const rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().left;
+    const leftLabelEdge = label1.getBoundingClientRect().right;
+    const rightLabelEdge = label2.getBoundingClientRect().left;
 
     return ((rightLabelEdge - leftLabelEdge) < 3);
   }
 
-  private isLeftValueLabelCloseToMinLabel(): boolean | undefined {
-    let leftLabelEdge;
-    let minLabelEdge;
-
-    if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().bottom;
-      minLabelEdge = this.minLabel!.getBoundingClientRect().top;
-
-      return ((minLabelEdge - leftLabelEdge) < 3);
+  private isTwoValueLabelsClose(): boolean {
+    if (this.valueLabelLeft && this.valueLabelRight) {
+      return this.isTwoLabelsClose(this.valueLabelLeft, this.valueLabelRight);
     }
-
-    leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().left;
-    minLabelEdge = this.minLabel!.getBoundingClientRect().right;
-
-    return ((leftLabelEdge - minLabelEdge) < 3);
+    return false;
   }
 
-  private isLeftValueLabelCloseToMaxLabel(): boolean | undefined {
-    let leftLabelEdge;
-    let maxLabelEdge;
-
-    if (this.vertical) {
-      leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel!.getBoundingClientRect().bottom;
-
-      return ((leftLabelEdge - maxLabelEdge) < 3);
+  private isLeftValueLabelCloseToMinLabel(): boolean {
+    if (this.minLabel && this.valueLabelLeft) {
+      return this.isTwoLabelsClose(this.minLabel, this.valueLabelLeft);
     }
-
-    leftLabelEdge = this.valueLabelLeft!.getBoundingClientRect().right;
-    maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
-
-    return ((maxLabelEdge - leftLabelEdge) < 3);
+    return false;
   }
 
-  private isRightValueLabelCloseToMaxLabel(): boolean | undefined {
-    let rightLabelEdge;
-    let maxLabelEdge;
-
-    if (this.vertical) {
-      rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().top;
-      maxLabelEdge = this.maxLabel!.getBoundingClientRect().bottom;
-
-      return ((rightLabelEdge - maxLabelEdge) < 3);
+  private isLeftValueLabelCloseToMaxLabel(): boolean {
+    if (this.valueLabelLeft && this.maxLabel) {
+      return this.isTwoLabelsClose(this.valueLabelLeft, this.maxLabel);
     }
+    return false;
+  }
 
-    rightLabelEdge = this.valueLabelRight!.getBoundingClientRect().right;
-    maxLabelEdge = this.maxLabel!.getBoundingClientRect().left;
-
-    return ((maxLabelEdge - rightLabelEdge) < 3);
+  private isRightValueLabelCloseToMaxLabel(): boolean {
+    if (this.valueLabelRight && this.maxLabel) {
+      return this.isTwoLabelsClose(this.valueLabelRight, this.maxLabel);
+    }
+    return false;
   }
 
   private whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
@@ -858,17 +821,13 @@ class View {
     if (side === 'left') {
       this.thumbLeft.component.classList.add('range-slider__thumb_smooth-transition');
       this.range.component.classList.add('range-slider__range_smooth-transition');
-      if (this.valueLabelLeft) {
-        this.valueLabelLeft.component.classList.add('range-slider__value-label_smooth-transition');
-      }
+      this.valueLabelLeft?.component.classList.add('range-slider__value-label_smooth-transition');
     }
 
     if (side === 'right') {
       this.thumbRight!.component.classList.add('range-slider__thumb_smooth-transition');
       this.range.component.classList.add('range-slider__range_smooth-transition');
-      if (this.valueLabelRight) {
-        this.valueLabelRight.component.classList.add('range-slider__value-label_smooth-transition');
-      }
+      this.valueLabelRight?.component.classList.add('range-slider__value-label_smooth-transition');
     }
   }
 
@@ -876,17 +835,13 @@ class View {
     if (side === 'left') {
       this.thumbLeft.component.classList.remove('range-slider__thumb_smooth-transition');
       this.range.component.classList.remove('range-slider__range_smooth-transition');
-      if (this.valueLabelLeft) {
-        this.valueLabelLeft.component.classList.remove('range-slider__value-label_smooth-transition');
-      }
+      this.valueLabelLeft?.component.classList.remove('range-slider__value-label_smooth-transition');
     }
 
     if (side === 'right') {
       this.thumbRight!.component.classList.remove('range-slider__thumb_smooth-transition');
       this.range.component.classList.remove('range-slider__range_smooth-transition');
-      if (this.valueLabelRight) {
-        this.valueLabelRight.component.classList.remove('range-slider__value-label_smooth-transition');
-      }
+      this.valueLabelRight?.component.classList.remove('range-slider__value-label_smooth-transition');
     }
   }
 
