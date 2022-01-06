@@ -42,6 +42,9 @@ body {
     border-radius: 5px;
     background-color: rgba(crimson, 0.3);
     cursor: pointer;
+    @media (hover: none) {
+      cursor: auto;
+    }
   }
   &__range {
     position: absolute;
@@ -67,6 +70,7 @@ body {
     transition: 
       box-shadow 0.2s ease-in-out; 
     cursor: pointer;
+    touch-action: none;
     &_smooth-transition {
       transition: 
         box-shadow 0.2s ease-in-out,
@@ -126,6 +130,9 @@ body {
     padding-top: 8px;
     display: flex;  
     cursor: pointer;
+    @media (hover: none) {
+      cursor: auto;
+    }
     &-interval {
       border-right: 1px solid gray;
       height: 10px;

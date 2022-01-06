@@ -121,7 +121,7 @@ class Scale {
   private handleClick(event: MouseEvent): void {
     const x: number = event.clientX - (event.currentTarget as Element).getBoundingClientRect().left;
     const y: number = event.clientY - (event.currentTarget as Element).getBoundingClientRect().top;
-    this.view?.handleScaleOrTrackClick(x, y);
+    this.view?.handleScaleOrTrackClick(x, y, event);
   }
 
   private attachEventHandlers(): void {
