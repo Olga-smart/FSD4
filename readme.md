@@ -2,13 +2,23 @@
 Easy to use, flexible and responsive range slider.
 [Demo](https://olga-smart.github.io/FSD_4/)
 
+## Table of Contents
+1. [Description](#description)
+2. [Key Features](#key-features)
+3. [Dependencies](#dependencies)
+4. [Usage](#usage)
+5. [Initialization](#initialization)
+6. [Settings](#settings)
+7. [Public Methods](#public-methods)
+8. [Under the Hood](#under-the-hood)
+
 ## Description
 * RangeSlider — cool, comfortable, responsive and easily customizable range slider
 * Supports events and public methods, has flexible settings, can be completely altered with CSS
 * Cross-browser: Google Chrome, Mozilla Firefox 3.6+, Opera 12+, Safari 5+, Internet Explorer 8+
 * RangeSlider supports touch-devices (iPhone, iPad, Nexus, etc.).
 
-## Key features
+## Key Features
 * Any number of sliders at one page without conflicts and big performance problems
 * Two slider types: single (1 slider) and double (2 sliders)
 * Support of negative and fractional values
@@ -89,7 +99,7 @@ or using data-* attributes:
 | `scaleIntervals` | `data-scale-intervals` | `5`      | number  | Number of scale intervals |
 | `panel`          | `data-panel`           | `false`  | boolean | Enables panel for interactive slider settings |
 
-## Public methods
+## Public Methods
 
 To use public methods, at first you must save slider instance to variable:
 
@@ -119,7 +129,7 @@ slider.setRightValue(80)
 slider.setStep(10);
 ```
 
-## Under the hood
+## Under the Hood
 
 
 
