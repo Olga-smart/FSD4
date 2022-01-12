@@ -1,1 +1,0 @@
-{"version":3,"file":"MinMaxLabel.d.ts","sourceRoot":"","sources":["../../../../src/View/subviews/MinMaxLabel/MinMaxLabel.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,gBAAgB,CAAC;AAGnC,cAAM,WAAY,SAAQ,KAAK;IAC7B,SAAS,EAAE,WAAW,CAAC;gBAEX,IAAI,GAAE,MAAM,GAAG,OAAgB;CAI5C;AAED,eAAe,WAAW,CAAC"}
