@@ -1,7 +1,7 @@
 class Label {
-  type: 'left' | 'right' | 'common';
+  protected type: 'left' | 'right' | 'common';
 
-  component: HTMLElement;
+  protected component: HTMLElement;
 
   constructor(type: 'left' | 'right' | 'common' = 'left') {
     this.type = type;
@@ -16,8 +16,8 @@ class Label {
     this.component.textContent = `${value}`;
   }
 
-  getValue(): string | null {
-    return this.component.textContent;
+  getValue(): number {
+    return Number(this.component.textContent);
   }
 
   getBoundingClientRect(): DOMRect {
@@ -30,6 +30,14 @@ class Label {
 
   getOffsetHeight() {
     return this.component.offsetHeight;
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
+  }
+
+  remove(): void {
+    this.component.remove();
   }
 }
 

@@ -6,11 +6,11 @@ describe('Slider', () => {
       const slider = new Slider();
 
       it('common class', () => {
-        expect(slider.component.classList).toContain('range-slider__slider');
+        expect(slider.getComponent().classList).toContain('range-slider__slider');
       });
 
       it('component property is div element', () => {
-        expect(slider.component).toBeInstanceOf(HTMLDivElement);
+        expect(slider.getComponent()).toBeInstanceOf(HTMLDivElement);
       });
     });
   });
@@ -26,11 +26,11 @@ describe('Slider', () => {
     slider.append(div);
 
     it('append elements to slider component', () => {
-      expect(div.parentNode).toBe(slider.component);
+      expect(div.parentNode).toBe(slider.getComponent());
     });
 
     it('call built-in method append', () => {
-      expect(slider.component.append).toBeCalledWith(div);
+      expect(slider.getComponent().append).toBeCalledWith(div);
     });
 
     it('work with multiple arguments', () => {
@@ -39,7 +39,7 @@ describe('Slider', () => {
       const div3 = document.createElement('div');
       slider.append(div1, div2, div3);
 
-      expect(slider.component.append).toBeCalledWith(div1, div2, div3);
+      expect(slider.getComponent().append).toBeCalledWith(div1, div2, div3);
     });
   });
 
@@ -50,11 +50,11 @@ describe('Slider', () => {
 
     const slider = new Slider();
     const div = document.createElement('div');
-    slider.component.before = jest.fn();
+    slider.getComponent().before = jest.fn();
     slider.before(div);
 
     it('call built-in method before', () => {
-      expect(slider.component.before).toBeCalledWith(div);
+      expect(slider.getComponent().before).toBeCalledWith(div);
     });
 
     it('work with multiple arguments', () => {
@@ -63,7 +63,7 @@ describe('Slider', () => {
       const div3 = document.createElement('div');
       slider.before(div1, div2, div3);
 
-      expect(slider.component.before).toBeCalledWith(div1, div2, div3);
+      expect(slider.getComponent().before).toBeCalledWith(div1, div2, div3);
     });
   });
 
@@ -74,11 +74,11 @@ describe('Slider', () => {
 
     const slider = new Slider();
     const div = document.createElement('div');
-    slider.component.after = jest.fn();
+    slider.getComponent().after = jest.fn();
     slider.after(div);
 
     it('call built-in method after', () => {
-      expect(slider.component.after).toBeCalledWith(div);
+      expect(slider.getComponent().after).toBeCalledWith(div);
     });
 
     it('work with multiple arguments', () => {
@@ -87,7 +87,14 @@ describe('Slider', () => {
       const div3 = document.createElement('div');
       slider.after(div1, div2, div3);
 
-      expect(slider.component.after).toBeCalledWith(div1, div2, div3);
+      expect(slider.getComponent().after).toBeCalledWith(div1, div2, div3);
+    });
+  });
+
+  describe('getComponent()', () => {
+    it('return HTML element', () => {
+      const slider = new Slider();
+      expect(slider.getComponent()).toBeInstanceOf(HTMLElement);
     });
   });
 });

@@ -1,4 +1,4 @@
-import { EventManager } from '../EventManager/EventManager';
+import { EventManager, IEventListener } from '../EventManager/EventManager';
 
 type ModelOptions = {
   min: number;
@@ -10,19 +10,19 @@ type ModelOptions = {
 };
 
 class Model {
-  eventManager: EventManager;
+  private eventManager: EventManager;
 
-  min: number;
+  private min: number;
 
-  max: number;
+  private max: number;
 
-  leftValue: number;
+  private leftValue: number;
 
-  rightValue?: number;
+  private rightValue?: number;
 
-  step: number;
+  private step: number;
 
-  isRange: boolean;
+  private range: boolean;
 
   constructor(options: ModelOptions) {
     this.eventManager = new EventManager();
@@ -33,26 +33,34 @@ class Model {
     this.step = options.step;
     if (options.range) {
       this.rightValue = options.rightValue;
-      this.isRange = true;
+      this.range = true;
     } else {
-      this.isRange = false;
+      this.range = false;
     }
+  }
+
+  subscribe(listener: IEventListener): void {
+    this.eventManager.subscribe(listener);
+  }
+
+  notify(eventType: string, data: any = null): void {
+    this.eventManager.notify(eventType, data);
   }
 
   setLeftValue(value: number): void {
     if (value < this.min) {
       this.leftValue = this.min;
     } else {
-      if (!this.isRange) {
+      if (!this.isRange()) {
         this.leftValue = Math.min(value, this.max);
       }
 
-      if (this.isRange) {
+      if (this.isRange()) {
         this.leftValue = Math.min(value, this.rightValue!);
       }
     }
 
-    this.eventManager.notify('modelLeftSet');
+    this.notify('modelLeftSet');
   }
 
   setRightValue(value: number = this.max): void {
@@ -62,7 +70,7 @@ class Model {
       this.rightValue = Math.max(value, this.leftValue);
     }
 
-    this.eventManager.notify('modelRightSet');
+    this.notify('modelRightSet');
   }
 
   removeRightValue(): void {
@@ -73,21 +81,21 @@ class Model {
     if (value > this.leftValue) return;
     this.min = value;
 
-    this.eventManager.notify('modelChangeMin');
+    this.notify('modelChangeMin');
   }
 
   changeMaxFromOutside(value: number): void {
-    if (!this.isRange) {
+    if (!this.isRange()) {
       if (value < this.leftValue) return;
     }
 
-    if (this.isRange) {
+    if (this.isRange()) {
       if (value < this.rightValue!) return;
     }
 
     this.max = value;
 
-    this.eventManager.notify('modelChangeMax');
+    this.notify('modelChangeMax');
   }
 
   setStep(value: number): void {
@@ -96,13 +104,37 @@ class Model {
 
     this.step = value;
 
-    this.eventManager.notify('modelStepSet');
+    this.notify('modelStepSet');
   }
 
   toggleRange(): void {
-    this.isRange = !this.isRange;
+    this.range = !this.range;
 
-    this.eventManager.notify('modelRangeToggle');
+    this.notify('modelRangeToggle');
+  }
+
+  getMin(): number {
+    return this.min;
+  }
+
+  getMax(): number {
+    return this.max;
+  }
+
+  getLeftValue(): number {
+    return this.leftValue;
+  }
+
+  getRightValue(): number | undefined {
+    return this.rightValue;
+  }
+
+  getStep(): number {
+    return this.step;
+  }
+
+  isRange(): boolean {
+    return this.range;
   }
 }
 

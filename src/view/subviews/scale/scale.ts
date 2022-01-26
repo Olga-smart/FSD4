@@ -1,21 +1,21 @@
 import createElement from '../../helpers/createElement';
 
 class Scale {
-  view: any;
+  private view: any;
 
-  component: HTMLElement;
+  private component: HTMLElement;
 
-  min: number;
+  private min: number;
 
-  max: number;
+  private max: number;
 
-  intervalsNumber: number;
+  private intervalsNumber: number;
 
-  intervals: HTMLElement[];
+  private intervals: HTMLElement[];
 
-  values: number[];
+  private values: number[];
 
-  valueElements: HTMLElement[];
+  private valueElements: HTMLElement[];
 
   constructor(min: number, max: number, intervalsNumber: number) {
     this.view = null;
@@ -69,6 +69,10 @@ class Scale {
   handleSwitchFromVerticalToHorizontal() {
     this.component.style.paddingRight = 'unset';
     this.fitHeightForHorizontal();
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
   }
 
   private createIntervals(): void {

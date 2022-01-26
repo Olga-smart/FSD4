@@ -1,11 +1,11 @@
 import createElement from '../../helpers/createElement';
 
 class Thumb {
-  type: 'left' | 'right';
+  private type: 'left' | 'right';
 
-  component: HTMLElement;
+  private component: HTMLElement;
 
-  view: any;
+  private view: any;
 
   constructor(type: 'left' | 'right' = 'left') {
     this.view = null;
@@ -49,6 +49,10 @@ class Thumb {
 
   getHeight(): number {
     return this.component.offsetHeight;
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
   }
 
   private static handlePointerOver(event: PointerEvent): void {

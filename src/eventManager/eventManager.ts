@@ -1,5 +1,5 @@
 class EventManager {
-  listeners: IEventListener[] = [];
+  private listeners: IEventListener[] = [];
 
   subscribe(listener: IEventListener): void {
     this.listeners.push(listener);

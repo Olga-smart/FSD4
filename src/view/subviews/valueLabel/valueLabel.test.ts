@@ -6,25 +6,25 @@ describe('ValueLabel', () => {
     describe('set up component property with necessary classes', () => {
       it('set up common class', () => {
         const valueLabel = new ValueLabel();
-        expect(valueLabel.component.classList).toContain('range-slider__value-label');
+        expect(valueLabel.getComponent().classList).toContain('range-slider__value-label');
       });
 
       it('set up class for left label if argument "type" == "left" or by default', () => {
         let valueLabel = new ValueLabel();
-        expect(valueLabel.component.classList).toContain('range-slider__value-label_left');
+        expect(valueLabel.getComponent().classList).toContain('range-slider__value-label_left');
 
         valueLabel = new ValueLabel('left');
-        expect(valueLabel.component.classList).toContain('range-slider__value-label_left');
+        expect(valueLabel.getComponent().classList).toContain('range-slider__value-label_left');
       });
 
       it('set up class for right label if argument "type" == "right"', () => {
         const valueLabel = new ValueLabel('right');
-        expect(valueLabel.component.classList).toContain('range-slider__value-label_right');
+        expect(valueLabel.getComponent().classList).toContain('range-slider__value-label_right');
       });
 
       it('component property is div element', () => {
         const valueLabel = new ValueLabel();
-        expect(valueLabel.component).toBeInstanceOf(HTMLDivElement);
+        expect(valueLabel.getComponent()).toBeInstanceOf(HTMLDivElement);
       });
     });
 
@@ -75,7 +75,7 @@ describe('ValueLabel', () => {
     it('set up left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
         valueLabel.setLeftIndent(`${i}px`);
-        expect(valueLabel.component.style.left).toBe(`${i}px`);
+        expect(valueLabel.getComponent().style.left).toBe(`${i}px`);
       }
     });
   });
@@ -85,7 +85,7 @@ describe('ValueLabel', () => {
 
     it('return left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        valueLabel.component.style.left = `${i}px`;
+        valueLabel.getComponent().style.left = `${i}px`;
         expect(valueLabel.getLeftIndent()).toBe(`${i}px`);
       }
     });
@@ -97,7 +97,7 @@ describe('ValueLabel', () => {
     it('set up top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
         valueLabel.setTopIndent(`${i}px`);
-        expect(valueLabel.component.style.top).toBe(`${i}px`);
+        expect(valueLabel.getComponent().style.top).toBe(`${i}px`);
       }
     });
   });
@@ -107,7 +107,7 @@ describe('ValueLabel', () => {
 
     it('return top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        valueLabel.component.style.top = `${i}px`;
+        valueLabel.getComponent().style.top = `${i}px`;
         expect(valueLabel.getTopIndent()).toBe(`${i}px`);
       }
     });

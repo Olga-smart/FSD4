@@ -3,63 +3,29 @@ import View from '../../View';
 
 describe('Thumb', () => {
   describe('constructor(type)', () => {
-    describe('set up necessary properties', () => {
-      it('set up view property', () => {
+    describe('set up component property with necessary classes', () => {
+      it('common class', () => {
         const thumb = new Thumb();
-        expect(thumb).toHaveProperty('view');
+        expect(thumb.getComponent().classList).toContain('range-slider__thumb');
       });
 
-      describe('set up type property', () => {
-        it('type = left by default', () => {
-          const thumb = new Thumb();
-          expect(thumb.type).toBe('left');
-        });
+      it('class for left thumb if argument "type" == "left" or by default', () => {
+        let thumb = new Thumb();
+        expect(thumb.getComponent().classList).toContain('range-slider__thumb_left');
 
-        it('type = right if the argument is "right"', () => {
-          const thumb = new Thumb('right');
-          expect(thumb.type).toBe('right');
-        });
-
-        it('type = left if the argument is "left"', () => {
-          const thumb = new Thumb('left');
-          expect(thumb.type).toBe('left');
-        });
+        thumb = new Thumb('left');
+        expect(thumb.getComponent().classList).toContain('range-slider__thumb_left');
       });
 
-      describe('set up component property with necessary classes', () => {
-        it('common class', () => {
-          const thumb = new Thumb();
-          expect(thumb.component.classList).toContain('range-slider__thumb');
-        });
-
-        it('class for left thumb if argument "type" == "left" or by default', () => {
-          let thumb = new Thumb();
-          expect(thumb.component.classList).toContain('range-slider__thumb_left');
-
-          thumb = new Thumb('left');
-          expect(thumb.component.classList).toContain('range-slider__thumb_left');
-        });
-
-        it('class for right thumb if argument "type" == "right"', () => {
-          const thumb = new Thumb('right');
-          expect(thumb.component.classList).toContain('range-slider__thumb_right');
-        });
-
-        it('component property is div element', () => {
-          const thumb = new Thumb();
-          expect(thumb.component).toBeInstanceOf(HTMLDivElement);
-        });
+      it('class for right thumb if argument "type" == "right"', () => {
+        const thumb = new Thumb('right');
+        expect(thumb.getComponent().classList).toContain('range-slider__thumb_right');
       });
-    });
-  });
 
-  describe('registerWith(view)', () => {
-    const thumb = new Thumb();
-    const view: any = {};
-    thumb.registerWith(view);
-
-    it('set up view', () => {
-      expect(thumb.view).toBe(view);
+      it('component property is div element', () => {
+        const thumb = new Thumb();
+        expect(thumb.getComponent()).toBeInstanceOf(HTMLDivElement);
+      });
     });
   });
 
@@ -69,7 +35,7 @@ describe('Thumb', () => {
     it('set up left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
         thumb.setLeftIndent(i);
-        expect(thumb.component.style.left).toBe(`${i}%`);
+        expect(thumb.getComponent().style.left).toBe(`${i}%`);
       }
     });
   });
@@ -80,7 +46,7 @@ describe('Thumb', () => {
     it('set up top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
         thumb.setTopIndent(i);
-        expect(thumb.component.style.top).toBe(`${i}%`);
+        expect(thumb.getComponent().style.top).toBe(`${i}%`);
       }
     });
   });
@@ -115,7 +81,7 @@ describe('Thumb', () => {
     it('change z-index of component', () => {
       for (let i = 0; i <= 100; i += 1) {
         thumb.setZIndex(i);
-        expect(thumb.component.style.zIndex).toBe(`${i}`);
+        expect(thumb.getComponent().style.zIndex).toBe(`${i}`);
       }
     });
   });
@@ -125,7 +91,14 @@ describe('Thumb', () => {
     const coords = thumb.getBoundingClientRect();
 
     it('return component coordinates', () => {
-      expect(coords).toEqual(thumb.component.getBoundingClientRect());
+      expect(coords).toEqual(thumb.getComponent().getBoundingClientRect());
+    });
+  });
+
+  describe('getComponent()', () => {
+    it('return HTML element', () => {
+      const thumb = new Thumb();
+      expect(thumb.getComponent()).toBeInstanceOf(HTMLElement);
     });
   });
 
@@ -136,33 +109,33 @@ describe('Thumb', () => {
 
     it('handle pointerover', () => {
       const event = new Event('pointerover');
-      thumb.component.dispatchEvent(event);
+      thumb.getComponent().dispatchEvent(event);
 
-      expect(thumb.component.classList).toContain('range-slider__thumb_hover');
+      expect(thumb.getComponent().classList).toContain('range-slider__thumb_hover');
     });
 
     it('handle pointerout', () => {
       const event = new Event('pointerout');
-      thumb.component.classList.add('range-slider__thumb_hover');
-      thumb.component.dispatchEvent(event);
+      thumb.getComponent().classList.add('range-slider__thumb_hover');
+      thumb.getComponent().dispatchEvent(event);
 
-      expect(thumb.component.classList).not.toContain('range-slider__thumb_hover');
+      expect(thumb.getComponent().classList).not.toContain('range-slider__thumb_hover');
     });
 
     it('handle pointerdown', () => {
       const event = new Event('pointerdown');
-      thumb.component.setPointerCapture = jest.fn();
-      thumb.component.dispatchEvent(event);
+      thumb.getComponent().setPointerCapture = jest.fn();
+      thumb.getComponent().dispatchEvent(event);
 
-      expect(thumb.component.classList).toContain('range-slider__thumb_active');
+      expect(thumb.getComponent().classList).toContain('range-slider__thumb_active');
     });
 
     it('handle pointerup', () => {
       const event = new Event('pointerup');
-      thumb.component.classList.add('range-slider__thumb_active');
-      thumb.component.dispatchEvent(event);
+      thumb.getComponent().classList.add('range-slider__thumb_active');
+      thumb.getComponent().dispatchEvent(event);
 
-      expect(thumb.component.classList).not.toContain('range-slider__thumb_active');
+      expect(thumb.getComponent().classList).not.toContain('range-slider__thumb_active');
     });
 
     describe('handle dragging', () => {
@@ -170,44 +143,44 @@ describe('Thumb', () => {
         const newThumb = new Thumb('left');
         const newView: any = {};
         newThumb.registerWith(newView);
-        newThumb.view!.handleLeftInput = jest.fn();
-        newThumb.component.setPointerCapture = jest.fn();
+        newView.handleLeftInput = jest.fn();
+        newThumb.getComponent().setPointerCapture = jest.fn();
 
-        newThumb.component.dispatchEvent(new Event('pointerdown'));
-        newThumb.component.dispatchEvent(new Event('pointermove'));
+        newThumb.getComponent().dispatchEvent(new Event('pointerdown'));
+        newThumb.getComponent().dispatchEvent(new Event('pointermove'));
 
-        expect(newThumb.view!.handleLeftInput).toBeCalled();
+        expect(newView.handleLeftInput).toBeCalled();
       });
 
       it('call handler for right input if thumb type is right', () => {
         const newThumb = new Thumb('right');
         const newView: any = {};
         newThumb.registerWith(newView);
-        newThumb.view!.handleRightInput = jest.fn();
-        newThumb.component.setPointerCapture = jest.fn();
+        newView.handleRightInput = jest.fn();
+        newThumb.getComponent().setPointerCapture = jest.fn();
 
-        newThumb.component.dispatchEvent(new Event('pointerdown'));
-        newThumb.component.dispatchEvent(new Event('pointermove'));
+        newThumb.getComponent().dispatchEvent(new Event('pointerdown'));
+        newThumb.getComponent().dispatchEvent(new Event('pointermove'));
 
-        expect(newThumb.view!.handleRightInput).toBeCalled();
+        expect(newView.handleRightInput).toBeCalled();
       });
 
       it('nothing happens if view is not registered', () => {
         let newThumb = new Thumb('left');
-        newThumb.component.setPointerCapture = jest.fn();
+        newThumb.getComponent().setPointerCapture = jest.fn();
         jest.spyOn(View.prototype, 'handleLeftInput');
 
-        newThumb.component.dispatchEvent(new Event('pointerdown'));
-        newThumb.component.dispatchEvent(new Event('pointermove'));
+        newThumb.getComponent().dispatchEvent(new Event('pointerdown'));
+        newThumb.getComponent().dispatchEvent(new Event('pointermove'));
 
         expect(View.prototype.handleLeftInput).not.toBeCalled();
 
         newThumb = new Thumb('right');
-        newThumb.component.setPointerCapture = jest.fn();
+        newThumb.getComponent().setPointerCapture = jest.fn();
         jest.spyOn(View.prototype, 'handleRightInput');
 
-        newThumb.component.dispatchEvent(new Event('pointerdown'));
-        newThumb.component.dispatchEvent(new Event('pointermove'));
+        newThumb.getComponent().dispatchEvent(new Event('pointerdown'));
+        newThumb.getComponent().dispatchEvent(new Event('pointermove'));
 
         expect(View.prototype.handleRightInput).not.toBeCalled();
       });

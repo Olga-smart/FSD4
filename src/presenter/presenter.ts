@@ -3,15 +3,17 @@ import View from '../View/View';
 import { IEventListener } from '../EventManager/EventManager';
 
 class Presenter implements IEventListener {
-  model: Model;
+  private model: Model;
 
-  view: View;
+  private view: View;
 
   constructor(model: Model, view: View) {
     this.model = model;
     this.view = view;
 
     this.initViewValues();
+    this.model.subscribe(this);
+    this.view.subscribe(this);
   }
 
   inform(eventType: string, data: any): void {
@@ -45,13 +47,13 @@ class Presenter implements IEventListener {
         break;
       case 'viewToggleScaleFromOutside':
         this.handleScaleToggle();
-        return;
+        break;
       case 'viewChangeScaleIntervals':
         this.handleChangeScaleIntervals();
-        return;
+        break;
       case 'viewAddValueLabels':
         this.handleAddValueLabels();
-        return;
+        break;
       case 'viewAddMinMaxLabels':
         this.handleAddMinMaxLabels();
         break;
@@ -84,46 +86,47 @@ class Presenter implements IEventListener {
     const { model } = this;
     const { view } = this;
 
-    view.setMinValue(model.min);
-    view.setMaxValue(model.max);
-    this.passLeftValueToView(model.leftValue);
+    view.setMinValue(model.getMin());
+    view.setMaxValue(model.getMax());
+    this.passLeftValueToView(model.getLeftValue());
 
-    if (view.isRange) {
-      this.passRightValueToView(model.rightValue!);
-      view.updateInput(model.leftValue, model.rightValue!);
+    if (view.isRange()) {
+      this.passRightValueToView(model.getRightValue()!);
+      view.updateInput(model.getLeftValue(), model.getRightValue()!);
     } else {
-      view.updateInput(model.leftValue);
+      view.updateInput(model.getLeftValue());
     }
 
-    if (view.hasScale) {
-      view.addScale(model.min, model.max, view.scaleIntervals!);
+    if (view.hasScale()) {
+      // first remove scale with arbitrary values, which was added as a plug
+      view.removeScale();
+      view.addScale(model.getMin(), model.getMax());
     }
 
     if (this.view.hasLabels()) {
-      if (!view.vertical) {
+      if (!view.isVertical()) {
         view.fixLabelsContainerHeightForHorizontal();
       }
 
-      if (view.vertical) {
+      if (view.isVertical()) {
         view.fixLabelsContainerWidthForVertical();
       }
     }
 
-    if (view.panel) {
+    if (view.hasPanel()) {
       view.setPanelValues({
-        min: model.min,
-        max: model.max,
-        step: model.step,
-        from: model.leftValue,
-        to: model.rightValue ?? null,
-        vertical: view.vertical ?? false,
-        range: view.isRange,
-        scale: view.hasScale,
-        scaleIntervals: view.scaleIntervals ?? null,
-        valueLabels: !!view.valueLabelLeft,
-        minMaxLabels: !!view.minLabel,
+        min: model.getMin(),
+        max: model.getMax(),
+        step: model.getStep(),
+        from: model.getLeftValue(),
+        to: model.getRightValue() ?? null,
+        vertical: view.isVertical() ?? false,
+        range: view.isRange(),
+        scale: view.hasScale(),
+        scaleIntervals: view.getScaleIntervals() ?? null,
+        valueLabels: view.hasValueLabels(),
+        minMaxLabels: view.hasMinMaxLabels(),
       });
-      view.panel.registerWith(view);
     }
   }
 
@@ -133,11 +136,11 @@ class Presenter implements IEventListener {
   }
 
   private handleModelLeftSet(): void {
-    const value = this.model.leftValue;
+    const value = this.model.getLeftValue();
     this.view.setLeftValue(value, this.convertValueToPercent(value));
     this.updateViewInput();
 
-    if (this.view.panel) {
+    if (this.view.hasPanel()) {
       this.view.updatePanelFrom(value);
     }
   }
@@ -148,11 +151,11 @@ class Presenter implements IEventListener {
   }
 
   private handleModelRightSet(): void {
-    const value = this.model.rightValue!;
+    const value = this.model.getRightValue()!;
     this.view.setRightValue(value, this.convertValueToPercent(value));
     this.updateViewInput();
 
-    if (this.view.panel) {
+    if (this.view.hasPanel()) {
       this.view.updatePanelTo(value);
     }
   }
@@ -168,18 +171,18 @@ class Presenter implements IEventListener {
   }
 
   private updateViewInput(): void {
-    if (!this.view.isRange) {
-      this.view.updateInput(this.model.leftValue);
+    if (!this.view.isRange()) {
+      this.view.updateInput(this.model.getLeftValue());
     }
 
-    if (this.view.isRange) {
-      this.view.updateInput(this.model.leftValue, this.model.rightValue);
+    if (this.view.isRange()) {
+      this.view.updateInput(this.model.getLeftValue(), this.model.getRightValue());
     }
   }
 
   private convertValueToPercent(value: number): number {
-    const { min } = this.model;
-    const { max } = this.model;
+    const min = this.model.getMin();
+    const max = this.model.getMax();
     let percent: number = ((value - min) / (max - min)) * 100;
     percent = Presenter.removeCalcInaccuracy(percent);
 
@@ -189,18 +192,18 @@ class Presenter implements IEventListener {
   private convertPxToValue(px: number): number {
     let percent: number = 0;
 
-    if (!this.view.vertical) {
-      const trackWidthInPx: number = this.view.track.getOffsetWidth();
+    if (!this.view.isVertical()) {
+      const trackWidthInPx: number = this.view.getTrackWidth();
       percent = (px * 100) / trackWidthInPx;
     }
 
-    if (this.view.vertical) {
-      const trackHeightInPx: number = this.view.track.getOffsetHeight();
+    if (this.view.isVertical()) {
+      const trackHeightInPx: number = this.view.getTrackHeight();
       percent = (px * 100) / trackHeightInPx;
     }
 
-    const { min } = this.model;
-    const { max } = this.model;
+    const min = this.model.getMin();
+    const max = this.model.getMax();
     let value: number = ((max - min) * (percent / 100) + min);
     value = this.fitToStep(value);
     value = Presenter.removeCalcInaccuracy(value);
@@ -209,7 +212,7 @@ class Presenter implements IEventListener {
   }
 
   private fitToStep(value: number): number {
-    let result = Math.round(value / this.model.step) * this.model.step;
+    let result = Math.round(value / this.model.getStep()) * this.model.getStep();
     result = Presenter.removeCalcInaccuracy(result);
     return result;
   }
@@ -231,14 +234,14 @@ class Presenter implements IEventListener {
   }
 
   private handleModelChangeMin(): void {
-    this.view.setMinValue(this.model.min);
-    this.passLeftValueToView(this.model.leftValue);
-    if (this.model.rightValue) {
-      this.passRightValueToView(this.model.rightValue);
+    this.view.setMinValue(this.model.getMin());
+    this.passLeftValueToView(this.model.getLeftValue());
+    if (this.model.getRightValue() !== undefined) {
+      this.passRightValueToView(this.model.getRightValue() as number);
     }
-    if (this.view.hasScale) {
+    if (this.view.hasScale()) {
       this.view.removeScale();
-      this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
+      this.view.addScale(this.model.getMin(), this.model.getMax());
     }
   }
 
@@ -247,14 +250,14 @@ class Presenter implements IEventListener {
   }
 
   private handleModelChangeMax(): void {
-    this.view.setMaxValue(this.model.max);
-    this.passLeftValueToView(this.model.leftValue);
-    if (this.model.rightValue) {
-      this.passRightValueToView(this.model.rightValue);
+    this.view.setMaxValue(this.model.getMax());
+    this.passLeftValueToView(this.model.getLeftValue());
+    if (this.model.getRightValue() !== undefined) {
+      this.passRightValueToView(this.model.getRightValue() as number);
     }
-    if (this.view.hasScale) {
+    if (this.view.hasScale()) {
       this.view.removeScale();
-      this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
+      this.view.addScale(this.model.getMin(), this.model.getMax());
     }
   }
 
@@ -263,18 +266,18 @@ class Presenter implements IEventListener {
   }
 
   private handleViewOrientationChange(): void {
-    this.passLeftValueToView(this.model.leftValue);
+    this.passLeftValueToView(this.model.getLeftValue());
 
-    if (this.view.isRange) {
-      this.passRightValueToView(this.model.rightValue!);
+    if (this.view.isRange()) {
+      this.passRightValueToView(this.model.getRightValue()!);
     }
 
     if (this.view.hasLabels()) {
-      if (!this.view.vertical) {
+      if (!this.view.isVertical()) {
         this.view.fixLabelsContainerHeightForHorizontal();
       }
 
-      if (this.view.vertical) {
+      if (this.view.isVertical()) {
         this.view.fixLabelsContainerWidthForVertical();
       }
     }
@@ -285,58 +288,59 @@ class Presenter implements IEventListener {
   }
 
   private handleModelRangeToggle(): void {
-    this.passLeftValueToView(this.model.leftValue);
+    this.passLeftValueToView(this.model.getLeftValue());
 
-    if (this.model.isRange) {
+    if (this.model.isRange()) {
       this.model.setRightValue();
-      this.passRightValueToView(this.model.rightValue!);
-      this.view.updateInput(this.model.leftValue, this.model.rightValue);
-      if (this.view.panel) {
-        this.view.updatePanelTo(this.model.rightValue!);
+      this.passRightValueToView(this.model.getRightValue()!);
+      this.view.updateInput(this.model.getLeftValue(), this.model.getRightValue());
+      if (this.view.hasPanel()) {
+        this.view.updatePanelTo(this.model.getRightValue()!);
       }
     }
 
-    if (!this.model.isRange) {
+    if (!this.model.isRange()) {
       this.model.removeRightValue();
-      this.view.updateInput(this.model.leftValue);
-      if (this.view.panel) {
+      this.view.updateInput(this.model.getLeftValue());
+      if (this.view.hasPanel()) {
         this.view.updatePanelTo('');
       }
     }
   }
 
   private handleModelStepSet(): void {
-    if (this.view.panel) {
-      this.view.updatePanelStep(this.model.step);
+    if (this.view.hasPanel()) {
+      this.view.updatePanelStep(this.model.getStep());
     }
   }
 
   private handleScaleToggle(): void {
-    if (this.view.hasScale) {
-      this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals ?? 4);
-      this.view.updatePanelScaleIntervals(this.view.scaleIntervals ?? 4);
+    if (!this.view.hasScale()) {
+      this.view.addScale(this.model.getMin(), this.model.getMax());
+      this.view.updatePanelScaleIntervals(this.view.getScaleIntervals() ?? 4);
+      return;
     }
 
-    if (!this.view.hasScale) {
+    if (this.view.hasScale()) {
       this.view.removeScale();
       this.view.updatePanelScaleIntervals('');
     }
   }
 
   private handleChangeScaleIntervals(): void {
-    this.view.addScale(this.model.min, this.model.max, this.view.scaleIntervals!);
+    this.view.addScale(this.model.getMin(), this.model.getMax());
   }
 
   private handleAddValueLabels(): void {
-    this.passLeftValueToView(this.model.leftValue);
-    if (this.view.isRange) {
-      this.passRightValueToView(this.model.rightValue!);
+    this.passLeftValueToView(this.model.getLeftValue());
+    if (this.view.isRange()) {
+      this.passRightValueToView(this.model.getRightValue()!);
     }
   }
 
   private handleAddMinMaxLabels(): void {
-    this.view.setMinValue(this.model.min);
-    this.view.setMaxValue(this.model.max);
+    this.view.setMinValue(this.model.getMin());
+    this.view.setMaxValue(this.model.getMax());
   }
 }
 

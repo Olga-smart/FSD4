@@ -1,7 +1,7 @@
 import createElement from '../../helpers/createElement';
 
 class Slider {
-  component: HTMLElement;
+  private component: HTMLElement;
 
   constructor() {
     this.component = createElement('div', 'range-slider__slider');
@@ -17,6 +17,10 @@ class Slider {
 
   after(...elements: HTMLElement[]) {
     this.component.after(...elements);
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
   }
 }
 

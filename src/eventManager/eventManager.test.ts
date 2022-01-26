@@ -7,23 +7,26 @@ describe('EventManager', () => {
       const listener = {
         inform() {},
       };
+      listener.inform = jest.fn();
       eventManager.subscribe(listener);
+      eventManager.notify('someEvent');
 
-      expect(eventManager.listeners).toContain(listener);
+      expect(listener.inform).toBeCalled();
     });
   });
 
   describe('unsubscribe(listener)', () => {
-    it('remove listener to listeners array', () => {
+    it('remove listener from listeners array', () => {
       const eventManager = new EventManager();
       const listener = {
         inform() {},
       };
+      listener.inform = jest.fn();
       eventManager.subscribe(listener);
-      expect(eventManager.listeners).toContain(listener);
-
       eventManager.unsubscribe(listener);
-      expect(eventManager.listeners).not.toContain(listener);
+      eventManager.notify('someEvent');
+
+      expect(listener.inform).not.toBeCalled();
     });
   });
 
@@ -50,7 +53,7 @@ describe('EventManager', () => {
     it('call inform methods of all listeners', () => {
       eventManager.notify('someEvent', 5);
 
-      eventManager.listeners.forEach((listener) => {
+      [listener1, listener2, listener3].forEach((listener) => {
         expect(listener.inform).toBeCalledWith('someEvent', 5);
       });
     });
@@ -58,7 +61,7 @@ describe('EventManager', () => {
     it('if data is not passed it is null by default', () => {
       eventManager.notify('someEvent');
 
-      eventManager.listeners.forEach((listener) => {
+      [listener1, listener2, listener3].forEach((listener) => {
         expect(listener.inform).toBeCalledWith('someEvent', null);
       });
     });

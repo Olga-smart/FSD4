@@ -7,11 +7,11 @@ describe('Track', () => {
 
     describe('set up component property with necessary classes', () => {
       it('common class', () => {
-        expect(track.component.classList).toContain('range-slider__track');
+        expect(track.getComponent().classList).toContain('range-slider__track');
       });
 
       it('component property is div element', () => {
-        expect(track.component).toBeInstanceOf(HTMLDivElement);
+        expect(track.getComponent()).toBeInstanceOf(HTMLDivElement);
       });
     });
 
@@ -20,22 +20,12 @@ describe('Track', () => {
     });
   });
 
-  describe('registerWith(view)', () => {
-    const track = new Track();
-    const view: any = {};
-    track.registerWith(view);
-
-    it('set up view', () => {
-      expect(track.view).toBe(view);
-    });
-  });
-
   describe('getOffsetWidth()', () => {
     const track = new Track();
     const width = track.getOffsetWidth();
 
     it('return component width', () => {
-      expect(width).toBe(track.component.offsetWidth);
+      expect(width).toBe(track.getComponent().offsetWidth);
     });
   });
 
@@ -44,7 +34,7 @@ describe('Track', () => {
     const height = track.getOffsetHeight();
 
     it('return component height', () => {
-      expect(height).toBe(track.component.offsetWidth);
+      expect(height).toBe(track.getComponent().offsetWidth);
     });
   });
 
@@ -53,7 +43,7 @@ describe('Track', () => {
     const coords = track.getBoundingClientRect();
 
     it('return component coordinates', () => {
-      expect(coords).toEqual(track.component.getBoundingClientRect());
+      expect(coords).toEqual(track.getComponent().getBoundingClientRect());
     });
   });
 
@@ -64,11 +54,11 @@ describe('Track', () => {
     track.append(div);
 
     it('append element to component', () => {
-      expect(div.parentNode).toBe(track.component);
+      expect(div.parentNode).toBe(track.getComponent());
     });
 
     it('call built-in method append', () => {
-      expect(track.component.append).toBeCalledWith(div);
+      expect(track.getComponent().append).toBeCalledWith(div);
     });
 
     it('work with multiple arguments', () => {
@@ -77,7 +67,14 @@ describe('Track', () => {
       const div3 = document.createElement('div');
       track.append(div1, div2, div3);
 
-      expect(track.component.append).toBeCalledWith(div1, div2, div3);
+      expect(track.getComponent().append).toBeCalledWith(div1, div2, div3);
+    });
+  });
+
+  describe('getComponent()', () => {
+    it('return HTML element', () => {
+      const track = new Track();
+      expect(track.getComponent()).toBeInstanceOf(HTMLElement);
     });
   });
 
@@ -86,20 +83,20 @@ describe('Track', () => {
       const track = new Track();
       const view: any = {};
       track.registerWith(view);
-      track.view!.handleScaleOrTrackClick = jest.fn();
+      view.handleScaleOrTrackClick = jest.fn();
       const event = new Event('click');
-      track.component.dispatchEvent(event);
+      track.getComponent().dispatchEvent(event);
 
       const x = (event as MouseEvent).clientX - track.getBoundingClientRect().left;
       const y = (event as MouseEvent).clientY - track.getBoundingClientRect().top;
 
-      expect(track.view!.handleScaleOrTrackClick).toBeCalledWith(x, y);
+      expect(view.handleScaleOrTrackClick).toBeCalledWith(x, y);
     });
 
     it('if view is not registered nothing happens on click', () => {
       const track = new Track();
       const event = new Event('click');
-      track.component.dispatchEvent(event);
+      track.getComponent().dispatchEvent(event);
       jest.spyOn(View.prototype, 'handleScaleOrTrackClick');
 
       expect(View.prototype.handleScaleOrTrackClick).not.toBeCalled();

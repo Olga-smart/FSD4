@@ -1,8 +1,7 @@
 import createElement from '../../helpers/createElement';
-import Label from '../Label/Label';
 
 class LabelsContainer {
-  component: HTMLElement;
+  private component: HTMLElement;
 
   constructor() {
     this.component = createElement('div', 'range-slider__labels-container');
@@ -12,28 +11,36 @@ class LabelsContainer {
     this.component.append(...elements);
   }
 
-  fixWidthForVertical(labels: Label[]): void {
+  fixWidthForVertical(labels: HTMLElement[]): void {
     let maxWidth = 0;
 
     labels.forEach((label) => {
-      if (label.getOffsetWidth() > maxWidth) {
-        maxWidth = label.getOffsetWidth();
+      if (label.offsetWidth > maxWidth) {
+        maxWidth = label.offsetWidth;
       }
     });
 
     this.component.style.paddingLeft = `${maxWidth + 4}px`;
   }
 
-  fixHeightForHorizontal(labels: Label[]): void {
+  fixHeightForHorizontal(labels: HTMLElement[]): void {
     let maxHeight = 0;
 
     labels.forEach((label) => {
-      if (label.getOffsetHeight() > maxHeight) {
-        maxHeight = label.getOffsetHeight();
+      if (label.offsetHeight > maxHeight) {
+        maxHeight = label.offsetHeight;
       }
     });
 
     this.component.style.paddingTop = `${maxHeight + 4}px`;
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
+  }
+
+  remove(): void {
+    this.component.remove();
   }
 }
 

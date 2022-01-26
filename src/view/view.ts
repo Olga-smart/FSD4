@@ -9,7 +9,7 @@ import LabelsContainer from './subviews/LabelsContainer/LabelsContainer';
 import Label from './subviews/Label/Label';
 import Input from './subviews/Input/Input';
 import { Panel, PanelOptions } from './subviews/Panel/Panel';
-import { EventManager } from '../EventManager/EventManager';
+import { EventManager, IEventListener } from '../EventManager/EventManager';
 
 type ViewOptions = {
   minMaxLabels?: boolean,
@@ -22,47 +22,43 @@ type ViewOptions = {
 };
 
 class View {
-  component: Element;
+  private component: HTMLElement;
 
-  eventManager: EventManager;
+  private eventManager: EventManager;
 
-  slider: Slider;
+  private slider: Slider;
 
-  track: Track;
+  private track: Track;
 
-  range: Range;
+  private range: Range;
 
-  input: Input;
+  private input: Input;
 
-  thumbLeft: Thumb;
+  private thumbLeft: Thumb;
 
-  thumbRight?: Thumb;
+  private thumbRight?: Thumb;
 
-  isRange: boolean;
+  private scale?: Scale;
 
-  hasScale: boolean;
+  private scaleIntervals?: number;
 
-  scaleIntervals?: number;
+  private minLabel?: MinMaxLabel;
 
-  minLabel?: MinMaxLabel;
+  private maxLabel?: MinMaxLabel;
 
-  maxLabel?: MinMaxLabel;
+  private valueLabelLeft?: ValueLabel;
 
-  valueLabelLeft?: ValueLabel;
+  private valueLabelRight?: ValueLabel;
 
-  valueLabelRight?: ValueLabel;
+  private valueLabelCommon?: ValueLabel;
 
-  valueLabelCommon?: ValueLabel;
+  private vertical?: boolean;
 
-  vertical?: boolean;
+  private labelsContainer?: LabelsContainer;
 
-  scale?: Scale;
+  private panel?: Panel;
 
-  labelsContainer?: LabelsContainer;
-
-  panel?: Panel;
-
-  constructor(component: Element, options: ViewOptions = {}) {
+  constructor(component: HTMLElement, options: ViewOptions = {}) {
     this.component = component;
     this.eventManager = new EventManager();
 
@@ -77,18 +73,16 @@ class View {
     this.input = new Input();
 
     if (options.range) {
-      this.isRange = true;
       this.thumbRight = new Thumb('right');
       this.thumbRight.registerWith(this);
-    } else {
-      this.isRange = false;
     }
 
     if (options.scale) {
-      this.hasScale = true;
       this.scaleIntervals = options.scaleIntervals ?? 4;
-    } else {
-      this.hasScale = false;
+
+      // create scale with arbitrary values, which will be replaced later by Presenter
+      // it is necessary for hasScale() return true
+      this.scale = new Scale(0, 100, this.scaleIntervals);
     }
 
     if (options.minMaxLabels || options.valueLabels) {
@@ -115,9 +109,18 @@ class View {
 
     if (options.panel) {
       this.panel = new Panel();
+      this.panel.registerWith(this);
     }
 
     this.render();
+  }
+
+  subscribe(listener: IEventListener): void {
+    this.eventManager.subscribe(listener);
+  }
+
+  notify(eventType: string, data: any = null): void {
+    this.eventManager.notify(eventType, data);
   }
 
   setMinValue(min: number): void {
@@ -132,11 +135,11 @@ class View {
     if (!this.vertical) {
       this.thumbLeft.setLeftIndent(percent);
 
-      if (!this.isRange) {
+      if (!this.isRange()) {
         this.range.setWidth(percent);
       }
 
-      if (this.isRange) {
+      if (this.isRange()) {
         this.range.setLeftIndent(percent);
       }
 
@@ -152,11 +155,11 @@ class View {
     if (this.vertical) {
       this.thumbLeft.setTopIndent(100 - percent);
 
-      if (!this.isRange) {
+      if (!this.isRange()) {
         this.range.setHeight(percent);
       }
 
-      if (this.isRange) {
+      if (this.isRange()) {
         this.range.setBottomIndent(percent);
       }
 
@@ -172,7 +175,7 @@ class View {
     if (this.valueLabelLeft) {
       this.valueLabelLeft.setValue(value);
 
-      if (this.isRange) {
+      if (this.isRange()) {
         this.valueLabelCommon!.setValue(`${value} - ${this.valueLabelRight!.getValue()}`);
 
         if (this.isTwoValueLabelsClose()) {
@@ -190,7 +193,7 @@ class View {
         this.minLabel.setOpacity(1);
       }
 
-      if (!this.isRange) {
+      if (!this.isRange()) {
         if (this.isLeftValueLabelCloseToMaxLabel()) {
           this.maxLabel!.setOpacity(0);
         } else {
@@ -248,15 +251,15 @@ class View {
         newLeft = 0;
       }
 
-      if (!this.isRange) {
-        const trackWidth = this.track.getOffsetWidth();
+      if (!this.isRange()) {
+        const trackWidth = this.getTrackWidth();
 
         if (newLeft > trackWidth) {
           newLeft = trackWidth;
         }
       }
 
-      if (this.isRange) {
+      if (this.isRange()) {
         const rightThumbShift = this.thumbRight!.getBoundingClientRect().left;
         const rightThumbPosition = rightThumbShift + this.thumbRight!.getWidth() / 2 - trackShift;
 
@@ -265,23 +268,23 @@ class View {
         }
       }
 
-      this.eventManager.notify('viewLeftInput', newLeft);
+      this.notify('viewLeftInput', newLeft);
     }
 
     if (this.vertical) {
       const trackShift = this.track.getBoundingClientRect().top;
       let newTop = clientY - shiftY - trackShift;
 
-      const trackHeight = this.track.getOffsetHeight();
+      const trackHeight = this.getTrackHeight();
       if (newTop > trackHeight) {
         newTop = trackHeight;
       }
 
-      if (!this.isRange && newTop < 0) {
+      if (!this.isRange() && newTop < 0) {
         newTop = 0;
       }
 
-      if (this.isRange) {
+      if (this.isRange()) {
         const rightThumbShift = this.thumbRight!.getBoundingClientRect().top;
         const rightThumbPosition = rightThumbShift + this.thumbRight!.getHeight() / 2 - trackShift;
 
@@ -292,7 +295,7 @@ class View {
 
       const newBottom = trackHeight - newTop;
 
-      this.eventManager.notify('viewLeftInput', newBottom);
+      this.notify('viewLeftInput', newBottom);
     }
   }
 
@@ -308,13 +311,13 @@ class View {
         newLeft = leftThumbPosition;
       }
 
-      const trackWidth = this.track.getOffsetWidth();
+      const trackWidth = this.getTrackWidth();
 
       if (newLeft > trackWidth) {
         newLeft = trackWidth;
       }
 
-      this.eventManager.notify('viewRightInput', newLeft);
+      this.notify('viewRightInput', newLeft);
     }
 
     if (this.vertical) {
@@ -332,16 +335,17 @@ class View {
         newTop = leftThumbPosition;
       }
 
-      const newBottom = this.track.getOffsetHeight() - newTop;
+      const newBottom = this.getTrackHeight() - newTop;
 
-      this.eventManager.notify('viewRightInput', newBottom);
+      this.notify('viewRightInput', newBottom);
     }
   }
 
-  addScale(min: number, max: number, intervalsNumber: number): void {
+  addScale(min: number, max: number): void {
+    const intervalsNumber: number = this.scaleIntervals || 4;
     this.scale = new Scale(min, max, intervalsNumber);
     this.scale.registerWith(this);
-    this.slider.after(this.scale.component);
+    this.slider.after(this.scale.getComponent());
 
     if (!this.vertical) {
       this.scale.fitHeightForHorizontal();
@@ -350,23 +354,29 @@ class View {
     if (this.vertical) {
       this.scale.fitWidthForVertical();
     }
-
-    this.hasScale = true;
   }
 
   removeScale(): void {
-    this.scale?.component.remove();
-    this.hasScale = false;
+    this.scale?.getComponent().remove();
+    this.scale = undefined;
+  }
+
+  getScale(): Scale | undefined {
+    return this.scale;
+  }
+
+  getScaleIntervals(): number {
+    return this.scaleIntervals || 0;
   }
 
   handleScaleOrTrackClick(x: number, y: number): void {
-    if (!this.isRange) {
+    if (!this.isRange()) {
       this.addSmoothTransition('left');
 
       if (!this.vertical) {
-        this.eventManager.notify('viewLeftInput', x);
+        this.notify('viewLeftInput', x);
       } else {
-        this.eventManager.notify('viewLeftInput', this.track.getOffsetHeight() - y);
+        this.notify('viewLeftInput', this.getTrackHeight() - y);
       }
 
       setTimeout(() => {
@@ -374,14 +384,14 @@ class View {
       }, 1000);
     }
 
-    if (this.isRange) {
+    if (this.isRange()) {
       if (this.whichThumbIsNearer(x, y) === 'left') {
         this.addSmoothTransition('left');
 
         if (!this.vertical) {
-          this.eventManager.notify('viewLeftInput', x);
+          this.notify('viewLeftInput', x);
         } else {
-          this.eventManager.notify('viewLeftInput', this.track.getOffsetHeight() - y);
+          this.notify('viewLeftInput', this.getTrackHeight() - y);
         }
 
         setTimeout(() => {
@@ -391,9 +401,9 @@ class View {
         this.addSmoothTransition('right');
 
         if (!this.vertical) {
-          this.eventManager.notify('viewRightInput', x);
+          this.notify('viewRightInput', x);
         } else {
-          this.eventManager.notify('viewRightInput', this.track.getOffsetHeight() - y);
+          this.notify('viewRightInput', this.getTrackHeight() - y);
         }
 
         setTimeout(() => {
@@ -404,12 +414,12 @@ class View {
   }
 
   fixLabelsContainerWidthForVertical(): void {
-    const labels: Label[] = this.collectLabels();
+    const labels: HTMLElement[] = this.collectLabels();
     this.labelsContainer?.fixWidthForVertical(labels);
   }
 
   fixLabelsContainerHeightForHorizontal(): void {
-    const labels: Label[] = this.collectLabels();
+    const labels: HTMLElement[] = this.collectLabels();
     this.labelsContainer?.fixHeightForHorizontal(labels);
   }
 
@@ -434,23 +444,23 @@ class View {
   }
 
   changeLeftValueFromOutside(value: number): void {
-    this.eventManager.notify('viewChangeLeftValueFromOutside', value);
+    this.notify('viewChangeLeftValueFromOutside', value);
   }
 
   changeRightValueFromOutside(value: number): void {
-    this.eventManager.notify('viewChangeRightValueFromOutside', value);
+    this.notify('viewChangeRightValueFromOutside', value);
   }
 
   changeMinFromOutside(value: number): void {
-    this.eventManager.notify('viewChangeMinFromOutside', value);
+    this.notify('viewChangeMinFromOutside', value);
   }
 
   changeMaxFromOutside(value: number): void {
-    this.eventManager.notify('viewChangeMaxFromOutside', value);
+    this.notify('viewChangeMaxFromOutside', value);
   }
 
   changeStepFromOutside(value: number): void {
-    this.eventManager.notify('viewChangeStepFromOutside', value);
+    this.notify('viewChangeStepFromOutside', value);
   }
 
   changeOrientationFromOutside(): void {
@@ -468,7 +478,7 @@ class View {
       this.valueLabelRight?.setLeftIndent('unset');
       this.valueLabelCommon?.setLeftIndent('unset');
       this.scale?.handleSwitchFromHorizontalToVertical();
-      this.eventManager.notify('viewChangeOrientationFromOutside');
+      this.notify('viewChangeOrientationFromOutside');
       return;
     }
 
@@ -486,14 +496,14 @@ class View {
       this.valueLabelRight?.setTopIndent('unset');
       this.valueLabelCommon?.setTopIndent('unset');
       this.scale?.handleSwitchFromVerticalToHorizontal();
-      this.eventManager.notify('viewChangeOrientationFromOutside');
+      this.notify('viewChangeOrientationFromOutside');
     }
   }
 
   toggleRangeFromOutside(): void {
-    this.isRange = !this.isRange;
+    const isRange = !this.isRange();
 
-    if (this.isRange) {
+    if (isRange) {
       this.destroy();
       this.thumbRight = new Thumb('right');
       this.thumbRight.registerWith(this);
@@ -510,20 +520,20 @@ class View {
       this.render();
     }
 
-    if (!this.isRange) {
+    if (!isRange) {
       if (this.vertical) {
         this.range.resetTopIndent();
       }
       this.destroy();
+      this.thumbRight = undefined;
       this.render();
     }
 
-    this.eventManager.notify('viewToggleRangeFromOutside');
+    this.notify('viewToggleRangeFromOutside');
   }
 
   toggleScaleFromOutside(): void {
-    this.hasScale = !this.hasScale;
-    this.eventManager.notify('viewToggleScaleFromOutside');
+    this.notify('viewToggleScaleFromOutside');
   }
 
   changeScaleIntervals(value: number): void {
@@ -531,14 +541,14 @@ class View {
 
     this.scaleIntervals = Math.floor(value);
     this.removeScale();
-    this.eventManager.notify('viewChangeScaleIntervals');
+    this.notify('viewChangeScaleIntervals');
   }
 
   toggleValueLabels(): void {
     if (this.valueLabelLeft) {
-      this.valueLabelLeft.component.remove();
-      this.valueLabelRight?.component?.remove();
-      this.valueLabelCommon?.component?.remove();
+      this.valueLabelLeft.remove();
+      this.valueLabelRight?.remove();
+      this.valueLabelCommon?.remove();
 
       this.valueLabelLeft = undefined;
       this.valueLabelRight = undefined;
@@ -555,7 +565,7 @@ class View {
       }
 
       if (!this.minLabel) {
-        this.labelsContainer?.component.remove();
+        this.labelsContainer?.remove();
         this.labelsContainer = undefined;
       }
 
@@ -565,24 +575,22 @@ class View {
     if (!this.valueLabelLeft) {
       this.valueLabelLeft = new ValueLabel('left');
 
-      if (this.isRange) {
-        this.valueLabelRight = new ValueLabel('right');
-        this.valueLabelCommon = new ValueLabel('common');
-      }
-
       if (!this.labelsContainer) {
         this.labelsContainer = new LabelsContainer();
-        this.slider.before(this.labelsContainer.component);
+        this.slider.before(this.labelsContainer.getComponent());
       }
 
-      this.labelsContainer.append(this.valueLabelLeft.component);
+      this.labelsContainer.append(this.valueLabelLeft.getComponent());
 
-      if (this.isRange) {
+      if (this.isRange()) {
+        this.valueLabelRight = new ValueLabel('right');
+        this.valueLabelCommon = new ValueLabel('common');
+
         this.labelsContainer
-          .append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
+          .append(this.valueLabelRight!.getComponent(), this.valueLabelCommon!.getComponent());
       }
 
-      this.eventManager.notify('viewAddValueLabels');
+      this.notify('viewAddValueLabels');
 
       if (!this.vertical) {
         this.fixLabelsContainerHeightForHorizontal();
@@ -596,8 +604,8 @@ class View {
 
   toggleMinMaxLabels(): void {
     if (this.minLabel) {
-      this.minLabel.component.remove();
-      this.maxLabel?.component.remove();
+      this.minLabel.remove();
+      this.maxLabel?.remove();
 
       this.minLabel = undefined;
       this.maxLabel = undefined;
@@ -613,7 +621,7 @@ class View {
       }
 
       if (!this.valueLabelLeft) {
-        this.labelsContainer?.component.remove();
+        this.labelsContainer?.remove();
         this.labelsContainer = undefined;
       }
 
@@ -626,12 +634,12 @@ class View {
 
       if (!this.labelsContainer) {
         this.labelsContainer = new LabelsContainer();
-        this.slider.before(this.labelsContainer.component);
+        this.slider.before(this.labelsContainer.getComponent());
       }
 
-      this.labelsContainer.append(this.minLabel.component, this.maxLabel.component);
+      this.labelsContainer.append(this.minLabel.getComponent(), this.maxLabel.getComponent());
 
-      this.eventManager.notify('viewAddMinMaxLabels');
+      this.notify('viewAddMinMaxLabels');
 
       if (!this.vertical) {
         this.fixLabelsContainerHeightForHorizontal();
@@ -650,15 +658,69 @@ class View {
     return false;
   }
 
+  hasScale(): boolean {
+    if (this.scale) {
+      return true;
+    }
+    return false;
+  }
+
+  hasMinMaxLabels(): boolean {
+    if (this.maxLabel) {
+      return true;
+    }
+    return false;
+  }
+
+  hasValueLabels(): boolean {
+    if (this.valueLabelLeft) {
+      return true;
+    }
+    return false;
+  }
+
+  hasPanel(): boolean {
+    if (this.panel) {
+      return true;
+    }
+    return false;
+  }
+
+  isRange(): boolean {
+    if (this.thumbRight) {
+      return true;
+    }
+    return false;
+  }
+
+  isVertical(): boolean {
+    if (this.vertical) {
+      return true;
+    }
+    return false;
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
+  }
+
+  getTrackWidth(): number {
+    return this.track.getOffsetWidth();
+  }
+
+  getTrackHeight(): number {
+    return this.track.getOffsetHeight();
+  }
+
   private render(): void {
     const fragment = new DocumentFragment();
 
-    this.track.append(this.range.component);
-    this.slider.append(this.track.component, this.thumbLeft.component);
-    fragment.append(this.slider.component, this.input.component);
+    this.track.append(this.range.getComponent());
+    this.slider.append(this.track.getComponent(), this.thumbLeft.getComponent());
+    fragment.append(this.slider.getComponent(), this.input.getComponent());
 
-    if (this.isRange) {
-      this.slider.append(this.thumbRight!.component);
+    if (this.isRange()) {
+      this.slider.append(this.thumbRight!.getComponent());
     } else {
       if (!this.vertical) {
         this.range.setLeftIndent(0);
@@ -669,20 +731,20 @@ class View {
     }
 
     if (this.minLabel && this.maxLabel) {
-      this.labelsContainer!.append(this.minLabel.component, this.maxLabel.component);
+      this.labelsContainer!.append(this.minLabel.getComponent(), this.maxLabel.getComponent());
     }
 
     if (this.valueLabelLeft) {
-      this.labelsContainer!.append(this.valueLabelLeft.component);
+      this.labelsContainer!.append(this.valueLabelLeft.getComponent());
 
-      if (this.isRange) {
+      if (this.isRange()) {
         this.labelsContainer!
-          .append(this.valueLabelRight!.component, this.valueLabelCommon!.component);
+          .append(this.valueLabelRight!.getComponent(), this.valueLabelCommon!.getComponent());
       }
     }
 
     if (this.labelsContainer) {
-      this.slider.before(this.labelsContainer.component);
+      this.slider.before(this.labelsContainer.getComponent());
     }
 
     if (this.vertical) {
@@ -690,11 +752,11 @@ class View {
     }
 
     if (this.panel) {
-      fragment.append(this.panel.component);
+      fragment.append(this.panel.getComponent());
     }
 
     if (this.scale) {
-      this.slider.after(this.scale.component);
+      this.slider.after(this.scale.getComponent());
     }
 
     this.component.append(fragment);
@@ -702,12 +764,12 @@ class View {
 
   private destroy(): void {
     if (this.labelsContainer) {
-      [...this.labelsContainer.component.children].forEach((element) => {
+      [...this.labelsContainer.getComponent().children].forEach((element) => {
         element.remove();
       });
     }
 
-    [...this.slider.component.children].forEach((element) => {
+    [...this.slider.getComponent().children].forEach((element) => {
       element.remove();
     });
 
@@ -819,46 +881,46 @@ class View {
 
   private addSmoothTransition(side: 'left' | 'right' = 'left'): void {
     if (side === 'left') {
-      this.thumbLeft.component.classList.add('range-slider__thumb_smooth-transition');
-      this.range.component.classList.add('range-slider__range_smooth-transition');
-      this.valueLabelLeft?.component.classList.add('range-slider__value-label_smooth-transition');
+      this.thumbLeft.getComponent().classList.add('range-slider__thumb_smooth-transition');
+      this.range.getComponent().classList.add('range-slider__range_smooth-transition');
+      this.valueLabelLeft?.getComponent().classList.add('range-slider__value-label_smooth-transition');
     }
 
     if (side === 'right') {
-      this.thumbRight!.component.classList.add('range-slider__thumb_smooth-transition');
-      this.range.component.classList.add('range-slider__range_smooth-transition');
-      this.valueLabelRight?.component.classList.add('range-slider__value-label_smooth-transition');
+      this.thumbRight!.getComponent().classList.add('range-slider__thumb_smooth-transition');
+      this.range.getComponent().classList.add('range-slider__range_smooth-transition');
+      this.valueLabelRight?.getComponent().classList.add('range-slider__value-label_smooth-transition');
     }
   }
 
   private removeSmoothTransition(side: 'left' | 'right' = 'left'): void {
     if (side === 'left') {
-      this.thumbLeft.component.classList.remove('range-slider__thumb_smooth-transition');
-      this.range.component.classList.remove('range-slider__range_smooth-transition');
-      this.valueLabelLeft?.component.classList.remove('range-slider__value-label_smooth-transition');
+      this.thumbLeft.getComponent().classList.remove('range-slider__thumb_smooth-transition');
+      this.range.getComponent().classList.remove('range-slider__range_smooth-transition');
+      this.valueLabelLeft?.getComponent().classList.remove('range-slider__value-label_smooth-transition');
     }
 
     if (side === 'right') {
-      this.thumbRight!.component.classList.remove('range-slider__thumb_smooth-transition');
-      this.range.component.classList.remove('range-slider__range_smooth-transition');
-      this.valueLabelRight?.component.classList.remove('range-slider__value-label_smooth-transition');
+      this.thumbRight!.getComponent().classList.remove('range-slider__thumb_smooth-transition');
+      this.range.getComponent().classList.remove('range-slider__range_smooth-transition');
+      this.valueLabelRight?.getComponent().classList.remove('range-slider__value-label_smooth-transition');
     }
   }
 
-  private collectLabels(): Label[] {
-    const labels: Label[] = [];
+  private collectLabels(): HTMLElement[] {
+    const labels: HTMLElement[] = [];
 
     if (this.minLabel && this.maxLabel) {
-      labels.push(this.minLabel);
-      labels.push(this.maxLabel);
+      labels.push(this.minLabel.getComponent());
+      labels.push(this.maxLabel.getComponent());
     }
 
     if (this.valueLabelLeft) {
-      labels.push(this.valueLabelLeft);
+      labels.push(this.valueLabelLeft.getComponent());
     }
 
     if (this.valueLabelRight) {
-      labels.push(this.valueLabelRight);
+      labels.push(this.valueLabelRight.getComponent());
     }
 
     return labels;

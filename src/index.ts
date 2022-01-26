@@ -66,8 +66,6 @@ declare global {
         panel: options.panel,
       });
       this.presenter = new Presenter(this.model, this.view);
-      this.presenter.view.eventManager.subscribe(this.presenter);
-      this.presenter.model.eventManager.subscribe(this.presenter);
     }
 
     setLeftValue(value: number): this {

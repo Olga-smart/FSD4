@@ -15,31 +15,31 @@ type PanelOptions = {
 };
 
 class Panel {
-  view: any;
+  private view: any;
 
-  component: HTMLElement;
+  private component: HTMLElement;
 
-  min: HTMLElement;
+  private min: HTMLElement;
 
-  max: HTMLElement;
+  private max: HTMLElement;
 
-  step: HTMLElement;
+  private step: HTMLElement;
 
-  from: HTMLElement;
+  private from: HTMLElement;
 
-  to: HTMLElement;
+  private to: HTMLElement;
 
-  vertical: HTMLElement;
+  private vertical: HTMLElement;
 
-  range: HTMLElement;
+  private range: HTMLElement;
 
-  scale: HTMLElement;
+  private scale: HTMLElement;
 
-  scaleIntervals: HTMLElement;
+  private scaleIntervals: HTMLElement;
 
-  valueLabels: HTMLElement;
+  private valueLabels: HTMLElement;
 
-  minMaxLabels: HTMLElement;
+  private minMaxLabels: HTMLElement;
 
   constructor() {
     this.view = null;
@@ -100,6 +100,10 @@ class Panel {
 
   updateScaleIntervals(value: number | ''): void {
     (this.scaleIntervals as HTMLInputElement).value = `${value}`;
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
   }
 
   private render(): void {
@@ -209,11 +213,11 @@ class Panel {
 
     (this.min as HTMLInputElement).max = from.value;
 
-    if (this.view?.isRange) {
+    if (this.view?.isRange()) {
       (this.to as HTMLInputElement).min = from.value;
     }
 
-    if (!this.view?.isRange) {
+    if (!this.view?.isRange()) {
       (this.max as HTMLInputElement).min = from.value;
     }
   }
@@ -237,11 +241,11 @@ class Panel {
   }
 
   private updateAttributesAfterMaxChange(): void {
-    if (!this.view?.isRange) {
+    if (!this.view?.isRange()) {
       (this.from as HTMLInputElement).max = (this.max as HTMLInputElement).value;
     }
 
-    if (this.view?.isRange) {
+    if (this.view?.isRange()) {
       (this.to as HTMLInputElement).max = (this.max as HTMLInputElement).value;
     }
   }
@@ -261,7 +265,7 @@ class Panel {
   private handleMaxChange(): void {
     const max = this.max as HTMLInputElement;
 
-    if (!this.view?.isRange) {
+    if (!this.view?.isRange()) {
       const from = this.from as HTMLInputElement;
 
       if (Number(max.value) < Number(from.value)) {
@@ -269,7 +273,7 @@ class Panel {
       }
     }
 
-    if (this.view?.isRange) {
+    if (this.view?.isRange()) {
       const to = this.to as HTMLInputElement;
 
       if (Number(max.value) < Number(to.value)) {

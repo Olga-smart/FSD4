@@ -1,7 +1,7 @@
 import createElement from '../../helpers/createElement';
 
 class Input {
-  component: HTMLElement;
+  private component: HTMLElement;
 
   constructor() {
     this.component = createElement('input', 'range-slider__input');
@@ -16,6 +16,10 @@ class Input {
     } else {
       component.value = `${value1} - ${value2}`;
     }
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
   }
 
   private setAttributes(): void {

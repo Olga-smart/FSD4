@@ -1,9 +1,9 @@
 import createElement from '../../helpers/createElement';
 
 class Track {
-  view: any;
+  private view: any;
 
-  component: HTMLElement;
+  private component: HTMLElement;
 
   constructor() {
     this.view = null;
@@ -15,20 +15,24 @@ class Track {
     this.view = view;
   }
 
-  getOffsetWidth() {
+  getOffsetWidth(): number {
     return this.component.offsetWidth;
   }
 
-  getOffsetHeight() {
+  getOffsetHeight(): number {
     return this.component.offsetHeight;
   }
 
-  getBoundingClientRect() {
+  getBoundingClientRect(): DOMRect {
     return this.component.getBoundingClientRect();
   }
 
-  append(...elements: HTMLElement[]) {
+  append(...elements: HTMLElement[]): void {
     this.component.append(...elements);
+  }
+
+  getComponent(): HTMLElement {
+    return this.component;
   }
 
   private handleClick(event: MouseEvent): void {
@@ -37,7 +41,7 @@ class Track {
     this.view?.handleScaleOrTrackClick(x, y);
   }
 
-  private attachEventHandlers() {
+  private attachEventHandlers(): void {
     this.component.addEventListener('click', this.handleClick.bind(this));
   }
 }
