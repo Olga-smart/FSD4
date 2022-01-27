@@ -4,10 +4,6 @@ describe('Input', () => {
   describe('constructor()', () => {
     const input = new Input();
 
-    it('set up component property', () => {
-      expect(input).toHaveProperty('component');
-    });
-
     it('component property is input element', () => {
       expect(input.getComponent()).toBeInstanceOf(HTMLInputElement);
     });
@@ -42,13 +38,6 @@ describe('Input', () => {
           expect((input.getComponent() as HTMLInputElement).value).toBe(`${i} - ${j}`);
         }
       });
-    });
-  });
-
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const input = new Input();
-      expect(input.getComponent()).toBeInstanceOf(HTMLElement);
     });
   });
 });

@@ -1,10 +1,8 @@
-import createElement from '../../helpers/createElement';
+import BaseElement from '../../BaseElement/BaseElement';
 
-class Slider {
-  private component: HTMLElement;
-
+class Slider extends BaseElement {
   constructor() {
-    this.component = createElement('div', 'range-slider__slider');
+    super('div', 'range-slider__slider');
   }
 
   append(...elements: HTMLElement[]) {
@@ -17,10 +15,6 @@ class Slider {
 
   after(...elements: HTMLElement[]) {
     this.component.after(...elements);
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
   }
 }
 

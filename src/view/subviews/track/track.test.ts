@@ -71,13 +71,6 @@ describe('Track', () => {
     });
   });
 
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const track = new Track();
-      expect(track.getComponent()).toBeInstanceOf(HTMLElement);
-    });
-  });
-
   describe('handle events', () => {
     it('handle click', () => {
       const track = new Track();

@@ -2612,14 +2612,6 @@ describe('View', () => {
     });
   });
 
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider);
-      expect(view.getComponent()).toBe(slider);
-    });
-  });
-
   describe('getTrackWidth()', () => {
     it('return track width in px', () => {
       const slider = document.createElement('div');

@@ -1,10 +1,8 @@
-import createElement from '../../helpers/createElement';
+import BaseElement from '../../BaseElement/BaseElement';
 
-class LabelsContainer {
-  private component: HTMLElement;
-
+class LabelsContainer extends BaseElement {
   constructor() {
-    this.component = createElement('div', 'range-slider__labels-container');
+    super('div', 'range-slider__labels-container');
   }
 
   append(...elements: HTMLElement[]) {
@@ -33,14 +31,6 @@ class LabelsContainer {
     });
 
     this.component.style.paddingTop = `${maxHeight + 4}px`;
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
-  }
-
-  remove(): void {
-    this.component.remove();
   }
 }
 

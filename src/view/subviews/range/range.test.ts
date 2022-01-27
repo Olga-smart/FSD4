@@ -80,11 +80,4 @@ describe('Range', () => {
       }
     });
   });
-
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const range = new Range();
-      expect(range.getComponent()).toBeInstanceOf(HTMLElement);
-    });
-  });
 });

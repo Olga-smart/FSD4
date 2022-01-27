@@ -1,10 +1,8 @@
-import createElement from '../../helpers/createElement';
+import BaseElement from '../../BaseElement/BaseElement';
 
-class Input {
-  private component: HTMLElement;
-
+class Input extends BaseElement {
   constructor() {
-    this.component = createElement('input', 'range-slider__input');
+    super('input', 'range-slider__input');
     this.setAttributes();
   }
 
@@ -16,10 +14,6 @@ class Input {
     } else {
       component.value = `${value1} - ${value2}`;
     }
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
   }
 
   private setAttributes(): void {

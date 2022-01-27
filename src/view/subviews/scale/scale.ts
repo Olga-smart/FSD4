@@ -1,9 +1,8 @@
+import BaseElement from '../../BaseElement/BaseElement';
 import createElement from '../../helpers/createElement';
 
-class Scale {
+class Scale extends BaseElement {
   private view: any;
-
-  private component: HTMLElement;
 
   private min: number;
 
@@ -18,8 +17,10 @@ class Scale {
   private valueElements: HTMLElement[];
 
   constructor(min: number, max: number, intervalsNumber: number) {
+    super('div', 'range-slider__scale');
+
     this.view = null;
-    this.component = createElement('div', 'range-slider__scale');
+
     this.min = min;
     this.max = max;
     this.intervalsNumber = Math.floor(intervalsNumber);

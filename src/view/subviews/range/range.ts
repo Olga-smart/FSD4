@@ -1,10 +1,8 @@
-import createElement from '../../helpers/createElement';
+import BaseElement from '../../BaseElement/BaseElement';
 
-class Range {
-  private component: HTMLElement;
-
+class Range extends BaseElement {
   constructor() {
-    this.component = createElement('div', 'range-slider__range');
+    super('div', 'range-slider__range');
   }
 
   setLeftIndent(percent: number): void {
@@ -41,10 +39,6 @@ class Range {
 
   resetTopIndent(): void {
     this.component.style.top = 'unset';
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
   }
 }
 

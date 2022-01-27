@@ -160,13 +160,6 @@ describe('Scale', () => {
     });
   });
 
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const scale = new Scale(0, 150, 4);
-      expect(scale.getComponent()).toBeInstanceOf(HTMLElement);
-    });
-  });
-
   describe('handle events', () => {
     it('handle click', () => {
       const scale = new Scale(0, 150, 4);

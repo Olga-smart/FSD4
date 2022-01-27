@@ -1,3 +1,4 @@
+import BaseElement from '../../BaseElement/BaseElement';
 import createElement from '../../helpers/createElement';
 
 type PanelOptions = {
@@ -14,10 +15,8 @@ type PanelOptions = {
   minMaxLabels: boolean
 };
 
-class Panel {
+class Panel extends BaseElement {
   private view: any;
-
-  private component: HTMLElement;
 
   private min: HTMLElement;
 
@@ -42,8 +41,9 @@ class Panel {
   private minMaxLabels: HTMLElement;
 
   constructor() {
+    super('div', 'range-slider__panel panel');
+
     this.view = null;
-    this.component = createElement('div', 'range-slider__panel panel');
 
     this.min = createElement('input', 'panel__min panel__input');
     this.max = createElement('input', 'panel__max panel__input');
@@ -100,10 +100,6 @@ class Panel {
 
   updateScaleIntervals(value: number | ''): void {
     (this.scaleIntervals as HTMLInputElement).value = `${value}`;
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
   }
 
   private render(): void {

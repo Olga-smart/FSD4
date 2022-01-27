@@ -425,13 +425,6 @@ describe('Panel', () => {
     });
   });
 
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const panel = new Panel();
-      expect(panel.getComponent()).toBeInstanceOf(HTMLElement);
-    });
-  });
-
   describe('handle events', () => {
     describe('handle min change', () => {
       const panel = new Panel();

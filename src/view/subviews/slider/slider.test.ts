@@ -90,11 +90,4 @@ describe('Slider', () => {
       expect(slider.getComponent().after).toBeCalledWith(div1, div2, div3);
     });
   });
-
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const slider = new Slider();
-      expect(slider.getComponent()).toBeInstanceOf(HTMLElement);
-    });
-  });
 });

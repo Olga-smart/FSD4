@@ -1,11 +1,11 @@
-class Label {
+import BaseElement from '../../BaseElement/BaseElement';
+
+class Label extends BaseElement {
   protected type: 'left' | 'right' | 'common';
 
-  protected component: HTMLElement;
-
-  constructor(type: 'left' | 'right' | 'common' = 'left') {
+  constructor(type: 'left' | 'right' | 'common' = 'left', className?: string) {
+    super('div', className);
     this.type = type;
-    this.component = document.createElement('div');
   }
 
   setOpacity(value: number): void {
@@ -30,14 +30,6 @@ class Label {
 
   getOffsetHeight() {
     return this.component.offsetHeight;
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
-  }
-
-  remove(): void {
-    this.component.remove();
   }
 }
 

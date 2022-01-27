@@ -95,13 +95,6 @@ describe('Thumb', () => {
     });
   });
 
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const thumb = new Thumb();
-      expect(thumb.getComponent()).toBeInstanceOf(HTMLElement);
-    });
-  });
-
   describe('handle events', () => {
     const thumb = new Thumb();
     const view: any = {};

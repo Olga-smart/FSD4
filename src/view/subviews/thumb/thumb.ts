@@ -1,16 +1,15 @@
-import createElement from '../../helpers/createElement';
+import BaseElement from '../../BaseElement/BaseElement';
 
-class Thumb {
+class Thumb extends BaseElement {
   private type: 'left' | 'right';
-
-  private component: HTMLElement;
 
   private view: any;
 
   constructor(type: 'left' | 'right' = 'left') {
+    super('div', `range-slider__thumb range-slider__thumb_${type}`);
+
     this.view = null;
     this.type = type;
-    this.component = createElement('div', `range-slider__thumb range-slider__thumb_${type}`);
 
     this.attachEventHandlers();
   }
@@ -49,10 +48,6 @@ class Thumb {
 
   getHeight(): number {
     return this.component.offsetHeight;
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
   }
 
   private static handlePointerOver(event: PointerEvent): void {

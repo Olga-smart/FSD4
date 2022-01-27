@@ -1,42 +1,6 @@
 import Label from './Label';
 
 describe('Label', () => {
-  describe('constructor(type)', () => {
-    const label = new Label();
-
-    it('set up type property', () => {
-      expect(label).toHaveProperty('type');
-    });
-
-    // it('set up type = left by default', () => {
-    //   const newLabel = new Label();
-    //   expect(newLabel.type).toBe('left');
-    // });
-
-    // it('set up type = right if the argument is "right"', () => {
-    //   const newLabel = new Label('right');
-    //   expect(newLabel.type).toBe('right');
-    // });
-
-    // it('set up type = left if the argument is "left"', () => {
-    //   const newLabel = new Label('left');
-    //   expect(newLabel.type).toBe('left');
-    // });
-
-    // it('set up type = common if the argument is "common"', () => {
-    //   const newLabel = new Label('common');
-    //   expect(newLabel.type).toBe('common');
-    // });
-
-    it('set up component property', () => {
-      expect(label).toHaveProperty('component');
-    });
-
-    it('component property is div element', () => {
-      expect(label.getComponent()).toBeInstanceOf(HTMLDivElement);
-    });
-  });
-
   describe('setOpacity(value)', () => {
     const label = new Label();
 
@@ -94,26 +58,6 @@ describe('Label', () => {
 
     it('return component height', () => {
       expect(height).toBe(label.getComponent().offsetHeight);
-    });
-  });
-
-  describe('getComponent()', () => {
-    it('return HTML element', () => {
-      const label = new Label();
-      expect(label.getComponent()).toBeInstanceOf(HTMLElement);
-    });
-  });
-
-  describe('remove()', () => {
-    it('remove component from DOM', () => {
-      const parent = document.createElement('div');
-      const label = new Label();
-
-      parent.append(label.getComponent());
-      expect(parent.children).toContain(label.getComponent());
-
-      label.remove();
-      expect(parent.children).not.toContain(label.getComponent());
     });
   });
 });

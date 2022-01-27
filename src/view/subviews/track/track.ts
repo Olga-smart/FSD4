@@ -1,13 +1,13 @@
-import createElement from '../../helpers/createElement';
+import BaseElement from '../../BaseElement/BaseElement';
 
-class Track {
+class Track extends BaseElement {
   private view: any;
 
-  private component: HTMLElement;
-
   constructor() {
+    super('div', 'range-slider__track');
+
     this.view = null;
-    this.component = createElement('div', 'range-slider__track');
+
     this.attachEventHandlers();
   }
 
@@ -29,10 +29,6 @@ class Track {
 
   append(...elements: HTMLElement[]): void {
     this.component.append(...elements);
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
   }
 
   private handleClick(event: MouseEvent): void {

@@ -1,3 +1,4 @@
+import BaseElement from './BaseElement/BaseElement';
 import Slider from './subviews/Slider/Slider';
 import Track from './subviews/Track/Track';
 import Range from './subviews/Range/Range';
@@ -21,9 +22,7 @@ type ViewOptions = {
   panel?: boolean
 };
 
-class View {
-  private component: HTMLElement;
-
+class View extends BaseElement {
   private eventManager: EventManager;
 
   private slider: Slider;
@@ -59,6 +58,8 @@ class View {
   private panel?: Panel;
 
   constructor(component: HTMLElement, options: ViewOptions = {}) {
+    super();
+
     this.component = component;
     this.eventManager = new EventManager();
 
@@ -698,10 +699,6 @@ class View {
       return true;
     }
     return false;
-  }
-
-  getComponent(): HTMLElement {
-    return this.component;
   }
 
   getTrackWidth(): number {

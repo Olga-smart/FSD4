@@ -1,10 +1,8 @@
 import Label from '../Label/Label';
-import createElement from '../../helpers/createElement';
 
 class ValueLabel extends Label {
   constructor(type: 'left' | 'right' | 'common' = 'left') {
-    super(type);
-    this.component = createElement('div', `range-slider__value-label range-slider__value-label_${type}`);
+    super(type, `range-slider__value-label range-slider__value-label_${type}`);
   }
 
   setLeftIndent(value: string): void {
