@@ -19,18 +19,6 @@ class Label extends BaseElement {
   getValue(): number {
     return Number(this.component.textContent);
   }
-
-  getBoundingClientRect(): DOMRect {
-    return this.component.getBoundingClientRect();
-  }
-
-  getOffsetWidth() {
-    return this.component.offsetWidth;
-  }
-
-  getOffsetHeight() {
-    return this.component.offsetHeight;
-  }
 }
 
 export default Label;

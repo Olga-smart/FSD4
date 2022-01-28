@@ -134,17 +134,17 @@ class View extends BaseElement {
 
   setLeftValue(value: number, percent: number): void {
     if (!this.vertical) {
-      this.thumbLeft.setLeftIndent(percent);
+      this.thumbLeft.setIndent('left', percent);
 
       if (!this.isRange()) {
         this.range.setWidth(percent);
       }
 
       if (this.isRange()) {
-        this.range.setLeftIndent(percent);
+        this.range.setIndent('left', percent);
       }
 
-      this.valueLabelLeft?.setLeftIndent(this.thumbLeft.getLeftIndent());
+      this.valueLabelLeft?.setIndent('left', this.thumbLeft.getLeftIndent());
 
       if (this.thumbLeft.getLeftIndent() === '100%') {
         this.thumbLeft.setZIndex(100);
@@ -154,17 +154,17 @@ class View extends BaseElement {
     }
 
     if (this.vertical) {
-      this.thumbLeft.setTopIndent(100 - percent);
+      this.thumbLeft.setIndent('top', 100 - percent);
 
       if (!this.isRange()) {
         this.range.setHeight(percent);
       }
 
       if (this.isRange()) {
-        this.range.setBottomIndent(percent);
+        this.range.setIndent('bottom', percent);
       }
 
-      this.valueLabelLeft?.setTopIndent(this.thumbLeft.getTopIndent());
+      this.valueLabelLeft?.setIndent('top', this.thumbLeft.getTopIndent());
 
       if (this.thumbLeft.getTopIndent() === '0%') {
         this.thumbLeft.setZIndex(100);
@@ -206,17 +206,17 @@ class View extends BaseElement {
 
   setRightValue(value: number, percent: number): void {
     if (!this.vertical) {
-      this.thumbRight?.setLeftIndent(percent);
-      this.range.setRightIndent(100 - percent);
+      this.thumbRight?.setIndent('left', percent);
+      this.range.setIndent('right', 100 - percent);
 
-      this.valueLabelRight?.setLeftIndent(this.thumbRight!.getLeftIndent());
+      this.valueLabelRight?.setIndent('left', this.thumbRight!.getLeftIndent());
     }
 
     if (this.vertical) {
-      this.thumbRight?.setTopIndent(100 - percent);
-      this.range.setTopIndent(100 - percent);
+      this.thumbRight?.setIndent('top', 100 - percent);
+      this.range.setIndent('top', 100 - percent);
 
-      this.valueLabelRight?.setTopIndent(this.thumbRight!.getTopIndent());
+      this.valueLabelRight?.setIndent('top', this.thumbRight!.getTopIndent());
     }
 
     if (this.valueLabelRight) {
@@ -469,15 +469,15 @@ class View extends BaseElement {
       this.vertical = true;
       this.destroy();
       this.render();
-      this.thumbLeft.setLeftIndent(0);
-      this.thumbRight?.setLeftIndent(0);
-      this.range.setLeftIndent(0);
-      this.range.setRightIndent(0);
+      this.thumbLeft.setIndent('left', 0);
+      this.thumbRight?.setIndent('left', 0);
+      this.range.setIndent('left', 0);
+      this.range.setIndent('right', 0);
       this.range.resetTopIndent();
       this.range.resetWidth();
-      this.valueLabelLeft?.setLeftIndent('unset');
-      this.valueLabelRight?.setLeftIndent('unset');
-      this.valueLabelCommon?.setLeftIndent('unset');
+      this.valueLabelLeft?.setIndent('left', 'unset');
+      this.valueLabelRight?.setIndent('left', 'unset');
+      this.valueLabelCommon?.setIndent('left', 'unset');
       this.scale?.handleSwitchFromHorizontalToVertical();
       this.notify('viewChangeOrientationFromOutside');
       return;
@@ -488,14 +488,14 @@ class View extends BaseElement {
       this.component.classList.remove('range-slider_vertical');
       this.destroy();
       this.render();
-      this.thumbLeft.setTopIndent(0);
-      this.thumbRight?.setTopIndent(0);
-      this.range.setBottomIndent(0);
-      this.range.setTopIndent(0);
+      this.thumbLeft.setIndent('top', 0);
+      this.thumbRight?.setIndent('top', 0);
+      this.range.setIndent('bottom', 0);
+      this.range.setIndent('top', 0);
       this.range.resetHeight();
-      this.valueLabelLeft?.setTopIndent('unset');
-      this.valueLabelRight?.setTopIndent('unset');
-      this.valueLabelCommon?.setTopIndent('unset');
+      this.valueLabelLeft?.setIndent('top', 'unset');
+      this.valueLabelRight?.setIndent('top', 'unset');
+      this.valueLabelCommon?.setIndent('top', 'unset');
       this.scale?.handleSwitchFromVerticalToHorizontal();
       this.notify('viewChangeOrientationFromOutside');
     }
@@ -702,11 +702,11 @@ class View extends BaseElement {
   }
 
   getTrackWidth(): number {
-    return this.track.getOffsetWidth();
+    return this.track.getWidth();
   }
 
   getTrackHeight(): number {
-    return this.track.getOffsetHeight();
+    return this.track.getHeight();
   }
 
   private render(): void {
@@ -720,10 +720,10 @@ class View extends BaseElement {
       this.slider.append(this.thumbRight!.getComponent());
     } else {
       if (!this.vertical) {
-        this.range.setLeftIndent(0);
+        this.range.setIndent('left', 0);
       }
       if (this.vertical) {
-        this.range.setBottomIndent(0);
+        this.range.setIndent('bottom', 0);
       }
     }
 
@@ -785,14 +785,14 @@ class View extends BaseElement {
         parseInt(this.thumbRight!.getLeftIndent(), 10)
         - parseInt(this.thumbLeft.getLeftIndent(), 10)
       );
-      this.valueLabelCommon?.setLeftIndent(`${parseInt(this.valueLabelLeft!.getLeftIndent(), 10) + distanceBetweenThumbs / 2}%`);
+      this.valueLabelCommon?.setIndent('left', `${parseInt(this.valueLabelLeft!.getLeftIndent(), 10) + distanceBetweenThumbs / 2}%`);
     }
 
     if (this.vertical) {
       const distanceBetweenThumbs = (
         parseInt(this.thumbRight!.getTopIndent(), 10) - parseInt(this.thumbLeft.getTopIndent(), 10)
       );
-      this.valueLabelCommon?.setTopIndent(`${parseInt(this.valueLabelRight!.getTopIndent(), 10) - distanceBetweenThumbs / 2}%`);
+      this.valueLabelCommon?.setIndent('top', `${parseInt(this.valueLabelRight!.getTopIndent(), 10) - distanceBetweenThumbs / 2}%`);
     }
   }
 

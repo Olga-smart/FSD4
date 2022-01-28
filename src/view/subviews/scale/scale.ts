@@ -71,10 +71,6 @@ class Scale extends BaseElement {
     this.fitHeightForHorizontal();
   }
 
-  getComponent(): HTMLElement {
-    return this.component;
-  }
-
   private createIntervals(): void {
     for (let i = 0; i < this.intervalsNumber; i += 1) {
       this.intervals[i] = BaseElement.createComponent('div', 'range-slider__scale-interval');

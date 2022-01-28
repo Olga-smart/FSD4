@@ -28,44 +28,10 @@ describe('MinMaxLabel', () => {
       });
     });
 
-    describe('inherit from Label', () => {
+    it('inherit from Label', () => {
       const label = new MinMaxLabel();
 
-      it('is instance of Label', () => {
-        expect(label).toBeInstanceOf(Label);
-      });
-
-      describe('has parent properties', () => {
-        it('has type property', () => {
-          expect(label).toHaveProperty('type');
-        });
-      });
-
-      describe('has parent methods', () => {
-        it('has setOpacity() method', () => {
-          expect(label).toHaveProperty('setOpacity');
-        });
-
-        it('has setValue() method', () => {
-          expect(label).toHaveProperty('setValue');
-        });
-
-        it('has getValue() method', () => {
-          expect(label).toHaveProperty('getValue');
-        });
-
-        it('has getBoundingClientRect() method', () => {
-          expect(label).toHaveProperty('getBoundingClientRect');
-        });
-
-        it('has getOffsetWidth() method', () => {
-          expect(label).toHaveProperty('getOffsetWidth');
-        });
-
-        it('has getOffsetHeight() method', () => {
-          expect(label).toHaveProperty('getOffsetHeight');
-        });
-      });
+      expect(label).toBeInstanceOf(Label);
     });
   });
 });

@@ -18,14 +18,6 @@ class Thumb extends BaseElement {
     this.view = view;
   }
 
-  setLeftIndent(percent: number): void {
-    this.component.style.left = `${percent}%`;
-  }
-
-  setTopIndent(percent: number): void {
-    this.component.style.top = `${percent}%`;
-  }
-
   getLeftIndent(): string {
     return this.component.style.left;
   }
@@ -36,18 +28,6 @@ class Thumb extends BaseElement {
 
   setZIndex(value: number): void {
     this.component.style.zIndex = `${value}`;
-  }
-
-  getBoundingClientRect(): DOMRect {
-    return this.component.getBoundingClientRect();
-  }
-
-  getWidth(): number {
-    return this.component.offsetWidth;
-  }
-
-  getHeight(): number {
-    return this.component.offsetHeight;
   }
 
   private static handlePointerOver(event: PointerEvent): void {

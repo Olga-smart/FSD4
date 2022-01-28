@@ -29,34 +29,12 @@ describe('Thumb', () => {
     });
   });
 
-  describe('setLeftIndent(percent)', () => {
-    const thumb = new Thumb();
-
-    it('set up left property of component', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        thumb.setLeftIndent(i);
-        expect(thumb.getComponent().style.left).toBe(`${i}%`);
-      }
-    });
-  });
-
-  describe('setTopIndent(percent)', () => {
-    const thumb = new Thumb();
-
-    it('set up top property of component', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        thumb.setTopIndent(i);
-        expect(thumb.getComponent().style.top).toBe(`${i}%`);
-      }
-    });
-  });
-
   describe('getLeftIndent()', () => {
     const thumb = new Thumb();
 
     it('return left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        thumb.setLeftIndent(i);
+        thumb.setIndent('left', i);
         const indent = thumb.getLeftIndent();
         expect(indent).toBe(`${i}%`);
       }
@@ -68,7 +46,7 @@ describe('Thumb', () => {
 
     it('return top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
-        thumb.setTopIndent(i);
+        thumb.setIndent('top', i);
         const indent = thumb.getTopIndent();
         expect(indent).toBe(`${i}%`);
       }
@@ -83,15 +61,6 @@ describe('Thumb', () => {
         thumb.setZIndex(i);
         expect(thumb.getComponent().style.zIndex).toBe(`${i}`);
       }
-    });
-  });
-
-  describe('getBoundingClientRect()', () => {
-    const thumb = new Thumb();
-    const coords = thumb.getBoundingClientRect();
-
-    it('return component coordinates', () => {
-      expect(coords).toEqual(thumb.getComponent().getBoundingClientRect());
     });
   });
 

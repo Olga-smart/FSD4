@@ -33,31 +33,4 @@ describe('Label', () => {
       }
     });
   });
-
-  describe('getBoundingClientRect()', () => {
-    const label = new Label();
-    const coords = label.getBoundingClientRect();
-
-    it('return component coordinates', () => {
-      expect(coords).toEqual(label.getComponent().getBoundingClientRect());
-    });
-  });
-
-  describe('getOffsetWidth()', () => {
-    const label = new Label();
-    const width = label.getOffsetWidth();
-
-    it('return component width', () => {
-      expect(width).toBe(label.getComponent().offsetWidth);
-    });
-  });
-
-  describe('getOffsetHeight()', () => {
-    const label = new Label();
-    const height = label.getOffsetHeight();
-
-    it('return component height', () => {
-      expect(height).toBe(label.getComponent().offsetHeight);
-    });
-  });
 });

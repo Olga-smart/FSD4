@@ -19,6 +19,28 @@ class BaseElement {
     return this.component;
   }
 
+  getBoundingClientRect(): DOMRect {
+    return this.component.getBoundingClientRect();
+  }
+
+  getWidth(): number {
+    return this.component.offsetWidth;
+  }
+
+  getHeight(): number {
+    return this.component.offsetHeight;
+  }
+
+  setIndent(side: 'top' | 'right' | 'bottom' | 'left' = 'left', indent: number | string): void {
+    if (typeof indent === 'number') {
+      this.component.style[side] = `${indent}%`;
+    }
+
+    if (typeof indent === 'string') {
+      this.component.style[side] = indent;
+    }
+  }
+
   remove(): void {
     this.component.remove();
   }

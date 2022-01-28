@@ -28,55 +28,10 @@ describe('ValueLabel', () => {
       });
     });
 
-    describe('inherit from Label', () => {
+    it('inherit from Label', () => {
       const label = new ValueLabel();
 
-      it('is instance of Label', () => {
-        expect(label).toBeInstanceOf(Label);
-      });
-
-      describe('has parent properties', () => {
-        it('has type property', () => {
-          expect(label).toHaveProperty('type');
-        });
-      });
-
-      describe('has parent methods', () => {
-        it('has setOpacity() method', () => {
-          expect(label).toHaveProperty('setOpacity');
-        });
-
-        it('has setValue() method', () => {
-          expect(label).toHaveProperty('setValue');
-        });
-
-        it('has getValue() method', () => {
-          expect(label).toHaveProperty('getValue');
-        });
-
-        it('has getBoundingClientRect() method', () => {
-          expect(label).toHaveProperty('getBoundingClientRect');
-        });
-
-        it('has getOffsetWidth() method', () => {
-          expect(label).toHaveProperty('getOffsetWidth');
-        });
-
-        it('has getOffsetHeight() method', () => {
-          expect(label).toHaveProperty('getOffsetHeight');
-        });
-      });
-    });
-  });
-
-  describe('setLeftIndent(value)', () => {
-    const valueLabel = new ValueLabel();
-
-    it('set up left property of component', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        valueLabel.setLeftIndent(`${i}px`);
-        expect(valueLabel.getComponent().style.left).toBe(`${i}px`);
-      }
+      expect(label).toBeInstanceOf(Label);
     });
   });
 
@@ -87,17 +42,6 @@ describe('ValueLabel', () => {
       for (let i = 0; i <= 100; i += 1) {
         valueLabel.getComponent().style.left = `${i}px`;
         expect(valueLabel.getLeftIndent()).toBe(`${i}px`);
-      }
-    });
-  });
-
-  describe('setTopIndent(value)', () => {
-    const valueLabel = new ValueLabel();
-
-    it('set up top property of component', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        valueLabel.setTopIndent(`${i}px`);
-        expect(valueLabel.getComponent().style.top).toBe(`${i}px`);
       }
     });
   });

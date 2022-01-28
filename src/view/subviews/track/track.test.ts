@@ -20,33 +20,6 @@ describe('Track', () => {
     });
   });
 
-  describe('getOffsetWidth()', () => {
-    const track = new Track();
-    const width = track.getOffsetWidth();
-
-    it('return component width', () => {
-      expect(width).toBe(track.getComponent().offsetWidth);
-    });
-  });
-
-  describe('getOffsetHeight()', () => {
-    const track = new Track();
-    const height = track.getOffsetHeight();
-
-    it('return component height', () => {
-      expect(height).toBe(track.getComponent().offsetWidth);
-    });
-  });
-
-  describe('getBoundingClientRect()', () => {
-    const track = new Track();
-    const coords = track.getBoundingClientRect();
-
-    it('return component coordinates', () => {
-      expect(coords).toEqual(track.getComponent().getBoundingClientRect());
-    });
-  });
-
   describe('append(...elements)', () => {
     const track = new Track();
     const div = document.createElement('div');

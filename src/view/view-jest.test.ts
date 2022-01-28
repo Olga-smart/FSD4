@@ -51,22 +51,22 @@ describe('View', () => {
 
         it('set left indent = 0 if slider is horizontal or by default', () => {
           const newSlider = document.createElement('div');
-          jest.spyOn(Range.prototype, 'setLeftIndent');
+          jest.spyOn(Range.prototype, 'setIndent');
           // eslint-disable-next-line no-new
           new View(newSlider);
 
-          expect(Range.prototype.setLeftIndent).toBeCalledWith(0);
+          expect(Range.prototype.setIndent).toBeCalledWith('left', 0);
         });
 
         it('set bottom indent = 0 if slider is vertical', () => {
           const newSlider = document.createElement('div');
-          jest.spyOn(Range.prototype, 'setBottomIndent');
+          jest.spyOn(Range.prototype, 'setIndent');
           // eslint-disable-next-line no-new
           new View(newSlider, {
             vertical: true,
           });
 
-          expect(Range.prototype.setBottomIndent).toBeCalledWith(0);
+          expect(Range.prototype.setIndent).toBeCalledWith('bottom', 0);
         });
       });
 

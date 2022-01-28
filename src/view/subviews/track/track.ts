@@ -15,18 +15,6 @@ class Track extends BaseElement {
     this.view = view;
   }
 
-  getOffsetWidth(): number {
-    return this.component.offsetWidth;
-  }
-
-  getOffsetHeight(): number {
-    return this.component.offsetHeight;
-  }
-
-  getBoundingClientRect(): DOMRect {
-    return this.component.getBoundingClientRect();
-  }
-
   append(...elements: HTMLElement[]): void {
     this.component.append(...elements);
   }

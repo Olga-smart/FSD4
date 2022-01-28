@@ -5,22 +5,6 @@ class Range extends BaseElement {
     super('div', 'range-slider__range');
   }
 
-  setLeftIndent(percent: number): void {
-    this.component.style.left = `${percent}%`;
-  }
-
-  setRightIndent(percent: number): void {
-    this.component.style.right = `${percent}%`;
-  }
-
-  setTopIndent(percent: number): void {
-    this.component.style.top = `${percent}%`;
-  }
-
-  setBottomIndent(percent: number): void {
-    this.component.style.bottom = `${percent}%`;
-  }
-
   setWidth(percent: number): void {
     this.component.style.width = `${percent}%`;
   }
