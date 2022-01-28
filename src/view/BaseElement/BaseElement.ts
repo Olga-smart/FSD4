@@ -5,7 +5,7 @@ class BaseElement {
     this.component = BaseElement.createComponent(tag, className);
   }
 
-  private static createComponent(tag: string = 'div', className?: string): HTMLElement {
+  protected static createComponent(tag: string = 'div', className?: string): HTMLElement {
     const element = document.createElement(tag);
 
     if (className) {

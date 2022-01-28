@@ -1,5 +1,4 @@
 import BaseElement from '../../BaseElement/BaseElement';
-import createElement from '../../helpers/createElement';
 
 type PanelOptions = {
   min: number,
@@ -45,18 +44,18 @@ class Panel extends BaseElement {
 
     this.view = null;
 
-    this.min = createElement('input', 'panel__min panel__input');
-    this.max = createElement('input', 'panel__max panel__input');
-    this.step = createElement('input', 'panel__step panel__input');
-    this.from = createElement('input', 'panel__from panel__input');
-    this.to = createElement('input', 'panel__to panel__input');
+    this.min = BaseElement.createComponent('input', 'panel__min panel__input');
+    this.max = BaseElement.createComponent('input', 'panel__max panel__input');
+    this.step = BaseElement.createComponent('input', 'panel__step panel__input');
+    this.from = BaseElement.createComponent('input', 'panel__from panel__input');
+    this.to = BaseElement.createComponent('input', 'panel__to panel__input');
 
-    this.vertical = createElement('input', 'panel__vertical panel__checkbox');
-    this.range = createElement('input', 'panel__range panel__checkbox');
-    this.scale = createElement('input', 'panel__scale panel__checkbox');
-    this.scaleIntervals = createElement('input', 'panel__scale-intervals panel__input');
-    this.valueLabels = createElement('input', 'panel__value-labels panel__checkbox');
-    this.minMaxLabels = createElement('input', 'panel__min-max-labels panel__checkbox');
+    this.vertical = BaseElement.createComponent('input', 'panel__vertical panel__checkbox');
+    this.range = BaseElement.createComponent('input', 'panel__range panel__checkbox');
+    this.scale = BaseElement.createComponent('input', 'panel__scale panel__checkbox');
+    this.scaleIntervals = BaseElement.createComponent('input', 'panel__scale-intervals panel__input');
+    this.valueLabels = BaseElement.createComponent('input', 'panel__value-labels panel__checkbox');
+    this.minMaxLabels = BaseElement.createComponent('input', 'panel__min-max-labels panel__checkbox');
 
     this.render();
     this.attachEventHandlers();
@@ -120,7 +119,7 @@ class Panel extends BaseElement {
   }
 
   private static addLabel(input: HTMLElement, name: string, className?: string): HTMLElement {
-    const label: HTMLElement = createElement('label', 'panel__label');
+    const label: HTMLElement = BaseElement.createComponent('label', 'panel__label');
     label.textContent = name;
 
     if (className) {

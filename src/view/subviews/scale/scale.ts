@@ -1,5 +1,4 @@
 import BaseElement from '../../BaseElement/BaseElement';
-import createElement from '../../helpers/createElement';
 
 class Scale extends BaseElement {
   private view: any;
@@ -78,7 +77,7 @@ class Scale extends BaseElement {
 
   private createIntervals(): void {
     for (let i = 0; i < this.intervalsNumber; i += 1) {
-      this.intervals[i] = createElement('div', 'range-slider__scale-interval');
+      this.intervals[i] = BaseElement.createComponent('div', 'range-slider__scale-interval');
       this.component.append(this.intervals[i]);
     }
   }
@@ -87,16 +86,16 @@ class Scale extends BaseElement {
     this.intervals.forEach((item) => {
       const fragment = new DocumentFragment();
       if (this.intervalsNumber < 29) {
-        fragment.append(createElement('span', 'range-slider__scale-mark'));
+        fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
       if (this.intervalsNumber < 15) {
-        fragment.append(createElement('span', 'range-slider__scale-mark'));
+        fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
       if (this.intervalsNumber < 8) {
-        fragment.append(createElement('span', 'range-slider__scale-mark'));
+        fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
       if (this.intervalsNumber < 5) {
-        fragment.append(createElement('span', 'range-slider__scale-mark'));
+        fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
       item.append(fragment);
     });
@@ -110,13 +109,13 @@ class Scale extends BaseElement {
     }
     this.values.push(this.max);
 
-    const valueElement = createElement('span', 'range-slider__scale-interval-value range-slider__scale-interval-value_min');
+    const valueElement = BaseElement.createComponent('span', 'range-slider__scale-interval-value range-slider__scale-interval-value_min');
     valueElement.textContent = `${this.values[0]}`;
     this.intervals[0].append(valueElement);
     this.valueElements.push(valueElement);
 
     for (let i = 1; i < this.values.length; i += 1) {
-      const newValueElement = createElement('span', 'range-slider__scale-interval-value');
+      const newValueElement = BaseElement.createComponent('span', 'range-slider__scale-interval-value');
       newValueElement.textContent = `${this.values[i]}`;
       this.intervals[i - 1].append(newValueElement);
       this.valueElements.push(newValueElement);
