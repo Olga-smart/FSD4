@@ -31,7 +31,7 @@ class BaseElement {
     return this.component.offsetHeight;
   }
 
-  setIndent(side: 'top' | 'right' | 'bottom' | 'left' = 'left', indent: number | string): void {
+  setIndent(side: 'top' | 'right' | 'bottom' | 'left', indent: number | string): void {
     if (typeof indent === 'number') {
       this.component.style[side] = `${indent}%`;
     }
