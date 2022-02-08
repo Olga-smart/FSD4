@@ -4,9 +4,6 @@ import View from '../View/View';
 import Presenter from './Presenter';
 
 describe('Presenter', () => {
-  jest.mock('../model/model');
-  jest.mock('../view/view');
-
   const defaultModelOptions = {
     min: 10,
     max: 100,
@@ -159,8 +156,7 @@ describe('Presenter', () => {
           it('value match px if track length is 100 and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(100);
+            view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewLeftInput', i);
@@ -171,8 +167,7 @@ describe('Presenter', () => {
           it('value match px * 2 if track length is 100 and min = 0 and max = 200', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(200);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(100);
+            view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewLeftInput', i);
@@ -183,8 +178,7 @@ describe('Presenter', () => {
           it('value match px / 2 if track length is 200 and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(200);
+            view.getTrackWidth = jest.fn(() => 200);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewLeftInput', i);
@@ -194,8 +188,7 @@ describe('Presenter', () => {
 
           it('value match px * x if track length is 100 and min = 0 and max = 100 * x', () => {
             model.changeMinFromOutside(0);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(100);
+            view.getTrackWidth = jest.fn(() => 100);
 
             for (let x = 1; x <= 10; x += 1) {
               model.changeMaxFromOutside(100 * x);
@@ -209,10 +202,9 @@ describe('Presenter', () => {
           it('value match px / x if track length is 100 * x and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackWidth = jest.fn();
 
             for (let x = 1; x <= 10; x += 1) {
-              (view.getTrackWidth as jest.Mock).mockReturnValue(100 * x);
+              view.getTrackWidth = jest.fn(() => 100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 presenter.inform('viewLeftInput', i);
                 expect(model.setLeftValue).toBeCalledWith(Math.round(i / x));
@@ -233,8 +225,7 @@ describe('Presenter', () => {
           it('value match px if track height is 100 and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackHeight = jest.fn();
-            (view.getTrackHeight as jest.Mock).mockReturnValue(100);
+            view.getTrackHeight = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewLeftInput', i);
@@ -245,8 +236,7 @@ describe('Presenter', () => {
           it('value match px * 2 if track height is 100 and min = 0 and max = 200', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(200);
-            view.getTrackHeight = jest.fn();
-            (view.getTrackHeight as jest.Mock).mockReturnValue(100);
+            view.getTrackHeight = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewLeftInput', i);
@@ -257,8 +247,7 @@ describe('Presenter', () => {
           it('value match px / 2 if track height is 200 and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackHeight = jest.fn();
-            (view.getTrackHeight as jest.Mock).mockReturnValue(200);
+            view.getTrackHeight = jest.fn(() => 200);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewLeftInput', i);
@@ -268,8 +257,7 @@ describe('Presenter', () => {
 
           it('value match px * x if track height is 100 and min = 0 and max = 100 * x', () => {
             model.changeMinFromOutside(0);
-            view.getTrackHeight = jest.fn();
-            (view.getTrackHeight as jest.Mock).mockReturnValue(100);
+            view.getTrackHeight = jest.fn(() => 100);
 
             for (let x = 1; x <= 10; x += 1) {
               model.changeMaxFromOutside(100 * x);
@@ -283,10 +271,9 @@ describe('Presenter', () => {
           it('value match px / x if track height is 100 * x and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackHeight = jest.fn();
 
             for (let x = 1; x <= 10; x += 1) {
-              (view.getTrackHeight as jest.Mock).mockReturnValue(100 * x);
+              view.getTrackHeight = jest.fn(() => 100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 presenter.inform('viewLeftInput', i);
                 expect(model.setLeftValue).toBeCalledWith(Math.round(i / x));
@@ -309,8 +296,7 @@ describe('Presenter', () => {
           it('value match px if track length is 100 and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(100);
+            view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewRightInput', i);
@@ -321,8 +307,7 @@ describe('Presenter', () => {
           it('value match px * 2 if track length is 100 and min = 0 and max = 200', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(200);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(100);
+            view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewRightInput', i);
@@ -333,8 +318,7 @@ describe('Presenter', () => {
           it('value match px / 2 if track length is 200 and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(200);
+            view.getTrackWidth = jest.fn(() => 200);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewRightInput', i);
@@ -344,8 +328,7 @@ describe('Presenter', () => {
 
           it('value match px * x if track length is 100 and min = 0 and max = 100 * x', () => {
             model.changeMinFromOutside(0);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(100);
+            view.getTrackWidth = jest.fn(() => 100);
 
             for (let x = 1; x <= 10; x += 1) {
               model.changeMaxFromOutside(100 * x);
@@ -359,10 +342,9 @@ describe('Presenter', () => {
           it('value match px / x if track length is 100 * x and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackWidth = jest.fn();
 
             for (let x = 1; x <= 10; x += 1) {
-              (view.getTrackWidth as jest.Mock).mockReturnValue(100 * x);
+              view.getTrackWidth = jest.fn(() => 100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 presenter.inform('viewRightInput', i);
                 expect(model.setRightValue).toBeCalledWith(Math.round(i / x));
@@ -383,8 +365,7 @@ describe('Presenter', () => {
           it('value match px if track height is 100 and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackHeight = jest.fn();
-            (view.getTrackHeight as jest.Mock).mockReturnValue(100);
+            view.getTrackHeight = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewRightInput', i);
@@ -395,8 +376,7 @@ describe('Presenter', () => {
           it('value match px * 2 if track height is 100 and min = 0 and max = 200', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(200);
-            view.getTrackHeight = jest.fn();
-            (view.getTrackHeight as jest.Mock).mockReturnValue(100);
+            view.getTrackHeight = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewRightInput', i);
@@ -407,8 +387,7 @@ describe('Presenter', () => {
           it('value match px / 2 if track height is 200 and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackHeight = jest.fn();
-            (view.getTrackHeight as jest.Mock).mockReturnValue(200);
+            view.getTrackHeight = jest.fn(() => 200);
 
             for (let i = 0; i <= 100; i += 1) {
               presenter.inform('viewRightInput', i);
@@ -418,8 +397,7 @@ describe('Presenter', () => {
 
           it('value match px * x if track height is 100 and min = 0 and max = 100 * x', () => {
             model.changeMinFromOutside(0);
-            view.getTrackHeight = jest.fn();
-            (view.getTrackHeight as jest.Mock).mockReturnValue(100);
+            view.getTrackHeight = jest.fn(() => 100);
 
             for (let x = 1; x <= 10; x += 1) {
               model.changeMaxFromOutside(100 * x);
@@ -433,10 +411,9 @@ describe('Presenter', () => {
           it('value match px / x if track height is 100 * x and min = 0 and max = 100', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
-            view.getTrackHeight = jest.fn();
 
             for (let x = 1; x <= 10; x += 1) {
-              (view.getTrackHeight as jest.Mock).mockReturnValue(100 * x);
+              view.getTrackHeight = jest.fn(() => 100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 presenter.inform('viewRightInput', i);
                 expect(model.setRightValue).toBeCalledWith(Math.round(i / x));
@@ -697,8 +674,7 @@ describe('Presenter', () => {
             model.changeMinFromOutside(0);
             model.changeMaxFromOutside(100);
             model.setRightValue(100);
-            view.getTrackWidth = jest.fn();
-            (view.getTrackWidth as jest.Mock).mockReturnValue(100);
+            view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
               model.setLeftValue(i);

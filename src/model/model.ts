@@ -31,6 +31,7 @@ class Model {
     this.max = options.max;
     this.leftValue = options.leftValue;
     this.step = options.step;
+
     if (options.range) {
       this.rightValue = options.rightValue;
       this.range = true;
@@ -55,8 +56,8 @@ class Model {
         this.leftValue = Math.min(value, this.max);
       }
 
-      if (this.isRange()) {
-        this.leftValue = Math.min(value, this.rightValue!);
+      if (this.isRange() && this.rightValue !== undefined) {
+        this.leftValue = Math.min(value, this.rightValue);
       }
     }
 
@@ -89,8 +90,8 @@ class Model {
       if (value < this.leftValue) return;
     }
 
-    if (this.isRange()) {
-      if (value < this.rightValue!) return;
+    if (this.isRange() && this.rightValue !== undefined) {
+      if (value < this.rightValue) return;
     }
 
     this.max = value;

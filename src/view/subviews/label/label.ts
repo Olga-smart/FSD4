@@ -1,6 +1,6 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
-class Label extends BaseElement {
+class Label extends BaseElement<'div'> {
   protected type: 'left' | 'right' | 'common';
 
   constructor(type: 'left' | 'right' | 'common' = 'left', className?: string) {

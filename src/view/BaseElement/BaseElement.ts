@@ -1,11 +1,16 @@
-class BaseElement {
-  protected component: HTMLElement;
+class BaseElement<T extends keyof HTMLElementTagNameMap> {
+  protected component: HTMLElementTagNameMap[T];
 
-  constructor(tag?: string, className?: string) {
-    this.component = BaseElement.createComponent(tag, className);
+  constructor(tag: T, className?: string) {
+    this.component = document.createElement(tag);
+
+    if (className) {
+      this.component.className = className;
+    }
   }
 
-  protected static createComponent(tag: string = 'div', className?: string): HTMLElement {
+  // eslint-disable-next-line max-len
+  protected static createComponent<K extends keyof HTMLElementTagNameMap>(tag: K, className?: string): HTMLElementTagNameMap[K] {
     const element = document.createElement(tag);
 
     if (className) {
@@ -15,7 +20,7 @@ class BaseElement {
     return element;
   }
 
-  getComponent(): HTMLElement {
+  getComponent(): HTMLElementTagNameMap[T] {
     return this.component;
   }
 

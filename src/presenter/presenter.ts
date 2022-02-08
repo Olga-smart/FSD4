@@ -236,9 +236,12 @@ class Presenter implements IEventListener {
   private handleModelChangeMin(): void {
     this.view.setMinValue(this.model.getMin());
     this.passLeftValueToView(this.model.getLeftValue());
-    if (this.model.getRightValue() !== undefined) {
-      this.passRightValueToView(this.model.getRightValue() as number);
+
+    const rightValue = this.model.getRightValue();
+    if (rightValue !== undefined) {
+      this.passRightValueToView(rightValue);
     }
+
     if (this.view.hasScale()) {
       this.view.removeScale();
       this.view.addScale(this.model.getMin(), this.model.getMax());
@@ -252,9 +255,12 @@ class Presenter implements IEventListener {
   private handleModelChangeMax(): void {
     this.view.setMaxValue(this.model.getMax());
     this.passLeftValueToView(this.model.getLeftValue());
-    if (this.model.getRightValue() !== undefined) {
-      this.passRightValueToView(this.model.getRightValue() as number);
+
+    const rightValue = this.model.getRightValue();
+    if (rightValue !== undefined) {
+      this.passRightValueToView(rightValue);
     }
+
     if (this.view.hasScale()) {
       this.view.removeScale();
       this.view.addScale(this.model.getMin(), this.model.getMax());

@@ -14,33 +14,33 @@ type PanelOptions = {
   minMaxLabels: boolean
 };
 
-class Panel extends BaseElement {
+class Panel extends BaseElement<'form'> {
   private view: any;
 
-  private min: HTMLElement;
+  private min: HTMLInputElement;
 
-  private max: HTMLElement;
+  private max: HTMLInputElement;
 
-  private step: HTMLElement;
+  private step: HTMLInputElement;
 
-  private from: HTMLElement;
+  private from: HTMLInputElement;
 
-  private to: HTMLElement;
+  private to: HTMLInputElement;
 
-  private vertical: HTMLElement;
+  private vertical: HTMLInputElement;
 
-  private range: HTMLElement;
+  private range: HTMLInputElement;
 
-  private scale: HTMLElement;
+  private scale: HTMLInputElement;
 
-  private scaleIntervals: HTMLElement;
+  private scaleIntervals: HTMLInputElement;
 
-  private valueLabels: HTMLElement;
+  private valueLabels: HTMLInputElement;
 
-  private minMaxLabels: HTMLElement;
+  private minMaxLabels: HTMLInputElement;
 
   constructor() {
-    super('div', 'range-slider__panel panel');
+    super('form', 'range-slider__panel panel');
 
     this.view = null;
 
@@ -66,39 +66,39 @@ class Panel extends BaseElement {
   }
 
   setValues(options: PanelOptions): void {
-    (this.min as HTMLInputElement).value = `${options.min}`;
-    (this.max as HTMLInputElement).value = `${options.max}`;
-    (this.step as HTMLInputElement).value = `${options.step}`;
-    (this.from as HTMLInputElement).value = `${options.from}`;
-    (this.to as HTMLInputElement).value = `${options.to}`;
-    (this.vertical as HTMLInputElement).checked = options.vertical;
-    (this.range as HTMLInputElement).checked = options.range;
-    (this.scale as HTMLInputElement).checked = options.scale;
-    (this.scaleIntervals as HTMLInputElement).value = `${options.scaleIntervals}`;
-    (this.valueLabels as HTMLInputElement).checked = options.valueLabels;
-    (this.minMaxLabels as HTMLInputElement).checked = options.minMaxLabels;
+    this.min.value = `${options.min}`;
+    this.max.value = `${options.max}`;
+    this.step.value = `${options.step}`;
+    this.from.value = `${options.from}`;
+    this.to.value = `${options.to}`;
+    this.vertical.checked = options.vertical;
+    this.range.checked = options.range;
+    this.scale.checked = options.scale;
+    this.scaleIntervals.value = `${options.scaleIntervals}`;
+    this.valueLabels.checked = options.valueLabels;
+    this.minMaxLabels.checked = options.minMaxLabels;
 
     this.setCheckMarks();
     this.setAttributes(options);
   }
 
   updateFrom(value: number): void {
-    (this.from as HTMLInputElement).value = `${value}`;
+    this.from.value = `${value}`;
     this.updateAttributesAfterFromChange();
   }
 
   updateTo(value: number | ''): void {
-    (this.to as HTMLInputElement).value = `${value}`;
+    this.to.value = `${value}`;
     this.updateAttributesAfterToChange();
   }
 
   updateStep(value: number): void {
-    (this.step as HTMLInputElement).value = `${value}`;
+    this.step.value = `${value}`;
     this.updateAttributesAfterStepChange();
   }
 
   updateScaleIntervals(value: number | ''): void {
-    (this.scaleIntervals as HTMLInputElement).value = `${value}`;
+    this.scaleIntervals.value = `${value}`;
   }
 
   private render(): void {
@@ -132,44 +132,44 @@ class Panel extends BaseElement {
   }
 
   private setTypes(): void {
-    (this.min as HTMLInputElement).type = 'number';
-    (this.max as HTMLInputElement).type = 'number';
-    (this.step as HTMLInputElement).type = 'number';
-    (this.from as HTMLInputElement).type = 'number';
-    (this.to as HTMLInputElement).type = 'number';
-    (this.vertical as HTMLInputElement).type = 'checkbox';
-    (this.range as HTMLInputElement).type = 'checkbox';
-    (this.scale as HTMLInputElement).type = 'checkbox';
-    (this.scaleIntervals as HTMLInputElement).type = 'number';
-    (this.valueLabels as HTMLInputElement).type = 'checkbox';
-    (this.minMaxLabels as HTMLInputElement).type = 'checkbox';
+    this.min.type = 'number';
+    this.max.type = 'number';
+    this.step.type = 'number';
+    this.from.type = 'number';
+    this.to.type = 'number';
+    this.vertical.type = 'checkbox';
+    this.range.type = 'checkbox';
+    this.scale.type = 'checkbox';
+    this.scaleIntervals.type = 'number';
+    this.valueLabels.type = 'checkbox';
+    this.minMaxLabels.type = 'checkbox';
   }
 
   private setAttributes(options: PanelOptions): void {
-    (this.from as HTMLInputElement).min = `${options.min}`;
-    (this.from as HTMLInputElement).max = options.range ? `${options.to}` : `${options.max}`;
+    this.from.min = `${options.min}`;
+    this.from.max = options.range ? `${options.to}` : `${options.max}`;
 
-    (this.to as HTMLInputElement).min = `${options.from}`;
-    (this.to as HTMLInputElement).max = `${options.max}`;
+    this.to.min = `${options.from}`;
+    this.to.max = `${options.max}`;
 
-    (this.from as HTMLInputElement).step = `${options.step}`;
-    (this.to as HTMLInputElement).step = `${options.step}`;
+    this.from.step = `${options.step}`;
+    this.to.step = `${options.step}`;
 
-    (this.min as HTMLInputElement).max = `${options.from}`;
-    (this.max as HTMLInputElement).min = options.range ? `${options.to}` : `${options.from}`;
+    this.min.max = `${options.from}`;
+    this.max.min = options.range ? `${options.to}` : `${options.from}`;
 
-    (this.step as HTMLInputElement).min = `${Panel.calcStepMin(options.step)}`;
-    (this.step as HTMLInputElement).step = (this.step as HTMLInputElement).min;
-    (this.step as HTMLInputElement).max = `${Math.abs(options.max - options.min)}`;
+    this.step.min = `${Panel.calcStepMin(options.step)}`;
+    this.step.step = this.step.min;
+    this.step.max = `${Math.abs(options.max - options.min)}`;
 
     if (!options.range) {
-      (this.to as HTMLInputElement).disabled = true;
+      this.to.disabled = true;
     }
 
-    (this.scaleIntervals as HTMLInputElement).min = '1';
+    this.scaleIntervals.min = '1';
 
     if (!options.scale) {
-      (this.scaleIntervals as HTMLInputElement).disabled = true;
+      this.scaleIntervals.disabled = true;
     }
   }
 
@@ -182,7 +182,7 @@ class Panel extends BaseElement {
       this.minMaxLabels,
     ];
     checkboxes.forEach((checkbox) => {
-      if ((checkbox as HTMLInputElement).checked) {
+      if (checkbox.checked) {
         Panel.toggleCheckbox(checkbox);
       }
     });
@@ -204,129 +204,104 @@ class Panel extends BaseElement {
   }
 
   private updateAttributesAfterFromChange(): void {
-    const from = this.from as HTMLInputElement;
-
-    (this.min as HTMLInputElement).max = from.value;
+    this.min.max = this.from.value;
 
     if (this.view?.isRange()) {
-      (this.to as HTMLInputElement).min = from.value;
+      this.to.min = this.from.value;
     }
 
     if (!this.view?.isRange()) {
-      (this.max as HTMLInputElement).min = from.value;
+      this.max.min = this.from.value;
     }
   }
 
   private updateAttributesAfterToChange(): void {
-    const to = this.to as HTMLInputElement;
-
-    (this.from as HTMLInputElement).max = to.value;
-    (this.max as HTMLInputElement).min = to.value;
+    this.from.max = this.to.value;
+    this.max.min = this.to.value;
   }
 
   private updateAttributesAfterStepChange(): void {
-    const step = this.step as HTMLInputElement;
-
-    step.min = `${Panel.calcStepMin(Number(step.value))}`;
-    step.step = `${Panel.calcStepMin(Number(step.value))}`;
+    this.step.min = `${Panel.calcStepMin(Number(this.step.value))}`;
+    this.step.step = `${Panel.calcStepMin(Number(this.step.value))}`;
   }
 
   private updateAttributesAfterMinChange(): void {
-    (this.from as HTMLInputElement).min = (this.min as HTMLInputElement).value;
+    this.from.min = this.min.value;
   }
 
   private updateAttributesAfterMaxChange(): void {
     if (!this.view?.isRange()) {
-      (this.from as HTMLInputElement).max = (this.max as HTMLInputElement).value;
+      this.from.max = this.max.value;
     }
 
     if (this.view?.isRange()) {
-      (this.to as HTMLInputElement).max = (this.max as HTMLInputElement).value;
+      this.to.max = this.max.value;
     }
   }
 
   private handleMinChange(): void {
-    const min = this.min as HTMLInputElement;
-    const from = this.from as HTMLInputElement;
-
-    if (Number(min.value) > Number(from.value)) {
-      min.value = from.value;
+    if (Number(this.min.value) > Number(this.from.value)) {
+      this.min.value = this.from.value;
     }
 
-    this.view?.changeMinFromOutside(Number(min.value));
+    this.view?.changeMinFromOutside(Number(this.min.value));
     this.updateAttributesAfterMinChange();
   }
 
   private handleMaxChange(): void {
-    const max = this.max as HTMLInputElement;
-
     if (!this.view?.isRange()) {
-      const from = this.from as HTMLInputElement;
-
-      if (Number(max.value) < Number(from.value)) {
-        max.value = from.value;
+      if (Number(this.max.value) < Number(this.from.value)) {
+        this.max.value = this.from.value;
       }
     }
 
     if (this.view?.isRange()) {
-      const to = this.to as HTMLInputElement;
-
-      if (Number(max.value) < Number(to.value)) {
-        max.value = to.value;
+      if (Number(this.max.value) < Number(this.to.value)) {
+        this.max.value = this.to.value;
       }
     }
 
-    this.view?.changeMaxFromOutside(Number(max.value));
-
-    const min = this.min as HTMLInputElement;
-    (this.step as HTMLInputElement).max = `${Math.abs(Number(max.value) - Number(min.value))}`;
-
+    this.view?.changeMaxFromOutside(Number(this.max.value));
+    this.step.max = `${Math.abs(Number(this.max.value) - Number(this.min.value))}`;
     this.updateAttributesAfterMaxChange();
   }
 
   private handleStepChange(): void {
-    const step = this.step as HTMLInputElement;
-
-    if (Number(step.value) > Number(step.max)) {
-      step.value = step.max;
+    if (Number(this.step.value) > Number(this.step.max)) {
+      this.step.value = this.step.max;
     }
 
-    if (Number(step.value) <= 0) {
-      step.value = step.min;
+    if (Number(this.step.value) <= 0) {
+      this.step.value = this.step.min;
     }
 
-    this.view?.changeStepFromOutside(Number(step.value));
-
+    this.view?.changeStepFromOutside(Number(this.step.value));
     this.updateAttributesAfterStepChange();
   }
 
   private handleFromChange(): void {
-    const from = this.from as HTMLInputElement;
-
-    if (Number(from.value) > Number(from.max)) {
-      from.value = from.max;
+    if (Number(this.from.value) > Number(this.from.max)) {
+      this.from.value = this.from.max;
     }
 
-    if (Number(from.value) < Number(from.min)) {
-      from.value = from.min;
+    if (Number(this.from.value) < Number(this.from.min)) {
+      this.from.value = this.from.min;
     }
 
-    this.view?.changeLeftValueFromOutside(Number(from.value));
+    this.view?.changeLeftValueFromOutside(Number(this.from.value));
     this.updateAttributesAfterFromChange();
   }
 
   private handleToChange(): void {
-    const to = this.to as HTMLInputElement;
-
-    if (Number(to.value) > Number(to.max)) {
-      to.value = to.max;
+    if (Number(this.to.value) > Number(this.to.max)) {
+      this.to.value = this.to.max;
     }
 
-    if (Number(to.value) < Number(to.min)) {
-      to.value = to.min;
+    if (Number(this.to.value) < Number(this.to.min)) {
+      this.to.value = this.to.min;
     }
 
-    this.view?.changeRightValueFromOutside(Number(to.value));
+    this.view?.changeRightValueFromOutside(Number(this.to.value));
     this.updateAttributesAfterToChange();
   }
 
@@ -338,16 +313,12 @@ class Panel extends BaseElement {
   private handleRangeChange(): void {
     this.view?.toggleRangeFromOutside();
 
-    const to = this.to as HTMLInputElement;
-    to.disabled = !to.disabled;
+    this.to.disabled = !this.to.disabled;
 
-    const from = this.from as HTMLInputElement;
-    const range = this.range as HTMLInputElement;
-
-    if (range.checked) {
-      from.max = to.value;
+    if (this.range.checked) {
+      this.from.max = this.to.value;
     } else {
-      from.max = (this.max as HTMLInputElement).value;
+      this.from.max = this.max.value;
     }
 
     Panel.toggleCheckbox(this.range);
@@ -356,24 +327,21 @@ class Panel extends BaseElement {
   private handleScaleChange(): void {
     this.view?.toggleScaleFromOutside();
 
-    const scaleIntervals = this.scaleIntervals as HTMLInputElement;
-    scaleIntervals.disabled = !scaleIntervals.disabled;
+    this.scaleIntervals.disabled = !this.scaleIntervals.disabled;
 
     Panel.toggleCheckbox(this.scale);
   }
 
   private handleScaleIntervalsChange(): void {
-    const scaleIntervals = this.scaleIntervals as HTMLInputElement;
-
-    if (Number(scaleIntervals.value) < Number(scaleIntervals.min)) {
-      scaleIntervals.value = scaleIntervals.min;
+    if (Number(this.scaleIntervals.value) < Number(this.scaleIntervals.min)) {
+      this.scaleIntervals.value = this.scaleIntervals.min;
     }
 
-    if (!Number.isInteger(scaleIntervals.value)) {
-      scaleIntervals.value = `${Math.floor(Number(scaleIntervals.value))}`;
+    if (!Number.isInteger(this.scaleIntervals.value)) {
+      this.scaleIntervals.value = `${Math.floor(Number(this.scaleIntervals.value))}`;
     }
 
-    this.view?.changeScaleIntervals(Number(scaleIntervals.value));
+    this.view?.changeScaleIntervals(Number(this.scaleIntervals.value));
   }
 
   private handleValueLabelsChange(): void {

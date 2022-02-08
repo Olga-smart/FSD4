@@ -22,7 +22,7 @@ type ViewOptions = {
   panel?: boolean
 };
 
-class View extends BaseElement {
+class View extends BaseElement<'div'> {
   private eventManager: EventManager;
 
   private slider: Slider;
@@ -57,8 +57,8 @@ class View extends BaseElement {
 
   private panel?: Panel;
 
-  constructor(component: HTMLElement, options: ViewOptions = {}) {
-    super();
+  constructor(component: HTMLDivElement, options: ViewOptions = {}) {
+    super('div');
 
     this.component = component;
     this.eventManager = new EventManager();

@@ -1,6 +1,6 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
-class Thumb extends BaseElement {
+class Thumb extends BaseElement<'div'> {
   private type: 'left' | 'right';
 
   private view: any;
@@ -31,46 +31,53 @@ class Thumb extends BaseElement {
   }
 
   private static handlePointerOver(event: PointerEvent): void {
-    (event.currentTarget as Element).classList.add('range-slider__thumb_hover');
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.classList.add('range-slider__thumb_hover');
+    }
   }
 
   private static handlePointerOut(event: PointerEvent): void {
-    (event.currentTarget as Element).classList.remove('range-slider__thumb_hover');
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.classList.remove('range-slider__thumb_hover');
+    }
   }
 
   private handlePointerDown(event: PointerEvent): void {
-    (event.currentTarget as Element).classList.add('range-slider__thumb_active');
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.classList.add('range-slider__thumb_active');
 
-    (event.currentTarget as Element).setPointerCapture(event.pointerId);
+      event.currentTarget.setPointerCapture(event.pointerId);
 
-    // prevent selection (browser action)
-    event.preventDefault();
+      // prevent selection (browser action)
+      event.preventDefault();
 
-    const shiftX: number = event.clientX
-                         - (event.currentTarget as Element).getBoundingClientRect().left;
-    const shiftY: number = event.clientY
-                         - (event.currentTarget as Element).getBoundingClientRect().top;
+      const shiftX: number = event.clientX - event.currentTarget.getBoundingClientRect().left;
+      const shiftY: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
 
-    const handlePointerMove = (newEvent: PointerEvent) => {
-      if (this.type === 'left') {
-        this.view?.handleLeftInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
-      }
-      if (this.type === 'right') {
-        this.view?.handleRightInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
-      }
-    };
+      const handlePointerMove = (newEvent: PointerEvent) => {
+        if (this.type === 'left') {
+          this.view?.handleLeftInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
+        }
 
-    const handlePointerUp = () => {
-      this.component.removeEventListener('pointermove', handlePointerMove);
-      this.component.removeEventListener('pointerup', handlePointerUp);
-    };
+        if (this.type === 'right') {
+          this.view?.handleRightInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
+        }
+      };
 
-    this.component.addEventListener('pointermove', handlePointerMove);
-    this.component.addEventListener('pointerup', handlePointerUp);
+      const handlePointerUp = () => {
+        this.component.removeEventListener('pointermove', handlePointerMove);
+        this.component.removeEventListener('pointerup', handlePointerUp);
+      };
+
+      this.component.addEventListener('pointermove', handlePointerMove);
+      this.component.addEventListener('pointerup', handlePointerUp);
+    }
   }
 
   private static handlePointerUp(event: PointerEvent): void {
-    (event.currentTarget as Element).classList.remove('range-slider__thumb_active');
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.classList.remove('range-slider__thumb_active');
+    }
   }
 
   private static handleDragStart(): false {

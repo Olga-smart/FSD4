@@ -3,6 +3,18 @@ import Range from './subviews/Range/Range';
 import Scale from './subviews/Scale/Scale';
 
 describe('View', () => {
+  const defaultDomRect = {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    x: 0,
+    y: 0,
+    height: 0,
+    width: 0,
+    toJSON() { return undefined; },
+  };
+
   describe('constructor()', () => {
     const slider = document.createElement('div');
     const view = new View(slider);
@@ -180,11 +192,11 @@ describe('View', () => {
         it('change left indent if slider is horizontal', () => {
           const slider = document.createElement('div');
           const view = new View(slider);
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
+          const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setLeftValue(50, i);
-            expect(thumbLeft.style.left).toBe(`${i}%`);
+            expect(thumbLeft?.style.left).toBe(`${i}%`);
           }
         });
 
@@ -193,11 +205,11 @@ describe('View', () => {
           const view = new View(slider, {
             vertical: true,
           });
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
+          const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setLeftValue(50, i);
-            expect(thumbLeft.style.top).toBe(`${100 - i}%`);
+            expect(thumbLeft?.style.top).toBe(`${100 - i}%`);
           }
         });
       });
@@ -207,12 +219,15 @@ describe('View', () => {
           const slider = document.createElement('div');
           const view = new View(slider);
 
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
-          thumbLeft.style.left = '100%';
+          const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+
+          if (thumbLeft) {
+            thumbLeft.style.left = '100%';
+          }
 
           view.setLeftValue(200, 100);
 
-          expect(thumbLeft.style.zIndex).toBe('100');
+          expect(thumbLeft?.style.zIndex).toBe('100');
         });
 
         it('if slider is vertical', () => {
@@ -221,11 +236,14 @@ describe('View', () => {
             vertical: true,
           });
 
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
-          thumbLeft.style.top = '0%';
+          const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+
+          if (thumbLeft) {
+            thumbLeft.style.top = '0%';
+          }
 
           view.setLeftValue(200, 100);
-          expect(thumbLeft.style.zIndex).toBe('100');
+          expect(thumbLeft?.style.zIndex).toBe('100');
         });
       });
     });
@@ -235,11 +253,11 @@ describe('View', () => {
         it('set up range width if !view.isRange', () => {
           const slider = document.createElement('div');
           const view = new View(slider);
-          const range = view.getComponent().querySelector('.range-slider__range');
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setLeftValue(50, i);
-            expect((range as HTMLElement).style.width).toBe(`${i}%`);
+            expect(range?.style.width).toBe(`${i}%`);
           }
         });
 
@@ -248,11 +266,11 @@ describe('View', () => {
           const view = new View(slider, {
             range: true,
           });
-          const range = view.getComponent().querySelector('.range-slider__range');
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setLeftValue(50, i);
-            expect((range as HTMLElement).style.left).toBe(`${i}%`);
+            expect(range?.style.left).toBe(`${i}%`);
           }
         });
       });
@@ -263,11 +281,11 @@ describe('View', () => {
           const view = new View(slider, {
             vertical: true,
           });
-          const range = view.getComponent().querySelector('.range-slider__range');
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setLeftValue(50, i);
-            expect((range as HTMLElement).style.height).toBe(`${i}%`);
+            expect(range?.style.height).toBe(`${i}%`);
           }
         });
 
@@ -277,11 +295,11 @@ describe('View', () => {
             vertical: true,
             range: true,
           });
-          const range = view.getComponent().querySelector('.range-slider__range');
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setLeftValue(50, i);
-            expect((range as HTMLElement).style.bottom).toBe(`${i}%`);
+            expect(range?.style.bottom).toBe(`${i}%`);
           }
         });
       });
@@ -308,10 +326,13 @@ describe('View', () => {
             valueLabels: true,
             range: true,
           });
-          const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common');
+          const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
           const rightValue = 200;
-          const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
-          valueLabelRight!.textContent = `${rightValue}`;
+          const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+          if (valueLabelRight) {
+            valueLabelRight.textContent = `${rightValue}`;
+          }
 
           for (let value = -100; value <= 100; value += 1) {
             view.setLeftValue(value, 100);
@@ -326,11 +347,11 @@ describe('View', () => {
           const view = new View(slider, {
             valueLabels: true,
           });
-          const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
+          const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setLeftValue(50, i);
-            expect(valueLabelLeft!.style.left).toBe(`${i}%`);
+            expect(valueLabelLeft?.style.left).toBe(`${i}%`);
           }
         });
 
@@ -340,11 +361,11 @@ describe('View', () => {
             vertical: true,
             valueLabels: true,
           });
-          const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
+          const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setLeftValue(50, i);
-            expect(valueLabelLeft!.style.top).toBe(`${100 - i}%`);
+            expect(valueLabelLeft?.style.top).toBe(`${100 - i}%`);
           }
         });
       });
@@ -358,32 +379,38 @@ describe('View', () => {
               vertical: false,
               range: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 52,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
             it('make left value label transparent', () => {
-              expect(valueLabelLeft!.style.opacity).toBe('0');
+              expect(valueLabelLeft?.style.opacity).toBe('0');
             });
 
             it('make right value label transparent', () => {
-              expect(valueLabelRight!.style.opacity).toBe('0');
+              expect(valueLabelRight?.style.opacity).toBe('0');
             });
 
             it('make common value label opaque', () => {
-              const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-              expect(valueLabelCommon!.style.opacity).toBe('1');
+              const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+              expect(valueLabelCommon?.style.opacity).toBe('1');
             });
           });
 
@@ -394,32 +421,38 @@ describe('View', () => {
               vertical: true,
               range: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 52,
-              });
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
             it('make left value label transparent', () => {
-              expect(valueLabelLeft!.style.opacity).toBe('0');
+              expect(valueLabelLeft?.style.opacity).toBe('0');
             });
 
             it('make right value label transparent', () => {
-              expect(valueLabelRight!.style.opacity).toBe('0');
+              expect(valueLabelRight?.style.opacity).toBe('0');
             });
 
             it('make common value label opaque', () => {
-              const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-              expect(valueLabelCommon!.style.opacity).toBe('1');
+              const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+              expect(valueLabelCommon?.style.opacity).toBe('1');
             });
           });
         });
@@ -432,32 +465,38 @@ describe('View', () => {
               vertical: false,
               range: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 55,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
             it('make common value label transparent', () => {
-              const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-              expect(valueLabelCommon!.style.opacity).toBe('0');
+              const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+              expect(valueLabelCommon?.style.opacity).toBe('0');
             });
 
             it('make left value label opaque', () => {
-              expect(valueLabelLeft!.style.opacity).toBe('1');
+              expect(valueLabelLeft?.style.opacity).toBe('1');
             });
 
             it('make right value label opaque', () => {
-              expect(valueLabelRight!.style.opacity).toBe('1');
+              expect(valueLabelRight?.style.opacity).toBe('1');
             });
           });
 
@@ -468,32 +507,38 @@ describe('View', () => {
               vertical: true,
               range: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 55,
-              });
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
             it('make common value label transparent', () => {
-              const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-              expect(valueLabelCommon!.style.opacity).toBe('0');
+              const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+              expect(valueLabelCommon?.style.opacity).toBe('0');
             });
 
             it('make left value label opaque', () => {
-              expect(valueLabelLeft!.style.opacity).toBe('1');
+              expect(valueLabelLeft?.style.opacity).toBe('1');
             });
 
             it('make right value label opaque', () => {
-              expect(valueLabelRight!.style.opacity).toBe('1');
+              expect(valueLabelRight?.style.opacity).toBe('1');
             });
           });
         });
@@ -508,18 +553,24 @@ describe('View', () => {
               minMaxLabels: true,
               vertical: false,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            const minLabel = view.getComponent().querySelector('.range-slider__min-max-label_left') as HTMLElement;
-            minLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 52,
-              });
-            (minLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
+
+            if (minLabel) {
+              minLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
@@ -533,18 +584,24 @@ describe('View', () => {
               minMaxLabels: true,
               vertical: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            const minLabel = view.getComponent().querySelector('.range-slider__min-max-label_left') as HTMLElement;
-            minLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
-            (minLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
+
+            if (minLabel) {
+              minLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 52,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
@@ -560,18 +617,24 @@ describe('View', () => {
               minMaxLabels: true,
               vertical: false,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            const minLabel = view.getComponent().querySelector('.range-slider__min-max-label_left') as HTMLElement;
-            minLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 55,
-              });
-            (minLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
+
+            if (minLabel) {
+              minLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
@@ -585,18 +648,24 @@ describe('View', () => {
               minMaxLabels: true,
               vertical: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            const minLabel = view.getComponent().querySelector('.range-slider__min-max-label_left') as HTMLElement;
-            minLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
-            (minLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
+
+            if (minLabel) {
+              minLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 55,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
@@ -614,18 +683,24 @@ describe('View', () => {
               minMaxLabels: true,
               vertical: false,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right') as HTMLElement;
-            maxLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
-            (maxLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+            if (maxLabel) {
+              maxLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 52,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
@@ -639,18 +714,24 @@ describe('View', () => {
               minMaxLabels: true,
               vertical: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right') as HTMLElement;
-            maxLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 52,
-              });
-            (maxLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+            if (maxLabel) {
+              maxLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
@@ -666,18 +747,24 @@ describe('View', () => {
               minMaxLabels: true,
               vertical: false,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right') as HTMLElement;
-            maxLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
-            (maxLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+            if (maxLabel) {
+              maxLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 55,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
@@ -691,18 +778,24 @@ describe('View', () => {
               minMaxLabels: true,
               vertical: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right') as HTMLElement;
-            maxLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 55,
-              });
-            (maxLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+            if (maxLabel) {
+              maxLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
@@ -721,11 +814,11 @@ describe('View', () => {
           const view = new View(slider, {
             range: true,
           });
-          const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right') as HTMLElement;
+          const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setRightValue(50, i);
-            expect(thumbRight!.style.left).toBe(`${i}%`);
+            expect(thumbRight?.style.left).toBe(`${i}%`);
           }
         });
 
@@ -735,11 +828,11 @@ describe('View', () => {
             range: true,
             vertical: true,
           });
-          const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right') as HTMLElement;
+          const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setRightValue(50, i);
-            expect(thumbRight!.style.top).toBe(`${100 - i}%`);
+            expect(thumbRight?.style.top).toBe(`${100 - i}%`);
           }
         });
       });
@@ -751,11 +844,11 @@ describe('View', () => {
         const view = new View(slider, {
           range: true,
         });
-        const range = view.getComponent().querySelector('.range-slider__range');
+        const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
         for (let i = 0; i <= 100; i += 1) {
           view.setRightValue(50, i);
-          expect((range as HTMLElement).style.right).toBe(`${100 - i}%`);
+          expect(range?.style.right).toBe(`${100 - i}%`);
         }
       });
 
@@ -765,11 +858,11 @@ describe('View', () => {
           vertical: true,
           range: true,
         });
-        const range = view.getComponent().querySelector('.range-slider__range');
+        const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
         for (let i = 0; i <= 100; i += 1) {
           view.setRightValue(50, i);
-          expect((range as HTMLElement).style.top).toBe(`${100 - i}%`);
+          expect(range?.style.top).toBe(`${100 - i}%`);
         }
       });
     });
@@ -799,7 +892,10 @@ describe('View', () => {
           const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common');
           const leftValue = -200;
           const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-          valueLabelLeft!.textContent = `${leftValue}`;
+
+          if (valueLabelLeft) {
+            valueLabelLeft.textContent = `${leftValue}`;
+          }
 
           for (let value = -100; value <= 100; value += 1) {
             view.setRightValue(value, 100);
@@ -815,11 +911,11 @@ describe('View', () => {
             range: true,
             valueLabels: true,
           });
-          const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
+          const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setRightValue(50, i);
-            expect(valueLabelRight!.style.left).toBe(`${i}%`);
+            expect(valueLabelRight?.style.left).toBe(`${i}%`);
           }
         });
 
@@ -830,11 +926,11 @@ describe('View', () => {
             vertical: true,
             valueLabels: true,
           });
-          const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
+          const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
 
           for (let i = 0; i <= 100; i += 1) {
             view.setRightValue(50, i);
-            expect(valueLabelRight!.style.top).toBe(`${100 - i}%`);
+            expect(valueLabelRight?.style.top).toBe(`${100 - i}%`);
           }
         });
       });
@@ -848,32 +944,38 @@ describe('View', () => {
               vertical: false,
               range: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 52,
-              });
+              }));
+            }
 
             view.setRightValue(100, 100);
 
             it('make left value label transparent', () => {
-              expect(valueLabelLeft!.style.opacity).toBe('0');
+              expect(valueLabelLeft?.style.opacity).toBe('0');
             });
 
             it('make right value label transparent', () => {
-              expect(valueLabelRight!.style.opacity).toBe('0');
+              expect(valueLabelRight?.style.opacity).toBe('0');
             });
 
             it('make common value label opaque', () => {
-              const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-              expect(valueLabelCommon!.style.opacity).toBe('1');
+              const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+              expect(valueLabelCommon?.style.opacity).toBe('1');
             });
           });
 
@@ -884,32 +986,38 @@ describe('View', () => {
               vertical: true,
               range: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 52,
-              });
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
+              }));
+            }
 
             view.setRightValue(100, 100);
 
             it('make left value label transparent', () => {
-              expect(valueLabelLeft!.style.opacity).toBe('0');
+              expect(valueLabelLeft?.style.opacity).toBe('0');
             });
 
             it('make right value label transparent', () => {
-              expect(valueLabelRight!.style.opacity).toBe('0');
+              expect(valueLabelRight?.style.opacity).toBe('0');
             });
 
             it('make common value label opaque', () => {
-              const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-              expect(valueLabelCommon!.style.opacity).toBe('1');
+              const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+              expect(valueLabelCommon?.style.opacity).toBe('1');
             });
           });
         });
@@ -922,32 +1030,38 @@ describe('View', () => {
               vertical: false,
               range: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 55,
-              });
+              }));
+            }
 
             view.setLeftValue(100, 100);
 
             it('make common value label transparent', () => {
-              const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-              expect(valueLabelCommon!.style.opacity).toBe('0');
+              const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+              expect(valueLabelCommon?.style.opacity).toBe('0');
             });
 
             it('make left value label opaque', () => {
-              expect(valueLabelLeft!.style.opacity).toBe('1');
+              expect(valueLabelLeft?.style.opacity).toBe('1');
             });
 
             it('make right value label opaque', () => {
-              expect(valueLabelRight!.style.opacity).toBe('1');
+              expect(valueLabelRight?.style.opacity).toBe('1');
             });
           });
 
@@ -958,32 +1072,38 @@ describe('View', () => {
               vertical: true,
               range: true,
             });
-            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-            valueLabelLeft!.getBoundingClientRect = jest.fn();
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            (valueLabelLeft!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            if (valueLabelLeft) {
+              valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 55,
-              });
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
+              }));
+            }
 
             view.setRightValue(100, 100);
 
             it('make common value label transparent', () => {
-              const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-              expect(valueLabelCommon!.style.opacity).toBe('0');
+              const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+              expect(valueLabelCommon?.style.opacity).toBe('0');
             });
 
             it('make left value label opaque', () => {
-              expect(valueLabelLeft!.style.opacity).toBe('1');
+              expect(valueLabelLeft?.style.opacity).toBe('1');
             });
 
             it('make right value label opaque', () => {
-              expect(valueLabelRight!.style.opacity).toBe('1');
+              expect(valueLabelRight?.style.opacity).toBe('1');
             });
           });
         });
@@ -999,18 +1119,24 @@ describe('View', () => {
               vertical: false,
               range: true,
             });
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right') as HTMLElement;
-            maxLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
-            (maxLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+            if (maxLabel) {
+              maxLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 52,
-              });
+              }));
+            }
 
             view.setRightValue(100, 100);
 
@@ -1025,18 +1151,24 @@ describe('View', () => {
               vertical: true,
               range: true,
             });
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right') as HTMLElement;
-            maxLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 52,
-              });
-            (maxLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+            if (maxLabel) {
+              maxLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
+              }));
+            }
 
             view.setRightValue(100, 100);
 
@@ -1053,18 +1185,24 @@ describe('View', () => {
               vertical: false,
               range: true,
             });
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right') as HTMLElement;
-            maxLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 right: 50,
-              });
-            (maxLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+            if (maxLabel) {
+              maxLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 left: 55,
-              });
+              }));
+            }
 
             view.setRightValue(100, 100);
 
@@ -1079,18 +1217,24 @@ describe('View', () => {
               vertical: true,
               range: true,
             });
-            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
-            valueLabelRight!.getBoundingClientRect = jest.fn();
-            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right') as HTMLElement;
-            maxLabel!.getBoundingClientRect = jest.fn();
-            (valueLabelRight!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+
+            const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            if (valueLabelRight) {
+              valueLabelRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 top: 55,
-              });
-            (maxLabel!.getBoundingClientRect as jest.Mock)
-              .mockReturnValue({
+              }));
+            }
+
+            const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+            if (maxLabel) {
+              maxLabel.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
                 bottom: 50,
-              });
+              }));
+            }
 
             view.setRightValue(100, 100);
 
@@ -1104,16 +1248,17 @@ describe('View', () => {
   describe('updateInput(value1, value2)', () => {
     const slider = document.createElement('div');
     const view = new View(slider);
-    const input = view.getComponent().querySelector('.range-slider__input') as HTMLInputElement;
+    const input: HTMLInputElement | null = view.getComponent().querySelector('.range-slider__input');
+
     view.updateInput(1, 2);
 
     it('pass call to input with received values', () => {
-      expect(input.value).toBe('1 - 2');
+      expect(input?.value).toBe('1 - 2');
     });
 
     it('if second value is not received, pass null instead of it', () => {
       view.updateInput(1);
-      expect(input.value).toBe('1');
+      expect(input?.value).toBe('1');
     });
   });
 
@@ -1123,13 +1268,16 @@ describe('View', () => {
       const view = new View(slider);
       view.notify = jest.fn();
 
-      const track = view.getComponent().querySelector('.range-slider__track');
-      track!.getBoundingClientRect = jest.fn();
-      (track!.getBoundingClientRect as jest.Mock).mockReturnValue({
-        left: 200,
-      });
-      view.getTrackWidth = jest.fn();
-      (view.getTrackWidth as jest.Mock).mockReturnValue(500);
+      const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+      if (track) {
+        track.getBoundingClientRect = jest.fn(() => ({
+          ...defaultDomRect,
+          left: 200,
+        }));
+      }
+
+      view.getTrackWidth = jest.fn(() => 500);
 
       it('if cursor is off left edge of track, new left indent is 0', () => {
         view.handleLeftInput(100, 200);
@@ -1148,17 +1296,23 @@ describe('View', () => {
         });
         newView.notify = jest.fn();
 
-        const newTrack = newView.getComponent().querySelector('.range-slider__track');
-        newTrack!.getBoundingClientRect = jest.fn();
-        (newTrack!.getBoundingClientRect as jest.Mock).mockReturnValue({
-          left: 200,
-        });
+        const newTrack: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__track');
 
-        const thumbRight = newView.getComponent().querySelector('.range-slider__thumb_right') as HTMLElement;
-        thumbRight!.getBoundingClientRect = jest.fn();
-        (thumbRight!.getBoundingClientRect as jest.Mock).mockReturnValue({
-          left: 400,
-        });
+        if (newTrack) {
+          newTrack.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: 200,
+          }));
+        }
+
+        const thumbRight: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__thumb_right');
+
+        if (thumbRight) {
+          thumbRight.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: 400,
+          }));
+        }
 
         newView.handleLeftInput(500, 200);
 
@@ -1173,13 +1327,16 @@ describe('View', () => {
       });
       view.notify = jest.fn();
 
-      const track = view.getComponent().querySelector('.range-slider__track');
-      track!.getBoundingClientRect = jest.fn();
-      (track!.getBoundingClientRect as jest.Mock).mockReturnValue({
-        top: 200,
-      });
-      view.getTrackHeight = jest.fn();
-      (view.getTrackHeight as jest.Mock).mockReturnValue(500);
+      const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+      if (track) {
+        track.getBoundingClientRect = jest.fn(() => ({
+          ...defaultDomRect,
+          top: 200,
+        }));
+      }
+
+      view.getTrackHeight = jest.fn(() => 500);
 
       it('if cursor is off bottom edge of track, new bottom indent is 0', () => {
         view.handleLeftInput(100, 800);
@@ -1199,19 +1356,25 @@ describe('View', () => {
         });
         newView.notify = jest.fn();
 
-        const newTrack = newView.getComponent().querySelector('.range-slider__track');
-        newTrack!.getBoundingClientRect = jest.fn();
-        (newTrack!.getBoundingClientRect as jest.Mock).mockReturnValue({
-          top: 200,
-        });
-        newView.getTrackHeight = jest.fn();
-        (newView.getTrackHeight as jest.Mock).mockReturnValue(500);
+        const newTrack: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__track');
 
-        const thumbRight = newView.getComponent().querySelector('.range-slider__thumb_right') as HTMLElement;
-        thumbRight!.getBoundingClientRect = jest.fn();
-        (thumbRight!.getBoundingClientRect as jest.Mock).mockReturnValue({
-          top: 400,
-        });
+        if (newTrack) {
+          newTrack.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: 200,
+          }));
+        }
+
+        newView.getTrackHeight = jest.fn(() => 500);
+
+        const thumbRight: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__thumb_right');
+
+        if (thumbRight) {
+          thumbRight.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: 400,
+          }));
+        }
 
         newView.handleLeftInput(100, 300);
 
@@ -1228,20 +1391,27 @@ describe('View', () => {
       });
       view.notify = jest.fn();
 
-      const track = view.getComponent().querySelector('.range-slider__track');
-      track!.getBoundingClientRect = jest.fn();
-      (track!.getBoundingClientRect as jest.Mock).mockReturnValue({
-        left: 200,
-      });
-      view.getTrackWidth = jest.fn();
-      (view.getTrackWidth as jest.Mock).mockReturnValue(500);
+      const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+      if (track) {
+        track.getBoundingClientRect = jest.fn(() => ({
+          ...defaultDomRect,
+          left: 200,
+        }));
+      }
+
+      view.getTrackWidth = jest.fn(() => 500);
 
       it('if cursor is off left thumb position, new left indent = left thumb indent', () => {
-        const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
-        thumbLeft.getBoundingClientRect = jest.fn();
-        (thumbLeft.getBoundingClientRect as jest.Mock).mockReturnValue({
-          left: 400,
-        });
+        const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+
+        if (thumbLeft) {
+          thumbLeft.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: 400,
+          }));
+        }
+
         view.handleRightInput(300, 100);
 
         expect(view.notify).toBeCalledWith('viewRightInput', 200);
@@ -1261,20 +1431,26 @@ describe('View', () => {
       });
       view.notify = jest.fn();
 
-      const track = view.getComponent().querySelector('.range-slider__track');
-      track!.getBoundingClientRect = jest.fn();
-      (track!.getBoundingClientRect as jest.Mock).mockReturnValue({
-        top: 200,
-      });
-      view.getTrackHeight = jest.fn();
-      (view.getTrackHeight as jest.Mock).mockReturnValue(500);
+      const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+      if (track) {
+        track.getBoundingClientRect = jest.fn(() => ({
+          ...defaultDomRect,
+          top: 200,
+        }));
+      }
+
+      view.getTrackHeight = jest.fn(() => 500);
 
       it('if cursor is off left thumb position, new bottom indent = left thumb indent', () => {
-        const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
-        thumbLeft.getBoundingClientRect = jest.fn();
-        (thumbLeft.getBoundingClientRect as jest.Mock).mockReturnValue({
-          top: 400,
-        });
+        const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+
+        if (thumbLeft) {
+          thumbLeft.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: 400,
+          }));
+        }
 
         view.handleRightInput(100, 500);
 
@@ -1383,8 +1559,7 @@ describe('View', () => {
             vertical: true,
           });
           newView.notify = jest.fn();
-          newView.getTrackHeight = jest.fn();
-          (newView.getTrackHeight as jest.Mock).mockReturnValue(500);
+          newView.getTrackHeight = jest.fn(() => 500);
 
           newView.handleScaleOrTrackClick(100, 100);
 
@@ -1427,25 +1602,34 @@ describe('View', () => {
             range: true,
           });
 
-          const track = view.getComponent().querySelector('.range-slider__track');
-          track!.getBoundingClientRect = jest.fn();
-          (track!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            left: 0,
-          });
+          const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
 
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
-          thumbLeft!.getBoundingClientRect = jest.fn();
-          (thumbLeft!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            left: 10,
-            width: 16,
-          });
+          if (track) {
+            track.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              left: 0,
+            }));
+          }
 
-          const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
-          thumbRight!.getBoundingClientRect = jest.fn();
-          (thumbRight!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            left: 40,
-            width: 16,
-          });
+          const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+
+          if (thumbLeft) {
+            thumbLeft.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              left: 10,
+              width: 16,
+            }));
+          }
+
+          const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
+
+          if (thumbRight) {
+            thumbRight.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              left: 40,
+              width: 16,
+            }));
+          }
 
           const range = view.getComponent().querySelector('.range-slider__range');
           const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
@@ -1506,26 +1690,35 @@ describe('View', () => {
           });
 
           const track = view.getComponent().querySelector('.range-slider__track');
-          track!.getBoundingClientRect = jest.fn();
-          (track!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            top: 0,
-          });
-          view.getTrackHeight = jest.fn();
-          (view.getTrackHeight as jest.Mock).mockReturnValue(500);
+
+          if (track) {
+            track.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              top: 0,
+            }));
+          }
+
+          view.getTrackHeight = jest.fn(() => 500);
 
           const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
-          thumbLeft!.getBoundingClientRect = jest.fn();
-          (thumbLeft!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            top: 40,
-            height: 16,
-          });
+
+          if (thumbLeft) {
+            thumbLeft.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              top: 40,
+              height: 16,
+            }));
+          }
 
           const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
-          thumbRight!.getBoundingClientRect = jest.fn();
-          (thumbRight!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            top: 10,
-            height: 16,
-          });
+
+          if (thumbRight) {
+            thumbRight.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              top: 10,
+              height: 16,
+            }));
+          }
 
           const range = view.getComponent().querySelector('.range-slider__range');
           const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
@@ -1587,24 +1780,33 @@ describe('View', () => {
           });
 
           const track = view.getComponent().querySelector('.range-slider__track');
-          track!.getBoundingClientRect = jest.fn();
-          (track!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            left: 0,
-          });
 
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
-          thumbLeft!.getBoundingClientRect = jest.fn();
-          (thumbLeft!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            left: 10,
-            width: 16,
-          });
+          if (track) {
+            track.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              left: 0,
+            }));
+          }
+
+          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+
+          if (thumbLeft) {
+            thumbLeft.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              left: 10,
+              width: 16,
+            }));
+          }
 
           const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
-          thumbRight!.getBoundingClientRect = jest.fn();
-          (thumbRight!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            left: 40,
-            width: 16,
-          });
+
+          if (thumbRight) {
+            thumbRight.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              left: 40,
+              width: 16,
+            }));
+          }
 
           const range = view.getComponent().querySelector('.range-slider__range');
           const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
@@ -1665,26 +1867,35 @@ describe('View', () => {
           });
 
           const track = view.getComponent().querySelector('.range-slider__track');
-          track!.getBoundingClientRect = jest.fn();
-          (track!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            top: 0,
-          });
-          view.getTrackHeight = jest.fn();
-          (view.getTrackHeight as jest.Mock).mockReturnValue(500);
+
+          if (track) {
+            track.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              top: 0,
+            }));
+          }
+
+          view.getTrackHeight = jest.fn(() => 500);
 
           const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
-          thumbLeft!.getBoundingClientRect = jest.fn();
-          (thumbLeft!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            top: 40,
-            height: 16,
-          });
+
+          if (thumbLeft) {
+            thumbLeft.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              top: 40,
+              height: 16,
+            }));
+          }
 
           const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
-          thumbRight!.getBoundingClientRect = jest.fn();
-          (thumbRight!.getBoundingClientRect as jest.Mock).mockReturnValue({
-            top: 10,
-            height: 16,
-          });
+
+          if (thumbRight) {
+            thumbRight.getBoundingClientRect = jest.fn(() => ({
+              ...defaultDomRect,
+              top: 10,
+              height: 16,
+            }));
+          }
 
           view.notify = jest.fn();
 
@@ -1749,8 +1960,8 @@ describe('View', () => {
       for (let i = 0; i <= 100; i += 1) {
         view.updatePanelFrom(i);
         const panel = view.getComponent().querySelector('.range-slider__panel');
-        const from = panel?.querySelector('.panel__from') as HTMLInputElement;
-        expect(from.value).toBe(`${i}`);
+        const from: HTMLInputElement | null | undefined = panel?.querySelector('.panel__from');
+        expect(from?.value).toBe(`${i}`);
       }
     });
   });
@@ -1765,8 +1976,8 @@ describe('View', () => {
       for (let i = 0; i <= 100; i += 1) {
         view.updatePanelTo(i);
         const panel = view.getComponent().querySelector('.range-slider__panel');
-        const to = panel?.querySelector('.panel__to') as HTMLInputElement;
-        expect(to.value).toBe(`${i}`);
+        const to: HTMLInputElement | null | undefined = panel?.querySelector('.panel__to');
+        expect(to?.value).toBe(`${i}`);
       }
     });
   });
@@ -1781,8 +1992,8 @@ describe('View', () => {
       for (let i = 0; i <= 100; i += 1) {
         view.updatePanelScaleIntervals(i);
         const panel = view.getComponent().querySelector('.range-slider__panel');
-        const scaleIntervals = panel?.querySelector('.panel__scale-intervals') as HTMLInputElement;
-        expect(scaleIntervals.value).toBe(`${i}`);
+        const scaleIntervals: HTMLInputElement | null | undefined = panel?.querySelector('.panel__scale-intervals');
+        expect(scaleIntervals?.value).toBe(`${i}`);
       }
     });
   });
@@ -1797,8 +2008,8 @@ describe('View', () => {
       for (let i = 0; i <= 100; i += 1) {
         view.updatePanelStep(i);
         const panel = view.getComponent().querySelector('.range-slider__panel');
-        const step = panel?.querySelector('.panel__step') as HTMLInputElement;
-        expect(step.value).toBe(`${i}`);
+        const step: HTMLInputElement | null | undefined = panel?.querySelector('.panel__step');
+        expect(step?.value).toBe(`${i}`);
       }
     });
   });
@@ -1879,10 +2090,15 @@ describe('View', () => {
       });
       view.addScale(0, 100);
 
-      view.getScale()!.handleSwitchFromHorizontalToVertical = jest.fn();
+      const scale = view.getScale();
+
+      if (scale && scale.handleSwitchFromHorizontalToVertical) {
+        scale.handleSwitchFromHorizontalToVertical = jest.fn();
+      }
+
       view.notify = jest.fn();
-      const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
-      const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right') as HTMLElement;
+      const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+      const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
 
       view.changeOrientationFromOutside();
 
@@ -1901,44 +2117,44 @@ describe('View', () => {
       });
 
       describe('make necessary transformations with range', () => {
-        const range = view.getComponent().querySelector('.range-slider__range');
+        const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
         it('set left indent to 0', () => {
-          expect((range as HTMLElement).style.left).toBe(`${0}%`);
+          expect(range?.style.left).toBe(`${0}%`);
         });
 
         it('set right indent to 0', () => {
-          expect((range as HTMLElement).style.right).toBe(`${0}%`);
+          expect(range?.style.right).toBe(`${0}%`);
         });
 
         it('reset top indent', () => {
-          expect((range as HTMLElement).style.top).toBe('');
+          expect(range?.style.top).toBe('');
         });
 
         it('reset width', () => {
-          expect((range as HTMLElement).style.width).toBe('');
+          expect(range?.style.width).toBe('');
         });
       });
 
       describe('reset labels indents', () => {
         it('for left label', () => {
-          const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
-          expect(valueLabelLeft!.style.left).toBe('');
+          const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+          expect(valueLabelLeft?.style.left).toBe('');
         });
 
         it('for right label', () => {
-          const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-          expect(valueLabelRight!.style.left).toBe('');
+          const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+          expect(valueLabelRight?.style.left).toBe('');
         });
 
         it('for common label', () => {
-          const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-          expect(valueLabelCommon!.style.left).toBe('');
+          const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+          expect(valueLabelCommon?.style.left).toBe('');
         });
       });
 
       it('fit scale to vertical view', () => {
-        expect(view.getScale()?.handleSwitchFromHorizontalToVertical).toBeCalled();
+        expect(scale?.handleSwitchFromHorizontalToVertical).toBeCalled();
       });
 
       it('say subscribers that orientation was changed', () => {
@@ -1956,10 +2172,15 @@ describe('View', () => {
       });
       view.addScale(0, 100);
 
-      view.getScale()!.handleSwitchFromVerticalToHorizontal = jest.fn();
+      const scale = view.getScale();
+
+      if (scale && scale.handleSwitchFromVerticalToHorizontal) {
+        scale.handleSwitchFromVerticalToHorizontal = jest.fn();
+      }
+
       view.notify = jest.fn();
-      const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left') as HTMLElement;
-      const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right') as HTMLElement;
+      const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+      const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
 
       view.changeOrientationFromOutside();
 
@@ -1978,40 +2199,40 @@ describe('View', () => {
       });
 
       describe('make necessary transformations with range', () => {
-        const range = view.getComponent().querySelector('.range-slider__range') as HTMLElement;
+        const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
         it('set bottom indent to 0', () => {
-          expect(range.style.bottom).toBe(`${0}%`);
+          expect(range?.style.bottom).toBe(`${0}%`);
         });
 
         it('set top indent to 0', () => {
-          expect(range.style.top).toBe(`${0}%`);
+          expect(range?.style.top).toBe(`${0}%`);
         });
 
         it('reset height', () => {
-          expect(range.style.height).toBe('');
+          expect(range?.style.height).toBe('');
         });
       });
 
       describe('reset labels indents', () => {
         it('for left label', () => {
-          const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left') as HTMLElement;
+          const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
           expect(valueLabelLeft?.style.top).toBe('');
         });
 
         it('for right label', () => {
-          const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right') as HTMLElement;
-          expect(valueLabelRight!.style.top).toBe('');
+          const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+          expect(valueLabelRight?.style.top).toBe('');
         });
 
         it('for common label', () => {
-          const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common') as HTMLElement;
-          expect(valueLabelCommon!.style.top).toBe('');
+          const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+          expect(valueLabelCommon?.style.top).toBe('');
         });
       });
 
       it('fit scale to horizontal view', () => {
-        expect(view.getScale()?.handleSwitchFromVerticalToHorizontal).toBeCalled();
+        expect(scale?.handleSwitchFromVerticalToHorizontal).toBeCalled();
       });
 
       it('say subscribers that orientation was changed', () => {
@@ -2062,8 +2283,8 @@ describe('View', () => {
         });
 
         it('reset range width', () => {
-          const range = view.getComponent().querySelector('.range-slider__range') as HTMLElement;
-          expect(range.style.width).toBe('');
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+          expect(range?.style.width).toBe('');
         });
 
         it('say subscribers that range was changed', () => {
@@ -2111,8 +2332,8 @@ describe('View', () => {
         });
 
         it('reset range height', () => {
-          const range = view.getComponent().querySelector('.range-slider__range') as HTMLElement;
-          expect(range.style.height).toBe('');
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+          expect(range?.style.height).toBe('');
         });
 
         it('say subscribers that range was changed', () => {
@@ -2152,8 +2373,8 @@ describe('View', () => {
         view.toggleRangeFromOutside();
 
         it('reset range top indent', () => {
-          const range = view.getComponent().querySelector('.range-slider__range') as HTMLElement;
-          expect(range.style.top).toBe('');
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+          expect(range?.style.top).toBe('');
         });
 
         it('say subscribers that range was changed', () => {
@@ -2616,8 +2837,7 @@ describe('View', () => {
     it('return track width in px', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
-      view.getTrackWidth = jest.fn();
-      (view.getTrackWidth as jest.Mock).mockReturnValue(100);
+      view.getTrackWidth = jest.fn(() => 100);
 
       expect(view.getTrackWidth()).toBe(100);
     });
@@ -2627,8 +2847,7 @@ describe('View', () => {
     it('return track height in px', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
-      view.getTrackHeight = jest.fn();
-      (view.getTrackHeight as jest.Mock).mockReturnValue(100);
+      view.getTrackHeight = jest.fn(() => 100);
 
       expect(view.getTrackHeight()).toBe(100);
     });

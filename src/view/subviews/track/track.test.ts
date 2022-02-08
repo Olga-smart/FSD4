@@ -50,11 +50,11 @@ describe('Track', () => {
       const view: any = {};
       track.registerWith(view);
       view.handleScaleOrTrackClick = jest.fn();
-      const event = new Event('click');
+      const event = new MouseEvent('click');
       track.getComponent().dispatchEvent(event);
 
-      const x = (event as MouseEvent).clientX - track.getBoundingClientRect().left;
-      const y = (event as MouseEvent).clientY - track.getBoundingClientRect().top;
+      const x = event.clientX - track.getBoundingClientRect().left;
+      const y = event.clientY - track.getBoundingClientRect().top;
 
       expect(view.handleScaleOrTrackClick).toBeCalledWith(x, y);
     });

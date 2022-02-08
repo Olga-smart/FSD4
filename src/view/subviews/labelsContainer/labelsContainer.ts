@@ -1,6 +1,6 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
-class LabelsContainer extends BaseElement {
+class LabelsContainer extends BaseElement<'div'> {
   constructor() {
     super('div', 'range-slider__labels-container');
   }

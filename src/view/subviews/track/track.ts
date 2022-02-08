@@ -1,6 +1,6 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
-class Track extends BaseElement {
+class Track extends BaseElement<'div'> {
   private view: any;
 
   constructor() {
@@ -20,9 +20,12 @@ class Track extends BaseElement {
   }
 
   private handleClick(event: MouseEvent): void {
-    const x: number = event.clientX - (event.currentTarget as Element).getBoundingClientRect().left;
-    const y: number = event.clientY - (event.currentTarget as Element).getBoundingClientRect().top;
-    this.view?.handleScaleOrTrackClick(x, y);
+    if (event.currentTarget instanceof HTMLElement) {
+      const x: number = event.clientX - event.currentTarget.getBoundingClientRect().left;
+      const y: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
+
+      this.view?.handleScaleOrTrackClick(x, y);
+    }
   }
 
   private attachEventHandlers(): void {

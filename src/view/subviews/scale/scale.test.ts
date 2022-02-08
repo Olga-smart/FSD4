@@ -89,10 +89,10 @@ describe('Scale', () => {
   describe('fitWidthForVertical()', () => {
     const scale = new Scale(0, 150, 2);
 
-    const valueElements = scale.getComponent().querySelectorAll('.range-slider__scale-interval-value');
-    (valueElements[0] as HTMLElement).style.width = '100px';
-    (valueElements[1] as HTMLElement).style.width = '200px';
-    (valueElements[2] as HTMLElement).style.width = '300px';
+    const valueElements: NodeListOf<HTMLDivElement> = scale.getComponent().querySelectorAll('.range-slider__scale-interval-value');
+    valueElements[0].style.width = '100px';
+    valueElements[1].style.width = '200px';
+    valueElements[2].style.width = '300px';
 
     Object.defineProperties(window.HTMLElement.prototype, {
       offsetWidth: {
@@ -112,10 +112,10 @@ describe('Scale', () => {
   describe('fitHeightForHorizontal()', () => {
     const scale = new Scale(0, 150, 2);
 
-    const valueElements = scale.getComponent().querySelectorAll('.range-slider__scale-interval-value');
-    (valueElements[0] as HTMLElement).style.height = '100px';
-    (valueElements[1] as HTMLElement).style.height = '200px';
-    (valueElements[2] as HTMLElement).style.height = '300px';
+    const valueElements: NodeListOf<HTMLDivElement> = scale.getComponent().querySelectorAll('.range-slider__scale-interval-value');
+    valueElements[0].style.height = '100px';
+    valueElements[1].style.height = '200px';
+    valueElements[2].style.height = '300px';
 
     Object.defineProperties(window.HTMLElement.prototype, {
       offsetHeight: {

@@ -1,6 +1,6 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
-class Scale extends BaseElement {
+class Scale extends BaseElement<'div'> {
   private view: any;
 
   private min: number;
@@ -9,11 +9,11 @@ class Scale extends BaseElement {
 
   private intervalsNumber: number;
 
-  private intervals: HTMLElement[];
+  private intervals: HTMLDivElement[];
 
   private values: number[];
 
-  private valueElements: HTMLElement[];
+  private valueElements: HTMLSpanElement[];
 
   constructor(min: number, max: number, intervalsNumber: number) {
     super('div', 'range-slider__scale');
@@ -119,9 +119,12 @@ class Scale extends BaseElement {
   }
 
   private handleClick(event: MouseEvent): void {
-    const x: number = event.clientX - (event.currentTarget as Element).getBoundingClientRect().left;
-    const y: number = event.clientY - (event.currentTarget as Element).getBoundingClientRect().top;
-    this.view?.handleScaleOrTrackClick(x, y, event);
+    if (event.currentTarget instanceof HTMLElement) {
+      const x: number = event.clientX - event.currentTarget.getBoundingClientRect().left;
+      const y: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
+
+      this.view?.handleScaleOrTrackClick(x, y, event);
+    }
   }
 
   private attachEventHandlers(): void {

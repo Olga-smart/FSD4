@@ -1,6 +1,6 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
-class Slider extends BaseElement {
+class Slider extends BaseElement<'div'> {
   constructor() {
     super('div', 'range-slider__slider');
   }

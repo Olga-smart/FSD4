@@ -3,10 +3,10 @@ import BaseElement from './BaseElement';
 describe('BaseElement', () => {
   describe('constructor(type, className)', () => {
     it('create element with passed tag', () => {
-      const tags = ['DIN', 'SPAN', 'A', 'H1', 'INPUT'];
+      const tags: (keyof HTMLElementTagNameMap)[] = ['div', 'span', 'a', 'h1', 'input'];
       tags.forEach((tag) => {
         const element = new BaseElement(tag);
-        expect(element.getComponent().tagName).toBe(tag);
+        expect(element.getComponent().tagName).toBe(tag.toUpperCase());
       });
     });
 
@@ -21,7 +21,7 @@ describe('BaseElement', () => {
 
   describe('getComponent()', () => {
     it('return HTML element', () => {
-      const element = new BaseElement();
+      const element = new BaseElement('div');
 
       expect(element.getComponent()).toBeInstanceOf(HTMLElement);
     });
@@ -29,7 +29,7 @@ describe('BaseElement', () => {
 
   describe('getBoundingClientRect()', () => {
     it('return component coordinates', () => {
-      const element = new BaseElement();
+      const element = new BaseElement('div');
       const coords = element.getBoundingClientRect();
 
       expect(coords).toEqual(element.getComponent().getBoundingClientRect());
@@ -38,7 +38,7 @@ describe('BaseElement', () => {
 
   describe('getWidth()', () => {
     it('return component width', () => {
-      const element = new BaseElement();
+      const element = new BaseElement('div');
       const width = element.getWidth();
 
       expect(width).toBe(element.getComponent().offsetWidth);
@@ -46,7 +46,7 @@ describe('BaseElement', () => {
   });
 
   describe('getHeight()', () => {
-    const element = new BaseElement();
+    const element = new BaseElement('div');
     const height = element.getHeight();
 
     it('return component height', () => {
@@ -55,8 +55,9 @@ describe('BaseElement', () => {
   });
 
   describe('setIndent(side, indent)', () => {
-    const element = new BaseElement();
-    const sides: ['top', 'right', 'bottom', 'left'] = ['top', 'right', 'bottom', 'left'];
+    const element = new BaseElement('div');
+    type Side = 'top' | 'right' | 'bottom' | 'left';
+    const sides: Side[] = ['top', 'right', 'bottom', 'left'];
 
     it('if indent is number, set indent in %', () => {
       sides.forEach((side) => {
@@ -79,7 +80,7 @@ describe('BaseElement', () => {
 
   describe('remove()', () => {
     it('remove component from DOM', () => {
-      const element = new BaseElement();
+      const element = new BaseElement('div');
       const container = document.createElement('div');
       container.append(element.getComponent());
 

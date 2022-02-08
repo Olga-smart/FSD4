@@ -38,7 +38,7 @@ declare global {
 
 (function ($) {
   class RangeSlider {
-    element: HTMLElement;
+    element: HTMLDivElement;
 
     model: Model;
 
@@ -46,7 +46,7 @@ declare global {
 
     presenter: Presenter;
 
-    constructor(element: HTMLElement, options: RangeSliderOptions) {
+    constructor(element: HTMLDivElement, options: RangeSliderOptions) {
       this.element = element;
       this.model = new Model({
         min: options.min,
@@ -84,9 +84,9 @@ declare global {
     }
   }
 
-  $.fn.rangeSlider = function (options: object = {}): JQuery<HTMLElement> {
+  $.fn.rangeSlider = function (options: object = {}) {
     return this.each(function () {
-      const settingsFromDataset: RangeSliderOptions = {
+      const settingsFromDataset = {
         min: $(this).data('min'),
         max: $(this).data('max'),
         range: $(this).data('range'),
@@ -101,10 +101,13 @@ declare global {
         panel: $(this).data('panel'),
       };
 
-      let settings = $.extend({}, $.fn.rangeSlider.defaults, options, settingsFromDataset);
+      let settings = $
+        .extend({}, $.fn.rangeSlider.defaults, options, settingsFromDataset);
       settings = $.fn.rangeSlider.validate!(settings);
 
-      $(this).data('rangeSlider', new RangeSlider(this, settings));
+      if (this instanceof HTMLDivElement) {
+        $(this).data('rangeSlider', new RangeSlider(this, settings));
+      }
     });
   };
 
@@ -123,8 +126,8 @@ declare global {
     panel: false,
   };
 
-  $.fn.rangeSlider.validate = (settings: RangeSliderOptions) => {
-    const fixedSettings: RangeSliderOptions = $.extend({}, settings);
+  $.fn.rangeSlider.validate = (settings) => {
+    const fixedSettings = $.extend({}, settings);
 
     function fixType(property: keyof RangeSliderOptions, type: string): void {
       if (typeof settings[property] !== type) {
@@ -188,7 +191,7 @@ $(() => {
   $('.js-range-slider').rangeSlider({
     panel: true,
     vertical: false,
-    range: true,
+    range: 'false',
   });
   // const slider = $('.js-range-slider').data('rangeSlider');
   // slider.setLeftValue(50).setRightValue(80).setStep(10);
