@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-/* eslint-disable func-names */
-/* eslint-disable no-param-reassign */
 import * as jQuery from 'jquery';
 import 'airbnb-browser-shims';
 
@@ -15,9 +12,8 @@ declare global {
   }
 
   interface IRangeSlider {
-    (options?: object): JQuery<HTMLElement>;
+    (options: object): JQuery<HTMLElement>;
     defaults?: RangeSliderOptions;
-    validate?: (settings: RangeSliderOptions) => RangeSliderOptions;
   }
 
   type RangeSliderOptions = {
@@ -36,57 +32,59 @@ declare global {
   };
 }
 
-(function ($) {
-  class RangeSlider {
-    element: HTMLDivElement;
+class RangeSlider {
+  element: HTMLDivElement;
 
-    model: Model;
+  model: Model;
 
-    view: View;
+  view: View;
 
-    presenter: Presenter;
+  presenter: Presenter;
 
-    constructor(element: HTMLDivElement, options: RangeSliderOptions) {
-      this.element = element;
-      this.model = new Model({
-        min: options.min,
-        max: options.max,
-        leftValue: options.leftValue,
-        rightValue: options.rightValue,
-        range: options.range,
-        step: options.step,
-      });
-      this.view = new View(element, {
-        minMaxLabels: options.minMaxLabels,
-        valueLabels: options.valueLabels,
-        vertical: options.vertical,
-        range: options.range,
-        scale: options.scale,
-        scaleIntervals: options.scaleIntervals,
-        panel: options.panel,
-      });
-      this.presenter = new Presenter(this.model, this.view);
-    }
-
-    setLeftValue(value: number): this {
-      this.view.changeLeftValueFromOutside(value);
-      return this;
-    }
-
-    setRightValue(value: number): this {
-      this.view.changeRightValueFromOutside(value);
-      return this;
-    }
-
-    setStep(value: number): this {
-      this.view.changeStepFromOutside(value);
-      return this;
-    }
+  constructor(element: HTMLDivElement, options: RangeSliderOptions) {
+    this.element = element;
+    this.model = new Model({
+      min: options.min,
+      max: options.max,
+      leftValue: options.leftValue,
+      rightValue: options.rightValue,
+      range: options.range,
+      step: options.step,
+    });
+    this.view = new View(element, {
+      minMaxLabels: options.minMaxLabels,
+      valueLabels: options.valueLabels,
+      vertical: options.vertical,
+      range: options.range,
+      scale: options.scale,
+      scaleIntervals: options.scaleIntervals,
+      panel: options.panel,
+    });
+    this.presenter = new Presenter(this.model, this.view);
   }
 
-  $.fn.rangeSlider = function (options: object = {}) {
-    return this.each(function () {
-      const settingsFromDataset = {
+  setLeftValue(value: number): this {
+    this.view.changeLeftValueFromOutside(value);
+    return this;
+  }
+
+  setRightValue(value: number): this {
+    this.view.changeRightValueFromOutside(value);
+    return this;
+  }
+
+  setStep(value: number): this {
+    this.view.changeStepFromOutside(value);
+    return this;
+  }
+}
+
+(function rangeSliderWrapper(jQ) {
+  const $ = jQ;
+
+  $.fn.rangeSlider = function initRangeSliders(this: JQuery, options: object = {}): JQuery {
+    return this.each(function initRangeSlider() {
+      const settingsFromDataset: RangeSliderOptions = {
         min: $(this).data('min'),
         max: $(this).data('max'),
         range: $(this).data('range'),
@@ -101,9 +99,72 @@ declare global {
         panel: $(this).data('panel'),
       };
 
-      let settings = $
+      function validate(settings: RangeSliderOptions): RangeSliderOptions {
+        const fixedSettings: RangeSliderOptions = $.extend({}, settings);
+
+        function fixType(property: keyof RangeSliderOptions, type: string): void {
+          if (typeof settings[property] !== type) {
+            fixedSettings[property] = $.fn.rangeSlider.defaults![property];
+            // for test
+            const arr = [];
+            const x = fixedSettings[property];
+            arr.push(x);
+          }
+        }
+
+        function fixValues(): void {
+          if (fixedSettings.min > fixedSettings.max) {
+            [fixedSettings.min, fixedSettings.max] = [fixedSettings.max, fixedSettings.min];
+          }
+
+          if (fixedSettings.leftValue < fixedSettings.min) {
+            fixedSettings.leftValue = fixedSettings.min;
+          }
+
+          if (fixedSettings.rightValue > fixedSettings.max) {
+            fixedSettings.rightValue = fixedSettings.max;
+          }
+
+          if (fixedSettings.leftValue > fixedSettings.max) {
+            fixedSettings.leftValue = fixedSettings.max;
+          }
+
+          if (fixedSettings.leftValue > fixedSettings.rightValue) {
+            [fixedSettings.leftValue, fixedSettings.rightValue] = (
+              [fixedSettings.rightValue, fixedSettings.leftValue]
+            );
+          }
+
+          if (fixedSettings.step > Math.abs(fixedSettings.max - fixedSettings.min)) {
+            fixedSettings.step = Math.abs(fixedSettings.max - fixedSettings.min);
+          }
+        }
+
+        function checkTypes(): void {
+          fixType('min', 'number');
+          fixType('max', 'number');
+          fixType('leftValue', 'number');
+          fixType('rightValue', 'number');
+          fixType('range', 'boolean');
+          fixType('step', 'number');
+          fixType('minMaxLabels', 'boolean');
+          fixType('valueLabels', 'boolean');
+          fixType('vertical', 'boolean');
+          fixType('scale', 'boolean');
+          fixType('scaleIntervals', 'number');
+          fixType('panel', 'boolean');
+        }
+
+        checkTypes();
+
+        fixValues();
+
+        return fixedSettings;
+      }
+
+      let settings: RangeSliderOptions = $
         .extend({}, $.fn.rangeSlider.defaults, options, settingsFromDataset);
-      settings = $.fn.rangeSlider.validate!(settings);
+      settings = validate(settings);
 
       if (this instanceof HTMLDivElement) {
         $(this).data('rangeSlider', new RangeSlider(this, settings));
@@ -124,65 +185,6 @@ declare global {
     scale: true,
     scaleIntervals: 5,
     panel: false,
-  };
-
-  $.fn.rangeSlider.validate = (settings) => {
-    const fixedSettings = $.extend({}, settings);
-
-    function fixType(property: keyof RangeSliderOptions, type: string): void {
-      if (typeof settings[property] !== type) {
-        (fixedSettings as any)[property] = $.fn.rangeSlider.defaults![property];
-      }
-    }
-
-    function fixValues(): void {
-      if (fixedSettings.min > fixedSettings.max) {
-        [fixedSettings.min, fixedSettings.max] = [fixedSettings.max, fixedSettings.min];
-      }
-
-      if (fixedSettings.leftValue < fixedSettings.min) {
-        fixedSettings.leftValue = fixedSettings.min;
-      }
-
-      if (fixedSettings.rightValue > fixedSettings.max) {
-        fixedSettings.rightValue = fixedSettings.max;
-      }
-
-      if (fixedSettings.leftValue > fixedSettings.max) {
-        fixedSettings.leftValue = fixedSettings.max;
-      }
-
-      if (fixedSettings.leftValue > fixedSettings.rightValue) {
-        [fixedSettings.leftValue, fixedSettings.rightValue] = (
-          [fixedSettings.rightValue, fixedSettings.leftValue]
-        );
-      }
-
-      if (fixedSettings.step > Math.abs(fixedSettings.max - fixedSettings.min)) {
-        fixedSettings.step = Math.abs(fixedSettings.max - fixedSettings.min);
-      }
-    }
-
-    function checkTypes(): void {
-      fixType('min', 'number');
-      fixType('max', 'number');
-      fixType('leftValue', 'number');
-      fixType('rightValue', 'number');
-      fixType('range', 'boolean');
-      fixType('step', 'number');
-      fixType('minMaxLabels', 'boolean');
-      fixType('valueLabels', 'boolean');
-      fixType('vertical', 'boolean');
-      fixType('scale', 'boolean');
-      fixType('scaleIntervals', 'number');
-      fixType('panel', 'boolean');
-    }
-
-    checkTypes();
-
-    fixValues();
-
-    return fixedSettings;
   };
 }(jQuery));
 
