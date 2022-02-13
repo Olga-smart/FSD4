@@ -13,7 +13,6 @@ declare global {
 
   interface IRangeSlider {
     (options: object): JQuery<HTMLElement>;
-    defaults?: RangeSliderOptions;
   }
 
   type RangeSliderOptions = {
@@ -82,9 +81,24 @@ class RangeSlider {
 (function rangeSliderWrapper(jQ) {
   const $ = jQ;
 
-  $.fn.rangeSlider = function initRangeSliders(this: JQuery, options: object = {}): JQuery {
+  const defaults: RangeSliderOptions = {
+    min: 0,
+    max: 100,
+    range: true,
+    leftValue: 25,
+    rightValue: 75,
+    step: 1,
+    minMaxLabels: true,
+    valueLabels: true,
+    vertical: false,
+    scale: true,
+    scaleIntervals: 5,
+    panel: false,
+  };
+
+  $.fn.rangeSlider = function initRangeSliders(options: Partial<RangeSliderOptions> = {}): JQuery {
     return this.each(function initRangeSlider() {
-      const settingsFromDataset: RangeSliderOptions = {
+      const settingsFromDataset: Partial<RangeSliderOptions> = {
         min: $(this).data('min'),
         max: $(this).data('max'),
         range: $(this).data('range'),
@@ -104,11 +118,8 @@ class RangeSlider {
 
         function fixType(property: keyof RangeSliderOptions, type: string): void {
           if (typeof settings[property] !== type) {
-            fixedSettings[property] = $.fn.rangeSlider.defaults![property];
-            // for test
-            const arr = [];
-            const x = fixedSettings[property];
-            arr.push(x);
+            // no other way was found, it's a forced measure
+            (fixedSettings as any)[property] = defaults[property];
           }
         }
 
@@ -162,29 +173,13 @@ class RangeSlider {
         return fixedSettings;
       }
 
-      let settings: RangeSliderOptions = $
-        .extend({}, $.fn.rangeSlider.defaults, options, settingsFromDataset);
+      let settings: RangeSliderOptions = $.extend({}, defaults, options, settingsFromDataset);
       settings = validate(settings);
 
       if (this instanceof HTMLDivElement) {
         $(this).data('rangeSlider', new RangeSlider(this, settings));
       }
     });
-  };
-
-  $.fn.rangeSlider.defaults = {
-    min: 0,
-    max: 100,
-    range: true,
-    leftValue: 25,
-    rightValue: 75,
-    step: 1,
-    minMaxLabels: true,
-    valueLabels: true,
-    vertical: false,
-    scale: true,
-    scaleIntervals: 5,
-    panel: false,
   };
 }(jQuery));
 
