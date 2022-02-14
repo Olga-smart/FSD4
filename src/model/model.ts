@@ -65,6 +65,8 @@ class Model {
   }
 
   setRightValue(value: number = this.max): void {
+    if (!this.isRange()) return;
+
     if (value > this.max) {
       this.rightValue = this.max;
     } else {

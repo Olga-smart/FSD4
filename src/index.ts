@@ -215,4 +215,8 @@ $(() => {
   });
   const slider = $('.js-range-slider').data('rangeSlider');
   slider.setLeftValue(50).setRightValue(80).setStep(10);
+  // slider.onChange = (leftValue: number, rightValue: number | undefined) => {
+  //   console.log(`${leftValue} + ${rightValue}`);
+  // };
+  // delete slider.onChange;
 });
