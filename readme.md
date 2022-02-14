@@ -10,7 +10,8 @@ Easy to use, flexible and responsive range slider.
 5. [Initialization](#initialization)
 6. [Settings](#settings)
 7. [Public Methods](#public-methods)
-8. [Under the Hood](#under-the-hood)
+8. [Events](#events)
+9. [Under the Hood](#under-the-hood)
 
 ## Description
 * RangeSlider — cool, comfortable, responsive and easily customizable range slider
@@ -127,6 +128,41 @@ slider.setRightValue(80)
 
 // setStep
 slider.setStep(10);
+```
+
+## Events
+
+You may add your own handler for slider values change event:
+``` javascript
+// Launch plugin
+$('.js-range-slider').rangeSlider();
+
+// Saving it's instance to variable
+const slider = $('.js-range-slider').data('rangeSlider');
+
+// Write your event handler
+slider.onChange = (leftValue, rightValue) => {
+  // your code to be executed when the slider values ​​change
+};
+```
+
+Also you may use only 1 parameter:
+``` javascript
+slider.onChange = (leftValue) => {
+  // your code to be executed when the slider values ​​change
+};
+``` 
+
+Or even without parameters:
+``` javascript
+slider.onChange = () => {
+  // your code to be executed when the slider values ​​change
+};
+```
+
+You may easily remove this handler later:
+``` javascript
+delete slider.onChange;
 ```
 
 ## Under the Hood
