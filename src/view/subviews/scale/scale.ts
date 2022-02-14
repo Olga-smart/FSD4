@@ -1,7 +1,12 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
+type ViewForScale = {
+  getScaleIntervals(): number,
+  handleScaleOrTrackClick(x: number, y: number): void,
+};
+
 class Scale extends BaseElement<'div'> {
-  private view: any;
+  private view: ViewForScale;
 
   private min: number;
 
@@ -15,14 +20,14 @@ class Scale extends BaseElement<'div'> {
 
   private valueElements: HTMLSpanElement[];
 
-  constructor(min: number, max: number, intervalsNumber: number) {
+  constructor(min: number, max: number, view: ViewForScale) {
     super('div', 'range-slider__scale');
 
-    this.view = null;
+    this.view = view;
 
     this.min = min;
     this.max = max;
-    this.intervalsNumber = Math.floor(intervalsNumber);
+    this.intervalsNumber = Math.floor(view.getScaleIntervals());
     this.intervals = [];
     this.values = [];
     this.valueElements = [];
@@ -31,10 +36,6 @@ class Scale extends BaseElement<'div'> {
     this.addMarksInIntervals();
     this.addValues();
     this.attachEventHandlers();
-  }
-
-  registerWith(view: any): void {
-    this.view = view;
   }
 
   fitWidthForVertical() {
@@ -123,7 +124,7 @@ class Scale extends BaseElement<'div'> {
       const x: number = event.clientX - event.currentTarget.getBoundingClientRect().left;
       const y: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
 
-      this.view?.handleScaleOrTrackClick(x, y, event);
+      this.view?.handleScaleOrTrackClick(x, y);
     }
   }
 

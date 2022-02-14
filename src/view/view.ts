@@ -83,7 +83,7 @@ class View extends BaseElement<'div'> {
 
       // create scale with arbitrary values, which will be replaced later by Presenter
       // it is necessary for hasScale() return true
-      this.scale = new Scale(0, 100, this.scaleIntervals);
+      this.scale = new Scale(0, 100, this);
     }
 
     if (options.minMaxLabels || options.valueLabels) {
@@ -342,9 +342,7 @@ class View extends BaseElement<'div'> {
   }
 
   addScale(min: number, max: number): void {
-    const intervalsNumber: number = this.scaleIntervals || 4;
-    this.scale = new Scale(min, max, intervalsNumber);
-    this.scale.registerWith(this);
+    this.scale = new Scale(min, max, this);
     this.slider.after(this.scale.getComponent());
 
     if (!this.vertical) {
