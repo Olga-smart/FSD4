@@ -3,7 +3,9 @@ import View from '../../View';
 
 describe('Track', () => {
   describe('constructor()', () => {
-    const track = new Track();
+    const slider = document.createElement('div');
+    const view = new View(slider);
+    const track = new Track(view);
 
     describe('set up component property with necessary classes', () => {
       it('common class', () => {
@@ -21,7 +23,9 @@ describe('Track', () => {
   });
 
   describe('append(...elements)', () => {
-    const track = new Track();
+    const slider = document.createElement('div');
+    const view = new View(slider);
+    const track = new Track(view);
     const div = document.createElement('div');
     jest.spyOn(HTMLElement.prototype, 'append');
     track.append(div);
@@ -46,9 +50,9 @@ describe('Track', () => {
 
   describe('handle events', () => {
     it('handle click', () => {
-      const track = new Track();
-      const view: any = {};
-      track.registerWith(view);
+      const slider = document.createElement('div');
+      const view = new View(slider);
+      const track = new Track(view);
       view.handleScaleOrTrackClick = jest.fn();
       const event = new MouseEvent('click');
       track.getComponent().dispatchEvent(event);
@@ -60,7 +64,9 @@ describe('Track', () => {
     });
 
     it('if view is not registered nothing happens on click', () => {
-      const track = new Track();
+      const slider = document.createElement('div');
+      const view = new View(slider);
+      const track = new Track(view);
       const event = new Event('click');
       track.getComponent().dispatchEvent(event);
       jest.spyOn(View.prototype, 'handleScaleOrTrackClick');

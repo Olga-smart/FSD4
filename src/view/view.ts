@@ -64,8 +64,7 @@ class View extends BaseElement<'div'> {
     this.eventManager = new EventManager();
 
     this.slider = new Slider();
-    this.track = new Track();
-    this.track.registerWith(this);
+    this.track = new Track(this);
     this.range = new Range();
 
     this.thumbLeft = new Thumb(this, 'left');

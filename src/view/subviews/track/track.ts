@@ -1,18 +1,18 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
-class Track extends BaseElement<'div'> {
-  private view: any;
+type ViewForTrack = {
+  handleScaleOrTrackClick(x: number, y: number): void,
+};
 
-  constructor() {
+class Track extends BaseElement<'div'> {
+  private view: ViewForTrack;
+
+  constructor(view: ViewForTrack) {
     super('div', 'range-slider__track');
 
-    this.view = null;
+    this.view = view;
 
     this.attachEventHandlers();
-  }
-
-  registerWith(view: any) {
-    this.view = view;
   }
 
   append(...elements: HTMLElement[]): void {
