@@ -19,6 +19,14 @@ class Label extends BaseElement<'div'> {
   getValue(): number {
     return Number(this.component.textContent);
   }
+
+  getLeftIndent(): string {
+    return this.component.style.left;
+  }
+
+  getTopIndent(): string {
+    return this.component.style.top;
+  }
 }
 
 export default Label;

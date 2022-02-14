@@ -2,8 +2,6 @@ import BaseElement from './BaseElement/BaseElement';
 import Track from './subviews/Track/Track';
 import Range from './subviews/Range/Range';
 import Thumb from './subviews/Thumb/Thumb';
-import MinMaxLabel from './subviews/MinMaxLabel/MinMaxLabel';
-import ValueLabel from './subviews/ValueLabel/ValueLabel';
 import Scale from './subviews/Scale/Scale';
 import LabelsContainer from './subviews/LabelsContainer/LabelsContainer';
 import Label from './subviews/Label/Label';
@@ -40,15 +38,15 @@ class View extends BaseElement<'div'> {
 
   private scaleIntervals?: number;
 
-  private minLabel?: MinMaxLabel;
+  private minLabel?: Label;
 
-  private maxLabel?: MinMaxLabel;
+  private maxLabel?: Label;
 
-  private valueLabelLeft?: ValueLabel;
+  private valueLabelLeft?: Label;
 
-  private valueLabelRight?: ValueLabel;
+  private valueLabelRight?: Label;
 
-  private valueLabelCommon?: ValueLabel;
+  private valueLabelCommon?: Label;
 
   private vertical?: boolean;
 
@@ -86,16 +84,16 @@ class View extends BaseElement<'div'> {
       this.labelsContainer = new LabelsContainer();
 
       if (options.minMaxLabels) {
-        this.minLabel = new MinMaxLabel('left');
-        this.maxLabel = new MinMaxLabel('right');
+        this.minLabel = new Label('left', 'range-slider__min-max-label range-slider__min-max-label_left');
+        this.maxLabel = new Label('right', 'range-slider__min-max-label range-slider__min-max-label_right');
       }
 
       if (options.valueLabels) {
-        this.valueLabelLeft = new ValueLabel('left');
+        this.valueLabelLeft = new Label('left', 'range-slider__value-label range-slider__value-label_left');
 
         if (options.range) {
-          this.valueLabelRight = new ValueLabel('right');
-          this.valueLabelCommon = new ValueLabel('common');
+          this.valueLabelRight = new Label('right', 'range-slider__value-label range-slider__value-label_right');
+          this.valueLabelCommon = new Label('common', 'range-slider__value-label range-slider__value-label_common');
         }
       }
     }
@@ -501,8 +499,8 @@ class View extends BaseElement<'div'> {
       this.destroy();
       this.thumbRight = new Thumb(this, 'right');
       if (this.valueLabelLeft) {
-        this.valueLabelRight = new ValueLabel('right');
-        this.valueLabelCommon = new ValueLabel('common');
+        this.valueLabelRight = new Label('right', 'range-slider__value-label range-slider__value-label_right');
+        this.valueLabelCommon = new Label('common', 'range-slider__value-label range-slider__value-label_common');
       }
       if (!this.vertical) {
         this.range.resetWidth();
@@ -566,7 +564,7 @@ class View extends BaseElement<'div'> {
     }
 
     if (!this.valueLabelLeft) {
-      this.valueLabelLeft = new ValueLabel('left');
+      this.valueLabelLeft = new Label('left', 'range-slider__value-label range-slider__value-label_left');
 
       if (!this.labelsContainer) {
         this.labelsContainer = new LabelsContainer();
@@ -576,8 +574,8 @@ class View extends BaseElement<'div'> {
       this.labelsContainer.append(this.valueLabelLeft.getComponent());
 
       if (this.isRange()) {
-        this.valueLabelRight = new ValueLabel('right');
-        this.valueLabelCommon = new ValueLabel('common');
+        this.valueLabelRight = new Label('right', 'range-slider__value-label range-slider__value-label_right');
+        this.valueLabelCommon = new Label('common', 'range-slider__value-label range-slider__value-label_common');
 
         this.labelsContainer
           .append(this.valueLabelRight!.getComponent(), this.valueLabelCommon!.getComponent());
@@ -622,8 +620,8 @@ class View extends BaseElement<'div'> {
     }
 
     if (!this.minLabel) {
-      this.minLabel = new MinMaxLabel('left');
-      this.maxLabel = new MinMaxLabel('right');
+      this.minLabel = new Label('left', 'range-slider__min-max-label range-slider__min-max-label_left');
+      this.maxLabel = new Label('right', 'range-slider__min-max-label range-slider__min-max-label_right');
 
       if (!this.labelsContainer) {
         this.labelsContainer = new LabelsContainer();
