@@ -1,5 +1,4 @@
 import BaseElement from './BaseElement/BaseElement';
-import Slider from './subviews/Slider/Slider';
 import Track from './subviews/Track/Track';
 import Range from './subviews/Range/Range';
 import Thumb from './subviews/Thumb/Thumb';
@@ -25,7 +24,7 @@ type ViewOptions = {
 class View extends BaseElement<'div'> {
   private eventManager: EventManager;
 
-  private slider: Slider;
+  private slider: HTMLDivElement;
 
   private track: Track;
 
@@ -63,7 +62,7 @@ class View extends BaseElement<'div'> {
     this.component = component;
     this.eventManager = new EventManager();
 
-    this.slider = new Slider();
+    this.slider = BaseElement.createComponent('div', 'range-slider__slider');
     this.track = new Track(this);
     this.range = new Range();
 
@@ -707,7 +706,7 @@ class View extends BaseElement<'div'> {
 
     this.track.append(this.range.getComponent());
     this.slider.append(this.track.getComponent(), this.thumbLeft.getComponent());
-    fragment.append(this.slider.getComponent(), this.input.getComponent());
+    fragment.append(this.slider, this.input.getComponent());
 
     if (this.isRange()) {
       this.slider.append(this.thumbRight!.getComponent());
@@ -759,7 +758,7 @@ class View extends BaseElement<'div'> {
       });
     }
 
-    [...this.slider.getComponent().children].forEach((element) => {
+    [...this.slider.children].forEach((element) => {
       element.remove();
     });
 
