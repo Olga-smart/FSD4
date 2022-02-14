@@ -30,7 +30,7 @@ type ViewForPanel = {
 };
 
 class Panel extends BaseElement<'form'> {
-  private view: ViewForPanel | null;
+  private view: ViewForPanel;
 
   private min: HTMLInputElement;
 
@@ -217,11 +217,11 @@ class Panel extends BaseElement<'form'> {
   private updateAttributesAfterFromChange(): void {
     this.min.max = this.from.value;
 
-    if (this.view?.isRange()) {
+    if (this.view.isRange()) {
       this.to.min = this.from.value;
     }
 
-    if (!this.view?.isRange()) {
+    if (!this.view.isRange()) {
       this.max.min = this.from.value;
     }
   }
@@ -241,11 +241,11 @@ class Panel extends BaseElement<'form'> {
   }
 
   private updateAttributesAfterMaxChange(): void {
-    if (!this.view?.isRange()) {
+    if (!this.view.isRange()) {
       this.from.max = this.max.value;
     }
 
-    if (this.view?.isRange()) {
+    if (this.view.isRange()) {
       this.to.max = this.max.value;
     }
   }
@@ -255,24 +255,24 @@ class Panel extends BaseElement<'form'> {
       this.min.value = this.from.value;
     }
 
-    this.view?.changeMinFromOutside(Number(this.min.value));
+    this.view.changeMinFromOutside(Number(this.min.value));
     this.updateAttributesAfterMinChange();
   }
 
   private handleMaxChange(): void {
-    if (!this.view?.isRange()) {
+    if (!this.view.isRange()) {
       if (Number(this.max.value) < Number(this.from.value)) {
         this.max.value = this.from.value;
       }
     }
 
-    if (this.view?.isRange()) {
+    if (this.view.isRange()) {
       if (Number(this.max.value) < Number(this.to.value)) {
         this.max.value = this.to.value;
       }
     }
 
-    this.view?.changeMaxFromOutside(Number(this.max.value));
+    this.view.changeMaxFromOutside(Number(this.max.value));
     this.step.max = `${Math.abs(Number(this.max.value) - Number(this.min.value))}`;
     this.updateAttributesAfterMaxChange();
   }
@@ -286,7 +286,7 @@ class Panel extends BaseElement<'form'> {
       this.step.value = this.step.min;
     }
 
-    this.view?.changeStepFromOutside(Number(this.step.value));
+    this.view.changeStepFromOutside(Number(this.step.value));
     this.updateAttributesAfterStepChange();
   }
 
@@ -299,7 +299,7 @@ class Panel extends BaseElement<'form'> {
       this.from.value = this.from.min;
     }
 
-    this.view?.changeLeftValueFromOutside(Number(this.from.value));
+    this.view.changeLeftValueFromOutside(Number(this.from.value));
     this.updateAttributesAfterFromChange();
   }
 
@@ -312,17 +312,17 @@ class Panel extends BaseElement<'form'> {
       this.to.value = this.to.min;
     }
 
-    this.view?.changeRightValueFromOutside(Number(this.to.value));
+    this.view.changeRightValueFromOutside(Number(this.to.value));
     this.updateAttributesAfterToChange();
   }
 
   private handleVerticalChange(): void {
-    this.view?.changeOrientationFromOutside();
+    this.view.changeOrientationFromOutside();
     Panel.toggleCheckbox(this.vertical);
   }
 
   private handleRangeChange(): void {
-    this.view?.toggleRangeFromOutside();
+    this.view.toggleRangeFromOutside();
 
     this.to.disabled = !this.to.disabled;
 
@@ -336,7 +336,7 @@ class Panel extends BaseElement<'form'> {
   }
 
   private handleScaleChange(): void {
-    this.view?.toggleScaleFromOutside();
+    this.view.toggleScaleFromOutside();
 
     this.scaleIntervals.disabled = !this.scaleIntervals.disabled;
 
@@ -352,16 +352,16 @@ class Panel extends BaseElement<'form'> {
       this.scaleIntervals.value = `${Math.floor(Number(this.scaleIntervals.value))}`;
     }
 
-    this.view?.changeScaleIntervals(Number(this.scaleIntervals.value));
+    this.view.changeScaleIntervals(Number(this.scaleIntervals.value));
   }
 
   private handleValueLabelsChange(): void {
-    this.view?.toggleValueLabels();
+    this.view.toggleValueLabels();
     Panel.toggleCheckbox(this.valueLabels);
   }
 
   private handleMinMaxLabelsChange(): void {
-    this.view?.toggleMinMaxLabels();
+    this.view.toggleMinMaxLabels();
     Panel.toggleCheckbox(this.minMaxLabels);
   }
 

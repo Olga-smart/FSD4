@@ -57,11 +57,11 @@ class Thumb extends BaseElement<'div'> {
 
       const handlePointerMove = (newEvent: PointerEvent) => {
         if (this.type === 'left') {
-          this.view?.handleLeftInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
+          this.view.handleLeftInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
         }
 
         if (this.type === 'right') {
-          this.view?.handleRightInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
+          this.view.handleRightInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
         }
       };
 
