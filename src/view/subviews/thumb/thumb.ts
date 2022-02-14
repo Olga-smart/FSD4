@@ -1,21 +1,22 @@
 import BaseElement from '../../BaseElement/BaseElement';
 
+type ViewForThumb = {
+  handleLeftInput(clientX: number, clientY: number, shiftX: number, shiftY: number): void,
+  handleRightInput(clientX: number, clientY: number, shiftX: number, shiftY: number): void,
+};
+
 class Thumb extends BaseElement<'div'> {
   private type: 'left' | 'right';
 
-  private view: any;
+  private view: ViewForThumb;
 
-  constructor(type: 'left' | 'right' = 'left') {
+  constructor(view: ViewForThumb, type: 'left' | 'right' = 'left') {
     super('div', `range-slider__thumb range-slider__thumb_${type}`);
 
-    this.view = null;
     this.type = type;
+    this.view = view;
 
     this.attachEventHandlers();
-  }
-
-  registerWith(view: any): void {
-    this.view = view;
   }
 
   getLeftIndent(): string {

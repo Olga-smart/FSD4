@@ -68,14 +68,12 @@ class View extends BaseElement<'div'> {
     this.track.registerWith(this);
     this.range = new Range();
 
-    this.thumbLeft = new Thumb('left');
-    this.thumbLeft.registerWith(this);
+    this.thumbLeft = new Thumb(this, 'left');
 
     this.input = new Input();
 
     if (options.range) {
-      this.thumbRight = new Thumb('right');
-      this.thumbRight.registerWith(this);
+      this.thumbRight = new Thumb(this, 'right');
     }
 
     if (options.scale) {
@@ -503,8 +501,7 @@ class View extends BaseElement<'div'> {
 
     if (isRange) {
       this.destroy();
-      this.thumbRight = new Thumb('right');
-      this.thumbRight.registerWith(this);
+      this.thumbRight = new Thumb(this, 'right');
       if (this.valueLabelLeft) {
         this.valueLabelRight = new ValueLabel('right');
         this.valueLabelCommon = new ValueLabel('common');
