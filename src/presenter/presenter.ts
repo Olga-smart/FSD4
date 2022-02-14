@@ -16,28 +16,42 @@ class Presenter implements IEventListener {
     this.view.subscribe(this);
   }
 
-  inform(eventType: string, data: any): void {
+  inform(eventType: string, data: number | null = null): void {
     switch (eventType) {
       case 'viewLeftInput':
-        this.handleViewLeftInput(data);
+        if (typeof data === 'number') {
+          this.handleViewLeftInput(data);
+        }
         break;
       case 'viewRightInput':
-        this.handleViewRightInput(data);
+        if (typeof data === 'number') {
+          this.handleViewRightInput(data);
+        }
         break;
       case 'viewChangeLeftValueFromOutside':
-        this.handleChangeLeftValueFromOutside(data);
+        if (typeof data === 'number') {
+          this.handleChangeLeftValueFromOutside(data);
+        }
         break;
       case 'viewChangeRightValueFromOutside':
-        this.handleChangeRightValueFromOutside(data);
+        if (typeof data === 'number') {
+          this.handleChangeRightValueFromOutside(data);
+        }
         break;
       case 'viewChangeMinFromOutside':
-        this.handleChangeViewMinFromOutside(data);
+        if (typeof data === 'number') {
+          this.handleChangeViewMinFromOutside(data);
+        }
         break;
       case 'viewChangeMaxFromOutside':
-        this.handleChangeViewMaxFromOutside(data);
+        if (typeof data === 'number') {
+          this.handleChangeViewMaxFromOutside(data);
+        }
         break;
       case 'viewChangeStepFromOutside':
-        this.handleChangeViewStepFromOutside(data);
+        if (typeof data === 'number') {
+          this.handleChangeViewStepFromOutside(data);
+        }
         break;
       case 'viewChangeOrientationFromOutside':
         this.handleViewOrientationChange();

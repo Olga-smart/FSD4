@@ -119,6 +119,7 @@ class RangeSlider {
         function fixType(property: keyof RangeSliderOptions, type: string): void {
           if (typeof settings[property] !== type) {
             // no other way was found, it's a forced measure
+            // otherwise error: "Type 'number | boolean' is not assignable to type 'never'."
             (fixedSettings as any)[property] = defaults[property];
           }
         }

@@ -116,7 +116,7 @@ class View extends BaseElement<'div'> {
     this.eventManager.subscribe(listener);
   }
 
-  notify(eventType: string, data: any = null): void {
+  notify(eventType: string, data: number | null = null): void {
     this.eventManager.notify(eventType, data);
   }
 

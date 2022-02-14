@@ -9,14 +9,14 @@ class EventManager {
     this.listeners = this.listeners.filter((item) => item !== listener);
   }
 
-  notify(eventType: string, data: any = null): void {
+  notify(eventType: string, data: number | null = null): void {
     if (this.listeners.length === 0) { return; }
     this.listeners.forEach((item) => item.inform(eventType, data));
   }
 }
 
 interface IEventListener {
-  inform(eventType: string, data: any): void;
+  inform(eventType: string, data: number | null): void;
 }
 
 export { EventManager, IEventListener };
