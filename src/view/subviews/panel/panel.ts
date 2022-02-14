@@ -14,8 +14,23 @@ type PanelOptions = {
   minMaxLabels: boolean
 };
 
+type ViewForPanel = {
+  isRange(): boolean,
+  changeMinFromOutside(value: number): void,
+  changeMaxFromOutside(value: number): void,
+  changeStepFromOutside(value: number): void,
+  changeLeftValueFromOutside(value: number): void,
+  changeRightValueFromOutside(value: number): void,
+  changeOrientationFromOutside(): void,
+  toggleRangeFromOutside(): void,
+  toggleScaleFromOutside(): void,
+  changeScaleIntervals(value: number): void,
+  toggleValueLabels(): void,
+  toggleMinMaxLabels(): void,
+};
+
 class Panel extends BaseElement<'form'> {
-  private view: any;
+  private view: ViewForPanel | null;
 
   private min: HTMLInputElement;
 
@@ -39,10 +54,10 @@ class Panel extends BaseElement<'form'> {
 
   private minMaxLabels: HTMLInputElement;
 
-  constructor() {
+  constructor(view: ViewForPanel) {
     super('form', 'range-slider__panel panel');
 
-    this.view = null;
+    this.view = view;
 
     this.min = BaseElement.createComponent('input', 'panel__min panel__input');
     this.max = BaseElement.createComponent('input', 'panel__max panel__input');
@@ -59,10 +74,6 @@ class Panel extends BaseElement<'form'> {
 
     this.render();
     this.attachEventHandlers();
-  }
-
-  registerWith(view: any): void {
-    this.view = view;
   }
 
   setValues(options: PanelOptions): void {

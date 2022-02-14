@@ -109,8 +109,7 @@ class View extends BaseElement<'div'> {
     }
 
     if (options.panel) {
-      this.panel = new Panel();
-      this.panel.registerWith(this);
+      this.panel = new Panel(this);
     }
 
     this.render();

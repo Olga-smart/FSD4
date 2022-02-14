@@ -4,7 +4,9 @@ import View from '../../View';
 describe('Panel', () => {
   describe('constructor()', () => {
     describe('set up necessary properties', () => {
-      const panel = new Panel();
+      const slider = document.createElement('div');
+      const view = new View(slider);
+      const panel = new Panel(view);
 
       it('set up view property', () => {
         expect(panel).toHaveProperty('view');
@@ -60,7 +62,9 @@ describe('Panel', () => {
     });
 
     describe('set types', () => {
-      const panel = new Panel();
+      const slider = document.createElement('div');
+      const view = new View(slider);
+      const panel = new Panel(view);
 
       it('set up type "number" for min input', () => {
         const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
@@ -119,7 +123,9 @@ describe('Panel', () => {
     });
 
     describe('append all necessary inputs to panel component', () => {
-      const panel = new Panel();
+      const slider = document.createElement('div');
+      const view = new View(slider);
+      const panel = new Panel(view);
 
       it('range', () => {
         const range: HTMLInputElement | null = panel.getComponent().querySelector('.panel__range');
@@ -180,7 +186,9 @@ describe('Panel', () => {
 
   describe('setValues(options)', () => {
     describe('set up values', () => {
-      const panel = new Panel();
+      const slider = document.createElement('div');
+      const view = new View(slider);
+      const panel = new Panel(view);
       panel.setValues({
         min: 0,
         max: 100,
@@ -252,7 +260,9 @@ describe('Panel', () => {
     });
 
     describe('setAttributes(options)', () => {
-      const panel = new Panel();
+      const slider = document.createElement('div');
+      const view = new View(slider);
+      const panel = new Panel(view);
       const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
       const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
 
@@ -369,7 +379,11 @@ describe('Panel', () => {
   });
 
   describe('updateFrom(value)', () => {
-    const panel = new Panel();
+    const slider = document.createElement('div');
+    const view = new View(slider, {
+      range: true,
+    });
+    const panel = new Panel(view);
     panel.updateFrom(20);
 
     it('set up from.value', () => {
@@ -378,11 +392,6 @@ describe('Panel', () => {
     });
 
     it('update to.min if this.view.isRange', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        range: true,
-      });
-      panel.registerWith(view);
       panel.updateFrom(20);
 
       const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
@@ -391,7 +400,11 @@ describe('Panel', () => {
   });
 
   describe('updateTo(value)', () => {
-    const panel = new Panel();
+    const slider = document.createElement('div');
+    const view = new View(slider, {
+      range: true,
+    });
+    const panel = new Panel(view);
     panel.updateTo(50);
 
     it('set up to.value', () => {
@@ -406,7 +419,9 @@ describe('Panel', () => {
   });
 
   describe('updateStep(value)', () => {
-    const panel = new Panel();
+    const slider = document.createElement('div');
+    const view = new View(slider);
+    const panel = new Panel(view);
     panel.updateStep(10);
 
     it('set up step.value', () => {
@@ -416,7 +431,9 @@ describe('Panel', () => {
   });
 
   describe('updateScaleIntervals(value)', () => {
-    const panel = new Panel();
+    const slider = document.createElement('div');
+    const view = new View(slider);
+    const panel = new Panel(view);
     panel.updateScaleIntervals(10);
 
     it('set up scaleIntervals.value', () => {
@@ -427,10 +444,9 @@ describe('Panel', () => {
 
   describe('handle events', () => {
     describe('handle min change', () => {
-      const panel = new Panel();
       const slider = document.createElement('div');
       const view = new View(slider);
-      panel.registerWith(view);
+      const panel = new Panel(view);
       view.changeMinFromOutside = jest.fn();
       const event = new Event('change');
       const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
@@ -487,12 +503,11 @@ describe('Panel', () => {
 
     describe('handle max change', () => {
       describe('if !this.view.isRange', () => {
-        const panel = new Panel();
         const slider = document.createElement('div');
         const view = new View(slider, {
           range: false,
         });
-        panel.registerWith(view);
+        const panel = new Panel(view);
         view.changeMaxFromOutside = jest.fn();
         const event = new Event('change');
         const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
@@ -535,12 +550,11 @@ describe('Panel', () => {
       });
 
       describe('if this.view.isRange', () => {
-        const panel = new Panel();
         const slider = document.createElement('div');
         const view = new View(slider, {
           range: true,
         });
-        panel.registerWith(view);
+        const panel = new Panel(view);
         view.changeMaxFromOutside = jest.fn();
         const event = new Event('change');
         const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
@@ -583,10 +597,9 @@ describe('Panel', () => {
       });
 
       it('say view that max was changed and pass it value', () => {
-        const panel = new Panel();
         const slider = document.createElement('div');
         const view = new View(slider);
-        panel.registerWith(view);
+        const panel = new Panel(view);
         const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
 
         if (to) {
@@ -607,7 +620,9 @@ describe('Panel', () => {
       });
 
       it('update step.max', () => {
-        const panel = new Panel();
+        const slider = document.createElement('div');
+        const view = new View(slider);
+        const panel = new Panel(view);
         const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
 
         if (to) {
@@ -636,7 +651,11 @@ describe('Panel', () => {
     });
 
     describe('handle step change', () => {
-      const panel = new Panel();
+      const slider = document.createElement('div');
+      const view = new View(slider);
+      view.changeStepFromOutside = jest.fn();
+      view.changeLeftValueFromOutside = jest.fn();
+      const panel = new Panel(view);
       const step: HTMLInputElement | null = panel.getComponent().querySelector('.panel__step');
       const event = new Event('change');
 
@@ -661,11 +680,6 @@ describe('Panel', () => {
       });
 
       it('say view that step was changed and pass it value', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
-        panel.registerWith(view);
-        view.changeStepFromOutside = jest.fn();
-
         if (step) {
           step.value = '5';
           step.dispatchEvent(event);
@@ -676,7 +690,12 @@ describe('Panel', () => {
     });
 
     describe('handle from change', () => {
-      const panel = new Panel();
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        range: true,
+      });
+      view.changeLeftValueFromOutside = jest.fn();
+      const panel = new Panel(view);
       const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
       const event = new Event('change');
 
@@ -701,11 +720,6 @@ describe('Panel', () => {
       });
 
       it('say view that left value was changed and pass it value', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
-        panel.registerWith(view);
-        view.changeLeftValueFromOutside = jest.fn();
-
         if (from) {
           from.min = '0';
           from.value = '10';
@@ -716,13 +730,6 @@ describe('Panel', () => {
       });
 
       it('set up to.min = from.value, if !this.view.isRange', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
-          range: true,
-        });
-        panel.registerWith(view);
-        view.changeLeftValueFromOutside = jest.fn();
-
         if (from) {
           from.min = '0';
           from.value = '10';
@@ -735,7 +742,12 @@ describe('Panel', () => {
     });
 
     describe('handle to change', () => {
-      const panel = new Panel();
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        range: true,
+      });
+      view.changeRightValueFromOutside = jest.fn();
+      const panel = new Panel(view);
       const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
       const event = new Event('change');
 
@@ -760,13 +772,6 @@ describe('Panel', () => {
       });
 
       it('say view that right value was changed and pass it value', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider, {
-          range: true,
-        });
-        panel.registerWith(view);
-        view.changeRightValueFromOutside = jest.fn();
-
         if (to) {
           to.min = '0';
           to.max = '200';
@@ -792,10 +797,9 @@ describe('Panel', () => {
     });
 
     describe('handle vertical change', () => {
-      const panel = new Panel();
       const slider = document.createElement('div');
       const view = new View(slider);
-      panel.registerWith(view);
+      const panel = new Panel(view);
       view.changeOrientationFromOutside = jest.fn();
       const event = new Event('change');
       const vertical = panel.getComponent().querySelector('.panel__vertical');
@@ -807,10 +811,9 @@ describe('Panel', () => {
     });
 
     describe('handle range change', () => {
-      const panel = new Panel();
       const slider = document.createElement('div');
       const view = new View(slider);
-      panel.registerWith(view);
+      const panel = new Panel(view);
       view.toggleRangeFromOutside = jest.fn();
       const event = new Event('change');
       const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
@@ -853,10 +856,9 @@ describe('Panel', () => {
     });
 
     describe('handle scale change', () => {
-      const panel = new Panel();
       const slider = document.createElement('div');
       const view = new View(slider);
-      panel.registerWith(view);
+      const panel = new Panel(view);
       view.toggleScaleFromOutside = jest.fn();
       const event = new Event('change');
       const scale: HTMLInputElement | null = panel.getComponent().querySelector('.panel__scale');
@@ -883,10 +885,9 @@ describe('Panel', () => {
     });
 
     describe('handle scaleIntervals change', () => {
-      const panel = new Panel();
       const slider = document.createElement('div');
       const view = new View(slider);
-      panel.registerWith(view);
+      const panel = new Panel(view);
       view.changeScaleIntervals = jest.fn();
       const scaleIntervals: HTMLInputElement | null = panel.getComponent().querySelector('.panel__scale-intervals');
       const event = new Event('change');
@@ -913,10 +914,9 @@ describe('Panel', () => {
     });
 
     describe('handle valueLabels change', () => {
-      const panel = new Panel();
       const slider = document.createElement('div');
       const view = new View(slider);
-      panel.registerWith(view);
+      const panel = new Panel(view);
       view.toggleValueLabels = jest.fn();
       const event = new Event('change');
       const valueLabels = panel.getComponent().querySelector('.panel__value-labels');
@@ -928,10 +928,9 @@ describe('Panel', () => {
     });
 
     describe('handle minMaxLabels change', () => {
-      const panel = new Panel();
       const slider = document.createElement('div');
       const view = new View(slider);
-      panel.registerWith(view);
+      const panel = new Panel(view);
       view.toggleMinMaxLabels = jest.fn();
       const event = new Event('change');
       const minMaxLabels = panel.getComponent().querySelector('.panel__min-max-labels');
