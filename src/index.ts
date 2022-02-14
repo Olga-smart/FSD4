@@ -60,6 +60,26 @@ class RangeSlider {
       panel: options.panel,
     });
     this.presenter = new Presenter(this.model, this.view);
+
+    this.model.subscribe(this);
+  }
+
+  inform(eventType: string): void {
+    switch (eventType) {
+      case 'modelLeftSet':
+        if (this.onChange) {
+          this.onChange(this.model.getLeftValue(), this.model.getRightValue());
+        }
+        break;
+      case 'modelRightSet':
+        if (this.onChange) {
+          this.onChange(this.model.getLeftValue(), this.model.getRightValue());
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 
   setLeftValue(value: number): this {
@@ -76,6 +96,8 @@ class RangeSlider {
     this.view.changeStepFromOutside(value);
     return this;
   }
+
+  onChange?: (leftValue: number, rightValue: number | undefined) => void;
 }
 
 (function rangeSliderWrapper(jQ) {
@@ -189,8 +211,8 @@ $(() => {
   $('.js-range-slider').rangeSlider({
     panel: true,
     vertical: false,
-    range: 'false',
+    range: false,
   });
-  // const slider = $('.js-range-slider').data('rangeSlider');
-  // slider.setLeftValue(50).setRightValue(80).setStep(10);
+  const slider = $('.js-range-slider').data('rangeSlider');
+  slider.setLeftValue(50).setRightValue(80).setStep(10);
 });
