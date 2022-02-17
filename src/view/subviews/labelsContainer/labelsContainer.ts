@@ -5,7 +5,7 @@ class LabelsContainer extends BaseElement<'div'> {
     super('div', 'range-slider__labels-container');
   }
 
-  append(...elements: HTMLElement[]) {
+  append(...elements: HTMLElement[]): void {
     this.component.append(...elements);
   }
 

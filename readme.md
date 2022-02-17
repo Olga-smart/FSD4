@@ -167,6 +167,8 @@ delete slider.onChange;
 
 ## Under the Hood
 
+![Class diagram](./images_for_readme/class-diagram_general-perspective.drawio.svg "Class diagram: general perspective")
+*Class diagram: general perspective*
 
 
 

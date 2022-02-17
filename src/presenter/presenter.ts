@@ -231,7 +231,7 @@ class Presenter implements IEventListener {
     return result;
   }
 
-  static removeCalcInaccuracy(value: number): number {
+  private static removeCalcInaccuracy(value: number): number {
     return Number(value.toFixed(10));
   }
 
