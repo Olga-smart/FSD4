@@ -170,6 +170,9 @@ delete slider.onChange;
 ![Class diagram](./images_for_readme/class-diagram_general-perspective.drawio.svg "Class diagram: general perspective")
 *Class diagram: general perspective*
 
+![Class diagram](./images_for_readme/class-diagram_view-perspective.drawio.svg "Class diagram: view perspective")
+*Class diagram: view perspective*
+
 
 
  

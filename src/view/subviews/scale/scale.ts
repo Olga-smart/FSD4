@@ -38,7 +38,7 @@ class Scale extends BaseElement<'div'> {
     this.attachEventHandlers();
   }
 
-  fitWidthForVertical() {
+  fitWidthForVertical(): void {
     let maxWidth = 0;
 
     this.valueElements.forEach((valueElement) => {
@@ -50,7 +50,7 @@ class Scale extends BaseElement<'div'> {
     this.component.style.paddingRight = `${maxWidth + 3}px`;
   }
 
-  fitHeightForHorizontal() {
+  fitHeightForHorizontal(): void {
     let maxHeight = 0;
 
     this.valueElements.forEach((valueElement) => {
@@ -62,12 +62,12 @@ class Scale extends BaseElement<'div'> {
     this.component.style.paddingBottom = `${maxHeight + 3}px`;
   }
 
-  handleSwitchFromHorizontalToVertical() {
+  handleSwitchFromHorizontalToVertical(): void {
     this.component.style.paddingBottom = 'unset';
     this.fitWidthForVertical();
   }
 
-  handleSwitchFromVerticalToHorizontal() {
+  handleSwitchFromVerticalToHorizontal(): void {
     this.component.style.paddingRight = 'unset';
     this.fitHeightForHorizontal();
   }

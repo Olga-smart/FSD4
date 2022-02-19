@@ -112,6 +112,39 @@ class Panel extends BaseElement<'form'> {
     this.scaleIntervals.value = `${value}`;
   }
 
+  private static addLabel(input: HTMLElement, name: string, className?: string): HTMLElement {
+    const label: HTMLElement = BaseElement.createComponent('label', 'panel__label');
+    label.textContent = name;
+
+    if (className) {
+      label.classList.add(className);
+    }
+
+    label.append(input);
+
+    return label;
+  }
+
+  private static calcStepMin(step: number): number {
+    if (Number.isInteger(step)) {
+      return 1;
+    }
+
+    const numberOfSymbolsAfterComma = step.toString().split('.')[1].length;
+    let result: string = '1';
+    for (let i = numberOfSymbolsAfterComma; i > 1; i -= 1) {
+      result = `0${result}`;
+    }
+    result = `0.${result}`;
+
+    return Number(result);
+  }
+
+  private static toggleCheckbox(input: HTMLElement): void {
+    const label: HTMLLabelElement | null = input.closest('label');
+    label?.classList.toggle('panel__label_for-checkbox_checked');
+  }
+
   private render(): void {
     this.setTypes();
     this.component.append(
@@ -127,19 +160,6 @@ class Panel extends BaseElement<'form'> {
       Panel.addLabel(this.to, 'To:'),
       Panel.addLabel(this.step, 'Step:'),
     );
-  }
-
-  private static addLabel(input: HTMLElement, name: string, className?: string): HTMLElement {
-    const label: HTMLElement = BaseElement.createComponent('label', 'panel__label');
-    label.textContent = name;
-
-    if (className) {
-      label.classList.add(className);
-    }
-
-    label.append(input);
-
-    return label;
   }
 
   private setTypes(): void {
@@ -197,21 +217,6 @@ class Panel extends BaseElement<'form'> {
         Panel.toggleCheckbox(checkbox);
       }
     });
-  }
-
-  private static calcStepMin(step: number): number {
-    if (Number.isInteger(step)) {
-      return 1;
-    }
-
-    const numberOfSymbolsAfterComma = step.toString().split('.')[1].length;
-    let result: string = '1';
-    for (let i = numberOfSymbolsAfterComma; i > 1; i -= 1) {
-      result = `0${result}`;
-    }
-    result = `0.${result}`;
-
-    return Number(result);
   }
 
   private updateAttributesAfterFromChange(): void {
@@ -363,11 +368,6 @@ class Panel extends BaseElement<'form'> {
   private handleMinMaxLabelsChange(): void {
     this.view.toggleMinMaxLabels();
     Panel.toggleCheckbox(this.minMaxLabels);
-  }
-
-  private static toggleCheckbox(input: HTMLElement): void {
-    const label: HTMLLabelElement | null = input.closest('label');
-    label?.classList.toggle('panel__label_for-checkbox_checked');
   }
 
   private attachEventHandlers(): void {

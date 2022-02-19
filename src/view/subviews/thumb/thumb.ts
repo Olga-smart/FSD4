@@ -43,6 +43,16 @@ class Thumb extends BaseElement<'div'> {
     }
   }
 
+  private static handlePointerUp(event: PointerEvent): void {
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.classList.remove('range-slider__thumb_active');
+    }
+  }
+
+  private static handleDragStart(): false {
+    return false;
+  }
+
   private handlePointerDown(event: PointerEvent): void {
     if (event.currentTarget instanceof HTMLElement) {
       event.currentTarget.classList.add('range-slider__thumb_active');
@@ -75,17 +85,7 @@ class Thumb extends BaseElement<'div'> {
     }
   }
 
-  private static handlePointerUp(event: PointerEvent): void {
-    if (event.currentTarget instanceof HTMLElement) {
-      event.currentTarget.classList.remove('range-slider__thumb_active');
-    }
-  }
-
-  private static handleDragStart(): false {
-    return false;
-  }
-
-  private attachEventHandlers() {
+  private attachEventHandlers(): void {
     this.component.addEventListener('pointerover', Thumb.handlePointerOver);
     this.component.addEventListener('pointerout', Thumb.handlePointerOut);
     this.component.addEventListener('pointerdown', this.handlePointerDown.bind(this));
