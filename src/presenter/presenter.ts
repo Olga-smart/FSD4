@@ -96,6 +96,10 @@ class Presenter implements IEventListener {
     }
   }
 
+  private static removeCalcInaccuracy(value: number): number {
+    return Number(value.toFixed(10));
+  }
+
   private initViewValues(): void {
     const { model } = this;
     const { view } = this;
@@ -229,10 +233,6 @@ class Presenter implements IEventListener {
     let result = Math.round(value / this.model.getStep()) * this.model.getStep();
     result = Presenter.removeCalcInaccuracy(result);
     return result;
-  }
-
-  private static removeCalcInaccuracy(value: number): number {
-    return Number(value.toFixed(10));
   }
 
   private handleChangeLeftValueFromOutside(value: number): void {

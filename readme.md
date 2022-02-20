@@ -167,12 +167,20 @@ delete slider.onChange;
 
 ## Under the Hood
 
-![Class diagram](./images_for_readme/class-diagram_general-perspective.drawio.svg "Class diagram: general perspective")
-*Class diagram: general perspective*
+<figure align="center">
+  <img src="./images_for_readme/class-diagram_general-perspective.drawio.svg">
+  <figcaption>Class diagram: general perspective</figcaption>
+</figure>
 
-![Class diagram](./images_for_readme/class-diagram_view-perspective.drawio.svg "Class diagram: view perspective")
-*Class diagram: view perspective*
+<figure align="center">
+  <img src="./images_for_readme/class-diagram_view-perspective.drawio.svg">
+  <figcaption>Class diagram: view perspective</figcaption>
+</figure>
 
+<figure align="center">
+  <img src="./images_for_readme/class-diagram_presenter-perspective.drawio.svg">
+  <figcaption>Class diagram: presenter perspective</figcaption>
+</figure>
 
 
  
