@@ -113,7 +113,7 @@ class RangeSlider {
     minMaxLabels: true,
     valueLabels: true,
     vertical: false,
-    scale: true,
+    scale: false,
     scaleIntervals: 5,
     panel: false,
   };
@@ -172,6 +172,14 @@ class RangeSlider {
           if (fixedSettings.step > Math.abs(fixedSettings.max - fixedSettings.min)) {
             fixedSettings.step = Math.abs(fixedSettings.max - fixedSettings.min);
           }
+
+          if (fixedSettings.scaleIntervals < 1) {
+            fixedSettings.scaleIntervals = 1;
+          }
+
+          if (Number.isInteger(fixedSettings.scaleIntervals)) {
+            fixedSettings.scaleIntervals = Math.floor(fixedSettings.scaleIntervals);
+          }
         }
 
         function checkTypes(): void {
@@ -211,7 +219,7 @@ $(() => {
   $('.js-range-slider').rangeSlider({
     panel: true,
     vertical: false,
-    range: false,
+    scale: true,
   });
   const slider = $('.js-range-slider').data('rangeSlider');
   slider.setLeftValue(50).setRightValue(80).setStep(10);
