@@ -8,11 +8,7 @@ type ViewForScale = {
 class Scale extends BaseElement<'div'> {
   private view: ViewForScale;
 
-  private min: number;
-
-  private max: number;
-
-  private intervalsNumber: number;
+  // private intervalsNumber: number;
 
   private intervals: HTMLDivElement[];
 
@@ -24,17 +20,15 @@ class Scale extends BaseElement<'div'> {
     super('div', 'range-slider__scale');
 
     this.view = view;
-
-    this.min = min;
-    this.max = max;
-    this.intervalsNumber = Math.floor(view.getScaleIntervals());
     this.intervals = [];
     this.values = [];
     this.valueElements = [];
 
-    this.createIntervals();
-    this.addMarksInIntervals();
-    this.addValues();
+    const intervalsNumber = view.getScaleIntervals();
+
+    this.createIntervals(intervalsNumber);
+    this.addMarksInIntervals(intervalsNumber);
+    this.addValues(min, max, intervalsNumber);
     this.attachEventHandlers();
   }
 
@@ -72,39 +66,39 @@ class Scale extends BaseElement<'div'> {
     this.fitHeightForHorizontal();
   }
 
-  private createIntervals(): void {
-    for (let i = 0; i < this.intervalsNumber; i += 1) {
+  private createIntervals(intervalsNumber: number): void {
+    for (let i = 0; i < intervalsNumber; i += 1) {
       this.intervals[i] = BaseElement.createComponent('div', 'range-slider__scale-interval');
       this.component.append(this.intervals[i]);
     }
   }
 
-  private addMarksInIntervals(): void {
+  private addMarksInIntervals(intervalsNumber: number): void {
     this.intervals.forEach((item) => {
       const fragment = new DocumentFragment();
-      if (this.intervalsNumber < 29) {
+      if (intervalsNumber < 29) {
         fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
-      if (this.intervalsNumber < 15) {
+      if (intervalsNumber < 15) {
         fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
-      if (this.intervalsNumber < 8) {
+      if (intervalsNumber < 8) {
         fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
-      if (this.intervalsNumber < 5) {
+      if (intervalsNumber < 5) {
         fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
       item.append(fragment);
     });
   }
 
-  private addValues(): void {
-    this.values[0] = this.min;
-    const step = Math.round((this.max - this.min) / this.intervalsNumber);
-    for (let i = 1; i < this.intervalsNumber; i += 1) {
-      this.values[i] = i * step + this.min;
+  private addValues(min: number, max: number, intervalsNumber: number): void {
+    this.values[0] = min;
+    const step = Math.round((max - min) / intervalsNumber);
+    for (let i = 1; i < intervalsNumber; i += 1) {
+      this.values[i] = i * step + min;
     }
-    this.values.push(this.max);
+    this.values.push(max);
 
     const valueElement = BaseElement.createComponent('span', 'range-slider__scale-interval-value range-slider__scale-interval-value_min');
     valueElement.textContent = `${this.values[0]}`;
