@@ -171,17 +171,25 @@ delete slider.onChange;
 
 *Class diagram: general perspective*
 
-![Class diagram](./images_for_readme/class-diagram_model-perspective.drawio.svg "Class diagram: view perspective")
+![Class diagram](./images_for_readme/class-diagram_model-perspective.drawio.svg "Class diagram: model perspective")
 
 *Class diagram: model perspective*
 
 ![Class diagram](./images_for_readme/class-diagram_view-perspective.drawio.svg "Class diagram: view perspective")
 
-*Class diagram: view perspective*
+*Class diagram: view perspective (sorry, you have to scale the picture)*
+
+![Class diagram](./images_for_readme/object-diagram_view-perspective.drawio.svg "Object diagram: view perspective")
+
+*Object diagram: view perspective*
 
 ![Class diagram](./images_for_readme/class-diagram_presenter-perspective.drawio.svg "Class diagram: presenter perspective")
 
 *Class diagram: presenter perspective*
+
+![Communication diagram](./images_for_readme/communication-diagram.drawio.svg "Communication diagram")
+
+*Communication diagram*
 
 
 
