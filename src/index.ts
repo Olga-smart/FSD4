@@ -136,14 +136,33 @@ class RangeSlider {
       };
 
       function validate(settings: RangeSliderOptions): RangeSliderOptions {
-        const fixedSettings: RangeSliderOptions = $.extend({}, settings);
+        let fixedSettings: RangeSliderOptions = $.extend({}, settings);
 
-        function fixType(property: keyof RangeSliderOptions, type: string): void {
-          if (typeof settings[property] !== type) {
-            // no other way was found, it's a forced measure
-            // otherwise error: "Type 'number | boolean' is not assignable to type 'never'."
-            (fixedSettings as any)[property] = defaults[property];
+        function removeWrongTypes(): void {
+          function checkType(property: keyof RangeSliderOptions): void {
+            if (typeof settings[property] !== typeof defaults[property]) {
+              delete fixedSettings[property];
+            }
           }
+
+          // There is no Object.keys().forEach because TS throws an error:
+          // "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'"
+          checkType('min');
+          checkType('max');
+          checkType('leftValue');
+          checkType('rightValue');
+          checkType('range');
+          checkType('step');
+          checkType('minMaxLabels');
+          checkType('valueLabels');
+          checkType('vertical');
+          checkType('scale');
+          checkType('scaleIntervals');
+          checkType('panel');
+        }
+
+        function mergeWithDefaults(): void {
+          fixedSettings = $.extend(defaults, fixedSettings);
         }
 
         function fixValues(): void {
@@ -182,23 +201,8 @@ class RangeSlider {
           }
         }
 
-        function checkTypes(): void {
-          fixType('min', 'number');
-          fixType('max', 'number');
-          fixType('leftValue', 'number');
-          fixType('rightValue', 'number');
-          fixType('range', 'boolean');
-          fixType('step', 'number');
-          fixType('minMaxLabels', 'boolean');
-          fixType('valueLabels', 'boolean');
-          fixType('vertical', 'boolean');
-          fixType('scale', 'boolean');
-          fixType('scaleIntervals', 'number');
-          fixType('panel', 'boolean');
-        }
-
-        checkTypes();
-
+        removeWrongTypes();
+        mergeWithDefaults();
         fixValues();
 
         return fixedSettings;
@@ -218,7 +222,6 @@ $(() => {
   // eslint-disable-next-line fsd/jq-cache-dom-elements
   $('.js-range-slider').rangeSlider({
     panel: true,
-    vertical: false,
     scale: true,
   });
   const slider = $('.js-range-slider').data('rangeSlider');
