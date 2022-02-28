@@ -191,6 +191,10 @@ delete slider.onChange;
 
 *Communication diagram*
 
+![Sequence diagram](./images_for_readme/sequence-diagram.drawio.svg "Sequence diagram")
+
+*Sequence diagram*
+
 
 
  
