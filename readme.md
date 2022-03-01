@@ -167,25 +167,50 @@ delete slider.onChange;
 
 ## Under the Hood
 
-![Class diagram](./images_for_readme/class-diagram_general-perspective.drawio.svg "Class diagram: general perspective")
+Plugin was created using the MVP pattern with passive View.
+
+![Class diagram: general perspective](./images_for_readme/class-diagram_general-perspective.drawio.svg "Class diagram: general perspective")
 
 *Class diagram: general perspective*
 
-![Class diagram](./images_for_readme/class-diagram_model-perspective.drawio.svg "Class diagram: model perspective")
+### Model
+
+Model knows nothing about View and Presenter and is managed by Presenter, which calls the necessary methods. Any class that implements the IEventListener interface can subscribe to Model events.
+
+![Class diagram: model perspective](./images_for_readme/class-diagram_model-perspective.drawio.svg "Class diagram: model perspective")
 
 *Class diagram: model perspective*
 
-![Class diagram](./images_for_readme/class-diagram_view-perspective.drawio.svg "Class diagram: view perspective")
+### View
+
+View knows nothing about Model and Presenter and is managed by Presenter, which calls the necessary methods. It contains display related logic and reacts to user actions. Any class that implements the IEventListener interface can subscribe to View events.
+
+Slider components are implemented by separate classes - subViews, which are connected with the main View class using composition. Only View class has access to these subViews. View redirects calls to subViews' methods. For example, Presenter tells View to set left value and View tells its subViews to do necessary actions: thumb will change its position, range will change its length, label will change its textContent etc. 
+
+Some subViews are aware of the View existence. These are the subViews that cannot handle their events by alone: Thumb, Track, Scale, Panel. Other subViews don't know about the View existence.
+
+Panel is a special kind of subView, because it is only needed at the development stage so that the developer can experiment with the slider settings.
+
+![Class diagram: view perspective](./images_for_readme/class-diagram_view-perspective.drawio.svg "Class diagram: view perspective")
 
 *Class diagram: view perspective (sorry, you have to scale the picture)*
 
-![Class diagram](./images_for_readme/object-diagram_view-perspective.drawio.svg "Object diagram: view perspective")
+
+![Object diagram: view perspective](./images_for_readme/object-diagram_view-perspective.drawio.svg "Object diagram: view perspective")
 
 *Object diagram: view perspective*
 
-![Class diagram](./images_for_readme/class-diagram_presenter-perspective.drawio.svg "Class diagram: presenter perspective")
+### Presenter
+
+Presenter is associated with Model and View by Observer pattern and acts as the middleman between them. It has only 1 public method - inform(eventType, data). That is, all we can do with the Presenter is to notify it that some event happened. And then the Presenter decides what to do with this information.
+
+Presenter subscribes to Model and View events at the time of slider initialization.
+
+![Class diagram: presenter perspective](./images_for_readme/class-diagram_presenter-perspective.drawio.svg "Class diagram: presenter perspective")
 
 *Class diagram: presenter perspective*
+
+When user moves the slider, a whole chain of events is triggered, which is shown in the 2 diagrams below. We omitted such optional objects as min/max labels and panel to make information easier to understand.
 
 ![Communication diagram](./images_for_readme/communication-diagram.drawio.svg "Communication diagram")
 
@@ -194,6 +219,12 @@ delete slider.onChange;
 ![Sequence diagram](./images_for_readme/sequence-diagram.drawio.svg "Sequence diagram")
 
 *Sequence diagram*
+
+### Wrapper
+
+All 3 layers are combined in RangeSlider class, which you can see on [general class diagram](#under-the-hood). Each slider instance on the page is an instance of this class.
+
+Slider instances are created inside a special wrapper function, which is written in jQuery. The passed parameters are validated inside this wrapper function. Also the wrapper contains an object with default values.
 
 
 
