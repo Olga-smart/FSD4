@@ -36,7 +36,7 @@ class View extends BaseElement<'div'> {
 
   private scale?: Scale;
 
-  private scaleIntervals?: number;
+  private scaleIntervals: number;
 
   private minLabel?: Label;
 
@@ -72,9 +72,10 @@ class View extends BaseElement<'div'> {
       this.thumbRight = new Thumb(this, 'right');
     }
 
-    if (options.scale) {
-      this.scaleIntervals = options.scaleIntervals ?? 4;
+    // this field is always initialized in case the toggleScaleFromOutside() method will be called
+    this.scaleIntervals = options.scaleIntervals ?? 4;
 
+    if (options.scale) {
       // create scale with arbitrary values, which will be replaced later by Presenter
       // it is necessary for hasScale() return true
       this.scale = new Scale(0, 100, this);

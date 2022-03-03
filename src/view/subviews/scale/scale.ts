@@ -8,8 +8,6 @@ type ViewForScale = {
 class Scale extends BaseElement<'div'> {
   private view: ViewForScale;
 
-  // private intervalsNumber: number;
-
   private intervals: HTMLDivElement[];
 
   private values: number[];
