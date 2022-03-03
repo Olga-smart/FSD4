@@ -103,7 +103,7 @@ class RangeSlider {
 (function rangeSliderWrapper(jQ) {
   const $ = jQ;
 
-  const defaults: RangeSliderOptions = {
+  const defaults: Readonly<RangeSliderOptions> = {
     min: 0,
     max: 100,
     range: true,
@@ -162,7 +162,7 @@ class RangeSlider {
         }
 
         function mergeWithDefaults(): void {
-          fixedSettings = $.extend(defaults, fixedSettings);
+          fixedSettings = $.extend({}, defaults, fixedSettings);
         }
 
         function fixValues(): void {
@@ -222,10 +222,9 @@ $(() => {
   // eslint-disable-next-line fsd/jq-cache-dom-elements
   $('.js-range-slider').rangeSlider({
     panel: true,
-    scale: true,
   });
-  const slider = $('.js-range-slider').data('rangeSlider');
-  slider.setLeftValue(50).setRightValue(80).setStep(10);
+  // const slider = $('.js-range-slider').data('rangeSlider');
+  // slider.setLeftValue(50).setRightValue(80).setStep(10);
   // slider.onChange = (leftValue: number, rightValue: number | undefined) => {
   //   console.log(`${leftValue} + ${rightValue}`);
   // };
