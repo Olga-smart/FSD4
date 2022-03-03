@@ -16,8 +16,7 @@ Easy to use, flexible and responsive range slider.
 ## Description
 * RangeSlider — cool, comfortable, responsive and easily customizable range slider
 * Supports events and public methods, has flexible settings, can be completely altered with CSS
-* Cross-browser: Google Chrome, Mozilla Firefox 3.6+, Opera 12+, Safari 5+, Internet Explorer 8+
-* RangeSlider supports touch-devices (iPhone, iPad, Nexus, etc.).
+* Supports touch-devices
 
 ## Key Features
 * Any number of sliders at one page without conflicts and big performance problems
@@ -42,7 +41,7 @@ Add the following stylesheets to the page:
 
 ## Initialization
 1. Add div with classes 'range-slider' and 'js-range-slider' to the page.
-2. Call ionRangeSlider on the element:
+2. Call rangeSlider on the element:
 ```javascript
 $('.js-range-slider').rangeSlider();
 ```

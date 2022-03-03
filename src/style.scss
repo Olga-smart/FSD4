@@ -18,9 +18,11 @@ body {
   width: 50%;
   max-width: 500px;
   min-width: 300px;
-  // display: grid;
-  // grid-template-columns: 0.5fr 1fr 0.5fr;
-  // display: flex;
+}
+
+section {
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .range-slider {
@@ -272,6 +274,7 @@ body {
           top: 0;
           left: 10px;
         }
+        width: 100%;
       } 
     }
   }

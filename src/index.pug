@@ -7,24 +7,33 @@ html(lang="ru")
   body
     .container
       h1 Demo
-      h2 Simple start, default params
-      .range-slider.js-range-slider
 
-      h2 With scale
-      .range-slider.js-range-slider(
-        data-scale="true"
-      )
+      section
+        h2 Default params
+        .range-slider.js-range-slider
 
-      h2 Minimalistic
-      .range-slider.js-range-slider(
-        data-min-max-labels="false",
-        data-value-labels="false",
-      )
+      section
+        h2 Minimalistic
+        .range-slider.js-range-slider(
+          data-min-max-labels="false",
+          data-value-labels="false",
+        )
 
-      h2 Vertical
-      .range-slider.js-range-slider(
-        data-vertical="true"
-      )
-      .range-slider.js-range-slider
-      //- div(style="background-color: lightgreen; height: 300px; display: flex; align-items: center; justify-content: center;") div after
+      section
+        h2 Single
+        .range-slider.js-range-slider(
+          data-range="false"
+        )
+
+      section
+        h2 With scale
+        .range-slider.js-range-slider(
+          data-scale="true"
+        )  
+
+      section
+        h2 Vertical
+        .range-slider.js-range-slider(
+          data-vertical="true"
+        )
 
