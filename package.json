@@ -41,6 +41,7 @@
     "html-webpack-plugin": "^5.3.2",
     "jest": "^27.1.0",
     "jest-puppeteer": "^5.0.4",
+    "jquery": "^3.6.0",
     "mini-css-extract-plugin": "^1.6.2",
     "pug": "^3.0.0",
     "pug-loader": "^2.4.0",
@@ -61,7 +62,6 @@
     "@babel/core": "^7.15.0",
     "@babel/node": "^7.14.9",
     "@babel/preset-env": "^7.15.0",
-    "airbnb-browser-shims": "^3.3.0",
-    "jquery": "^3.6.0"
+    "airbnb-browser-shims": "^3.3.0"
   }
 }

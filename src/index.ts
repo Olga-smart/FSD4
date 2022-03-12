@@ -1,4 +1,4 @@
-import * as jQuery from 'jquery';
+// import * as jQuery from 'jquery';
 import 'airbnb-browser-shims';
 
 import Model from './Model/Model';

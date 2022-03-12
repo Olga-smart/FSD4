@@ -12,12 +12,15 @@ const isProd = !isDev;
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
-  entry: './index.ts',
-  output: {
-    filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname + '/docs'),
-    assetModuleFilename: 'assets/[name].[contenthash][ext]'
+  entry: {
+    RangeSlider: './index.ts',
   },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname + '/docs'),
+    assetModuleFilename: 'assets/[name][ext]'
+  },
+  devtool: 'inline-source-map',
   devServer: {
     port: 4200,
     hot: isDev
@@ -31,12 +34,11 @@ module.exports = {
     new HTMLWebpackPlugin({
       filename: 'index.html',
       template: './index.pug',
-      scriptLoading: 'blocking',
-      // inject: false
+      scriptLoading: 'blocking'
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css'
+      filename: '[name].css'
     }),
     new ESLintPlugin({
       extensions: ['.tsx', '.ts', '.js'],
@@ -73,5 +75,18 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-  }
+  },
+  optimization: {
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    },
+  },
 };
