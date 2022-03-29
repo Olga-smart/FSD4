@@ -1,4 +1,3 @@
-// import * as jQuery from 'jquery';
 import 'airbnb-browser-shims';
 
 import Model from './Model/Model';
@@ -145,8 +144,8 @@ class RangeSlider {
             }
           }
 
-          // There is no Object.keys().forEach because TS throws an error:
-          // "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'"
+          /* There is no Object.keys().forEach because TS throws an error:
+           * "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'" */
           checkType('min');
           checkType('max');
           checkType('leftValue');
@@ -223,10 +222,4 @@ $(() => {
   $('.js-range-slider').rangeSlider({
     panel: true,
   });
-  // const slider = $('.js-range-slider').data('rangeSlider');
-  // slider.setLeftValue(50).setRightValue(80).setStep(10);
-  // slider.onChange = (leftValue: number, rightValue: number | undefined) => {
-  //   console.log(`${leftValue} + ${rightValue}`);
-  // };
-  // delete slider.onChange;
 });

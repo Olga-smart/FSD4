@@ -76,8 +76,8 @@ class View extends BaseElement<'div'> {
     this.scaleIntervals = options.scaleIntervals ?? 4;
 
     if (options.scale) {
-      // create scale with arbitrary values, which will be replaced later by Presenter
-      // it is necessary for hasScale() return true
+      /* create scale with arbitrary values, which will be replaced later by Presenter
+       * it is necessary for hasScale() return true */
       this.scale = new Scale(0, 100, this);
     }
 
@@ -499,16 +499,20 @@ class View extends BaseElement<'div'> {
     if (isRange) {
       this.destroy();
       this.thumbRight = new Thumb(this, 'right');
+
       if (this.valueLabelLeft) {
         this.valueLabelRight = new Label('range-slider__value-label range-slider__value-label_right');
         this.valueLabelCommon = new Label('range-slider__value-label range-slider__value-label_common');
       }
+
       if (!this.vertical) {
         this.range.resetWidth();
       }
+
       if (this.vertical) {
         this.range.resetHeight();
       }
+
       this.render();
     }
 
@@ -516,6 +520,7 @@ class View extends BaseElement<'div'> {
       if (this.vertical) {
         this.range.resetTopIndent();
       }
+
       this.destroy();
       this.thumbRight = undefined;
       this.render();
@@ -713,6 +718,7 @@ class View extends BaseElement<'div'> {
       if (!this.vertical) {
         this.range.setIndent('left', 0);
       }
+
       if (this.vertical) {
         this.range.setIndent('bottom', 0);
       }
@@ -811,6 +817,7 @@ class View extends BaseElement<'div'> {
     if (this.valueLabelLeft && this.valueLabelRight) {
       return this.isTwoLabelsClose(this.valueLabelLeft, this.valueLabelRight);
     }
+
     return false;
   }
 
@@ -818,6 +825,7 @@ class View extends BaseElement<'div'> {
     if (this.minLabel && this.valueLabelLeft) {
       return this.isTwoLabelsClose(this.minLabel, this.valueLabelLeft);
     }
+
     return false;
   }
 
@@ -825,6 +833,7 @@ class View extends BaseElement<'div'> {
     if (this.valueLabelLeft && this.maxLabel) {
       return this.isTwoLabelsClose(this.valueLabelLeft, this.maxLabel);
     }
+
     return false;
   }
 
@@ -832,6 +841,7 @@ class View extends BaseElement<'div'> {
     if (this.valueLabelRight && this.maxLabel) {
       return this.isTwoLabelsClose(this.valueLabelRight, this.maxLabel);
     }
+
     return false;
   }
 
@@ -864,6 +874,7 @@ class View extends BaseElement<'div'> {
     if (distanceFromLeftThumbCenter <= distanceFromRightThumbCenter) {
       return 'left';
     }
+
     return 'right';
   }
 

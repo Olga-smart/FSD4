@@ -132,9 +132,11 @@ class Panel extends BaseElement<'form'> {
 
     const numberOfSymbolsAfterComma = step.toString().split('.')[1].length;
     let result: string = '1';
+
     for (let i = numberOfSymbolsAfterComma; i > 1; i -= 1) {
       result = `0${result}`;
     }
+
     result = `0.${result}`;
 
     return Number(result);

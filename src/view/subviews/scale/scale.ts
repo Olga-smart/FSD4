@@ -74,18 +74,23 @@ class Scale extends BaseElement<'div'> {
   private addMarksInIntervals(intervalsNumber: number): void {
     this.intervals.forEach((item) => {
       const fragment = new DocumentFragment();
+
       if (intervalsNumber < 29) {
         fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
+
       if (intervalsNumber < 15) {
         fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
+
       if (intervalsNumber < 8) {
         fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
+
       if (intervalsNumber < 5) {
         fragment.append(BaseElement.createComponent('span', 'range-slider__scale-mark'));
       }
+
       item.append(fragment);
     });
   }
@@ -93,9 +98,11 @@ class Scale extends BaseElement<'div'> {
   private addValues(min: number, max: number, intervalsNumber: number): void {
     this.values[0] = min;
     const step = Math.round((max - min) / intervalsNumber);
+
     for (let i = 1; i < intervalsNumber; i += 1) {
       this.values[i] = i * step + min;
     }
+
     this.values.push(max);
 
     const valueElement = BaseElement.createComponent('span', 'range-slider__scale-interval-value range-slider__scale-interval-value_min');
