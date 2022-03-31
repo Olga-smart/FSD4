@@ -29,7 +29,7 @@ Easy to use, flexible and responsive range slider.
 * Slider supports external methods to control it after creation
 
 ## Dependencies
-* [jQuery 1.8.x+](https://jquery.com/)
+* [jQuery 1.11.x+](https://jquery.com/)
 
 ## Usage
 Add the following libraries to the page:
@@ -94,7 +94,7 @@ or using data-* attributes:
 | `step`           | `data-step`            | `1`      | number  | Slider`s step. Always > 0. Could be fractional |
 | `minMaxLabels`   | `data-min-max-labels`  | `true`   | boolean | Shows min and max labels |
 | `valueLabels`    | `data-value-labels`    | `true`   | boolean | Shows from and to labels |
-| `vertical`       | `data-vertical`        | `false   | boolean | Makes slider vertical |
+| `vertical`       | `data-vertical`        | `false`   | boolean | Makes slider vertical |
 | `scale`          | `data-scale`           | `false`  | boolean | Shows scale |
 | `scaleIntervals` | `data-scale-intervals` | `5`      | number  | Number of scale intervals |
 | `panel`          | `data-panel`           | `false`  | boolean | Enables panel for interactive slider settings |
@@ -111,7 +111,7 @@ $('.js-range-slider').rangeSlider();
 const slider = $('.js-range-slider').data('rangeSlider');
 
 // Fire public method
-slider.setLeftValue(50)
+slider.setLeftValue(50);
 
 // Method calls can be chained
 slider.setLeftValue(50).setRightValue(80).setStep(10);
@@ -120,10 +120,10 @@ slider.setLeftValue(50).setRightValue(80).setStep(10);
 There are 3 public methods, whose names speak for themselves:
 ``` javascript
 // setLeftValue
-slider.setLeftValue(50)
+slider.setLeftValue(50);
 
 // setRightValue
-slider.setRightValue(80)
+slider.setRightValue(80);
 
 // setStep
 slider.setStep(10);
@@ -224,6 +224,7 @@ When user moves the slider, a whole chain of events is triggered, which is shown
 All 3 layers are combined in RangeSlider class, which you can see on [general class diagram](#under-the-hood). Each slider instance on the page is an instance of this class.
 
 Slider instances are created inside a special wrapper function, which is written in jQuery. The passed parameters are validated inside this wrapper function. Also the wrapper contains an object with default values.
+
 
 
 
