@@ -63,5 +63,8 @@
     "@babel/node": "^7.14.9",
     "@babel/preset-env": "^7.15.0",
     "airbnb-browser-shims": "^3.3.0"
+  },
+  "volta": {
+    "node": "16.14.2"
   }
 }

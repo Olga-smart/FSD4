@@ -225,7 +225,9 @@ All 3 layers are combined in RangeSlider class, which you can see on [general cl
 
 Slider instances are created inside a special wrapper function, which is written in jQuery. The passed parameters are validated inside this wrapper function. Also the wrapper contains an object with default values.
 
+### Node
 
+The project is compatible with Node versions from 10 to 16.
 
 
  
