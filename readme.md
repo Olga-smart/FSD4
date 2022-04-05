@@ -23,7 +23,7 @@ Easy to use, flexible and responsive range slider.
 * Two slider types: single (1 slider) and double (2 sliders)
 * Support of negative and fractional values
 * Ability to set custom step
-* Ability to disable UI elements (min and max, current value, scale)
+* Ability to disable UI elements (min and max labels, current value label, scale)
 * Slider writes its value right into input value field. This makes it easy to use in any html form
 * Any slider value can be set through data-attribute (eg. data-min="10")
 * Slider supports external methods to control it after creation
@@ -34,13 +34,16 @@ Easy to use, flexible and responsive range slider.
 ## Usage
 Add the following libraries to the page:
 * jQuery
-* rangeSlider.min.js
+* rangeSlider.js
 
 Add the following stylesheets to the page:
-* rangeSlider.min.css
+* rangeSlider.css
 
 ## Initialization
-1. Add div with classes 'range-slider' and 'js-range-slider' to the page.
+1. Add div with classes 'range-slider' and 'js-range-slider' to the page:
+```html
+<div class="range-slider js-range-slider"></div>
+```
 2. Call rangeSlider on the element:
 ```javascript
 $('.js-range-slider').rangeSlider();
@@ -90,7 +93,7 @@ or using data-* attributes:
 | `max`            | `data-max`             | `100`    | number  | Slider maximum value |
 | `range`          | `data-range`           | `true`   | boolean | False for one handle, true for two handles |
 | `leftValue`      | `data-left-value`      | `25`     | number  | Start position for left/bottom handle (or for single handle) |
-| `rightValue`     | `data-right-value`     | `75`     | number  | Start position for right/top handle (or for single handle) |
+| `rightValue`     | `data-right-value`     | `75`     | number  | Start position for right/top handle |
 | `step`           | `data-step`            | `1`      | number  | Slider`s step. Always > 0. Could be fractional |
 | `minMaxLabels`   | `data-min-max-labels`  | `true`   | boolean | Shows min and max labels |
 | `valueLabels`    | `data-value-labels`    | `true`   | boolean | Shows from and to labels |
@@ -221,7 +224,7 @@ When user moves the slider, a whole chain of events is triggered, which is shown
 
 ### Wrapper
 
-All 3 layers are combined in RangeSlider class, which you can see on [general class diagram](#under-the-hood). Each slider instance on the page is an instance of this class.
+All 3 layers are combined in Slider class, which you can see on [general class diagram](#under-the-hood). Each slider instance on the page is an instance of this class.
 
 Slider instances are created inside a special wrapper function, which is written in jQuery. The passed parameters are validated inside this wrapper function. Also the wrapper contains an object with default values.
 
