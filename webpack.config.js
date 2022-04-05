@@ -2,21 +2,20 @@ const path = require('path');
 const webpack = require('webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
-const isProd = !isDev;
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
   entry: {
-    RangeSlider: './index.ts',
+    RangeSlider: './Wrapper.ts',
+    demo: './demo/demo.ts'
   },
   output: {
-    filename: '[name].js',
+    filename: '[name]/[name].js',
     path: path.resolve(__dirname + '/docs'),
     assetModuleFilename: 'assets/[name][ext]'
   },
@@ -32,13 +31,14 @@ module.exports = {
       'window.jQuery': 'jquery'
     }),
     new HTMLWebpackPlugin({
-      filename: 'index.html',
-      template: './index.pug',
-      scriptLoading: 'blocking'
+      filename: 'demo/demo.html',
+      template: './demo/demo.pug',
+      scriptLoading: 'blocking',
+      chunks: ['RangeSlider', 'demo']
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: '[name].css'
+      filename: '[name]/[name].css'
     }),
     new ESLintPlugin({
       extensions: ['.tsx', '.ts', '.js'],
