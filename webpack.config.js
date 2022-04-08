@@ -21,7 +21,10 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
-    port: 4200,
+    static: {
+      directory: path.resolve(__dirname, 'docs')
+    },
+    open: './demo/demo.html',
     hot: isDev
   },
   plugins: [
