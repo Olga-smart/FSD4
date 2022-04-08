@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: column;
   user-select: none;
+  & *,
+  & *::before,
+  & *::after {
+    box-sizing: border-box;
+  }
   &__labels-container {
     position: relative;
   }

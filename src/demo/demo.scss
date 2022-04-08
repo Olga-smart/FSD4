@@ -1,4 +1,4 @@
-body {
+.demo {
   margin: 0;
   padding: 0;
   display: flex;
@@ -6,22 +6,14 @@ body {
   justify-content: center;
   align-items: center;
   font-family: 'Arial', sans-serif;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-.container {
-  width: 50%;
-  max-width: 500px;
-  min-width: 300px;
-}
-
-section {
-  padding-top: 50px;
-  padding-bottom: 50px;
+  &__container {
+    width: 50%;
+    max-width: 500px;
+    min-width: 300px;
+  }
+  &__section {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
 }
 
