@@ -7,8 +7,8 @@
     "allowJs": true,
     "lib": ["dom", "es2015", "dom.iterable"],
     "module": "esnext",
-    "outDir": "./docs",
-    "declarationDir": "./docs/types",
+    "outDir": "./dist",
+    "declarationDir": "./dist/types",
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true

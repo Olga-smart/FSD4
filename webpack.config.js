@@ -16,13 +16,13 @@ module.exports = {
   },
   output: {
     filename: '[name]/[name].js',
-    path: path.resolve(__dirname + '/docs'),
+    path: path.resolve(__dirname + '/dist'),
     assetModuleFilename: 'assets/[name][ext]'
   },
   devtool: 'inline-source-map',
   devServer: {
     static: {
-      directory: path.resolve(__dirname, 'docs')
+      directory: path.resolve(__dirname, '/dist')
     },
     open: './demo/demo.html',
     hot: isDev
