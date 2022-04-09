@@ -2,7 +2,7 @@ import { EventManager } from './EventManager';
 
 describe('EventManager', () => {
   describe('subscribe(listener)', () => {
-    it('add listener to listeners array', () => {
+    it('add listener to listeners list', () => {
       const eventManager = new EventManager();
       const listener = {
         inform() {},
@@ -16,7 +16,7 @@ describe('EventManager', () => {
   });
 
   describe('unsubscribe(listener)', () => {
-    it('remove listener from listeners array', () => {
+    it('remove listener from listeners list', () => {
       const eventManager = new EventManager();
       const listener = {
         inform() {},
@@ -58,7 +58,7 @@ describe('EventManager', () => {
       });
     });
 
-    it('if data is not passed it is null by default', () => {
+    it('if data is not passed, it is null by default', () => {
       eventManager.notify('someEvent');
 
       [listener1, listener2, listener3].forEach((listener) => {
@@ -66,7 +66,7 @@ describe('EventManager', () => {
       });
     });
 
-    it('if listeners array is empty nothing happens', () => {
+    it('if listeners list is empty, nothing happens', () => {
       const newEventManager = new EventManager();
       newEventManager.notify('someEvent', 5);
     });
