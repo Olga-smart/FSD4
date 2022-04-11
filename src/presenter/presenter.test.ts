@@ -154,8 +154,8 @@ describe('Presenter', () => {
           model.setLeftValue = jest.fn();
 
           it('value match px if track length is 100 and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -165,8 +165,8 @@ describe('Presenter', () => {
           });
 
           it('value match px * 2 if track length is 100 and min = 0 and max = 200', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(200);
+            model.setMin(0);
+            model.setMax(200);
             view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -176,8 +176,8 @@ describe('Presenter', () => {
           });
 
           it('value match px / 2 if track length is 200 and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             view.getTrackWidth = jest.fn(() => 200);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -187,11 +187,11 @@ describe('Presenter', () => {
           });
 
           it('value match px * x if track length is 100 and min = 0 and max = 100 * x', () => {
-            model.changeMinFromOutside(0);
+            model.setMin(0);
             view.getTrackWidth = jest.fn(() => 100);
 
             for (let x = 1; x <= 10; x += 1) {
-              model.changeMaxFromOutside(100 * x);
+              model.setMax(100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 presenter.inform('viewLeftInput', i);
                 expect(model.setLeftValue).toBeCalledWith(i * x);
@@ -200,8 +200,8 @@ describe('Presenter', () => {
           });
 
           it('value match px / x if track length is 100 * x and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
 
             for (let x = 1; x <= 10; x += 1) {
               view.getTrackWidth = jest.fn(() => 100 * x);
@@ -223,8 +223,8 @@ describe('Presenter', () => {
           model.setLeftValue = jest.fn();
 
           it('value match px if track height is 100 and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             view.getTrackHeight = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -234,8 +234,8 @@ describe('Presenter', () => {
           });
 
           it('value match px * 2 if track height is 100 and min = 0 and max = 200', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(200);
+            model.setMin(0);
+            model.setMax(200);
             view.getTrackHeight = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -245,8 +245,8 @@ describe('Presenter', () => {
           });
 
           it('value match px / 2 if track height is 200 and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             view.getTrackHeight = jest.fn(() => 200);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -256,11 +256,11 @@ describe('Presenter', () => {
           });
 
           it('value match px * x if track height is 100 and min = 0 and max = 100 * x', () => {
-            model.changeMinFromOutside(0);
+            model.setMin(0);
             view.getTrackHeight = jest.fn(() => 100);
 
             for (let x = 1; x <= 10; x += 1) {
-              model.changeMaxFromOutside(100 * x);
+              model.setMax(100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 presenter.inform('viewLeftInput', i);
                 expect(model.setLeftValue).toBeCalledWith(i * x);
@@ -269,8 +269,8 @@ describe('Presenter', () => {
           });
 
           it('value match px / x if track height is 100 * x and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
 
             for (let x = 1; x <= 10; x += 1) {
               view.getTrackHeight = jest.fn(() => 100 * x);
@@ -294,8 +294,8 @@ describe('Presenter', () => {
           model.setRightValue = jest.fn();
 
           it('value match px if track length is 100 and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -305,8 +305,8 @@ describe('Presenter', () => {
           });
 
           it('value match px * 2 if track length is 100 and min = 0 and max = 200', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(200);
+            model.setMin(0);
+            model.setMax(200);
             view.getTrackWidth = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -316,8 +316,8 @@ describe('Presenter', () => {
           });
 
           it('value match px / 2 if track length is 200 and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             view.getTrackWidth = jest.fn(() => 200);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -327,11 +327,11 @@ describe('Presenter', () => {
           });
 
           it('value match px * x if track length is 100 and min = 0 and max = 100 * x', () => {
-            model.changeMinFromOutside(0);
+            model.setMin(0);
             view.getTrackWidth = jest.fn(() => 100);
 
             for (let x = 1; x <= 10; x += 1) {
-              model.changeMaxFromOutside(100 * x);
+              model.setMax(100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 presenter.inform('viewRightInput', i);
                 expect(model.setRightValue).toBeCalledWith(i * x);
@@ -340,8 +340,8 @@ describe('Presenter', () => {
           });
 
           it('value match px / x if track length is 100 * x and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
 
             for (let x = 1; x <= 10; x += 1) {
               view.getTrackWidth = jest.fn(() => 100 * x);
@@ -363,8 +363,8 @@ describe('Presenter', () => {
           model.setRightValue = jest.fn();
 
           it('value match px if track height is 100 and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             view.getTrackHeight = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -374,8 +374,8 @@ describe('Presenter', () => {
           });
 
           it('value match px * 2 if track height is 100 and min = 0 and max = 200', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(200);
+            model.setMin(0);
+            model.setMax(200);
             view.getTrackHeight = jest.fn(() => 100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -385,8 +385,8 @@ describe('Presenter', () => {
           });
 
           it('value match px / 2 if track height is 200 and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             view.getTrackHeight = jest.fn(() => 200);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -396,11 +396,11 @@ describe('Presenter', () => {
           });
 
           it('value match px * x if track height is 100 and min = 0 and max = 100 * x', () => {
-            model.changeMinFromOutside(0);
+            model.setMin(0);
             view.getTrackHeight = jest.fn(() => 100);
 
             for (let x = 1; x <= 10; x += 1) {
-              model.changeMaxFromOutside(100 * x);
+              model.setMax(100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 presenter.inform('viewRightInput', i);
                 expect(model.setRightValue).toBeCalledWith(i * x);
@@ -409,8 +409,8 @@ describe('Presenter', () => {
           });
 
           it('value match px / x if track height is 100 * x and min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
 
             for (let x = 1; x <= 10; x += 1) {
               view.getTrackHeight = jest.fn(() => 100 * x);
@@ -460,11 +460,11 @@ describe('Presenter', () => {
         const model = new Model(defaultModelOptions);
         const view = new View(slider);
         const presenter = new Presenter(model, view);
-        model.changeMinFromOutside = jest.fn();
+        model.setMin = jest.fn();
 
         for (let i = 0; i <= 100; i += 1) {
           presenter.inform('viewChangeMinFromOutside', i);
-          expect(model.changeMinFromOutside).toBeCalledWith(i);
+          expect(model.setMin).toBeCalledWith(i);
         }
       });
     });
@@ -475,11 +475,11 @@ describe('Presenter', () => {
         const model = new Model(defaultModelOptions);
         const view = new View(slider);
         const presenter = new Presenter(model, view);
-        model.changeMaxFromOutside = jest.fn();
+        model.setMax = jest.fn();
 
         for (let i = 0; i <= 100; i += 1) {
           presenter.inform('viewChangeMaxFromOutside', i);
-          expect(model.changeMaxFromOutside).toBeCalledWith(i);
+          expect(model.setMax).toBeCalledWith(i);
         }
       });
     });
@@ -671,8 +671,8 @@ describe('Presenter', () => {
           view.setLeftValue = jest.fn();
 
           it('percent match value, if min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             model.setRightValue(100);
             view.getTrackWidth = jest.fn(() => 100);
 
@@ -685,8 +685,8 @@ describe('Presenter', () => {
           });
 
           it('percent match value / 2, if min = 0 and max = 200', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(200);
+            model.setMin(0);
+            model.setMax(200);
             model.setRightValue(100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -698,11 +698,11 @@ describe('Presenter', () => {
           });
 
           it('percent match value / x, if min = 0 and max = 100 * x', () => {
-            model.changeMinFromOutside(0);
+            model.setMin(0);
             model.setRightValue(100);
 
             for (let x = 1; x <= 10; x += 1) {
-              model.changeMaxFromOutside(100 * x);
+              model.setMax(100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 model.setLeftValue(i);
                 presenter.inform('modelLeftSet', null);
@@ -722,8 +722,8 @@ describe('Presenter', () => {
           view.setLeftValue = jest.fn();
 
           it('percent match value, if min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             model.setRightValue(100);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -735,8 +735,8 @@ describe('Presenter', () => {
           });
 
           it('percent match value / 2, if min = 0 and max = 200', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(200);
+            model.setMin(0);
+            model.setMax(200);
             model.setRightValue(200);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -748,10 +748,10 @@ describe('Presenter', () => {
           });
 
           it('percent match value / x, if min = 0 and max = 100 * x', () => {
-            model.changeMinFromOutside(0);
+            model.setMin(0);
 
             for (let x = 1; x <= 10; x += 1) {
-              model.changeMaxFromOutside(100 * x);
+              model.setMax(100 * x);
               model.setRightValue(100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 model.setLeftValue(i);
@@ -791,8 +791,8 @@ describe('Presenter', () => {
           view.setRightValue = jest.fn();
 
           it('percent match value, if min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             model.setLeftValue(0);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -804,8 +804,8 @@ describe('Presenter', () => {
           });
 
           it('percent match value / 2, if min = 0 and max = 200', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(200);
+            model.setMin(0);
+            model.setMax(200);
             model.setLeftValue(0);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -817,11 +817,11 @@ describe('Presenter', () => {
           });
 
           it('percent match value / x, if min = 0 and max = 100 * x', () => {
-            model.changeMinFromOutside(0);
+            model.setMin(0);
             model.setLeftValue(0);
 
             for (let x = 1; x <= 10; x += 1) {
-              model.changeMaxFromOutside(100 * x);
+              model.setMax(100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 model.setRightValue(i);
                 presenter.inform('modelRightSet', null);
@@ -842,8 +842,8 @@ describe('Presenter', () => {
           view.setRightValue = jest.fn();
 
           it('percent match value, if min = 0 and max = 100', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(100);
+            model.setMin(0);
+            model.setMax(100);
             model.setLeftValue(0);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -855,8 +855,8 @@ describe('Presenter', () => {
           });
 
           it('percent match value / 2, if min = 0 and max = 200', () => {
-            model.changeMinFromOutside(0);
-            model.changeMaxFromOutside(200);
+            model.setMin(0);
+            model.setMax(200);
             model.setLeftValue(0);
 
             for (let i = 0; i <= 100; i += 1) {
@@ -868,11 +868,11 @@ describe('Presenter', () => {
           });
 
           it('percent match value / x, if min = 0 and max = 100 * x', () => {
-            model.changeMinFromOutside(0);
+            model.setMin(0);
             model.setLeftValue(0);
 
             for (let x = 1; x <= 10; x += 1) {
-              model.changeMaxFromOutside(100 * x);
+              model.setMax(100 * x);
               for (let i = 0; i <= 100; i += 1) {
                 model.setRightValue(i);
                 presenter.inform('modelRightSet', null);

@@ -17,12 +17,11 @@ declare class Model {
     private range;
     constructor(options: ModelOptions);
     subscribe(listener: IEventListener): void;
-    notify(eventType: string, data?: number | null): void;
     setLeftValue(value: number): void;
     setRightValue(value?: number): void;
     removeRightValue(): void;
-    changeMinFromOutside(value: number): void;
-    changeMaxFromOutside(value: number): void;
+    setMin(value: number): void;
+    setMax(value: number): void;
     setStep(value: number): void;
     toggleRange(): void;
     getMin(): number;

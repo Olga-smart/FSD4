@@ -80,10 +80,14 @@ describe('Model', () => {
 
     it('say subscribers that left value was set', () => {
       const model = new Model(defaultOptions);
-      model.notify = jest.fn();
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
       model.setLeftValue(10);
 
-      expect(model.notify).toBeCalledWith('modelLeftSet');
+      expect(subscriber.inform).toBeCalledWith('modelSetLeft', null);
     });
   });
 
@@ -104,7 +108,7 @@ describe('Model', () => {
 
     it('set up right value = max, if value is not passed', () => {
       const model = new Model(defaultOptions);
-      model.changeMaxFromOutside(100);
+      model.setMax(100);
       model.setRightValue();
 
       expect(model.getRightValue()).toBe(100);
@@ -119,10 +123,27 @@ describe('Model', () => {
 
     it('say subscribers that right value was set', () => {
       const model = new Model(defaultOptions);
-      model.notify = jest.fn();
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
       model.setRightValue(100);
 
-      expect(model.notify).toBeCalledWith('modelRightSet');
+      expect(subscriber.inform).toBeCalledWith('modelSetRight', null);
+    });
+
+    it('nothing happens, if slider is not range', () => {
+      const model = new Model({ ...defaultOptions, range: false });
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
+      model.setRightValue(100);
+
+      expect(subscriber.inform).not.toBeCalled();
+      expect(model.getRightValue()).toBeUndefined();
     });
   });
 
@@ -136,44 +157,52 @@ describe('Model', () => {
     });
   });
 
-  describe('changeMinFromOutside(value)', () => {
+  describe('setMin(value)', () => {
     it('set up min value', () => {
       const model = new Model(defaultOptions);
-      model.changeMinFromOutside(10);
+      model.setMin(10);
 
       expect(model.getMin()).toBe(10);
     });
 
     it('say subscribers that min was changed', () => {
       const model = new Model(defaultOptions);
-      model.notify = jest.fn();
-      model.changeMinFromOutside(10);
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
+      model.setMin(10);
 
-      expect(model.notify).toBeCalledWith('modelChangeMin');
+      expect(subscriber.inform).toBeCalledWith('modelSetMin', null);
     });
 
     it('nothing happens if passed value > left value', () => {
       const model = new Model(defaultOptions);
-      model.notify = jest.fn();
-      model.changeMinFromOutside(30);
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
+      model.setMin(30);
 
       expect(model.getMin()).toBe(10);
-      expect(model.notify).not.toBeCalled();
+      expect(subscriber.inform).not.toBeCalled();
     });
   });
 
-  describe('changeMaxFromOutside(value)', () => {
+  describe('setMax(value)', () => {
     describe('set up max value', () => {
       it('if slider is range', () => {
         const model = new Model(defaultOptions);
-        model.changeMaxFromOutside(200);
+        model.setMax(200);
 
         expect(model.getMax()).toBe(200);
       });
 
       it('if slider is not range', () => {
         const model = new Model({ ...defaultOptions, range: false });
-        model.changeMaxFromOutside(200);
+        model.setMax(200);
 
         expect(model.getMax()).toBe(200);
       });
@@ -181,28 +210,40 @@ describe('Model', () => {
 
     it('say subscribers that max was changed', () => {
       const model = new Model(defaultOptions);
-      model.notify = jest.fn();
-      model.changeMaxFromOutside(200);
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
+      model.setMax(200);
 
-      expect(model.notify).toBeCalledWith('modelChangeMax');
+      expect(subscriber.inform).toBeCalledWith('modelSetMax', null);
     });
 
     it('nothing happens if passed value < left value', () => {
       const model = new Model({ ...defaultOptions, range: false });
-      model.notify = jest.fn();
-      model.changeMaxFromOutside(20);
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
+      model.setMax(20);
 
       expect(model.getMax()).toBe(100);
-      expect(model.notify).not.toBeCalled();
+      expect(subscriber.inform).not.toBeCalled();
     });
 
     it('nothing happens if passed value < right value', () => {
       const model = new Model(defaultOptions);
-      model.notify = jest.fn();
-      model.changeMaxFromOutside(70);
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
+      model.setMax(70);
 
       expect(model.getMax()).toBe(100);
-      expect(model.notify).not.toBeCalled();
+      expect(subscriber.inform).not.toBeCalled();
     });
   });
 
@@ -212,6 +253,18 @@ describe('Model', () => {
       model.setStep(10);
 
       expect(model.getStep()).toBe(10);
+    });
+
+    it('say subscribers that step was changed', () => {
+      const model = new Model(defaultOptions);
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
+      model.setStep(10);
+
+      expect(subscriber.inform).toBeCalledWith('modelSetStep', null);
     });
 
     it('nothing happens, if value = 0', () => {
@@ -232,8 +285,8 @@ describe('Model', () => {
 
     it('nothing happens, if value > |max - min|', () => {
       const model = new Model(defaultOptions);
-      model.changeMinFromOutside(10);
-      model.changeMaxFromOutside(100);
+      model.setMin(10);
+      model.setMax(100);
       model.setStep(10);
       model.setStep(100);
 
@@ -242,14 +295,14 @@ describe('Model', () => {
   });
 
   describe('toggleRange()', () => {
-    it('set up isRange property to false if slider was range', () => {
+    it('set up isRange property to false, if slider was range', () => {
       const model = new Model({ ...defaultOptions, range: true });
       model.toggleRange();
 
       expect(model.isRange()).toBe(false);
     });
 
-    it('set up isRange property to true if slider was range', () => {
+    it('set up isRange property to true, if slider was not range', () => {
       const model = new Model({ ...defaultOptions, range: false });
       model.toggleRange();
 
@@ -258,10 +311,14 @@ describe('Model', () => {
 
     it('say subscribers that range was changed', () => {
       const model = new Model({ ...defaultOptions, range: true });
-      model.notify = jest.fn();
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      model.subscribe(subscriber);
       model.toggleRange();
 
-      expect(model.notify).toBeCalledWith('modelRangeToggle');
+      expect(subscriber.inform).toBeCalledWith('modelToggleRange', null);
     });
   });
 });
