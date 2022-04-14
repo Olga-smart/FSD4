@@ -9,8 +9,9 @@ class BaseElement<T extends keyof HTMLElementTagNameMap> {
     }
   }
 
-  // eslint-disable-next-line max-len
-  protected static createComponent<K extends keyof HTMLElementTagNameMap>(tag: K, className?: string): HTMLElementTagNameMap[K] {
+  protected static createComponent<K extends keyof HTMLElementTagNameMap>(
+    tag: K, className?: string,
+  ): HTMLElementTagNameMap[K] {
     const element = document.createElement(tag);
 
     if (className) {

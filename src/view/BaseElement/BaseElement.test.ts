@@ -1,7 +1,8 @@
+/* eslint-disable max-classes-per-file */ // it is necessary for createComponent testing
 import BaseElement from './BaseElement';
 
 describe('BaseElement', () => {
-  describe('constructor(type, className)', () => {
+  describe('constructor(tag, className)', () => {
     it('create element with passed tag', () => {
       const tags: (keyof HTMLElementTagNameMap)[] = ['div', 'span', 'a', 'h1', 'input'];
       tags.forEach((tag) => {
@@ -15,6 +16,42 @@ describe('BaseElement', () => {
       classNames.forEach((className) => {
         const element = new BaseElement('div', className);
         expect(element.getComponent().className).toBe(className);
+      });
+    });
+  });
+
+  describe('createComponent(tag, className)', () => {
+    it('create element with passed tag', () => {
+      const tags: (keyof HTMLElementTagNameMap)[] = ['div', 'span', 'a', 'h1', 'input'];
+      tags.forEach((tag) => {
+        class Element extends BaseElement<'div'> {
+          element: HTMLElement;
+
+          constructor() {
+            super('div');
+            this.element = BaseElement.createComponent(tag);
+          }
+        }
+        const element = new Element();
+
+        expect(element.element.tagName).toBe(tag.toUpperCase());
+      });
+    });
+
+    it('assign passed class name to element', () => {
+      const classNames = ['class1', 'class2 class3', 'class4-class5'];
+      classNames.forEach((className) => {
+        class Element extends BaseElement<'div'> {
+          element: HTMLElement;
+
+          constructor() {
+            super('div');
+            this.element = BaseElement.createComponent('div', className);
+          }
+        }
+        const element = new Element();
+
+        expect(element.element.className).toBe(className);
       });
     });
   });
