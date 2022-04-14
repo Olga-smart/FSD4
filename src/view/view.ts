@@ -263,7 +263,7 @@ class View extends BaseElement<'div'> {
         }
       }
 
-      this.notify('viewLeftInput', newLeft);
+      this.notify('viewInputLeft', newLeft);
     }
 
     if (this.vertical) {
@@ -290,7 +290,7 @@ class View extends BaseElement<'div'> {
 
       const newBottom = trackHeight - newTop;
 
-      this.notify('viewLeftInput', newBottom);
+      this.notify('viewInputLeft', newBottom);
     }
   }
 
@@ -312,7 +312,7 @@ class View extends BaseElement<'div'> {
         newLeft = trackWidth;
       }
 
-      this.notify('viewRightInput', newLeft);
+      this.notify('viewInputRight', newLeft);
     }
 
     if (this.vertical) {
@@ -332,7 +332,7 @@ class View extends BaseElement<'div'> {
 
       const newBottom = this.getTrackHeight() - newTop;
 
-      this.notify('viewRightInput', newBottom);
+      this.notify('viewInputRight', newBottom);
     }
   }
 
@@ -367,9 +367,9 @@ class View extends BaseElement<'div'> {
       this.addSmoothTransition('left');
 
       if (!this.vertical) {
-        this.notify('viewLeftInput', x);
+        this.notify('viewInputLeft', x);
       } else {
-        this.notify('viewLeftInput', this.getTrackHeight() - y);
+        this.notify('viewInputLeft', this.getTrackHeight() - y);
       }
 
       setTimeout(() => {
@@ -382,9 +382,9 @@ class View extends BaseElement<'div'> {
         this.addSmoothTransition('left');
 
         if (!this.vertical) {
-          this.notify('viewLeftInput', x);
+          this.notify('viewInputLeft', x);
         } else {
-          this.notify('viewLeftInput', this.getTrackHeight() - y);
+          this.notify('viewInputLeft', this.getTrackHeight() - y);
         }
 
         setTimeout(() => {
@@ -394,9 +394,9 @@ class View extends BaseElement<'div'> {
         this.addSmoothTransition('right');
 
         if (!this.vertical) {
-          this.notify('viewRightInput', x);
+          this.notify('viewInputRight', x);
         } else {
-          this.notify('viewRightInput', this.getTrackHeight() - y);
+          this.notify('viewInputRight', this.getTrackHeight() - y);
         }
 
         setTimeout(() => {
@@ -437,23 +437,23 @@ class View extends BaseElement<'div'> {
   }
 
   changeLeftValueFromOutside(value: number): void {
-    this.notify('viewChangeLeftValueFromOutside', value);
+    this.notify('viewSetLeftFromOutside', value);
   }
 
   changeRightValueFromOutside(value: number): void {
-    this.notify('viewChangeRightValueFromOutside', value);
+    this.notify('viewSetRightFromOutside', value);
   }
 
   changeMinFromOutside(value: number): void {
-    this.notify('viewChangeMinFromOutside', value);
+    this.notify('viewSetMin', value);
   }
 
   changeMaxFromOutside(value: number): void {
-    this.notify('viewChangeMaxFromOutside', value);
+    this.notify('viewSetMax', value);
   }
 
   changeStepFromOutside(value: number): void {
-    this.notify('viewChangeStepFromOutside', value);
+    this.notify('viewSetStep', value);
   }
 
   changeOrientationFromOutside(): void {
@@ -471,7 +471,7 @@ class View extends BaseElement<'div'> {
       this.valueLabelRight?.setIndent('left', 'unset');
       this.valueLabelCommon?.setIndent('left', 'unset');
       this.scale?.handleSwitchFromHorizontalToVertical();
-      this.notify('viewChangeOrientationFromOutside');
+      this.notify('viewToggleOrientation');
       return;
     }
 
@@ -489,7 +489,7 @@ class View extends BaseElement<'div'> {
       this.valueLabelRight?.setIndent('top', 'unset');
       this.valueLabelCommon?.setIndent('top', 'unset');
       this.scale?.handleSwitchFromVerticalToHorizontal();
-      this.notify('viewChangeOrientationFromOutside');
+      this.notify('viewToggleOrientation');
     }
   }
 
@@ -526,11 +526,11 @@ class View extends BaseElement<'div'> {
       this.render();
     }
 
-    this.notify('viewToggleRangeFromOutside');
+    this.notify('viewToggleRange');
   }
 
   toggleScaleFromOutside(): void {
-    this.notify('viewToggleScaleFromOutside');
+    this.notify('viewToggleScale');
   }
 
   changeScaleIntervals(value: number): void {
@@ -538,7 +538,7 @@ class View extends BaseElement<'div'> {
 
     this.scaleIntervals = Math.floor(value);
     this.removeScale();
-    this.notify('viewChangeScaleIntervals');
+    this.notify('viewSetScaleIntervals');
   }
 
   toggleValueLabels(): void {

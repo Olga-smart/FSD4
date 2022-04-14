@@ -1281,12 +1281,12 @@ describe('View', () => {
 
       it('if cursor is off left edge of track, new left indent is 0', () => {
         view.handleLeftInput(100, 200);
-        expect(view.notify).toBeCalledWith('viewLeftInput', 0);
+        expect(view.notify).toBeCalledWith('viewInputLeft', 0);
       });
 
       it('if cursor is off right edge of track, new left indent = track width', () => {
         view.handleLeftInput(800, 200);
-        expect(view.notify).toBeCalledWith('viewLeftInput', 500);
+        expect(view.notify).toBeCalledWith('viewInputLeft', 500);
       });
 
       it('if cursor is off right thumb position, new left indent = right thumb indent', () => {
@@ -1316,7 +1316,7 @@ describe('View', () => {
 
         newView.handleLeftInput(500, 200);
 
-        expect(newView.notify).toBeCalledWith('viewLeftInput', 200);
+        expect(newView.notify).toBeCalledWith('viewInputLeft', 200);
       });
     });
 
@@ -1340,12 +1340,12 @@ describe('View', () => {
 
       it('if cursor is off bottom edge of track, new bottom indent is 0', () => {
         view.handleLeftInput(100, 800);
-        expect(view.notify).toBeCalledWith('viewLeftInput', 0);
+        expect(view.notify).toBeCalledWith('viewInputLeft', 0);
       });
 
       it('if cursor is off top edge of track, new bottom indent = track height', () => {
         view.handleLeftInput(100, 100);
-        expect(view.notify).toBeCalledWith('viewLeftInput', 500);
+        expect(view.notify).toBeCalledWith('viewInputLeft', 500);
       });
 
       it('if cursor is off right thumb position, new bottom indent = right thumb indent', () => {
@@ -1378,7 +1378,7 @@ describe('View', () => {
 
         newView.handleLeftInput(100, 300);
 
-        expect(newView.notify).toBeCalledWith('viewLeftInput', 500 - 200);
+        expect(newView.notify).toBeCalledWith('viewInputLeft', 500 - 200);
       });
     });
   });
@@ -1414,12 +1414,12 @@ describe('View', () => {
 
         view.handleRightInput(300, 100);
 
-        expect(view.notify).toBeCalledWith('viewRightInput', 200);
+        expect(view.notify).toBeCalledWith('viewInputRight', 200);
       });
 
       it('if cursor is off right edge of track, new left indent = track width', () => {
         view.handleRightInput(800, 200);
-        expect(view.notify).toBeCalledWith('viewRightInput', 500);
+        expect(view.notify).toBeCalledWith('viewInputRight', 500);
       });
     });
 
@@ -1454,12 +1454,12 @@ describe('View', () => {
 
         view.handleRightInput(100, 500);
 
-        expect(view.notify).toBeCalledWith('viewRightInput', 500 - 200);
+        expect(view.notify).toBeCalledWith('viewInputRight', 500 - 200);
       });
 
       it('if cursor is off top edge of track, new bottom indent = track height', () => {
         view.handleRightInput(100, 100);
-        expect(view.notify).toBeCalledWith('viewRightInput', 500);
+        expect(view.notify).toBeCalledWith('viewInputRight', 500);
       });
     });
   });
@@ -1548,7 +1548,7 @@ describe('View', () => {
 
       describe('say subscribers that view wants to change left value and pass this value', () => {
         it('if slider is horizontal', () => {
-          expect(view.notify).toBeCalledWith('viewLeftInput', 100);
+          expect(view.notify).toBeCalledWith('viewInputLeft', 100);
         });
 
         it('if slider is vertical', () => {
@@ -1563,7 +1563,7 @@ describe('View', () => {
 
           newView.handleScaleOrTrackClick(100, 100);
 
-          expect(newView.notify).toBeCalledWith('viewLeftInput', 500 - 100);
+          expect(newView.notify).toBeCalledWith('viewInputLeft', 500 - 100);
         });
       });
 
@@ -1653,7 +1653,7 @@ describe('View', () => {
           });
 
           it('say subscribers that view wants to change left value and pass this value', () => {
-            expect(view.notify).toBeCalledWith('viewLeftInput', 30);
+            expect(view.notify).toBeCalledWith('viewInputLeft', 30);
           });
 
           describe('remove smooth transition', () => {
@@ -1742,7 +1742,7 @@ describe('View', () => {
           });
 
           it('say subscribers that view wants to change left value and pass this value', () => {
-            expect(view.notify).toBeCalledWith('viewLeftInput', 500 - 38);
+            expect(view.notify).toBeCalledWith('viewInputLeft', 500 - 38);
           });
 
           describe('remove smooth transition', () => {
@@ -1830,7 +1830,7 @@ describe('View', () => {
           });
 
           it('say subscribers that view wants to change left value and pass this value', () => {
-            expect(view.notify).toBeCalledWith('viewRightInput', 38);
+            expect(view.notify).toBeCalledWith('viewInputRight', 38);
           });
 
           describe('remove smooth transition', () => {
@@ -1919,7 +1919,7 @@ describe('View', () => {
           });
 
           it('say subscribers that view wants to change left value and pass this value', () => {
-            expect(view.notify).toBeCalledWith('viewRightInput', 470);
+            expect(view.notify).toBeCalledWith('viewInputRight', 470);
           });
 
           describe('remove smooth transition', () => {
@@ -2022,7 +2022,7 @@ describe('View', () => {
     it('say subscribers that view wants to change left value and pass this value', () => {
       for (let i = 0; i <= 100; i += 1) {
         view.changeLeftValueFromOutside(i);
-        expect(view.notify).toBeCalledWith('viewChangeLeftValueFromOutside', i);
+        expect(view.notify).toBeCalledWith('viewSetLeftFromOutside', i);
       }
     });
   });
@@ -2035,7 +2035,7 @@ describe('View', () => {
     it('say subscribers that view wants to change right value and pass this value', () => {
       for (let i = 0; i <= 100; i += 1) {
         view.changeRightValueFromOutside(i);
-        expect(view.notify).toBeCalledWith('viewChangeRightValueFromOutside', i);
+        expect(view.notify).toBeCalledWith('viewSetRightFromOutside', i);
       }
     });
   });
@@ -2048,7 +2048,7 @@ describe('View', () => {
     it('say subscribers that view wants to change min value and pass this value', () => {
       for (let i = 0; i <= 100; i += 1) {
         view.changeMinFromOutside(i);
-        expect(view.notify).toBeCalledWith('viewChangeMinFromOutside', i);
+        expect(view.notify).toBeCalledWith('viewSetMin', i);
       }
     });
   });
@@ -2061,7 +2061,7 @@ describe('View', () => {
     it('say subscribers that view wants to change maz value and pass this value', () => {
       for (let i = 0; i <= 100; i += 1) {
         view.changeMaxFromOutside(i);
-        expect(view.notify).toBeCalledWith('viewChangeMaxFromOutside', i);
+        expect(view.notify).toBeCalledWith('viewSetMax', i);
       }
     });
   });
@@ -2074,7 +2074,7 @@ describe('View', () => {
     it('say subscribers that view wants to change maz value and pass this value', () => {
       for (let i = 0; i <= 10; i += 0.1) {
         view.changeStepFromOutside(i);
-        expect(view.notify).toBeCalledWith('viewChangeStepFromOutside', i);
+        expect(view.notify).toBeCalledWith('viewSetStep', i);
       }
     });
   });
@@ -2158,7 +2158,7 @@ describe('View', () => {
       });
 
       it('say subscribers that orientation was changed', () => {
-        expect(view.notify).toBeCalledWith('viewChangeOrientationFromOutside');
+        expect(view.notify).toBeCalledWith('viewToggleOrientation');
       });
     });
 
@@ -2236,7 +2236,7 @@ describe('View', () => {
       });
 
       it('say subscribers that orientation was changed', () => {
-        expect(view.notify).toBeCalledWith('viewChangeOrientationFromOutside');
+        expect(view.notify).toBeCalledWith('viewToggleOrientation');
       });
     });
   });
@@ -2288,7 +2288,7 @@ describe('View', () => {
         });
 
         it('say subscribers that range was changed', () => {
-          expect(view.notify).toBeCalledWith('viewToggleRangeFromOutside');
+          expect(view.notify).toBeCalledWith('viewToggleRange');
         });
       });
 
@@ -2337,7 +2337,7 @@ describe('View', () => {
         });
 
         it('say subscribers that range was changed', () => {
-          expect(view.notify).toBeCalledWith('viewToggleRangeFromOutside');
+          expect(view.notify).toBeCalledWith('viewToggleRange');
         });
       });
     });
@@ -2356,7 +2356,7 @@ describe('View', () => {
         view.toggleRangeFromOutside();
 
         it('say subscribers that range was changed', () => {
-          expect(view.notify).toBeCalledWith('viewToggleRangeFromOutside');
+          expect(view.notify).toBeCalledWith('viewToggleRange');
         });
       });
 
@@ -2378,7 +2378,7 @@ describe('View', () => {
         });
 
         it('say subscribers that range was changed', () => {
-          expect(view.notify).toBeCalledWith('viewToggleRangeFromOutside');
+          expect(view.notify).toBeCalledWith('viewToggleRange');
         });
       });
     });
@@ -2395,7 +2395,7 @@ describe('View', () => {
       view.toggleScaleFromOutside();
 
       it('say subscribers that scale was toggled', () => {
-        expect(view.notify).toBeCalledWith('viewToggleScaleFromOutside');
+        expect(view.notify).toBeCalledWith('viewToggleScale');
       });
     });
 
@@ -2409,7 +2409,7 @@ describe('View', () => {
       view.toggleScaleFromOutside();
 
       it('say subscribers that scale was toggled', () => {
-        expect(view.notify).toBeCalledWith('viewToggleScaleFromOutside');
+        expect(view.notify).toBeCalledWith('viewToggleScale');
       });
     });
   });

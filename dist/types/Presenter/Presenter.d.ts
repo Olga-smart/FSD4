@@ -8,9 +8,9 @@ declare class Presenter implements IEventListener {
     inform(eventType: string, data?: number | null): void;
     private static removeCalcInaccuracy;
     private initViewValues;
-    private handleViewLeftInput;
+    private handleViewInputLeft;
     private handleModelSetLeft;
-    private handleViewRightInput;
+    private handleViewInputRight;
     private handleModelSetRight;
     private passLeftValueToView;
     private passRightValueToView;
@@ -18,21 +18,21 @@ declare class Presenter implements IEventListener {
     private convertValueToPercent;
     private convertPxToValue;
     private fitToStep;
-    private handleChangeLeftValueFromOutside;
-    private handleChangeRightValueFromOutside;
-    private handleChangeViewMinFromOutside;
+    private handleViewSetLeftFromOutside;
+    private handleViewSetRightFromOutside;
+    private handleViewSetMin;
     private handleModelSetMin;
-    private handleChangeViewMaxFromOutside;
+    private handleViewSetMax;
     private handleModelSetMax;
-    private handleChangeViewStepFromOutside;
-    private handleViewOrientationChange;
-    private handleViewRangeToggle;
+    private handleViewSetStep;
+    private handleViewToggleOrientation;
+    private handleViewToggleRange;
     private handleModelToggleRange;
     private handleModelSetStep;
-    private handleScaleToggle;
-    private handleChangeScaleIntervals;
-    private handleAddValueLabels;
-    private handleAddMinMaxLabels;
+    private handleViewToggleScale;
+    private handleViewSetScaleIntervals;
+    private handleViewAddValueLabels;
+    private handleViewAddMinMaxLabels;
 }
 export default Presenter;
 //# sourceMappingURL=Presenter.d.ts.map
