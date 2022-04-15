@@ -9,7 +9,7 @@ class LabelsContainer extends BaseElement<'div'> {
     this.component.append(...elements);
   }
 
-  fixWidthForVertical(labels: HTMLElement[]): void {
+  fixWidthForVertical(labels: HTMLElement[], indent: number = 4): void {
     let maxWidth = 0;
 
     labels.forEach((label) => {
@@ -18,10 +18,10 @@ class LabelsContainer extends BaseElement<'div'> {
       }
     });
 
-    this.component.style.paddingLeft = `${maxWidth + 4}px`;
+    this.component.style.paddingLeft = `${maxWidth + indent}px`;
   }
 
-  fixHeightForHorizontal(labels: HTMLElement[]): void {
+  fixHeightForHorizontal(labels: HTMLElement[], indent: number = 4): void {
     let maxHeight = 0;
 
     labels.forEach((label) => {
@@ -30,7 +30,7 @@ class LabelsContainer extends BaseElement<'div'> {
       }
     });
 
-    this.component.style.paddingTop = `${maxHeight + 4}px`;
+    this.component.style.paddingTop = `${maxHeight + indent}px`;
   }
 }
 
