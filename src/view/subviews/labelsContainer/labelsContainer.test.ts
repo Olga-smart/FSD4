@@ -40,4 +40,46 @@ describe('LabelsContainer', () => {
       expect(labelsContainer.getComponent().append).toBeCalledWith(div1, div2, div3);
     });
   });
+
+  describe('fixWidthForVertical(labels, indent)', () => {
+    const labelsContainer = new LabelsContainer();
+    const label1 = {
+      offsetWidth: 10,
+    };
+    const label2 = {
+      offsetWidth: 20,
+    };
+    const label3 = {
+      offsetWidth: 30,
+    };
+
+    it('set up padding equal to max label width + indent', () => {
+      for (let i = 4; i <= 10; i += 1) {
+        // 'as HTMLElement[]' is necessary to test offsetWidth'
+        labelsContainer.fixWidthForVertical([label1, label2, label3] as HTMLElement[]);
+        expect(labelsContainer.getComponent().style.paddingLeft).toBe(`${30 + i}`);
+      }
+    });
+  });
+
+  describe('fixHeightForHorizontal(labels, indent)', () => {
+    const labelsContainer = new LabelsContainer();
+    const label1 = {
+      offsetHeight: 10,
+    };
+    const label2 = {
+      offsetHeight: 20,
+    };
+    const label3 = {
+      offsetHeight: 30,
+    };
+
+    it('set up padding equal to max label width + indent', () => {
+      for (let i = 4; i <= 10; i += 1) {
+        // 'as HTMLElement[]' is necessary to test offsetHeight'
+        labelsContainer.fixHeightForHorizontal([label1, label2, label3] as HTMLElement[]);
+        expect(labelsContainer.getComponent().style.paddingTop).toBe(`${30 + i}`);
+      }
+    });
+  });
 });
