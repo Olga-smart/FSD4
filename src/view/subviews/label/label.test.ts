@@ -33,4 +33,26 @@ describe('Label', () => {
       }
     });
   });
+
+  describe('getLeftIndent()', () => {
+    const label = new Label();
+
+    it('return left indent of component', () => {
+      for (let i = 0; i <= 100; i += 1) {
+        label.setIndent('left', i);
+        expect(label.getLeftIndent()).toBe(`${i}%`);
+      }
+    });
+  });
+
+  describe('getTopIndent()', () => {
+    const label = new Label();
+
+    it('return top indent of component', () => {
+      for (let i = 0; i <= 100; i += 1) {
+        label.setIndent('top', i);
+        expect(label.getTopIndent()).toBe(`${i}%`);
+      }
+    });
+  });
 });
