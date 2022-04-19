@@ -436,6 +436,14 @@ class View extends BaseElement<'div'> {
     this.panel?.updateStep(value);
   }
 
+  updatePanelMin(value: number): void {
+    this.panel?.updateMin(value);
+  }
+
+  updatePanelMax(value: number): void {
+    this.panel?.updateMax(value);
+  }
+
   changeLeftValueFromOutside(value: number): void {
     this.notify('viewSetLeftFromOutside', value);
   }
@@ -746,7 +754,9 @@ class View extends BaseElement<'div'> {
     }
 
     if (this.panel) {
-      fragment.append(this.panel.getComponent());
+      const panelWrapper = BaseElement.createComponent('div', 'range-slider__panel');
+      panelWrapper.append(this.panel.getComponent());
+      fragment.append(panelWrapper);
     }
 
     if (this.scale) {

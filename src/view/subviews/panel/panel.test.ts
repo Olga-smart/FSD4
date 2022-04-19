@@ -2,6 +2,20 @@ import { Panel } from './Panel';
 import View from '../../View';
 
 describe('Panel', () => {
+  const defaultPanelOptions = {
+    min: 0,
+    max: 100,
+    step: 5,
+    from: 20,
+    to: 60,
+    vertical: false,
+    range: true,
+    scale: true,
+    scaleIntervals: 6,
+    valueLabels: true,
+    minMaxLabels: true,
+  };
+
   describe('constructor()', () => {
     describe('set up necessary properties', () => {
       const slider = document.createElement('div');
@@ -189,19 +203,7 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       const panel = new Panel(view);
-      panel.setValues({
-        min: 0,
-        max: 100,
-        step: 5,
-        from: 20,
-        to: 60,
-        vertical: false,
-        range: true,
-        scale: true,
-        scaleIntervals: 6,
-        valueLabels: true,
-        minMaxLabels: true,
-      });
+      panel.setValues(defaultPanelOptions);
 
       it('set up min value', () => {
         const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
@@ -226,6 +228,12 @@ describe('Panel', () => {
       it('set up to value', () => {
         const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
         expect(to?.value).toBe('60');
+      });
+
+      it('if right value is not passed, to value will be empty', () => {
+        panel.setValues({ ...defaultPanelOptions, to: null });
+        const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
+        expect(to?.value).toBe('');
       });
 
       it('set up vertical value', () => {
@@ -263,116 +271,84 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       const panel = new Panel(view);
+      const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
       const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
       const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
+      const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
+      const scaleIntervals: HTMLInputElement | null = panel.getComponent().querySelector('.panel__scale-intervals');
+
+      it('set up from.min equal to options.min', () => {
+        panel.setValues(defaultPanelOptions);
+        expect(from?.min).toBe(`${defaultPanelOptions.min}`);
+      });
 
       it('set up from.max equal to options.to if options.range', () => {
-        panel.setValues({
-          min: 0,
-          max: 100,
-          step: 5,
-          from: 20,
-          to: 60,
-          vertical: false,
-          range: true,
-          scale: true,
-          scaleIntervals: 6,
-          valueLabels: true,
-          minMaxLabels: true,
-        });
-
-        expect(from?.max).toBe('60');
+        panel.setValues(defaultPanelOptions);
+        expect(from?.max).toBe(`${defaultPanelOptions.to}`);
       });
 
       it('set up from.max equal to options.max if !options.range', () => {
-        panel.setValues({
-          min: 0,
-          max: 100,
-          step: 5,
-          from: 20,
-          to: 60,
-          vertical: false,
-          range: false,
-          scale: true,
-          scaleIntervals: 6,
-          valueLabels: true,
-          minMaxLabels: true,
-        });
+        panel.setValues({ ...defaultPanelOptions, range: false });
+        expect(from?.max).toBe(`${defaultPanelOptions.max}`);
+      });
 
-        expect(from?.max).toBe('100');
+      it('set up to.min equal to options.from', () => {
+        panel.setValues(defaultPanelOptions);
+        expect(to?.min).toBe(`${defaultPanelOptions.from}`);
+      });
+
+      it('set up to.max equal to options.max', () => {
+        panel.setValues(defaultPanelOptions);
+        expect(to?.max).toBe(`${defaultPanelOptions.max}`);
+      });
+
+      it('set up from.step equal to options.step', () => {
+        panel.setValues(defaultPanelOptions);
+        expect(from?.step).toBe(`${defaultPanelOptions.step}`);
+      });
+
+      it('set up to.step equal to options.step', () => {
+        panel.setValues(defaultPanelOptions);
+        expect(to?.step).toBe(`${defaultPanelOptions.step}`);
+      });
+
+      it('set up min.step equal to options.step', () => {
+        panel.setValues(defaultPanelOptions);
+        expect(min?.step).toBe(`${defaultPanelOptions.step}`);
+      });
+
+      it('set up max.step equal to options.step', () => {
+        panel.setValues(defaultPanelOptions);
+        expect(max?.step).toBe(`${defaultPanelOptions.step}`);
+      });
+
+      it('set up min.max equal to options.from', () => {
+        panel.setValues(defaultPanelOptions);
+        expect(min?.max).toBe(`${defaultPanelOptions.from}`);
       });
 
       it('set up max.min equal to options.to if options.range', () => {
-        panel.setValues({
-          min: 0,
-          max: 100,
-          step: 5,
-          from: 20,
-          to: 60,
-          vertical: false,
-          range: true,
-          scale: true,
-          scaleIntervals: 6,
-          valueLabels: true,
-          minMaxLabels: true,
-        });
-
-        expect(max?.min).toBe('60');
+        panel.setValues(defaultPanelOptions);
+        expect(max?.min).toBe(`${defaultPanelOptions.to}`);
       });
 
       it('set up max.min equal to options.from if !options.range', () => {
-        panel.setValues({
-          min: 0,
-          max: 100,
-          step: 5,
-          from: 20,
-          to: 60,
-          vertical: false,
-          range: false,
-          scale: true,
-          scaleIntervals: 6,
-          valueLabels: true,
-          minMaxLabels: true,
-        });
-
-        expect(max?.min).toBe('20');
+        panel.setValues({ ...defaultPanelOptions, range: false });
+        expect(max?.min).toBe(`${defaultPanelOptions.from}`);
       });
 
       it('disable to if !options.range', () => {
-        panel.setValues({
-          min: 0,
-          max: 100,
-          step: 5,
-          from: 20,
-          to: 60,
-          vertical: false,
-          range: false,
-          scale: true,
-          scaleIntervals: 6,
-          valueLabels: true,
-          minMaxLabels: true,
-        });
-
-        const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
+        panel.setValues({ ...defaultPanelOptions, range: false });
         expect(to?.disabled).toBe(true);
       });
 
-      it('disable scaleIntervals if !options.scale', () => {
-        panel.setValues({
-          min: 0,
-          max: 100,
-          step: 5,
-          from: 20,
-          to: 60,
-          vertical: false,
-          range: false,
-          scale: false,
-          scaleIntervals: 6,
-          valueLabels: true,
-          minMaxLabels: true,
-        });
+      it('set up scaleIntervals.min equal to 1', () => {
+        panel.setValues({ ...defaultPanelOptions, range: false });
+        expect(scaleIntervals?.min).toBe('1');
+      });
 
-        const scaleIntervals: HTMLInputElement | null = panel.getComponent().querySelector('.panel__scale-intervals');
+      it('disable scaleIntervals if !options.scale', () => {
+        panel.setValues({ ...defaultPanelOptions, scale: false });
         expect(scaleIntervals?.disabled).toBe(true);
       });
     });
@@ -391,11 +367,26 @@ describe('Panel', () => {
       expect(from?.value).toBe('20');
     });
 
-    it('update to.min if this.view.isRange', () => {
-      panel.updateFrom(20);
+    describe('update attributes', () => {
+      it('set up min.max equal to from.value', () => {
+        const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
+        expect(min?.max).toBe('20');
+      });
 
-      const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
-      expect(to?.min).toBe('20');
+      it('set up to.min equal to from.value, if this.view.isRange', () => {
+        const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
+        expect(to?.min).toBe('20');
+      });
+
+      it('set up max.min equal to from.value, if !this.view.isRange', () => {
+        const newView = new View(slider, {
+          range: false,
+        });
+        const newPanel = new Panel(newView);
+        newPanel.updateFrom(20);
+        const max: HTMLInputElement | null = newPanel.getComponent().querySelector('.panel__max');
+        expect(max?.min).toBe('20');
+      });
     });
   });
 
@@ -412,9 +403,16 @@ describe('Panel', () => {
       expect(to?.value).toBe('50');
     });
 
-    it('set up from.max', () => {
-      const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
-      expect(from?.max).toBe('50');
+    describe('update attributes', () => {
+      it('set up from.max equal to to.value', () => {
+        const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
+        expect(from?.max).toBe('50');
+      });
+
+      it('set up max.min equal to to.value', () => {
+        const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
+        expect(max?.min).toBe('50');
+      });
     });
   });
 
@@ -427,6 +425,145 @@ describe('Panel', () => {
     it('set up step.value', () => {
       const step: HTMLInputElement | null = panel.getComponent().querySelector('.panel__step');
       expect(step?.value).toBe('10');
+    });
+
+    describe('update attributes', () => {
+      describe('set up step.min', () => {
+        const step: HTMLInputElement | null = panel.getComponent().querySelector('.panel__step');
+
+        it('equal to 1, if step is integer', () => {
+          panel.updateStep(10);
+          expect(step?.min).toBe('1');
+        });
+
+        it('equal to 0.1, if step has 1 decimal place', () => {
+          panel.updateStep(0.5);
+          expect(step?.min).toBe('0.1');
+        });
+
+        it('equal to 0.01, if step has 2 decimal place', () => {
+          panel.updateStep(0.05);
+          expect(step?.min).toBe('0.01');
+        });
+
+        it('equal to 0.001, if step has 3 decimal place', () => {
+          panel.updateStep(0.005);
+          expect(step?.min).toBe('0.001');
+        });
+
+        it('equal to 0.0001, if step has 4 decimal place', () => {
+          panel.updateStep(0.0005);
+          expect(step?.min).toBe('0.0001');
+        });
+      });
+
+      describe('set up step.step', () => {
+        const step: HTMLInputElement | null = panel.getComponent().querySelector('.panel__step');
+
+        it('equal to 1, if step is integer', () => {
+          panel.updateStep(10);
+          expect(step?.step).toBe('1');
+        });
+
+        it('equal to 0.1, if step has 1 decimal place', () => {
+          panel.updateStep(0.5);
+          expect(step?.step).toBe('0.1');
+        });
+
+        it('equal to 0.01, if step has 2 decimal place', () => {
+          panel.updateStep(0.05);
+          expect(step?.step).toBe('0.01');
+        });
+
+        it('equal to 0.001, if step has 3 decimal place', () => {
+          panel.updateStep(0.005);
+          expect(step?.step).toBe('0.001');
+        });
+
+        it('equal to 0.0001, if step has 4 decimal place', () => {
+          panel.updateStep(0.0005);
+          expect(step?.step).toBe('0.0001');
+        });
+      });
+
+      it('set up from.step equal to step.value', () => {
+        panel.updateStep(10);
+        const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
+        expect(from?.step).toBe('10');
+      });
+
+      it('set up to.step equal to step.value', () => {
+        panel.updateStep(10);
+        const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
+        expect(to?.step).toBe('10');
+      });
+
+      it('set up min.step equal to step.value', () => {
+        panel.updateStep(10);
+        const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
+        expect(min?.step).toBe('10');
+      });
+
+      it('set up max.step equal to step.value', () => {
+        panel.updateStep(10);
+        const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
+        expect(max?.step).toBe('10');
+      });
+    });
+  });
+
+  describe('updateMin(value)', () => {
+    const slider = document.createElement('div');
+    const view = new View(slider);
+    const panel = new Panel(view);
+    panel.updateMin(10);
+
+    it('set up min.value', () => {
+      const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
+      expect(min?.value).toBe('10');
+    });
+
+    describe('update attributes', () => {
+      it('set up from.min equal to min.value', () => {
+        const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
+        expect(from?.min).toBe('10');
+      });
+    });
+  });
+
+  describe('updateMax(value)', () => {
+    const slider = document.createElement('div');
+    const view = new View(slider);
+    const panel = new Panel(view);
+    panel.updateMax(200);
+
+    it('set up max.value', () => {
+      const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
+      expect(max?.value).toBe('200');
+    });
+
+    describe('update attributes', () => {
+      it('set up from.max equal to max.value, if !this.view.isRange', () => {
+        const newView = new View(slider, {
+          range: false,
+        });
+        const newPanel = new Panel(newView);
+        newPanel.updateMax(200);
+        const from: HTMLInputElement | null = newPanel.getComponent().querySelector('.panel__from');
+
+        expect(from?.max).toBe('200');
+      });
+
+      it('set up to.max equal to max.value, if this.view.isRange', () => {
+        const newView = new View(slider, {
+          range: true,
+        });
+        const newPanel = new Panel(newView);
+        newPanel.updateMax(200);
+        const to: HTMLInputElement | null = newPanel.getComponent().querySelector('.panel__to');
+
+        expect(to?.max).toBe('200');
+      });
     });
   });
 
@@ -498,6 +635,24 @@ describe('Panel', () => {
         }
 
         expect(from?.min).toBe('20');
+      });
+
+      it('update step.max', () => {
+        if (min) {
+          min.value = '10';
+        }
+
+        const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
+
+        if (max) {
+          max.value = '100';
+        }
+
+        min?.dispatchEvent(event);
+
+        const step: HTMLInputElement | null = panel.getComponent().querySelector('.panel__step');
+
+        expect(step?.max).toBe('90');
       });
     });
 
@@ -623,11 +778,6 @@ describe('Panel', () => {
         const slider = document.createElement('div');
         const view = new View(slider);
         const panel = new Panel(view);
-        const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
-
-        if (to) {
-          to.value = '50';
-        }
 
         const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
 
@@ -654,20 +804,9 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       view.changeStepFromOutside = jest.fn();
-      view.changeLeftValueFromOutside = jest.fn();
       const panel = new Panel(view);
       const step: HTMLInputElement | null = panel.getComponent().querySelector('.panel__step');
       const event = new Event('change');
-
-      it('set up step.value = step.min, if step.value < step.min', () => {
-        if (step) {
-          step.min = '1';
-          step.value = '-1';
-          step.dispatchEvent(event);
-        }
-
-        expect(step?.value).toBe('1');
-      });
 
       it('set up step.value = step.max, if step.value > step.max', () => {
         if (step) {
@@ -679,6 +818,26 @@ describe('Panel', () => {
         expect(step?.value).toBe('100');
       });
 
+      it('set up step.value = step.min, if step.value < 0', () => {
+        if (step) {
+          step.min = '1';
+          step.value = '-1';
+          step.dispatchEvent(event);
+        }
+
+        expect(step?.value).toBe('1');
+      });
+
+      it('set up step.value = step.min, if step.value = 0', () => {
+        if (step) {
+          step.min = '1';
+          step.value = '0';
+          step.dispatchEvent(event);
+        }
+
+        expect(step?.value).toBe('1');
+      });
+
       it('say view that step was changed and pass it value', () => {
         if (step) {
           step.value = '5';
@@ -686,6 +845,86 @@ describe('Panel', () => {
         }
 
         expect(view.changeStepFromOutside).toBeCalledWith(5);
+      });
+
+      describe('update attributes', () => {
+        describe('set up step.min', () => {
+          it('equal to 1, if step is integer', () => {
+            panel.updateStep(10);
+            expect(step?.min).toBe('1');
+          });
+
+          it('equal to 0.1, if step has 1 decimal place', () => {
+            panel.updateStep(0.5);
+            expect(step?.min).toBe('0.1');
+          });
+
+          it('equal to 0.01, if step has 2 decimal place', () => {
+            panel.updateStep(0.05);
+            expect(step?.min).toBe('0.01');
+          });
+
+          it('equal to 0.001, if step has 3 decimal place', () => {
+            panel.updateStep(0.005);
+            expect(step?.min).toBe('0.001');
+          });
+
+          it('equal to 0.0001, if step has 4 decimal place', () => {
+            panel.updateStep(0.0005);
+            expect(step?.min).toBe('0.0001');
+          });
+        });
+
+        describe('set up step.step', () => {
+          it('equal to 1, if step is integer', () => {
+            panel.updateStep(10);
+            expect(step?.step).toBe('1');
+          });
+
+          it('equal to 0.1, if step has 1 decimal place', () => {
+            panel.updateStep(0.5);
+            expect(step?.step).toBe('0.1');
+          });
+
+          it('equal to 0.01, if step has 2 decimal place', () => {
+            panel.updateStep(0.05);
+            expect(step?.step).toBe('0.01');
+          });
+
+          it('equal to 0.001, if step has 3 decimal place', () => {
+            panel.updateStep(0.005);
+            expect(step?.step).toBe('0.001');
+          });
+
+          it('equal to 0.0001, if step has 4 decimal place', () => {
+            panel.updateStep(0.0005);
+            expect(step?.step).toBe('0.0001');
+          });
+        });
+
+        it('set up from.step equal to step.value', () => {
+          panel.updateStep(10);
+          const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
+          expect(from?.step).toBe('10');
+        });
+
+        it('set up to.step equal to step.value', () => {
+          panel.updateStep(10);
+          const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
+          expect(to?.step).toBe('10');
+        });
+
+        it('set up min.step equal to step.value', () => {
+          panel.updateStep(10);
+          const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
+          expect(min?.step).toBe('10');
+        });
+
+        it('set up max.step equal to step.value', () => {
+          panel.updateStep(10);
+          const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
+          expect(max?.step).toBe('10');
+        });
       });
     });
 
@@ -729,15 +968,27 @@ describe('Panel', () => {
         expect(view.changeLeftValueFromOutside).toBeCalledWith(10);
       });
 
-      it('set up to.min = from.value, if !this.view.isRange', () => {
-        if (from) {
-          from.min = '0';
-          from.value = '10';
-          from.dispatchEvent(event);
-        }
+      describe('update attributes', () => {
+        it('set up min.max = from.value', () => {
+          if (from) {
+            from.value = '10';
+            from.dispatchEvent(event);
+          }
 
-        const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
-        expect(to?.min).toBe('10');
+          const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
+          expect(min?.max).toBe('10');
+        });
+
+        it('set up to.min = from.value, if this.view.isRange', () => {
+          if (from) {
+            from.min = '0';
+            from.value = '10';
+            from.dispatchEvent(event);
+          }
+
+          const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
+          expect(to?.min).toBe('10');
+        });
       });
     });
 
@@ -782,17 +1033,28 @@ describe('Panel', () => {
         expect(view.changeRightValueFromOutside).toBeCalledWith(100);
       });
 
-      it('set up from.max = to.value', () => {
-        if (to) {
-          to.min = '0';
-          to.max = '200';
-          to.value = '100';
-          to.dispatchEvent(event);
-        }
+      describe('update attributes', () => {
+        it('set up from.max = to.value', () => {
+          if (to) {
+            to.value = '100';
+            to.dispatchEvent(event);
+          }
 
-        const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
+          const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
 
-        expect(from?.max).toBe('100');
+          expect(from?.max).toBe('100');
+        });
+
+        it('set up max.min = to.value', () => {
+          if (to) {
+            to.value = '100';
+            to.dispatchEvent(event);
+          }
+
+          const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
+
+          expect(max?.min).toBe('100');
+        });
       });
     });
 
@@ -840,12 +1102,28 @@ describe('Panel', () => {
 
       it('set up from.max = to.value if range becomes checked', () => {
         if (range) {
-          range.checked = false;
           range.checked = true;
         }
 
         if (to) {
           to.value = '50';
+        }
+
+        const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
+        range?.dispatchEvent(event);
+
+        expect(from?.max).toBe('50');
+      });
+
+      it('set up from.max = max.value if range becomes not checked', () => {
+        if (range) {
+          range.checked = false;
+        }
+
+        const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
+
+        if (max) {
+          max.value = '50';
         }
 
         const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
@@ -902,9 +1180,17 @@ describe('Panel', () => {
         expect(scaleIntervals?.value).toBe('1');
       });
 
+      it('set up scaleIntervals.value = smallest nearest integer, if scaleIntervals.value is not integer', () => {
+        if (scaleIntervals) {
+          scaleIntervals.value = '1.5';
+          scaleIntervals.dispatchEvent(event);
+        }
+
+        expect(scaleIntervals?.value).toBe('1');
+      });
+
       it('say view that scaleIntervals was changed ans pass it value', () => {
         if (scaleIntervals) {
-          scaleIntervals.min = '1';
           scaleIntervals.value = '5';
           scaleIntervals.dispatchEvent(event);
         }

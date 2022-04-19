@@ -146,7 +146,7 @@ class Presenter implements IEventListener {
         vertical: view.isVertical() ?? false,
         range: view.isRange(),
         scale: view.hasScale(),
-        scaleIntervals: view.getScaleIntervals() ?? null,
+        scaleIntervals: view.getScaleIntervals(),
         valueLabels: view.hasValueLabels(),
         minMaxLabels: view.hasMinMaxLabels(),
       });
@@ -265,6 +265,10 @@ class Presenter implements IEventListener {
       this.view.removeScale();
       this.view.addScale(this.model.getMin(), this.model.getMax());
     }
+
+    if (this.view.hasPanel()) {
+      this.view.updatePanelMin(this.model.getMin());
+    }
   }
 
   private handleViewSetMax(value: number): void {
@@ -283,6 +287,10 @@ class Presenter implements IEventListener {
     if (this.view.hasScale()) {
       this.view.removeScale();
       this.view.addScale(this.model.getMin(), this.model.getMax());
+    }
+
+    if (this.view.hasPanel()) {
+      this.view.updatePanelMax(this.model.getMax());
     }
   }
 

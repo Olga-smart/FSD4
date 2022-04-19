@@ -8,7 +8,7 @@ declare type PanelOptions = {
     vertical: boolean;
     range: boolean;
     scale: boolean;
-    scaleIntervals: number | null;
+    scaleIntervals: number;
     valueLabels: boolean;
     minMaxLabels: boolean;
 };
@@ -44,6 +44,8 @@ declare class Panel extends BaseElement<'form'> {
     updateFrom(value: number): void;
     updateTo(value: number | ''): void;
     updateStep(value: number): void;
+    updateMin(value: number): void;
+    updateMax(value: number): void;
     updateScaleIntervals(value: number | ''): void;
     private static addLabel;
     private static calcStepMin;

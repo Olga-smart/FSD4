@@ -51,6 +51,8 @@ declare class View extends BaseElement<'div'> {
     updatePanelTo(value: number | ''): void;
     updatePanelScaleIntervals(value: number | ''): void;
     updatePanelStep(value: number): void;
+    updatePanelMin(value: number): void;
+    updatePanelMax(value: number): void;
     changeLeftValueFromOutside(value: number): void;
     changeRightValueFromOutside(value: number): void;
     changeMinFromOutside(value: number): void;

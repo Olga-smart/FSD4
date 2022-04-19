@@ -9,7 +9,7 @@ type PanelOptions = {
   vertical: boolean,
   range: boolean,
   scale: boolean,
-  scaleIntervals: number | null,
+  scaleIntervals: number,
   valueLabels: boolean,
   minMaxLabels: boolean
 };
@@ -55,7 +55,7 @@ class Panel extends BaseElement<'form'> {
   private minMaxLabels: HTMLInputElement;
 
   constructor(view: ViewForPanel) {
-    super('form', 'range-slider__panel panel');
+    super('form', 'panel');
 
     this.view = view;
 
@@ -81,7 +81,7 @@ class Panel extends BaseElement<'form'> {
     this.max.value = `${options.max}`;
     this.step.value = `${options.step}`;
     this.from.value = `${options.from}`;
-    this.to.value = `${options.to}`;
+    this.to.value = options.to !== null ? `${options.to}` : '';
     this.vertical.checked = options.vertical;
     this.range.checked = options.range;
     this.scale.checked = options.scale;
@@ -108,12 +108,24 @@ class Panel extends BaseElement<'form'> {
     this.updateAttributesAfterStepChange();
   }
 
+  updateMin(value: number): void {
+    this.min.value = `${value}`;
+    this.updateAttributesAfterMinChange();
+  }
+
+  updateMax(value: number): void {
+    this.max.value = `${value}`;
+    this.updateAttributesAfterMaxChange();
+  }
+
   updateScaleIntervals(value: number | ''): void {
     this.scaleIntervals.value = `${value}`;
   }
 
-  private static addLabel(input: HTMLElement, name: string, className?: string): HTMLElement {
-    const label: HTMLElement = BaseElement.createComponent('label', 'panel__label');
+  private static addLabel(
+    input: HTMLInputElement, name: string, className?: string,
+  ): HTMLLabelElement {
+    const label: HTMLLabelElement = BaseElement.createComponent('label', 'panel__label');
     label.textContent = name;
 
     if (className) {
@@ -142,7 +154,7 @@ class Panel extends BaseElement<'form'> {
     return Number(result);
   }
 
-  private static toggleCheckbox(input: HTMLElement): void {
+  private static toggleCheckbox(input: HTMLInputElement): void {
     const label: HTMLLabelElement | null = input.closest('label');
     label?.classList.toggle('panel__label_for-checkbox_checked');
   }
@@ -187,6 +199,9 @@ class Panel extends BaseElement<'form'> {
 
     this.from.step = `${options.step}`;
     this.to.step = `${options.step}`;
+
+    this.min.step = `${options.step}`;
+    this.max.step = `${options.step}`;
 
     this.min.max = `${options.from}`;
     this.max.min = options.range ? `${options.to}` : `${options.from}`;
@@ -241,6 +256,11 @@ class Panel extends BaseElement<'form'> {
   private updateAttributesAfterStepChange(): void {
     this.step.min = `${Panel.calcStepMin(Number(this.step.value))}`;
     this.step.step = `${Panel.calcStepMin(Number(this.step.value))}`;
+
+    this.from.step = this.step.value;
+    this.to.step = this.step.value;
+    this.min.step = this.step.value;
+    this.max.step = this.step.value;
   }
 
   private updateAttributesAfterMinChange(): void {
@@ -263,6 +283,7 @@ class Panel extends BaseElement<'form'> {
     }
 
     this.view.changeMinFromOutside(Number(this.min.value));
+    this.step.max = `${Math.abs(Number(this.max.value) - Number(this.min.value))}`;
     this.updateAttributesAfterMinChange();
   }
 
