@@ -36,4 +36,31 @@ describe('Range', () => {
       }
     });
   });
+
+  describe('resetWidth()', () => {
+    const range = new Range();
+
+    it('reset width property of component', () => {
+      range.resetWidth();
+      expect(range.getComponent().style.width).toBe('');
+    });
+  });
+
+  describe('resetHeight()', () => {
+    const range = new Range();
+
+    it('reset height property of component', () => {
+      range.resetHeight();
+      expect(range.getComponent().style.height).toBe('');
+    });
+  });
+
+  describe('resetTopIndent()', () => {
+    const range = new Range();
+
+    it('reset top property of component', () => {
+      range.resetTopIndent();
+      expect(range.getComponent().style.top).toBe('');
+    });
+  });
 });
