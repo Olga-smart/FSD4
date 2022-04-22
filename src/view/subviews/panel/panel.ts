@@ -142,10 +142,10 @@ class Panel extends BaseElement<'form'> {
       return 1;
     }
 
-    const numberOfSymbolsAfterComma = step.toString().split('.')[1].length;
+    const numberOfDigitsAfterPoint = step.toString().split('.')[1].length;
     let result: string = '1';
 
-    for (let i = numberOfSymbolsAfterComma; i > 1; i -= 1) {
+    for (let i = numberOfDigitsAfterPoint; i > 1; i -= 1) {
       result = `0${result}`;
     }
 

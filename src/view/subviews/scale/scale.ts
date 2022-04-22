@@ -65,10 +65,14 @@ class Scale extends BaseElement<'div'> {
   }
 
   private createIntervals(intervalsNumber: number): void {
+    const fragment = new DocumentFragment();
+
     for (let i = 0; i < intervalsNumber; i += 1) {
       this.intervals[i] = BaseElement.createComponent('div', 'range-slider__scale-interval');
-      this.component.append(this.intervals[i]);
+      fragment.append(this.intervals[i]);
     }
+
+    this.component.append(fragment);
   }
 
   private addMarksInIntervals(intervalsNumber: number): void {
@@ -97,10 +101,25 @@ class Scale extends BaseElement<'div'> {
 
   private addValues(min: number, max: number, intervalsNumber: number): void {
     this.values[0] = min;
-    const step = Math.round((max - min) / intervalsNumber);
+    const step = (max - min) / intervalsNumber;
+    let numberOfDigitsAfterPoint = 0;
+
+    if (!Number.isInteger(min)) {
+      numberOfDigitsAfterPoint = min.toString().split('.')[1].length;
+    }
+
+    if (!Number.isInteger(max)) {
+      if (max.toString().split('.')[1].length > numberOfDigitsAfterPoint) {
+        numberOfDigitsAfterPoint = max.toString().split('.')[1].length;
+      }
+    }
+
+    if ((max - min) < intervalsNumber) {
+      numberOfDigitsAfterPoint += intervalsNumber.toString().length;
+    }
 
     for (let i = 1; i < intervalsNumber; i += 1) {
-      this.values[i] = i * step + min;
+      this.values[i] = Number(((i * step) + min).toFixed(numberOfDigitsAfterPoint));
     }
 
     this.values.push(max);
