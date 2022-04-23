@@ -140,10 +140,16 @@ describe('Scale', () => {
       },
     });
 
-    scale.fitWidthForVertical();
-
-    it('set up component padding right equal to width of valueElement with max width + 3px', () => {
+    it('set up component padding right equal to width of valueElement with max width + 3px by default', () => {
+      scale.fitWidthForVertical();
       expect(scale.getComponent().style.paddingRight).toBe('303px');
+    });
+
+    it('set up component padding right equal to width of valueElement with max width + indent, passed to method', () => {
+      for (let i = 1; i <= 10; i += 1) {
+        scale.fitWidthForVertical(i);
+        expect(scale.getComponent().style.paddingRight).toBe(`${300 + i}px`);
+      }
     });
   });
 
@@ -167,10 +173,16 @@ describe('Scale', () => {
       },
     });
 
-    scale.fitHeightForHorizontal();
-
-    it('set up component padding bottom equal to height of valueElement with max height + 3px', () => {
+    it('set up component padding bottom equal to height of valueElement with max height + 3px by default', () => {
+      scale.fitHeightForHorizontal();
       expect(scale.getComponent().style.paddingBottom).toBe('303px');
+    });
+
+    it('set up component padding bottom equal to height of valueElement with max height + indent, passed to method', () => {
+      for (let i = 1; i <= 10; i += 1) {
+        scale.fitHeightForHorizontal(i);
+        expect(scale.getComponent().style.paddingBottom).toBe(`${300 + i}px`);
+      }
     });
   });
 

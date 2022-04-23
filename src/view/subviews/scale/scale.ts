@@ -30,7 +30,7 @@ class Scale extends BaseElement<'div'> {
     this.attachEventHandlers();
   }
 
-  fitWidthForVertical(): void {
+  fitWidthForVertical(indent: number = 3): void {
     let maxWidth = 0;
 
     this.valueElements.forEach((valueElement) => {
@@ -39,10 +39,10 @@ class Scale extends BaseElement<'div'> {
       }
     });
 
-    this.component.style.paddingRight = `${maxWidth + 3}px`;
+    this.component.style.paddingRight = `${maxWidth + indent}px`;
   }
 
-  fitHeightForHorizontal(): void {
+  fitHeightForHorizontal(indent: number = 3): void {
     let maxHeight = 0;
 
     this.valueElements.forEach((valueElement) => {
@@ -51,7 +51,7 @@ class Scale extends BaseElement<'div'> {
       }
     });
 
-    this.component.style.paddingBottom = `${maxHeight + 3}px`;
+    this.component.style.paddingBottom = `${maxHeight + indent}px`;
   }
 
   handleSwitchFromHorizontalToVertical(): void {
@@ -104,18 +104,8 @@ class Scale extends BaseElement<'div'> {
     const step = (max - min) / intervalsNumber;
     let numberOfDigitsAfterPoint = 0;
 
-    if (!Number.isInteger(min)) {
-      numberOfDigitsAfterPoint = min.toString().split('.')[1].length;
-    }
-
-    if (!Number.isInteger(max)) {
-      if (max.toString().split('.')[1].length > numberOfDigitsAfterPoint) {
-        numberOfDigitsAfterPoint = max.toString().split('.')[1].length;
-      }
-    }
-
-    if ((max - min) < intervalsNumber) {
-      numberOfDigitsAfterPoint += intervalsNumber.toString().length;
+    if (Math.round(intervalsNumber / (max - min)) !== 0) {
+      numberOfDigitsAfterPoint = (Math.round(intervalsNumber / (max - min))).toString().length;
     }
 
     for (let i = 1; i < intervalsNumber; i += 1) {

@@ -9,8 +9,8 @@ declare class Scale extends BaseElement<'div'> {
     private values;
     private valueElements;
     constructor(min: number, max: number, view: ViewForScale);
-    fitWidthForVertical(): void;
-    fitHeightForHorizontal(): void;
+    fitWidthForVertical(indent?: number): void;
+    fitHeightForHorizontal(indent?: number): void;
     handleSwitchFromHorizontalToVertical(): void;
     handleSwitchFromVerticalToHorizontal(): void;
     private createIntervals;
