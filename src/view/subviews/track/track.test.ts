@@ -62,16 +62,5 @@ describe('Track', () => {
 
       expect(view.handleScaleOrTrackClick).toBeCalledWith(x, y);
     });
-
-    it('if view is not registered nothing happens on click', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider);
-      const track = new Track(view);
-      const event = new Event('click');
-      track.getComponent().dispatchEvent(event);
-      jest.spyOn(View.prototype, 'handleScaleOrTrackClick');
-
-      expect(View.prototype.handleScaleOrTrackClick).not.toBeCalled();
-    });
   });
 });

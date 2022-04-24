@@ -2436,7 +2436,7 @@ describe('View', () => {
       });
 
       it('say subscribers that scaleIntervals was changed', () => {
-        expect(view.notify).toBeCalledWith('viewChangeScaleIntervals');
+        expect(view.notify).toBeCalledWith('viewSetScaleIntervals');
       });
     });
 

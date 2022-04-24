@@ -56,8 +56,8 @@ describe('LabelsContainer', () => {
     it('set up padding equal to max label width + indent', () => {
       for (let i = 4; i <= 10; i += 1) {
         // 'as HTMLElement[]' is necessary to test offsetWidth'
-        labelsContainer.fixWidthForVertical([label1, label2, label3] as HTMLElement[]);
-        expect(labelsContainer.getComponent().style.paddingLeft).toBe(`${30 + i}`);
+        labelsContainer.fixWidthForVertical([label1, label2, label3] as HTMLElement[], i);
+        expect(labelsContainer.getComponent().style.paddingLeft).toBe(`${30 + i}px`);
       }
     });
   });
@@ -77,8 +77,8 @@ describe('LabelsContainer', () => {
     it('set up padding equal to max label width + indent', () => {
       for (let i = 4; i <= 10; i += 1) {
         // 'as HTMLElement[]' is necessary to test offsetHeight'
-        labelsContainer.fixHeightForHorizontal([label1, label2, label3] as HTMLElement[]);
-        expect(labelsContainer.getComponent().style.paddingTop).toBe(`${30 + i}`);
+        labelsContainer.fixHeightForHorizontal([label1, label2, label3] as HTMLElement[], i);
+        expect(labelsContainer.getComponent().style.paddingTop).toBe(`${30 + i}px`);
       }
     });
   });

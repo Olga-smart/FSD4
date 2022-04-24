@@ -45,8 +45,7 @@ describe('Thumb', () => {
     it('return left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
         thumb.setIndent('left', i);
-        const indent = thumb.getLeftIndent();
-        expect(indent).toBe(`${i}%`);
+        expect(thumb.getLeftIndent()).toBe(`${i}%`);
       }
     });
   });
@@ -59,8 +58,7 @@ describe('Thumb', () => {
     it('return top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
         thumb.setIndent('top', i);
-        const indent = thumb.getTopIndent();
-        expect(indent).toBe(`${i}%`);
+        expect(thumb.getTopIndent()).toBe(`${i}%`);
       }
     });
   });
@@ -135,26 +133,6 @@ describe('Thumb', () => {
         newThumb.getComponent().dispatchEvent(new Event('pointermove'));
 
         expect(view.handleRightInput).toBeCalled();
-      });
-
-      it('nothing happens if view is not registered', () => {
-        let newThumb = new Thumb(view, 'left');
-        newThumb.getComponent().setPointerCapture = jest.fn();
-        jest.spyOn(View.prototype, 'handleLeftInput');
-
-        newThumb.getComponent().dispatchEvent(new Event('pointerdown'));
-        newThumb.getComponent().dispatchEvent(new Event('pointermove'));
-
-        expect(View.prototype.handleLeftInput).not.toBeCalled();
-
-        newThumb = new Thumb(view, 'right');
-        newThumb.getComponent().setPointerCapture = jest.fn();
-        jest.spyOn(View.prototype, 'handleRightInput');
-
-        newThumb.getComponent().dispatchEvent(new Event('pointerdown'));
-        newThumb.getComponent().dispatchEvent(new Event('pointermove'));
-
-        expect(View.prototype.handleRightInput).not.toBeCalled();
       });
     });
   });
