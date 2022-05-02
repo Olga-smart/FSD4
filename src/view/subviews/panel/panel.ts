@@ -16,15 +16,15 @@ type PanelOptions = {
 
 type ViewForPanel = {
   isRange(): boolean,
-  changeMinFromOutside(value: number): void,
-  changeMaxFromOutside(value: number): void,
-  changeStepFromOutside(value: number): void,
-  changeLeftValueFromOutside(value: number): void,
-  changeRightValueFromOutside(value: number): void,
-  changeOrientationFromOutside(): void,
+  setMinFromOutside(value: number): void,
+  setMaxFromOutside(value: number): void,
+  setStepFromOutside(value: number): void,
+  setLeftFromOutside(value: number): void,
+  setRightFromOutside(value: number): void,
+  toggleOrientationFromOutside(): void,
   toggleRangeFromOutside(): void,
   toggleScaleFromOutside(): void,
-  changeScaleIntervals(value: number): void,
+  setScaleIntervals(value: number): void,
   toggleValueLabels(): void,
   toggleMinMaxLabels(): void,
 };
@@ -282,7 +282,7 @@ class Panel extends BaseElement<'form'> {
       this.min.value = this.from.value;
     }
 
-    this.view.changeMinFromOutside(Number(this.min.value));
+    this.view.setMinFromOutside(Number(this.min.value));
     this.step.max = `${Math.abs(Number(this.max.value) - Number(this.min.value))}`;
     this.updateAttributesAfterMinChange();
   }
@@ -300,7 +300,7 @@ class Panel extends BaseElement<'form'> {
       }
     }
 
-    this.view.changeMaxFromOutside(Number(this.max.value));
+    this.view.setMaxFromOutside(Number(this.max.value));
     this.step.max = `${Math.abs(Number(this.max.value) - Number(this.min.value))}`;
     this.updateAttributesAfterMaxChange();
   }
@@ -314,7 +314,7 @@ class Panel extends BaseElement<'form'> {
       this.step.value = this.step.min;
     }
 
-    this.view.changeStepFromOutside(Number(this.step.value));
+    this.view.setStepFromOutside(Number(this.step.value));
     this.updateAttributesAfterStepChange();
   }
 
@@ -327,7 +327,7 @@ class Panel extends BaseElement<'form'> {
       this.from.value = this.from.min;
     }
 
-    this.view.changeLeftValueFromOutside(Number(this.from.value));
+    this.view.setLeftFromOutside(Number(this.from.value));
     this.updateAttributesAfterFromChange();
   }
 
@@ -340,12 +340,12 @@ class Panel extends BaseElement<'form'> {
       this.to.value = this.to.min;
     }
 
-    this.view.changeRightValueFromOutside(Number(this.to.value));
+    this.view.setRightFromOutside(Number(this.to.value));
     this.updateAttributesAfterToChange();
   }
 
   private handleVerticalChange(): void {
-    this.view.changeOrientationFromOutside();
+    this.view.toggleOrientationFromOutside();
     Panel.toggleCheckbox(this.vertical);
   }
 
@@ -380,7 +380,7 @@ class Panel extends BaseElement<'form'> {
       this.scaleIntervals.value = `${Math.floor(Number(this.scaleIntervals.value))}`;
     }
 
-    this.view.changeScaleIntervals(Number(this.scaleIntervals.value));
+    this.view.setScaleIntervals(Number(this.scaleIntervals.value));
   }
 
   private handleValueLabelsChange(): void {

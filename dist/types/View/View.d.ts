@@ -1,5 +1,4 @@
 import BaseElement from './BaseElement/BaseElement';
-import Scale from './subviews/Scale/Scale';
 import { PanelOptions } from './subviews/Panel/Panel';
 import { IEventListener } from '../EventManager/EventManager';
 declare type ViewOptions = {
@@ -31,7 +30,6 @@ declare class View extends BaseElement<'div'> {
     private panel?;
     constructor(component: HTMLDivElement, options?: ViewOptions);
     subscribe(listener: IEventListener): void;
-    notify(eventType: string, data?: number | null): void;
     setMinValue(min: number): void;
     setMaxValue(max: number): void;
     setLeftValue(value: number, percent: number): void;
@@ -41,7 +39,6 @@ declare class View extends BaseElement<'div'> {
     handleRightInput(clientX: number, clientY: number, shiftX?: number, shiftY?: number): void;
     addScale(min: number, max: number): void;
     removeScale(): void;
-    getScale(): Scale | undefined;
     getScaleIntervals(): number;
     handleScaleOrTrackClick(x: number, y: number): void;
     fixLabelsContainerWidthForVertical(): void;
@@ -53,15 +50,15 @@ declare class View extends BaseElement<'div'> {
     updatePanelStep(value: number): void;
     updatePanelMin(value: number): void;
     updatePanelMax(value: number): void;
-    changeLeftValueFromOutside(value: number): void;
-    changeRightValueFromOutside(value: number): void;
-    changeMinFromOutside(value: number): void;
-    changeMaxFromOutside(value: number): void;
-    changeStepFromOutside(value: number): void;
-    changeOrientationFromOutside(): void;
+    setLeftFromOutside(value: number): void;
+    setRightFromOutside(value: number): void;
+    setMinFromOutside(value: number): void;
+    setMaxFromOutside(value: number): void;
+    setStepFromOutside(value: number): void;
+    toggleOrientationFromOutside(): void;
     toggleRangeFromOutside(): void;
     toggleScaleFromOutside(): void;
-    changeScaleIntervals(value: number): void;
+    setScaleIntervals(value: number): void;
     toggleValueLabels(): void;
     toggleMinMaxLabels(): void;
     hasLabels(): boolean;

@@ -114,10 +114,6 @@ class View extends BaseElement<'div'> {
     this.eventManager.subscribe(listener);
   }
 
-  notify(eventType: string, data: number | null = null): void {
-    this.eventManager.notify(eventType, data);
-  }
-
   setMinValue(min: number): void {
     this.minLabel?.setValue(min);
   }
@@ -130,48 +126,36 @@ class View extends BaseElement<'div'> {
     if (!this.vertical) {
       this.thumbLeft.setIndent('left', percent);
 
-      if (!this.isRange()) {
+      if (this.isRange()) {
+        this.range.setIndent('left', percent);
+      } else {
         this.range.setWidth(percent);
       }
 
-      if (this.isRange()) {
-        this.range.setIndent('left', percent);
-      }
+      this.valueLabelLeft?.setIndent('left', `${percent}%`);
 
-      this.valueLabelLeft?.setIndent('left', this.thumbLeft.getLeftIndent());
-
-      if (this.thumbLeft.getLeftIndent() === '100%') {
-        this.thumbLeft.setZIndex(100);
-      } else {
-        this.thumbLeft.setZIndex(3);
-      }
+      this.thumbLeft.setZIndex(percent === 100 ? 100 : 3);
     }
 
     if (this.vertical) {
       this.thumbLeft.setIndent('top', 100 - percent);
 
-      if (!this.isRange()) {
+      if (this.isRange()) {
+        this.range.setIndent('bottom', percent);
+      } else {
         this.range.setHeight(percent);
       }
 
-      if (this.isRange()) {
-        this.range.setIndent('bottom', percent);
-      }
+      this.valueLabelLeft?.setIndent('top', `${100 - percent}%`);
 
-      this.valueLabelLeft?.setIndent('top', this.thumbLeft.getTopIndent());
-
-      if (this.thumbLeft.getTopIndent() === '0%') {
-        this.thumbLeft.setZIndex(100);
-      } else {
-        this.thumbLeft.setZIndex(3);
-      }
+      this.thumbLeft.setZIndex(percent === 100 ? 100 : 3);
     }
 
     if (this.valueLabelLeft) {
       this.valueLabelLeft.setValue(value);
 
       if (this.isRange()) {
-        this.valueLabelCommon!.setValue(`${value} - ${this.valueLabelRight!.getValue()}`);
+        this.valueLabelCommon?.setValue(`${value} - ${this.valueLabelRight?.getValue()}`);
 
         if (this.isTwoValueLabelsClose()) {
           this.mergeLabels();
@@ -179,20 +163,12 @@ class View extends BaseElement<'div'> {
           this.splitLabels();
         }
       }
-    }
 
-    if (this.valueLabelLeft && this.minLabel) {
-      if (this.isLeftValueLabelCloseToMinLabel()) {
-        this.minLabel.setOpacity(0);
-      } else {
-        this.minLabel.setOpacity(1);
-      }
+      if (this.minLabel) {
+        this.minLabel.setOpacity(this.isLeftValueLabelCloseToMinLabel() ? 0 : 1);
 
-      if (!this.isRange()) {
-        if (this.isLeftValueLabelCloseToMaxLabel()) {
-          this.maxLabel!.setOpacity(0);
-        } else {
-          this.maxLabel!.setOpacity(1);
+        if (!this.isRange()) {
+          this.maxLabel?.setOpacity(this.isLeftValueLabelCloseToMaxLabel() ? 0 : 1);
         }
       }
     }
@@ -202,33 +178,27 @@ class View extends BaseElement<'div'> {
     if (!this.vertical) {
       this.thumbRight?.setIndent('left', percent);
       this.range.setIndent('right', 100 - percent);
-
-      this.valueLabelRight?.setIndent('left', this.thumbRight!.getLeftIndent());
+      this.valueLabelRight?.setIndent('left', `${percent}%`);
     }
 
     if (this.vertical) {
       this.thumbRight?.setIndent('top', 100 - percent);
       this.range.setIndent('top', 100 - percent);
-
-      this.valueLabelRight?.setIndent('top', this.thumbRight!.getTopIndent());
+      this.valueLabelRight?.setIndent('top', `${100 - percent}%`);
     }
 
     if (this.valueLabelRight) {
       this.valueLabelRight.setValue(value);
-      this.valueLabelCommon!.setValue(`${this.valueLabelLeft!.getValue()} - ${value}`);
+      this.valueLabelCommon?.setValue(`${this.valueLabelLeft?.getValue()} - ${value}`);
 
       if (this.isTwoValueLabelsClose()) {
         this.mergeLabels();
       } else {
         this.splitLabels();
       }
-    }
 
-    if (this.valueLabelRight && this.maxLabel) {
-      if (this.isRightValueLabelCloseToMaxLabel()) {
-        this.maxLabel.setOpacity(0);
-      } else {
-        this.maxLabel.setOpacity(1);
+      if (this.maxLabel) {
+        this.maxLabel.setOpacity(this.isRightValueLabelCloseToMaxLabel() ? 0 : 1);
       }
     }
   }
@@ -254,16 +224,16 @@ class View extends BaseElement<'div'> {
         }
       }
 
-      if (this.isRange()) {
-        const rightThumbShift = this.thumbRight!.getBoundingClientRect().left;
-        const rightThumbPosition = rightThumbShift + this.thumbRight!.getWidth() / 2 - trackShift;
+      if (this.isRange() && this.thumbRight) {
+        const rightThumbShift = this.thumbRight.getBoundingClientRect().left;
+        const rightThumbPosition = rightThumbShift + this.thumbRight.getWidth() / 2 - trackShift;
 
         if (newLeft > rightThumbPosition) {
           newLeft = rightThumbPosition;
         }
       }
 
-      this.notify('viewInputLeft', newLeft);
+      this.eventManager.notify('viewInputLeft', newLeft);
     }
 
     if (this.vertical) {
@@ -279,9 +249,9 @@ class View extends BaseElement<'div'> {
         newTop = 0;
       }
 
-      if (this.isRange()) {
-        const rightThumbShift = this.thumbRight!.getBoundingClientRect().top;
-        const rightThumbPosition = rightThumbShift + this.thumbRight!.getHeight() / 2 - trackShift;
+      if (this.isRange() && this.thumbRight) {
+        const rightThumbShift = this.thumbRight.getBoundingClientRect().top;
+        const rightThumbPosition = rightThumbShift + this.thumbRight.getHeight() / 2 - trackShift;
 
         if (newTop < rightThumbPosition) {
           newTop = rightThumbPosition;
@@ -290,7 +260,7 @@ class View extends BaseElement<'div'> {
 
       const newBottom = trackHeight - newTop;
 
-      this.notify('viewInputLeft', newBottom);
+      this.eventManager.notify('viewInputLeft', newBottom);
     }
   }
 
@@ -307,12 +277,11 @@ class View extends BaseElement<'div'> {
       }
 
       const trackWidth = this.getTrackWidth();
-
       if (newLeft > trackWidth) {
         newLeft = trackWidth;
       }
 
-      this.notify('viewInputRight', newLeft);
+      this.eventManager.notify('viewInputRight', newLeft);
     }
 
     if (this.vertical) {
@@ -332,7 +301,7 @@ class View extends BaseElement<'div'> {
 
       const newBottom = this.getTrackHeight() - newTop;
 
-      this.notify('viewInputRight', newBottom);
+      this.eventManager.notify('viewInputRight', newBottom);
     }
   }
 
@@ -354,10 +323,6 @@ class View extends BaseElement<'div'> {
     this.scale = undefined;
   }
 
-  getScale(): Scale | undefined {
-    return this.scale;
-  }
-
   getScaleIntervals(): number {
     return this.scaleIntervals || 0;
   }
@@ -366,10 +331,10 @@ class View extends BaseElement<'div'> {
     if (!this.isRange()) {
       this.addSmoothTransition('left');
 
-      if (!this.vertical) {
-        this.notify('viewInputLeft', x);
+      if (this.vertical) {
+        this.eventManager.notify('viewInputLeft', this.getTrackHeight() - y);
       } else {
-        this.notify('viewInputLeft', this.getTrackHeight() - y);
+        this.eventManager.notify('viewInputLeft', x);
       }
 
       setTimeout(() => {
@@ -381,10 +346,10 @@ class View extends BaseElement<'div'> {
       if (this.whichThumbIsNearer(x, y) === 'left') {
         this.addSmoothTransition('left');
 
-        if (!this.vertical) {
-          this.notify('viewInputLeft', x);
+        if (this.vertical) {
+          this.eventManager.notify('viewInputLeft', this.getTrackHeight() - y);
         } else {
-          this.notify('viewInputLeft', this.getTrackHeight() - y);
+          this.eventManager.notify('viewInputLeft', x);
         }
 
         setTimeout(() => {
@@ -393,10 +358,10 @@ class View extends BaseElement<'div'> {
       } else {
         this.addSmoothTransition('right');
 
-        if (!this.vertical) {
-          this.notify('viewInputRight', x);
+        if (this.vertical) {
+          this.eventManager.notify('viewInputRight', this.getTrackHeight() - y);
         } else {
-          this.notify('viewInputRight', this.getTrackHeight() - y);
+          this.eventManager.notify('viewInputRight', x);
         }
 
         setTimeout(() => {
@@ -444,31 +409,32 @@ class View extends BaseElement<'div'> {
     this.panel?.updateMax(value);
   }
 
-  changeLeftValueFromOutside(value: number): void {
-    this.notify('viewSetLeftFromOutside', value);
+  setLeftFromOutside(value: number): void {
+    this.eventManager.notify('viewSetLeftFromOutside', value);
   }
 
-  changeRightValueFromOutside(value: number): void {
-    this.notify('viewSetRightFromOutside', value);
+  setRightFromOutside(value: number): void {
+    this.eventManager.notify('viewSetRightFromOutside', value);
   }
 
-  changeMinFromOutside(value: number): void {
-    this.notify('viewSetMin', value);
+  setMinFromOutside(value: number): void {
+    this.eventManager.notify('viewSetMin', value);
   }
 
-  changeMaxFromOutside(value: number): void {
-    this.notify('viewSetMax', value);
+  setMaxFromOutside(value: number): void {
+    this.eventManager.notify('viewSetMax', value);
   }
 
-  changeStepFromOutside(value: number): void {
-    this.notify('viewSetStep', value);
+  setStepFromOutside(value: number): void {
+    this.eventManager.notify('viewSetStep', value);
   }
 
-  changeOrientationFromOutside(): void {
-    if (!this.vertical) {
-      this.vertical = true;
-      this.destroy();
-      this.render();
+  toggleOrientationFromOutside(): void {
+    this.vertical = !this.vertical;
+    this.destroy();
+    this.render();
+
+    if (this.vertical) {
       this.thumbLeft.setIndent('left', 0);
       this.thumbRight?.setIndent('left', 0);
       this.range.setIndent('left', 0);
@@ -478,16 +444,12 @@ class View extends BaseElement<'div'> {
       this.valueLabelLeft?.setIndent('left', 'unset');
       this.valueLabelRight?.setIndent('left', 'unset');
       this.valueLabelCommon?.setIndent('left', 'unset');
+      if (this.hasLabels()) this.fixLabelsContainerWidthForVertical();
       this.scale?.handleSwitchFromHorizontalToVertical();
-      this.notify('viewToggleOrientation');
-      return;
     }
 
-    if (this.vertical) {
-      this.vertical = false;
+    if (!this.vertical) {
       this.component.classList.remove('range-slider_vertical');
-      this.destroy();
-      this.render();
       this.thumbLeft.setIndent('top', 0);
       this.thumbRight?.setIndent('top', 0);
       this.range.setIndent('bottom', 0);
@@ -496,16 +458,18 @@ class View extends BaseElement<'div'> {
       this.valueLabelLeft?.setIndent('top', 'unset');
       this.valueLabelRight?.setIndent('top', 'unset');
       this.valueLabelCommon?.setIndent('top', 'unset');
+      if (this.hasLabels()) this.fixLabelsContainerHeightForHorizontal();
       this.scale?.handleSwitchFromVerticalToHorizontal();
-      this.notify('viewToggleOrientation');
     }
+
+    this.eventManager.notify('viewToggleOrientation');
   }
 
   toggleRangeFromOutside(): void {
     const isRange = !this.isRange();
+    this.destroy();
 
     if (isRange) {
-      this.destroy();
       this.thumbRight = new Thumb(this, 'right');
 
       if (this.valueLabelLeft) {
@@ -520,33 +484,30 @@ class View extends BaseElement<'div'> {
       if (this.vertical) {
         this.range.resetHeight();
       }
-
-      this.render();
     }
 
     if (!isRange) {
+      this.thumbRight = undefined;
+
       if (this.vertical) {
         this.range.resetTopIndent();
       }
-
-      this.destroy();
-      this.thumbRight = undefined;
-      this.render();
     }
 
-    this.notify('viewToggleRange');
+    this.render();
+    this.eventManager.notify('viewToggleRange');
   }
 
   toggleScaleFromOutside(): void {
-    this.notify('viewToggleScale');
+    this.eventManager.notify('viewToggleScale');
   }
 
-  changeScaleIntervals(value: number): void {
+  setScaleIntervals(value: number): void {
     if (value <= 0) return;
 
     this.scaleIntervals = Math.floor(value);
     this.removeScale();
-    this.notify('viewSetScaleIntervals');
+    this.eventManager.notify('viewSetScaleIntervals');
   }
 
   toggleValueLabels(): void {
@@ -592,10 +553,10 @@ class View extends BaseElement<'div'> {
         this.valueLabelCommon = new Label('range-slider__value-label range-slider__value-label_common');
 
         this.labelsContainer
-          .append(this.valueLabelRight!.getComponent(), this.valueLabelCommon!.getComponent());
+          .append(this.valueLabelRight?.getComponent(), this.valueLabelCommon?.getComponent());
       }
 
-      this.notify('viewAddValueLabels');
+      this.eventManager.notify('viewAddValueLabels');
 
       if (!this.vertical) {
         this.fixLabelsContainerHeightForHorizontal();
@@ -644,7 +605,7 @@ class View extends BaseElement<'div'> {
 
       this.labelsContainer.append(this.minLabel.getComponent(), this.maxLabel.getComponent());
 
-      this.notify('viewAddMinMaxLabels');
+      this.eventManager.notify('viewAddMinMaxLabels');
 
       if (!this.vertical) {
         this.fixLabelsContainerHeightForHorizontal();
@@ -657,52 +618,31 @@ class View extends BaseElement<'div'> {
   }
 
   hasLabels(): boolean {
-    if (this.valueLabelLeft || this.minLabel) {
-      return true;
-    }
-    return false;
+    return Boolean(this.valueLabelLeft || this.minLabel);
   }
 
   hasScale(): boolean {
-    if (this.scale) {
-      return true;
-    }
-    return false;
+    return Boolean(this.scale);
   }
 
   hasMinMaxLabels(): boolean {
-    if (this.maxLabel) {
-      return true;
-    }
-    return false;
+    return Boolean(this.maxLabel);
   }
 
   hasValueLabels(): boolean {
-    if (this.valueLabelLeft) {
-      return true;
-    }
-    return false;
+    return Boolean(this.valueLabelLeft);
   }
 
   hasPanel(): boolean {
-    if (this.panel) {
-      return true;
-    }
-    return false;
+    return Boolean(this.panel);
   }
 
   isRange(): boolean {
-    if (this.thumbRight) {
-      return true;
-    }
-    return false;
+    return Boolean(this.thumbRight);
   }
 
   isVertical(): boolean {
-    if (this.vertical) {
-      return true;
-    }
-    return false;
+    return Boolean(this.vertical);
   }
 
   getTrackWidth(): number {
@@ -720,8 +660,8 @@ class View extends BaseElement<'div'> {
     this.slider.append(this.track.getComponent(), this.thumbLeft.getComponent());
     fragment.append(this.slider, this.input.getComponent());
 
-    if (this.isRange()) {
-      this.slider.append(this.thumbRight!.getComponent());
+    if (this.isRange() && this.thumbRight) {
+      this.slider.append(this.thumbRight.getComponent());
     } else {
       if (!this.vertical) {
         this.range.setIndent('left', 0);
@@ -733,15 +673,19 @@ class View extends BaseElement<'div'> {
     }
 
     if (this.minLabel && this.maxLabel) {
-      this.labelsContainer!.append(this.minLabel.getComponent(), this.maxLabel.getComponent());
+      this.labelsContainer?.append(this.minLabel.getComponent(), this.maxLabel.getComponent());
     }
 
     if (this.valueLabelLeft) {
-      this.labelsContainer!.append(this.valueLabelLeft.getComponent());
+      this.labelsContainer?.append(this.valueLabelLeft.getComponent());
 
       if (this.isRange()) {
-        this.labelsContainer!
-          .append(this.valueLabelRight!.getComponent(), this.valueLabelCommon!.getComponent());
+        if (this.valueLabelRight && this.valueLabelCommon) {
+          this.labelsContainer?.append(
+            this.valueLabelRight.getComponent(),
+            this.valueLabelCommon.getComponent(),
+          );
+        }
       }
     }
 
@@ -787,19 +731,25 @@ class View extends BaseElement<'div'> {
     this.valueLabelRight?.setOpacity(0);
     this.valueLabelCommon?.setOpacity(1);
 
-    if (!this.vertical) {
+    if (!this.vertical && this.thumbRight) {
       const distanceBetweenThumbs = (
-        parseInt(this.thumbRight!.getLeftIndent(), 10)
+        parseInt(this.thumbRight.getLeftIndent(), 10)
         - parseInt(this.thumbLeft.getLeftIndent(), 10)
       );
-      this.valueLabelCommon?.setIndent('left', `${parseInt(this.valueLabelLeft!.getLeftIndent(), 10) + distanceBetweenThumbs / 2}%`);
+
+      if (this.valueLabelLeft) {
+        this.valueLabelCommon?.setIndent('left', `${parseInt(this.valueLabelLeft.getLeftIndent(), 10) + distanceBetweenThumbs / 2}%`);
+      }
     }
 
-    if (this.vertical) {
+    if (this.vertical && this.thumbRight) {
       const distanceBetweenThumbs = (
-        parseInt(this.thumbRight!.getTopIndent(), 10) - parseInt(this.thumbLeft.getTopIndent(), 10)
+        parseInt(this.thumbRight.getTopIndent(), 10) - parseInt(this.thumbLeft.getTopIndent(), 10)
       );
-      this.valueLabelCommon?.setIndent('top', `${parseInt(this.valueLabelRight!.getTopIndent(), 10) - distanceBetweenThumbs / 2}%`);
+
+      if (this.valueLabelRight) {
+        this.valueLabelCommon?.setIndent('top', `${parseInt(this.valueLabelRight.getTopIndent(), 10) - distanceBetweenThumbs / 2}%`);
+      }
     }
   }
 
@@ -857,13 +807,13 @@ class View extends BaseElement<'div'> {
 
   private whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
     const leftThumbCoords = this.thumbLeft.getBoundingClientRect();
-    const rightThumbCoords = this.thumbRight!.getBoundingClientRect();
+    const rightThumbCoords = this.thumbRight?.getBoundingClientRect();
     const trackCoords = this.track.getBoundingClientRect();
 
     let distanceFromLeftThumbCenter: number = 0;
     let distanceFromRightThumbCenter: number = 0;
 
-    if (!this.vertical) {
+    if (!this.vertical && rightThumbCoords) {
       const leftThumbCenter = leftThumbCoords.left + leftThumbCoords.width / 2 - trackCoords.left;
       const rightThumbCenter = rightThumbCoords.left
         + rightThumbCoords.width / 2
@@ -873,7 +823,7 @@ class View extends BaseElement<'div'> {
       distanceFromRightThumbCenter = Math.abs(x - rightThumbCenter);
     }
 
-    if (this.vertical) {
+    if (this.vertical && rightThumbCoords) {
       const leftThumbCenter = leftThumbCoords.top + leftThumbCoords.height / 2 - trackCoords.top;
       const rightThumbCenter = rightThumbCoords.top + rightThumbCoords.height / 2 - trackCoords.top;
 
@@ -896,7 +846,7 @@ class View extends BaseElement<'div'> {
     }
 
     if (side === 'right') {
-      this.thumbRight!.getComponent().classList.add('range-slider__thumb_smooth-transition');
+      this.thumbRight?.getComponent().classList.add('range-slider__thumb_smooth-transition');
       this.range.getComponent().classList.add('range-slider__range_smooth-transition');
       this.valueLabelRight?.getComponent().classList.add('range-slider__value-label_smooth-transition');
     }
@@ -910,7 +860,7 @@ class View extends BaseElement<'div'> {
     }
 
     if (side === 'right') {
-      this.thumbRight!.getComponent().classList.remove('range-slider__thumb_smooth-transition');
+      this.thumbRight?.getComponent().classList.remove('range-slider__thumb_smooth-transition');
       this.range.getComponent().classList.remove('range-slider__range_smooth-transition');
       this.valueLabelRight?.getComponent().classList.remove('range-slider__value-label_smooth-transition');
     }

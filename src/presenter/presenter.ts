@@ -307,16 +307,6 @@ class Presenter implements IEventListener {
         this.passRightValueToView(rightValue);
       }
     }
-
-    if (this.view.hasLabels()) {
-      if (!this.view.isVertical()) {
-        this.view.fixLabelsContainerHeightForHorizontal();
-      }
-
-      if (this.view.isVertical()) {
-        this.view.fixLabelsContainerWidthForVertical();
-      }
-    }
   }
 
   private handleViewToggleRange(): void {

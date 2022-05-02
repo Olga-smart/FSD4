@@ -69,17 +69,17 @@ class Slider {
   }
 
   setLeftValue(value: number): this {
-    this.view.changeLeftValueFromOutside(value);
+    this.view.setLeftFromOutside(value);
     return this;
   }
 
   setRightValue(value: number): this {
-    this.view.changeRightValueFromOutside(value);
+    this.view.setRightFromOutside(value);
     return this;
   }
 
   setStep(value: number): this {
-    this.view.changeStepFromOutside(value);
+    this.view.setStepFromOutside(value);
     return this;
   }
 

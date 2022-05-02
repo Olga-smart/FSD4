@@ -14,15 +14,15 @@ declare type PanelOptions = {
 };
 declare type ViewForPanel = {
     isRange(): boolean;
-    changeMinFromOutside(value: number): void;
-    changeMaxFromOutside(value: number): void;
-    changeStepFromOutside(value: number): void;
-    changeLeftValueFromOutside(value: number): void;
-    changeRightValueFromOutside(value: number): void;
-    changeOrientationFromOutside(): void;
+    setMinFromOutside(value: number): void;
+    setMaxFromOutside(value: number): void;
+    setStepFromOutside(value: number): void;
+    setLeftFromOutside(value: number): void;
+    setRightFromOutside(value: number): void;
+    toggleOrientationFromOutside(): void;
     toggleRangeFromOutside(): void;
     toggleScaleFromOutside(): void;
-    changeScaleIntervals(value: number): void;
+    setScaleIntervals(value: number): void;
     toggleValueLabels(): void;
     toggleMinMaxLabels(): void;
 };

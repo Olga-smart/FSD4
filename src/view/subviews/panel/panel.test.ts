@@ -584,7 +584,7 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       const panel = new Panel(view);
-      view.changeMinFromOutside = jest.fn();
+      view.setMinFromOutside = jest.fn();
       const event = new Event('change');
       const min: HTMLInputElement | null = panel.getComponent().querySelector('.panel__min');
       const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
@@ -625,7 +625,7 @@ describe('Panel', () => {
           min.dispatchEvent(event);
         }
 
-        expect(view.changeMinFromOutside).toBeCalledWith(10);
+        expect(view.setMinFromOutside).toBeCalledWith(10);
       });
 
       it('update from.min', () => {
@@ -663,7 +663,7 @@ describe('Panel', () => {
           range: false,
         });
         const panel = new Panel(view);
-        view.changeMaxFromOutside = jest.fn();
+        view.setMaxFromOutside = jest.fn();
         const event = new Event('change');
         const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
         const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
@@ -710,7 +710,7 @@ describe('Panel', () => {
           range: true,
         });
         const panel = new Panel(view);
-        view.changeMaxFromOutside = jest.fn();
+        view.setMaxFromOutside = jest.fn();
         const event = new Event('change');
         const max: HTMLInputElement | null = panel.getComponent().querySelector('.panel__max');
         const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
@@ -767,11 +767,11 @@ describe('Panel', () => {
           max.value = '100';
         }
 
-        view.changeMaxFromOutside = jest.fn();
+        view.setMaxFromOutside = jest.fn();
         const event = new Event('change');
         max?.dispatchEvent(event);
 
-        expect(view.changeMaxFromOutside).toBeCalledWith(100);
+        expect(view.setMaxFromOutside).toBeCalledWith(100);
       });
 
       it('update step.max', () => {
@@ -803,7 +803,7 @@ describe('Panel', () => {
     describe('handle step change', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
-      view.changeStepFromOutside = jest.fn();
+      view.setStepFromOutside = jest.fn();
       const panel = new Panel(view);
       const step: HTMLInputElement | null = panel.getComponent().querySelector('.panel__step');
       const event = new Event('change');
@@ -844,7 +844,7 @@ describe('Panel', () => {
           step.dispatchEvent(event);
         }
 
-        expect(view.changeStepFromOutside).toBeCalledWith(5);
+        expect(view.setStepFromOutside).toBeCalledWith(5);
       });
 
       describe('update attributes', () => {
@@ -933,7 +933,7 @@ describe('Panel', () => {
       const view = new View(slider, {
         range: true,
       });
-      view.changeLeftValueFromOutside = jest.fn();
+      view.setLeftFromOutside = jest.fn();
       const panel = new Panel(view);
       const from: HTMLInputElement | null = panel.getComponent().querySelector('.panel__from');
       const event = new Event('change');
@@ -965,7 +965,7 @@ describe('Panel', () => {
           from.dispatchEvent(event);
         }
 
-        expect(view.changeLeftValueFromOutside).toBeCalledWith(10);
+        expect(view.setLeftFromOutside).toBeCalledWith(10);
       });
 
       describe('update attributes', () => {
@@ -997,7 +997,7 @@ describe('Panel', () => {
       const view = new View(slider, {
         range: true,
       });
-      view.changeRightValueFromOutside = jest.fn();
+      view.setRightFromOutside = jest.fn();
       const panel = new Panel(view);
       const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
       const event = new Event('change');
@@ -1030,7 +1030,7 @@ describe('Panel', () => {
           to.dispatchEvent(event);
         }
 
-        expect(view.changeRightValueFromOutside).toBeCalledWith(100);
+        expect(view.setRightFromOutside).toBeCalledWith(100);
       });
 
       describe('update attributes', () => {
@@ -1062,13 +1062,13 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       const panel = new Panel(view);
-      view.changeOrientationFromOutside = jest.fn();
+      view.toggleOrientationFromOutside = jest.fn();
       const event = new Event('change');
       const vertical = panel.getComponent().querySelector('.panel__vertical');
       vertical?.dispatchEvent(event);
 
       it('say view that orientation was changed', () => {
-        expect(view.changeOrientationFromOutside).toBeCalled();
+        expect(view.toggleOrientationFromOutside).toBeCalled();
       });
     });
 
@@ -1166,7 +1166,7 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       const panel = new Panel(view);
-      view.changeScaleIntervals = jest.fn();
+      view.setScaleIntervals = jest.fn();
       const scaleIntervals: HTMLInputElement | null = panel.getComponent().querySelector('.panel__scale-intervals');
       const event = new Event('change');
 
@@ -1195,7 +1195,7 @@ describe('Panel', () => {
           scaleIntervals.dispatchEvent(event);
         }
 
-        expect(view.changeScaleIntervals).toBeCalledWith(5);
+        expect(view.setScaleIntervals).toBeCalledWith(5);
       });
     });
 
