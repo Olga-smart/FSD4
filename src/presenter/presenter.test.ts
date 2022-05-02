@@ -605,36 +605,6 @@ describe('Presenter', () => {
 
         expect(view.setRightValue).toBeCalled();
       });
-
-      describe('fix labels container width or height if view has labels', () => {
-        it('if view is horizontal', () => {
-          const slider = document.createElement('div');
-          const model = new Model(defaultModelOptions);
-          const view = new View(slider, {
-            valueLabels: true,
-            vertical: false,
-          });
-          const presenter = new Presenter(model, view);
-          view.fixLabelsContainerHeightForHorizontal = jest.fn();
-          presenter.inform('viewToggleOrientation');
-
-          expect(view.fixLabelsContainerHeightForHorizontal).toBeCalled();
-        });
-
-        it('if view is vertical', () => {
-          const slider = document.createElement('div');
-          const model = new Model(defaultModelOptions);
-          const view = new View(slider, {
-            valueLabels: true,
-            vertical: true,
-          });
-          const presenter = new Presenter(model, view);
-          view.fixLabelsContainerWidthForVertical = jest.fn();
-          presenter.inform('viewToggleOrientation');
-
-          expect(view.fixLabelsContainerWidthForVertical).toBeCalled();
-        });
-      });
     });
 
     describe('if eventType is "viewToggleRange"', () => {

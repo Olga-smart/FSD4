@@ -1,6 +1,6 @@
-import Model from './Model/Model';
-import View from './View/View';
-import Presenter from './Presenter/Presenter';
+import Model from '../Model/Model';
+import View from '../View/View';
+import Presenter from '../Presenter/Presenter';
 
 type SliderOptions = {
   min: number,
@@ -18,16 +18,13 @@ type SliderOptions = {
 };
 
 class Slider {
-  element: HTMLDivElement;
+  private model: Model;
 
-  model: Model;
+  private view: View;
 
-  view: View;
-
-  presenter: Presenter;
+  private presenter: Presenter;
 
   constructor(element: HTMLDivElement, options: SliderOptions) {
-    this.element = element;
     this.model = new Model({
       min: options.min,
       max: options.max,
@@ -69,17 +66,17 @@ class Slider {
   }
 
   setLeftValue(value: number): this {
-    this.view.setLeftFromOutside(value);
+    this.presenter.inform('viewSetLeftFromOutside', value);
     return this;
   }
 
   setRightValue(value: number): this {
-    this.view.setRightFromOutside(value);
+    this.presenter.inform('viewSetRightFromOutside', value);
     return this;
   }
 
   setStep(value: number): this {
-    this.view.setStepFromOutside(value);
+    this.presenter.inform('viewSetStep', value);
     return this;
   }
 

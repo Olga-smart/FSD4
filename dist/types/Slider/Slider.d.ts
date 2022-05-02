@@ -1,6 +1,3 @@
-import Model from './Model/Model';
-import View from './View/View';
-import Presenter from './Presenter/Presenter';
 declare type SliderOptions = {
     min: number;
     max: number;
@@ -16,10 +13,9 @@ declare type SliderOptions = {
     panel: boolean;
 };
 declare class Slider {
-    element: HTMLDivElement;
-    model: Model;
-    view: View;
-    presenter: Presenter;
+    private model;
+    private view;
+    private presenter;
     constructor(element: HTMLDivElement, options: SliderOptions);
     inform(eventType: string): void;
     setLeftValue(value: number): this;
