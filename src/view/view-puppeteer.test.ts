@@ -6,7 +6,7 @@ describe('Horizontal slider', () => {
     it('when left thumb is being dragged, it`s position is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_left');
       const boxBefore = await leftThumb?.boundingBox();
       const x = boxBefore ? boxBefore.x + boxBefore.width / 2 : undefined;
@@ -25,7 +25,7 @@ describe('Horizontal slider', () => {
     it('when left thumb is being dragged, position of left value label is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const leftValueLabelPositionBefore = await page.evaluate('document.querySelector(".range-slider__value-label_left").getBoundingClientRect().x');
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
@@ -45,7 +45,7 @@ describe('Horizontal slider', () => {
     it('when left thumb is being dragged, text in left value label is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const leftValueLabelTextBefore = await page.evaluate('document.querySelector(".range-slider__value-label_left").textContent');
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
@@ -65,7 +65,7 @@ describe('Horizontal slider', () => {
     it('when 2 value labels get too close, they merge', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -86,7 +86,7 @@ describe('Horizontal slider', () => {
     it('when 2 value labels get too close and then get too far, they split', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -114,7 +114,7 @@ describe('Horizontal slider', () => {
     it('when left value label gets too close to min label, min label hides', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -135,7 +135,7 @@ describe('Horizontal slider', () => {
     it('when right thumb is being dragged, it`s position is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const rightThumb = await page.$('.range-slider__thumb_right');
       const boxBefore = await rightThumb?.boundingBox();
       const x = boxBefore ? boxBefore.x + boxBefore.width / 2 : undefined;
@@ -154,7 +154,7 @@ describe('Horizontal slider', () => {
     it('when right thumb is being dragged, position of right value label is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const rightValueLabelPositionBefore = await page.evaluate('document.querySelector(".range-slider__value-label_right").getBoundingClientRect().x');
       const rightThumb = await page.$('.range-slider__thumb_right');
       const box = await rightThumb?.boundingBox();
@@ -174,7 +174,7 @@ describe('Horizontal slider', () => {
     it('when right thumb is being dragged, text in right value label is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const rightValueLabelTextBefore = await page.evaluate('document.querySelector(".range-slider__value-label_right").textContent');
       const rightThumb = await page.$('.range-slider__thumb_right');
       const box = await rightThumb?.boundingBox();
@@ -194,7 +194,7 @@ describe('Horizontal slider', () => {
     it('when 2 value labels get too close, they merge', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const rightThumb = await page.$('.range-slider__thumb_right');
       const box = await rightThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -215,7 +215,7 @@ describe('Horizontal slider', () => {
     it('when 2 value labels get too close and then get too far, they split', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_right');
       const box = await leftThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -243,7 +243,7 @@ describe('Horizontal slider', () => {
     it('when right value label gets too close to max label, max label hides', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/horizontal/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerHorizontal/index.html')}`);
       const rightThumb = await page.$('.range-slider__thumb_right');
       const box = await rightThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -266,7 +266,7 @@ describe('Vertical slider', () => {
     it('when left thumb is being dragged, it`s position is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_left');
       const boxBefore = await leftThumb?.boundingBox();
       const x = boxBefore ? boxBefore.x + boxBefore.width / 2 : undefined;
@@ -285,7 +285,7 @@ describe('Vertical slider', () => {
     it('when left thumb is being dragged, position of left value label is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const leftValueLabelPositionBefore = await page.evaluate('document.querySelector(".range-slider__value-label_left").getBoundingClientRect().y');
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
@@ -305,7 +305,7 @@ describe('Vertical slider', () => {
     it('when left thumb is being dragged, text in left value label is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const leftValueLabelTextBefore = await page.evaluate('document.querySelector(".range-slider__value-label_left").textContent');
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
@@ -325,7 +325,7 @@ describe('Vertical slider', () => {
     it('when 2 value labels get too close, they merge', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -346,7 +346,7 @@ describe('Vertical slider', () => {
     it('when 2 value labels get too close and then get too far, they split', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -374,7 +374,7 @@ describe('Vertical slider', () => {
     it('when left value label gets too close to min label, min label hides', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_left');
       const box = await leftThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -395,7 +395,7 @@ describe('Vertical slider', () => {
     it('when right thumb is being dragged, it`s position is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const rightThumb = await page.$('.range-slider__thumb_right');
       const boxBefore = await rightThumb?.boundingBox();
       const x = boxBefore ? boxBefore.x + boxBefore.width / 2 : undefined;
@@ -414,7 +414,7 @@ describe('Vertical slider', () => {
     it('when right thumb is being dragged, position of right value label is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const rightValueLabelPositionBefore = await page.evaluate('document.querySelector(".range-slider__value-label_right").getBoundingClientRect().y');
       const rightThumb = await page.$('.range-slider__thumb_right');
       const box = await rightThumb?.boundingBox();
@@ -434,7 +434,7 @@ describe('Vertical slider', () => {
     it('when right thumb is being dragged, text in right value label is being changed', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const rightValueLabelTextBefore = await page.evaluate('document.querySelector(".range-slider__value-label_right").textContent');
       const rightThumb = await page.$('.range-slider__thumb_right');
       const box = await rightThumb?.boundingBox();
@@ -454,7 +454,7 @@ describe('Vertical slider', () => {
     it('when 2 value labels get too close, they merge', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const rightThumb = await page.$('.range-slider__thumb_right');
       const box = await rightThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -475,7 +475,7 @@ describe('Vertical slider', () => {
     it('when 2 value labels get too close and then get too far, they split', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const leftThumb = await page.$('.range-slider__thumb_right');
       const box = await leftThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;
@@ -503,7 +503,7 @@ describe('Vertical slider', () => {
     it('when right value label gets too close to max label, max label hides', async () => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`file:${path.join(__dirname, 'pages-for-puppeteer/vertical/index.html')}`);
+      await page.goto(`file:${path.resolve(__dirname, '../../dist/forPuppeteerVertical/index.html')}`);
       const rightThumb = await page.$('.range-slider__thumb_right');
       const box = await rightThumb?.boundingBox();
       const x = box ? box.x + box.width / 2 : undefined;

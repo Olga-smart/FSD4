@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-(function rangeSliderWrapper(jQ) {
+(function Wrapper(jQ) {
   const $ = jQ;
 
   const defaults: Readonly<SliderOptions> = {

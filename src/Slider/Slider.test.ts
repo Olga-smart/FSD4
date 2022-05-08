@@ -1,6 +1,3 @@
-import Model from '../Model/Model';
-import View from '../View/View';
-import Presenter from '../Presenter/Presenter';
 import { Slider } from './Slider';
 
 describe('Slider', () => {

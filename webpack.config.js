@@ -12,7 +12,9 @@ module.exports = {
   mode: 'development',
   entry: {
     RangeSlider: './Wrapper.ts',
-    demo: './demo/demo.ts'
+    demo: './demo/demo.ts',
+    forPuppeteerHorizontal: './View/pages-for-puppeteer/horizontal/index.ts',
+    forPuppeteerVertical: './View/pages-for-puppeteer/vertical/index.ts'
   },
   output: {
     filename: '[name]/[name].js',
@@ -38,6 +40,18 @@ module.exports = {
       template: './demo/demo.pug',
       scriptLoading: 'blocking',
       chunks: ['RangeSlider', 'demo']
+    }),
+    new HTMLWebpackPlugin({
+      filename: 'forPuppeteerHorizontal/index.html',
+      template: './View/pages-for-puppeteer/horizontal/index.pug',
+      scriptLoading: 'blocking',
+      chunks: ['RangeSlider', 'forPuppeteerHorizontal']
+    }),
+    new HTMLWebpackPlugin({
+      filename: 'forPuppeteerVertical/index.html',
+      template: './View/pages-for-puppeteer/vertical/index.pug',
+      scriptLoading: 'blocking',
+      chunks: ['RangeSlider', 'forPuppeteerVertical']
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
