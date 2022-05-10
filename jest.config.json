@@ -11,5 +11,6 @@
     "^.+\\.mjs$": "babel-jest",   
     "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
   },
-  "preset": "jest-puppeteer"
+  "preset": "jest-puppeteer",
+  "coverageReporters": ["json-summary"]
 }
