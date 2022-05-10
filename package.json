@@ -9,7 +9,8 @@
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
     "start": "cross-env NODE_ENV=development webpack serve --mode development",
     "test": "jest --detectOpenHandles",
-    "make-badges": "istanbul-badges-readme"
+    "make-badges": "istanbul-badges-readme",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -67,10 +68,5 @@
   },
   "volta": {
     "node": "16.14.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run test && istanbul-badges-readme && git add 'readme.md'"
-    }
   }
 }
