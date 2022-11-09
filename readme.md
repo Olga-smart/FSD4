@@ -286,7 +286,16 @@ To update the [demo](https://olga-smart.github.io/FSD_4/demo/demo.html), run the
 npm run deploy
 ```
 
-You need to have dist folder with generated files to run this command. So if you don't have dist folder [make a build](#making-the-build) before. 
+You need to have dist folder with generated files to run this command. So if you don't have dist folder [make a build](#making-the-build) before.
+
+#### Linting
+
+Linting starts automatically on build, but if you want to start it separately, run the following command:
+``` bash
+npm run lint
+```
+
+In this case, all errors that can be corrected automatically will be corrected.
 
 #### Commit
 
