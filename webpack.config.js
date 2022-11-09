@@ -11,10 +11,10 @@ module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
   entry: {
-    RangeSlider: './Wrapper.ts',
+    RangeSlider: './RangeSlider/Wrapper.ts',
     demo: './demo/demo.ts',
-    forPuppeteerHorizontal: './View/pages-for-puppeteer/horizontal/index.ts',
-    forPuppeteerVertical: './View/pages-for-puppeteer/vertical/index.ts'
+    forPuppeteerHorizontal: './RangeSlider/View/pages-for-puppeteer/horizontal/index.ts',
+    forPuppeteerVertical: './RangeSlider/View/pages-for-puppeteer/vertical/index.ts'
   },
   output: {
     filename: '[name]/[name].js',
@@ -43,13 +43,13 @@ module.exports = {
     }),
     new HTMLWebpackPlugin({
       filename: 'forPuppeteerHorizontal/index.html',
-      template: './View/pages-for-puppeteer/horizontal/index.pug',
+      template: './RangeSlider/View/pages-for-puppeteer/horizontal/index.pug',
       scriptLoading: 'blocking',
       chunks: ['RangeSlider', 'forPuppeteerHorizontal']
     }),
     new HTMLWebpackPlugin({
       filename: 'forPuppeteerVertical/index.html',
-      template: './View/pages-for-puppeteer/vertical/index.pug',
+      template: './RangeSlider/View/pages-for-puppeteer/vertical/index.pug',
       scriptLoading: 'blocking',
       chunks: ['RangeSlider', 'forPuppeteerVertical']
     }),

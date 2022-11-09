@@ -1,4 +1,4 @@
-import '../../../demo/demo.scss';
+import '../../../../demo/demo.scss';
 
 $(() => {
   $('.js-range-slider').rangeSlider();
