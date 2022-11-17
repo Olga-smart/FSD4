@@ -54,6 +54,7 @@ class View extends BaseElement<'div'> {
 
   private panel?: Panel;
 
+  // возможно конструктор перегружен
   constructor(component: HTMLDivElement, options: ViewOptions = {}) {
     super('div');
 
@@ -110,18 +111,22 @@ class View extends BaseElement<'div'> {
     this.render();
   }
 
+  // норм
   subscribe(listener: IEventListener): void {
     this.eventManager.subscribe(listener);
   }
 
+  // норм
   setMinValue(min: number): void {
     this.minLabel?.setValue(min);
   }
 
+  // норм
   setMaxValue(max: number): void {
     this.maxLabel?.setValue(max);
   }
 
+  // вроде норм (немного смущает, что значение для valuelabelCommon берется из View)
   setLeftValue(value: number, percent: number): void {
     if (!this.vertical) {
       this.thumbLeft.setIndent('left', percent);
@@ -174,6 +179,7 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // вроде норм (немного смущает, что значение для valuelabelCommon берется из View)
   setRightValue(value: number, percent: number): void {
     if (!this.vertical) {
       this.thumbRight?.setIndent('left', percent);
@@ -203,10 +209,12 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // норм
   updateInput(value1: number, value2: number | null = null): void {
     this.input.setValue(value1, value2);
   }
 
+  // кажется тут часть расчетов нужно перенести в модель
   handleLeftInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
     if (!this.vertical) {
       const trackShift = this.track.getBoundingClientRect().left;
@@ -264,6 +272,7 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // кажется тут часть расчетов нужно перенести в модель
   handleRightInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
     if (!this.vertical) {
       const trackShift = this.track.getBoundingClientRect().left;
@@ -305,6 +314,7 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // норм
   addScale(min: number, max: number): void {
     this.scale = new Scale(min, max, this);
     this.slider.after(this.scale.getComponent());
@@ -318,15 +328,18 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // норм
   removeScale(): void {
     this.scale?.getComponent().remove();
     this.scale = undefined;
   }
 
+  // норм
   getScaleIntervals(): number {
     return this.scaleIntervals || 0;
   }
 
+  // норм
   handleScaleOrTrackClick(x: number, y: number): void {
     if (!this.isRange()) {
       this.addSmoothTransition('left');
@@ -371,64 +384,79 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // норм
   fixLabelsContainerWidthForVertical(): void {
     const labels: HTMLElement[] = this.collectLabels();
     this.labelsContainer?.fixWidthForVertical(labels);
   }
 
+  // норм
   fixLabelsContainerHeightForHorizontal(): void {
     const labels: HTMLElement[] = this.collectLabels();
     this.labelsContainer?.fixHeightForHorizontal(labels);
   }
 
+  // уберется когда сделаю независимую панель
   setPanelValues(options: PanelOptions): void {
     this.panel?.setValues(options);
   }
 
+  // уберется когда сделаю независимую панель
   updatePanelFrom(value: number): void {
     this.panel?.updateFrom(value);
   }
 
+  // уберется когда сделаю независимую панель
   updatePanelTo(value: number | ''): void {
     this.panel?.updateTo(value);
   }
 
+  // уберется когда сделаю независимую панель
   updatePanelScaleIntervals(value: number | ''): void {
     this.panel?.updateScaleIntervals(value);
   }
 
+  // уберется когда сделаю независимую панель
   updatePanelStep(value: number): void {
     this.panel?.updateStep(value);
   }
 
+  // уберется когда сделаю независимую панель
   updatePanelMin(value: number): void {
     this.panel?.updateMin(value);
   }
 
+  // уберется когда сделаю независимую панель
   updatePanelMax(value: number): void {
     this.panel?.updateMax(value);
   }
 
+  // уберется когда сделаю независимую панель
   setLeftFromOutside(value: number): void {
     this.eventManager.notify('viewSetLeftFromOutside', value);
   }
 
+  // уберется когда сделаю независимую панель
   setRightFromOutside(value: number): void {
     this.eventManager.notify('viewSetRightFromOutside', value);
   }
 
+  // уберется когда сделаю независимую панель
   setMinFromOutside(value: number): void {
     this.eventManager.notify('viewSetMin', value);
   }
 
+  // уберется когда сделаю независимую панель
   setMaxFromOutside(value: number): void {
     this.eventManager.notify('viewSetMax', value);
   }
 
+  // уберется когда сделаю независимую панель
   setStepFromOutside(value: number): void {
     this.eventManager.notify('viewSetStep', value);
   }
 
+  // уберется когда сделаю независимую панель
   toggleOrientationFromOutside(): void {
     this.vertical = !this.vertical;
     this.destroy();
@@ -465,6 +493,7 @@ class View extends BaseElement<'div'> {
     this.eventManager.notify('viewToggleOrientation');
   }
 
+  // уберется когда сделаю независимую панель
   toggleRangeFromOutside(): void {
     const isRange = !this.isRange();
     this.destroy();
@@ -498,10 +527,12 @@ class View extends BaseElement<'div'> {
     this.eventManager.notify('viewToggleRange');
   }
 
+  // уберется когда сделаю независимую панель
   toggleScaleFromOutside(): void {
     this.eventManager.notify('viewToggleScale');
   }
 
+  // уберется когда сделаю независимую панель
   setScaleIntervals(value: number): void {
     if (value <= 0) return;
 
@@ -510,6 +541,7 @@ class View extends BaseElement<'div'> {
     this.eventManager.notify('viewSetScaleIntervals');
   }
 
+  // уберется когда сделаю независимую панель
   toggleValueLabels(): void {
     if (this.valueLabelLeft) {
       this.valueLabelLeft.remove();
@@ -568,6 +600,7 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // уберется когда сделаю независимую панель
   toggleMinMaxLabels(): void {
     if (this.minLabel) {
       this.minLabel.remove();
@@ -617,42 +650,52 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // норм
   hasLabels(): boolean {
     return Boolean(this.valueLabelLeft || this.minLabel);
   }
 
+  // норм
   hasScale(): boolean {
     return Boolean(this.scale);
   }
 
+  // норм
   hasMinMaxLabels(): boolean {
     return Boolean(this.maxLabel);
   }
 
+  // норм
   hasValueLabels(): boolean {
     return Boolean(this.valueLabelLeft);
   }
 
+  // уберется когда сделаю независимую панель
   hasPanel(): boolean {
     return Boolean(this.panel);
   }
 
+  // норм
   isRange(): boolean {
     return Boolean(this.thumbRight);
   }
 
+  // норм
   isVertical(): boolean {
     return Boolean(this.vertical);
   }
 
+  // норм
   getTrackWidth(): number {
     return this.track.getWidth();
   }
 
+  // норм
   getTrackHeight(): number {
     return this.track.getHeight();
   }
 
+  // норм
   private render(): void {
     const fragment = new DocumentFragment();
 
@@ -710,6 +753,7 @@ class View extends BaseElement<'div'> {
     this.component.append(fragment);
   }
 
+  // норм
   private destroy(): void {
     if (this.labelsContainer) {
       [...this.labelsContainer.getComponent().children].forEach((element) => {
@@ -726,6 +770,7 @@ class View extends BaseElement<'div'> {
     });
   }
 
+  // норм
   private mergeLabels(): void {
     this.valueLabelLeft?.setOpacity(0);
     this.valueLabelRight?.setOpacity(0);
@@ -753,12 +798,14 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // норм
   private splitLabels(): void {
     this.valueLabelCommon?.setOpacity(0);
     this.valueLabelLeft?.setOpacity(1);
     this.valueLabelRight?.setOpacity(1);
   }
 
+  // в модель
   private isTwoLabelsClose(label1: Label, label2: Label): boolean {
     if (this.vertical) {
       const bottomLabelEdge = label1.getBoundingClientRect().top;
@@ -773,6 +820,7 @@ class View extends BaseElement<'div'> {
     return ((rightLabelEdge - leftLabelEdge) < 3);
   }
 
+  // в модель
   private isTwoValueLabelsClose(): boolean {
     if (this.valueLabelLeft && this.valueLabelRight) {
       return this.isTwoLabelsClose(this.valueLabelLeft, this.valueLabelRight);
@@ -781,6 +829,7 @@ class View extends BaseElement<'div'> {
     return false;
   }
 
+  // в модель
   private isLeftValueLabelCloseToMinLabel(): boolean {
     if (this.minLabel && this.valueLabelLeft) {
       return this.isTwoLabelsClose(this.minLabel, this.valueLabelLeft);
@@ -789,6 +838,7 @@ class View extends BaseElement<'div'> {
     return false;
   }
 
+  // в модель
   private isLeftValueLabelCloseToMaxLabel(): boolean {
     if (this.valueLabelLeft && this.maxLabel) {
       return this.isTwoLabelsClose(this.valueLabelLeft, this.maxLabel);
@@ -797,6 +847,7 @@ class View extends BaseElement<'div'> {
     return false;
   }
 
+  // в модель
   private isRightValueLabelCloseToMaxLabel(): boolean {
     if (this.valueLabelRight && this.maxLabel) {
       return this.isTwoLabelsClose(this.valueLabelRight, this.maxLabel);
@@ -805,6 +856,7 @@ class View extends BaseElement<'div'> {
     return false;
   }
 
+  // норм
   private whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
     const leftThumbCoords = this.thumbLeft.getBoundingClientRect();
     const rightThumbCoords = this.thumbRight?.getBoundingClientRect();
@@ -838,6 +890,7 @@ class View extends BaseElement<'div'> {
     return 'right';
   }
 
+  // норм
   private addSmoothTransition(side: 'left' | 'right' = 'left'): void {
     if (side === 'left') {
       this.thumbLeft.getComponent().classList.add('range-slider__thumb_smooth-transition');
@@ -852,6 +905,7 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // норм
   private removeSmoothTransition(side: 'left' | 'right' = 'left'): void {
     if (side === 'left') {
       this.thumbLeft.getComponent().classList.remove('range-slider__thumb_smooth-transition');
@@ -866,6 +920,7 @@ class View extends BaseElement<'div'> {
     }
   }
 
+  // норм
   private collectLabels(): HTMLElement[] {
     const labels: HTMLElement[] = [];
 
