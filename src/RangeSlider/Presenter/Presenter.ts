@@ -7,6 +7,7 @@ class Presenter implements IEventListener {
 
   private view: View;
 
+  // возможно нужно чтобы model и view создавались с конструкторе презентера
   constructor(model: Model, view: View) {
     this.model = model;
     this.view = view;
@@ -16,6 +17,7 @@ class Presenter implements IEventListener {
     this.view.subscribe(this);
   }
 
+  // очень длинный свичкейс, но много кейсов уберется когда сделаю независимую панель
   inform(eventType: string, data: number | null = null): void {
     switch (eventType) {
       case 'viewInputLeft':
@@ -96,10 +98,12 @@ class Presenter implements IEventListener {
     }
   }
 
+  // возможно стоит перенести в модель
   private static removeCalcInaccuracy(value: number): number {
     return Number(value.toFixed(10));
   }
 
+  // норм
   private initViewValues(): void {
     const { model } = this;
     const { view } = this;
@@ -153,11 +157,13 @@ class Presenter implements IEventListener {
     }
   }
 
+  // норм
   private handleViewInputLeft(px: number): void {
     const value = this.convertPxToValue(px);
     this.model.setLeftValue(value);
   }
 
+  // норм
   private handleModelSetLeft(): void {
     const value = this.model.getLeftValue();
     this.passLeftValueToView(value);
@@ -168,11 +174,13 @@ class Presenter implements IEventListener {
     }
   }
 
+  // норм
   private handleViewInputRight(px: number): void {
     const value = this.convertPxToValue(px);
     this.model.setRightValue(value);
   }
 
+  // норм
   private handleModelSetRight(): void {
     const value = this.model.getRightValue()!;
     this.passRightValueToView(value);
@@ -183,16 +191,19 @@ class Presenter implements IEventListener {
     }
   }
 
+  // норм
   private passLeftValueToView(value: number): void {
     const percent = this.convertValueToPercent(value);
     this.view.setLeftValue(value, percent);
   }
 
+  // норм
   private passRightValueToView(value: number): void {
     const percent = this.convertValueToPercent(value);
     this.view.setRightValue(value, percent);
   }
 
+  // норм
   private updateViewInput(): void {
     if (!this.view.isRange()) {
       this.view.updateInput(this.model.getLeftValue());
@@ -203,6 +214,7 @@ class Presenter implements IEventListener {
     }
   }
 
+  // наверное стоит перенести в модель
   private convertValueToPercent(value: number): number {
     const min = this.model.getMin();
     const max = this.model.getMax();
@@ -212,6 +224,7 @@ class Presenter implements IEventListener {
     return percent;
   }
 
+  // наверное стоит перенести в модель
   private convertPxToValue(px: number): number {
     let percent = 0;
 
@@ -234,24 +247,29 @@ class Presenter implements IEventListener {
     return value;
   }
 
+  // перенести в модель
   private fitToStep(value: number): number {
     let result = Math.round(value / this.model.getStep()) * this.model.getStep();
     result = Presenter.removeCalcInaccuracy(result);
     return result;
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewSetLeftFromOutside(value: number): void {
     this.model.setLeftValue(value);
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewSetRightFromOutside(value: number): void {
     this.model.setRightValue(value);
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewSetMin(value: number): void {
     this.model.setMin(value);
   }
 
+  // норм
   private handleModelSetMin(): void {
     this.view.setMinValue(this.model.getMin());
     this.passLeftValueToView(this.model.getLeftValue());
@@ -271,10 +289,12 @@ class Presenter implements IEventListener {
     }
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewSetMax(value: number): void {
     this.model.setMax(value);
   }
 
+  // норм
   private handleModelSetMax(): void {
     this.view.setMaxValue(this.model.getMax());
     this.passLeftValueToView(this.model.getLeftValue());
@@ -294,10 +314,12 @@ class Presenter implements IEventListener {
     }
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewSetStep(value: number): void {
     this.model.setStep(value);
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewToggleOrientation(): void {
     this.passLeftValueToView(this.model.getLeftValue());
 
@@ -309,10 +331,12 @@ class Presenter implements IEventListener {
     }
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewToggleRange(): void {
     this.model.toggleRange();
   }
 
+  // норм
   private handleModelToggleRange(): void {
     this.passLeftValueToView(this.model.getLeftValue());
 
@@ -337,12 +361,14 @@ class Presenter implements IEventListener {
     }
   }
 
+  // изменится когда сделаю независимую панель
   private handleModelSetStep(): void {
     if (this.view.hasPanel()) {
       this.view.updatePanelStep(this.model.getStep());
     }
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewToggleScale(): void {
     if (!this.view.hasScale()) {
       this.view.addScale(this.model.getMin(), this.model.getMax());
@@ -363,10 +389,12 @@ class Presenter implements IEventListener {
     }
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewSetScaleIntervals(): void {
     this.view.addScale(this.model.getMin(), this.model.getMax());
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewAddValueLabels(): void {
     this.passLeftValueToView(this.model.getLeftValue());
     if (this.view.isRange()) {
@@ -377,6 +405,7 @@ class Presenter implements IEventListener {
     }
   }
 
+  // изменится когда сделаю независимую панель
   private handleViewAddMinMaxLabels(): void {
     this.view.setMinValue(this.model.getMin());
     this.view.setMaxValue(this.model.getMax());
