@@ -696,6 +696,12 @@ class View extends BaseElement<'div'> {
   }
 
   // норм
+  getTrackLength(): number {
+    const length = this.isVertical() ? this.getTrackHeight() : this.getTrackWidth();
+    return length;
+  }
+
+  // норм
   private render(): void {
     const fragment = new DocumentFragment();
 

@@ -98,12 +98,6 @@ class Presenter implements IEventListener {
     }
   }
 
-  // возможно стоит перенести в модель
-  private static removeCalcInaccuracy(value: number): number {
-    return Number(value.toFixed(10));
-  }
-
-  // норм
   private initViewValues(): void {
     const { model } = this;
     const { view } = this;
@@ -157,13 +151,10 @@ class Presenter implements IEventListener {
     }
   }
 
-  // норм
   private handleViewInputLeft(px: number): void {
-    const value = this.convertPxToValue(px);
-    this.model.setLeftValue(value);
+    this.model.setLeftValueFromPx(px, this.view.getTrackLength());
   }
 
-  // норм
   private handleModelSetLeft(): void {
     const value = this.model.getLeftValue();
     this.passLeftValueToView(value);
@@ -174,13 +165,10 @@ class Presenter implements IEventListener {
     }
   }
 
-  // норм
   private handleViewInputRight(px: number): void {
-    const value = this.convertPxToValue(px);
-    this.model.setRightValue(value);
+    this.model.setRightValueFromPx(px, this.view.getTrackLength());
   }
 
-  // норм
   private handleModelSetRight(): void {
     const value = this.model.getRightValue()!;
     this.passRightValueToView(value);
@@ -191,19 +179,16 @@ class Presenter implements IEventListener {
     }
   }
 
-  // норм
   private passLeftValueToView(value: number): void {
-    const percent = this.convertValueToPercent(value);
+    const percent = this.model.convertValueToPercent(value);
     this.view.setLeftValue(value, percent);
   }
 
-  // норм
   private passRightValueToView(value: number): void {
-    const percent = this.convertValueToPercent(value);
+    const percent = this.model.convertValueToPercent(value);
     this.view.setRightValue(value, percent);
   }
 
-  // норм
   private updateViewInput(): void {
     if (!this.view.isRange()) {
       this.view.updateInput(this.model.getLeftValue());
@@ -212,46 +197,6 @@ class Presenter implements IEventListener {
     if (this.view.isRange()) {
       this.view.updateInput(this.model.getLeftValue(), this.model.getRightValue());
     }
-  }
-
-  // наверное стоит перенести в модель
-  private convertValueToPercent(value: number): number {
-    const min = this.model.getMin();
-    const max = this.model.getMax();
-    let percent = ((value - min) / (max - min)) * 100;
-    percent = Presenter.removeCalcInaccuracy(percent);
-
-    return percent;
-  }
-
-  // наверное стоит перенести в модель
-  private convertPxToValue(px: number): number {
-    let percent = 0;
-
-    if (!this.view.isVertical()) {
-      const trackWidthInPx = this.view.getTrackWidth();
-      percent = (px * 100) / trackWidthInPx;
-    }
-
-    if (this.view.isVertical()) {
-      const trackHeightInPx = this.view.getTrackHeight();
-      percent = (px * 100) / trackHeightInPx;
-    }
-
-    const min = this.model.getMin();
-    const max = this.model.getMax();
-    let value = ((max - min) * (percent / 100) + min);
-    value = this.fitToStep(value);
-    value = Presenter.removeCalcInaccuracy(value);
-
-    return value;
-  }
-
-  // перенести в модель
-  private fitToStep(value: number): number {
-    let result = Math.round(value / this.model.getStep()) * this.model.getStep();
-    result = Presenter.removeCalcInaccuracy(result);
-    return result;
   }
 
   // изменится когда сделаю независимую панель
@@ -269,7 +214,6 @@ class Presenter implements IEventListener {
     this.model.setMin(value);
   }
 
-  // норм
   private handleModelSetMin(): void {
     this.view.setMinValue(this.model.getMin());
     this.passLeftValueToView(this.model.getLeftValue());
@@ -294,7 +238,6 @@ class Presenter implements IEventListener {
     this.model.setMax(value);
   }
 
-  // норм
   private handleModelSetMax(): void {
     this.view.setMaxValue(this.model.getMax());
     this.passLeftValueToView(this.model.getLeftValue());
@@ -336,7 +279,6 @@ class Presenter implements IEventListener {
     this.model.toggleRange();
   }
 
-  // норм
   private handleModelToggleRange(): void {
     this.passLeftValueToView(this.model.getLeftValue());
 

@@ -72,6 +72,16 @@ class Model {
     this.eventManager.notify('modelSetRight');
   }
 
+  setLeftValueFromPx(px: number, trackLengthInPx: number): void {
+    const value = this.convertPxToValue(px, trackLengthInPx);
+    this.setLeftValue(value);
+  }
+
+  setRightValueFromPx(px: number, trackLengthInPx: number): void {
+    const value = this.convertPxToValue(px, trackLengthInPx);
+    this.setRightValue(value);
+  }
+
   removeRightValue(): void {
     this.rightValue = undefined;
   }
@@ -134,6 +144,33 @@ class Model {
 
   isRange(): boolean {
     return this.range;
+  }
+
+  convertValueToPercent(value: number): number {
+    let percent = ((value - this.min) / (this.max - this.min)) * 100;
+    percent = Model.removeCalcInaccuracy(percent);
+
+    return percent;
+  }
+
+  convertPxToValue(px: number, trackLengthInPx: number): number {
+    const percent = (px * 100) / trackLengthInPx;
+
+    let value = ((this.max - this.min) * (percent / 100) + this.min);
+    value = this.fitToStep(value);
+    value = Model.removeCalcInaccuracy(value);
+
+    return value;
+  }
+
+  private static removeCalcInaccuracy(value: number): number {
+    return Number(value.toFixed(10));
+  }
+
+  private fitToStep(value: number): number {
+    let result = Math.round(value / this.step) * this.step;
+    result = Model.removeCalcInaccuracy(result);
+    return result;
   }
 }
 
