@@ -163,6 +163,16 @@ class Model {
     return value;
   }
 
+  static isTwoLabelsClose(distanceInPx: number): boolean {
+    const minDistanceBetweenLabels = 3;
+
+    if (distanceInPx < minDistanceBetweenLabels) {
+      return true;
+    }
+
+    return false;
+  }
+
   private static removeCalcInaccuracy(value: number): number {
     return Number(value.toFixed(10));
   }

@@ -111,25 +111,22 @@ class View extends BaseElement<'div'> {
     this.render();
   }
 
-  // норм
   subscribe(listener: IEventListener): void {
     this.eventManager.subscribe(listener);
   }
 
-  // норм
   setMinValue(min: number): void {
     this.minLabel?.setValue(min);
   }
 
-  // норм
   setMaxValue(max: number): void {
     this.maxLabel?.setValue(max);
   }
 
-  // вроде норм (немного смущает, что значение для valuelabelCommon берется из View)
   setLeftValue(value: number, percent: number): void {
     if (!this.vertical) {
       this.thumbLeft.setIndent('left', percent);
+      this.thumbLeft.setZIndex(percent === 100 ? 100 : 3);
 
       if (this.isRange()) {
         this.range.setIndent('left', percent);
@@ -138,12 +135,11 @@ class View extends BaseElement<'div'> {
       }
 
       this.valueLabelLeft?.setIndent('left', `${percent}%`);
-
-      this.thumbLeft.setZIndex(percent === 100 ? 100 : 3);
     }
 
     if (this.vertical) {
       this.thumbLeft.setIndent('top', 100 - percent);
+      this.thumbLeft.setZIndex(percent === 100 ? 100 : 3);
 
       if (this.isRange()) {
         this.range.setIndent('bottom', percent);
@@ -152,8 +148,6 @@ class View extends BaseElement<'div'> {
       }
 
       this.valueLabelLeft?.setIndent('top', `${100 - percent}%`);
-
-      this.thumbLeft.setZIndex(percent === 100 ? 100 : 3);
     }
 
     if (this.valueLabelLeft) {
@@ -161,25 +155,12 @@ class View extends BaseElement<'div'> {
 
       if (this.isRange()) {
         this.valueLabelCommon?.setValue(`${value} - ${this.valueLabelRight?.getValue()}`);
-
-        if (this.isTwoValueLabelsClose()) {
-          this.mergeLabels();
-        } else {
-          this.splitLabels();
-        }
-      }
-
-      if (this.minLabel) {
-        this.minLabel.setOpacity(this.isLeftValueLabelCloseToMinLabel() ? 0 : 1);
-
-        if (!this.isRange()) {
-          this.maxLabel?.setOpacity(this.isLeftValueLabelCloseToMaxLabel() ? 0 : 1);
-        }
       }
     }
+
+    this.eventManager.notify('viewSetLeft');
   }
 
-  // вроде норм (немного смущает, что значение для valuelabelCommon берется из View)
   setRightValue(value: number, percent: number): void {
     if (!this.vertical) {
       this.thumbRight?.setIndent('left', percent);
@@ -196,125 +177,49 @@ class View extends BaseElement<'div'> {
     if (this.valueLabelRight) {
       this.valueLabelRight.setValue(value);
       this.valueLabelCommon?.setValue(`${this.valueLabelLeft?.getValue()} - ${value}`);
-
-      if (this.isTwoValueLabelsClose()) {
-        this.mergeLabels();
-      } else {
-        this.splitLabels();
-      }
-
-      if (this.maxLabel) {
-        this.maxLabel.setOpacity(this.isRightValueLabelCloseToMaxLabel() ? 0 : 1);
-      }
     }
+
+    this.eventManager.notify('viewSetRight');
   }
 
-  // норм
   updateInput(value1: number, value2: number | null = null): void {
     this.input.setValue(value1, value2);
   }
 
-  // кажется тут часть расчетов нужно перенести в модель
   handleLeftInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
     if (!this.vertical) {
       const trackShift = this.track.getBoundingClientRect().left;
-      let newLeft = clientX - shiftX - trackShift;
-
-      if (newLeft < 0) {
-        newLeft = 0;
-      }
-
-      if (!this.isRange()) {
-        const trackWidth = this.getTrackWidth();
-
-        if (newLeft > trackWidth) {
-          newLeft = trackWidth;
-        }
-      }
-
-      if (this.isRange() && this.thumbRight) {
-        const rightThumbShift = this.thumbRight.getBoundingClientRect().left;
-        const rightThumbPosition = rightThumbShift + this.thumbRight.getWidth() / 2 - trackShift;
-
-        if (newLeft > rightThumbPosition) {
-          newLeft = rightThumbPosition;
-        }
-      }
+      const newLeft = clientX - shiftX - trackShift;
 
       this.eventManager.notify('viewInputLeft', newLeft);
     }
 
     if (this.vertical) {
       const trackShift = this.track.getBoundingClientRect().top;
-      let newTop = clientY - shiftY - trackShift;
-
-      const trackHeight = this.getTrackHeight();
-      if (newTop > trackHeight) {
-        newTop = trackHeight;
-      }
-
-      if (!this.isRange() && newTop < 0) {
-        newTop = 0;
-      }
-
-      if (this.isRange() && this.thumbRight) {
-        const rightThumbShift = this.thumbRight.getBoundingClientRect().top;
-        const rightThumbPosition = rightThumbShift + this.thumbRight.getHeight() / 2 - trackShift;
-
-        if (newTop < rightThumbPosition) {
-          newTop = rightThumbPosition;
-        }
-      }
-
-      const newBottom = trackHeight - newTop;
+      const newTop = clientY - shiftY - trackShift;
+      const newBottom = this.getTrackLength() - newTop;
 
       this.eventManager.notify('viewInputLeft', newBottom);
     }
   }
 
-  // кажется тут часть расчетов нужно перенести в модель
   handleRightInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
     if (!this.vertical) {
       const trackShift = this.track.getBoundingClientRect().left;
-      let newLeft = clientX - shiftX - trackShift;
-
-      const leftThumbShift = this.thumbLeft.getBoundingClientRect().left;
-      const leftThumbPosition = leftThumbShift + this.thumbLeft.getWidth() / 2 - trackShift;
-
-      if (newLeft < leftThumbPosition) {
-        newLeft = leftThumbPosition;
-      }
-
-      const trackWidth = this.getTrackWidth();
-      if (newLeft > trackWidth) {
-        newLeft = trackWidth;
-      }
+      const newLeft = clientX - shiftX - trackShift;
 
       this.eventManager.notify('viewInputRight', newLeft);
     }
 
     if (this.vertical) {
       const trackShift = this.track.getBoundingClientRect().top;
-      let newTop = clientY - shiftY - trackShift;
-
-      if (newTop < 0) {
-        newTop = 0;
-      }
-
-      const leftThumbShift = this.thumbLeft.getBoundingClientRect().top;
-      const leftThumbPosition = leftThumbShift + this.thumbLeft.getHeight() / 2 - trackShift;
-
-      if (newTop > leftThumbPosition) {
-        newTop = leftThumbPosition;
-      }
-
-      const newBottom = this.getTrackHeight() - newTop;
+      const newTop = clientY - shiftY - trackShift;
+      const newBottom = this.getTrackLength() - newTop;
 
       this.eventManager.notify('viewInputRight', newBottom);
     }
   }
 
-  // норм
   addScale(min: number, max: number): void {
     this.scale = new Scale(min, max, this);
     this.slider.after(this.scale.getComponent());
@@ -328,24 +233,21 @@ class View extends BaseElement<'div'> {
     }
   }
 
-  // норм
   removeScale(): void {
     this.scale?.getComponent().remove();
     this.scale = undefined;
   }
 
-  // норм
   getScaleIntervals(): number {
     return this.scaleIntervals || 0;
   }
 
-  // норм
   handleScaleOrTrackClick(x: number, y: number): void {
     if (!this.isRange()) {
       this.addSmoothTransition('left');
 
       if (this.vertical) {
-        this.eventManager.notify('viewInputLeft', this.getTrackHeight() - y);
+        this.eventManager.notify('viewInputLeft', this.getTrackLength() - y);
       } else {
         this.eventManager.notify('viewInputLeft', x);
       }
@@ -360,7 +262,7 @@ class View extends BaseElement<'div'> {
         this.addSmoothTransition('left');
 
         if (this.vertical) {
-          this.eventManager.notify('viewInputLeft', this.getTrackHeight() - y);
+          this.eventManager.notify('viewInputLeft', this.getTrackLength() - y);
         } else {
           this.eventManager.notify('viewInputLeft', x);
         }
@@ -372,7 +274,7 @@ class View extends BaseElement<'div'> {
         this.addSmoothTransition('right');
 
         if (this.vertical) {
-          this.eventManager.notify('viewInputRight', this.getTrackHeight() - y);
+          this.eventManager.notify('viewInputRight', this.getTrackLength() - y);
         } else {
           this.eventManager.notify('viewInputRight', x);
         }
@@ -384,13 +286,11 @@ class View extends BaseElement<'div'> {
     }
   }
 
-  // норм
   fixLabelsContainerWidthForVertical(): void {
     const labels: HTMLElement[] = this.collectLabels();
     this.labelsContainer?.fixWidthForVertical(labels);
   }
 
-  // норм
   fixLabelsContainerHeightForHorizontal(): void {
     const labels: HTMLElement[] = this.collectLabels();
     this.labelsContainer?.fixHeightForHorizontal(labels);
@@ -650,22 +550,18 @@ class View extends BaseElement<'div'> {
     }
   }
 
-  // норм
   hasLabels(): boolean {
     return Boolean(this.valueLabelLeft || this.minLabel);
   }
 
-  // норм
   hasScale(): boolean {
     return Boolean(this.scale);
   }
 
-  // норм
   hasMinMaxLabels(): boolean {
     return Boolean(this.maxLabel);
   }
 
-  // норм
   hasValueLabels(): boolean {
     return Boolean(this.valueLabelLeft);
   }
@@ -675,33 +571,19 @@ class View extends BaseElement<'div'> {
     return Boolean(this.panel);
   }
 
-  // норм
   isRange(): boolean {
     return Boolean(this.thumbRight);
   }
 
-  // норм
   isVertical(): boolean {
     return Boolean(this.vertical);
   }
 
-  // норм
-  getTrackWidth(): number {
-    return this.track.getWidth();
-  }
-
-  // норм
-  getTrackHeight(): number {
-    return this.track.getHeight();
-  }
-
-  // норм
   getTrackLength(): number {
-    const length = this.isVertical() ? this.getTrackHeight() : this.getTrackWidth();
+    const length = this.isVertical() ? this.track.getHeight() : this.track.getWidth();
     return length;
   }
 
-  // норм
   private render(): void {
     const fragment = new DocumentFragment();
 
@@ -759,7 +641,6 @@ class View extends BaseElement<'div'> {
     this.component.append(fragment);
   }
 
-  // норм
   private destroy(): void {
     if (this.labelsContainer) {
       [...this.labelsContainer.getComponent().children].forEach((element) => {
@@ -776,8 +657,7 @@ class View extends BaseElement<'div'> {
     });
   }
 
-  // норм
-  private mergeLabels(): void {
+  mergeLabels(): void {
     this.valueLabelLeft?.setOpacity(0);
     this.valueLabelRight?.setOpacity(0);
     this.valueLabelCommon?.setOpacity(1);
@@ -804,65 +684,70 @@ class View extends BaseElement<'div'> {
     }
   }
 
-  // норм
-  private splitLabels(): void {
+  splitLabels(): void {
     this.valueLabelCommon?.setOpacity(0);
     this.valueLabelLeft?.setOpacity(1);
     this.valueLabelRight?.setOpacity(1);
   }
 
-  // в модель
-  private isTwoLabelsClose(label1: Label, label2: Label): boolean {
+  hideMinLabel(): void {
+    this.minLabel?.setOpacity(0);
+  }
+
+  showMinLabel(): void {
+    this.minLabel?.setOpacity(1);
+  }
+
+  hideMaxLabel(): void {
+    this.maxLabel?.setOpacity(0);
+  }
+
+  showMaxLabel(): void {
+    this.maxLabel?.setOpacity(1);
+  }
+
+  getDistanceBetweenTwoLabels(label1: Label, label2: Label): number {
     if (this.vertical) {
       const bottomLabelEdge = label1.getBoundingClientRect().top;
       const topLabelEdge = label2.getBoundingClientRect().bottom;
 
-      return ((bottomLabelEdge - topLabelEdge) < 3);
+      return (bottomLabelEdge - topLabelEdge);
     }
 
     const leftLabelEdge = label1.getBoundingClientRect().right;
     const rightLabelEdge = label2.getBoundingClientRect().left;
 
-    return ((rightLabelEdge - leftLabelEdge) < 3);
+    return (rightLabelEdge - leftLabelEdge);
   }
 
-  // в модель
-  private isTwoValueLabelsClose(): boolean {
+  getDistanceBetweenValueLabels(): number | undefined {
     if (this.valueLabelLeft && this.valueLabelRight) {
-      return this.isTwoLabelsClose(this.valueLabelLeft, this.valueLabelRight);
+      return this.getDistanceBetweenTwoLabels(this.valueLabelLeft, this.valueLabelRight);
     }
-
-    return false;
+    return undefined;
   }
 
-  // в модель
-  private isLeftValueLabelCloseToMinLabel(): boolean {
-    if (this.minLabel && this.valueLabelLeft) {
-      return this.isTwoLabelsClose(this.minLabel, this.valueLabelLeft);
+  getDistanceBetweenLeftValueLabelAndMinLabel(): number | undefined {
+    if (this.valueLabelLeft && this.minLabel) {
+      return this.getDistanceBetweenTwoLabels(this.minLabel, this.valueLabelLeft);
     }
-
-    return false;
+    return undefined;
   }
 
-  // в модель
-  private isLeftValueLabelCloseToMaxLabel(): boolean {
+  getDistanceBetweenLeftValueLabelAndMaxLabel(): number | undefined {
     if (this.valueLabelLeft && this.maxLabel) {
-      return this.isTwoLabelsClose(this.valueLabelLeft, this.maxLabel);
+      return this.getDistanceBetweenTwoLabels(this.valueLabelLeft, this.maxLabel);
     }
-
-    return false;
+    return undefined;
   }
 
-  // в модель
-  private isRightValueLabelCloseToMaxLabel(): boolean {
+  getDistanceBetweenRightValueLabelAndMaxLabel(): number | undefined {
     if (this.valueLabelRight && this.maxLabel) {
-      return this.isTwoLabelsClose(this.valueLabelRight, this.maxLabel);
+      return this.getDistanceBetweenTwoLabels(this.valueLabelRight, this.maxLabel);
     }
-
-    return false;
+    return undefined;
   }
 
-  // норм
   private whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
     const leftThumbCoords = this.thumbLeft.getBoundingClientRect();
     const rightThumbCoords = this.thumbRight?.getBoundingClientRect();
@@ -896,7 +781,6 @@ class View extends BaseElement<'div'> {
     return 'right';
   }
 
-  // норм
   private addSmoothTransition(side: 'left' | 'right' = 'left'): void {
     if (side === 'left') {
       this.thumbLeft.getComponent().classList.add('range-slider__thumb_smooth-transition');
@@ -911,7 +795,6 @@ class View extends BaseElement<'div'> {
     }
   }
 
-  // норм
   private removeSmoothTransition(side: 'left' | 'right' = 'left'): void {
     if (side === 'left') {
       this.thumbLeft.getComponent().classList.remove('range-slider__thumb_smooth-transition');
@@ -926,7 +809,6 @@ class View extends BaseElement<'div'> {
     }
   }
 
-  // норм
   private collectLabels(): HTMLElement[] {
     const labels: HTMLElement[] = [];
 

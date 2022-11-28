@@ -30,6 +30,12 @@ class Presenter implements IEventListener {
           this.handleViewInputRight(data);
         }
         break;
+      case 'viewSetLeft':
+        this.handleViewSetLeft();
+        break;
+      case 'viewSetRight':
+        this.handleViewSetRight();
+        break;
       case 'viewSetLeftFromOutside':
         if (typeof data === 'number') {
           this.handleViewSetLeftFromOutside(data);
@@ -176,6 +182,67 @@ class Presenter implements IEventListener {
 
     if (this.view.hasPanel()) {
       this.view.updatePanelTo(value);
+    }
+  }
+
+  private handleViewSetValue(): void {
+    if (this.view.hasValueLabels()) {
+      const distanceBetweenValueLabels = this.view.getDistanceBetweenValueLabels();
+
+      if (distanceBetweenValueLabels !== undefined) {
+        if (Model.isTwoLabelsClose(distanceBetweenValueLabels)) {
+          this.view.mergeLabels();
+        } else {
+          this.view.splitLabels();
+        }
+      }
+    }
+  }
+
+  private handleViewSetLeft(): void {
+    this.handleViewSetValue();
+
+    if (this.view.hasMinMaxLabels() && this.view.hasValueLabels()) {
+      const distanceBetweenLeftValueLabelAndMinLabel = (
+        this.view.getDistanceBetweenLeftValueLabelAndMinLabel());
+
+      if (distanceBetweenLeftValueLabelAndMinLabel !== undefined) {
+        if (Model.isTwoLabelsClose(distanceBetweenLeftValueLabelAndMinLabel)) {
+          this.view.hideMinLabel();
+        } else {
+          this.view.showMinLabel();
+        }
+      }
+
+      if (!this.view.isRange()) {
+        const distanceBetweenLeftValueLabelAndMaxLabel = (
+          this.view.getDistanceBetweenLeftValueLabelAndMaxLabel());
+
+        if (distanceBetweenLeftValueLabelAndMaxLabel !== undefined) {
+          if (Model.isTwoLabelsClose(distanceBetweenLeftValueLabelAndMaxLabel)) {
+            this.view.hideMaxLabel();
+          } else {
+            this.view.showMaxLabel();
+          }
+        }
+      }
+    }
+  }
+
+  private handleViewSetRight(): void {
+    this.handleViewSetValue();
+
+    if (this.view.hasMinMaxLabels() && this.view.hasValueLabels()) {
+      const distanceBetweenRightValueLabelAndMaxLabel = (
+        this.view.getDistanceBetweenRightValueLabelAndMaxLabel());
+
+      if (distanceBetweenRightValueLabelAndMaxLabel !== undefined) {
+        if (Model.isTwoLabelsClose(distanceBetweenRightValueLabelAndMaxLabel)) {
+          this.view.hideMaxLabel();
+        } else {
+          this.view.showMaxLabel();
+        }
+      }
     }
   }
 

@@ -1270,7 +1270,7 @@ describe('View', () => {
         }));
       }
 
-      view.getTrackWidth = jest.fn(() => 500);
+      view.getTrackLength = jest.fn(() => 500);
 
       it('if cursor is off left edge of track, new left indent is 0', () => {
         view.handleLeftInput(100, 200);
@@ -1337,7 +1337,7 @@ describe('View', () => {
         }));
       }
 
-      view.getTrackHeight = jest.fn(() => 500);
+      view.getTrackLength = jest.fn(() => 500);
 
       it('if cursor is off bottom edge of track, new bottom indent is 0', () => {
         view.handleLeftInput(100, 800);
@@ -1370,7 +1370,7 @@ describe('View', () => {
           }));
         }
 
-        newView.getTrackHeight = jest.fn(() => 500);
+        newView.getTrackLength = jest.fn(() => 500);
 
         const thumbRight: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__thumb_right');
 
@@ -1409,7 +1409,7 @@ describe('View', () => {
         }));
       }
 
-      view.getTrackWidth = jest.fn(() => 500);
+      view.getTrackLength = jest.fn(() => 500);
 
       it('if cursor is off left thumb position, new left indent = left thumb indent', () => {
         const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
@@ -1453,7 +1453,7 @@ describe('View', () => {
         }));
       }
 
-      view.getTrackHeight = jest.fn(() => 500);
+      view.getTrackLength = jest.fn(() => 500);
 
       it('if cursor is off left thumb position, new bottom indent = left thumb indent', () => {
         const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
@@ -1574,7 +1574,7 @@ describe('View', () => {
           newSubscriber.inform = jest.fn();
           newView.subscribe(newSubscriber);
 
-          newView.getTrackHeight = jest.fn(() => 500);
+          newView.getTrackLength = jest.fn(() => 500);
 
           newView.handleScaleOrTrackClick(100, 100);
 
@@ -1717,7 +1717,7 @@ describe('View', () => {
             }));
           }
 
-          view.getTrackHeight = jest.fn(() => 500);
+          view.getTrackLength = jest.fn(() => 500);
 
           const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
 
@@ -1902,7 +1902,7 @@ describe('View', () => {
             }));
           }
 
-          view.getTrackHeight = jest.fn(() => 500);
+          view.getTrackLength = jest.fn(() => 500);
 
           const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
 
@@ -3046,7 +3046,7 @@ describe('View', () => {
     });
   });
 
-  describe('getTrackWidth()', () => {
+  describe('getTrackLength()', () => {
     const originalOffsetWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth');
 
     beforeAll(() => {
@@ -3066,11 +3066,11 @@ describe('View', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
 
-      expect(view.getTrackWidth()).toBe(200);
+      expect(view.getTrackLength()).toBe(200);
     });
   });
 
-  describe('getTrackHeight()', () => {
+  describe('getTrackLength()', () => {
     const originalOffsetHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight');
 
     beforeAll(() => {
@@ -3090,7 +3090,7 @@ describe('View', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
 
-      expect(view.getTrackHeight()).toBe(200);
+      expect(view.getTrackLength()).toBe(200);
     });
   });
 });
