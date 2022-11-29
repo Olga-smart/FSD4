@@ -12,5 +12,5 @@
     "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
   },
   "preset": "jest-puppeteer",
-  "coverageReporters": ["json-summary"]
+  "coverageReporters": ["clover", "json", "lcov", "text", "json-summary"]
 }
