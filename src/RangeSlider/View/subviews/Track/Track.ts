@@ -1,18 +1,19 @@
 import BaseElement from '../../BaseElement/BaseElement';
-
-type ViewForTrack = {
-  handleScaleOrTrackClick(x: number, y: number): void,
-};
+import { EventManager, IEventListener } from '../../../EventManager/EventManager';
 
 class Track extends BaseElement<'div'> {
-  private view: ViewForTrack;
+  private eventManager: EventManager;
 
-  constructor(view: ViewForTrack) {
+  constructor() {
     super('div', 'range-slider__track');
 
-    this.view = view;
+    this.eventManager = new EventManager();
 
     this.attachEventHandlers();
+  }
+
+  subscribe(listener: IEventListener): void {
+    this.eventManager.subscribe(listener);
   }
 
   append(...elements: HTMLElement[]): void {
@@ -24,7 +25,7 @@ class Track extends BaseElement<'div'> {
       const x: number = event.clientX - event.currentTarget.getBoundingClientRect().left;
       const y: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
 
-      this.view.handleScaleOrTrackClick(x, y);
+      this.eventManager.notify('trackClick', x, y);
     }
   }
 

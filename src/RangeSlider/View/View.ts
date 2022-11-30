@@ -62,7 +62,8 @@ class View extends BaseElement<'div'> {
     this.eventManager = new EventManager();
 
     this.slider = BaseElement.createComponent('div', 'range-slider__slider');
-    this.track = new Track(this);
+    this.track = new Track();
+    this.track.subscribe(this);
     this.range = new Range();
 
     this.thumbLeft = new Thumb(this, 'left');
@@ -118,6 +119,7 @@ class View extends BaseElement<'div'> {
   inform(eventType: string, data1: number | null = null, data2: number | null = null): void {
     switch (eventType) {
       case 'scaleClick':
+      case 'trackClick':
         if (typeof data1 === 'number' && typeof data2 === 'number') {
           this.handleScaleOrTrackClick(data1, data2);
         }
