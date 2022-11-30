@@ -1,12 +1,8 @@
 import BaseElement from '../../BaseElement/BaseElement';
-
-type ViewForScale = {
-  getScaleIntervals(): number,
-  handleScaleOrTrackClick(x: number, y: number): void,
-};
+import { EventManager, IEventListener } from '../../../EventManager/EventManager';
 
 class Scale extends BaseElement<'div'> {
-  private view: ViewForScale;
+  private eventManager: EventManager;
 
   private intervals: HTMLDivElement[];
 
@@ -14,20 +10,23 @@ class Scale extends BaseElement<'div'> {
 
   private valueElements: HTMLSpanElement[];
 
-  constructor(min: number, max: number, view: ViewForScale) {
+  constructor(min: number, max: number, intervalsNumber: number = 4) {
     super('div', 'range-slider__scale');
 
-    this.view = view;
+    this.eventManager = new EventManager();
+
     this.intervals = [];
     this.values = [];
     this.valueElements = [];
-
-    const intervalsNumber = view.getScaleIntervals();
 
     this.createIntervals(intervalsNumber);
     this.addMarksInIntervals(intervalsNumber);
     this.addValues(min, max, intervalsNumber);
     this.attachEventHandlers();
+  }
+
+  subscribe(listener: IEventListener): void {
+    this.eventManager.subscribe(listener);
   }
 
   fitWidthForVertical(indent: number = 3): void {
@@ -132,7 +131,7 @@ class Scale extends BaseElement<'div'> {
       const x: number = event.clientX - event.currentTarget.getBoundingClientRect().left;
       const y: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
 
-      this.view.handleScaleOrTrackClick(x, y);
+      this.eventManager.notify('scaleClick', x, y);
     }
   }
 

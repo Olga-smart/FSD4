@@ -1461,7 +1461,7 @@ describe('View', () => {
       // });
     });
 
-    describe('calc new bottom indent, if slider is vertical', () => {
+    it('calc new bottom indent, if slider is vertical', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
         vertical: true,

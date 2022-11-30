@@ -79,7 +79,7 @@ class View extends BaseElement<'div'> {
     if (options.scale) {
       /* create scale with arbitrary values, which will be replaced later by Presenter
        * it is necessary for hasScale() return true */
-      this.scale = new Scale(0, 100, this);
+      this.scale = new Scale(0, 100, this.getScaleIntervals());
     }
 
     if (options.minMaxLabels || options.valueLabels) {
@@ -113,6 +113,19 @@ class View extends BaseElement<'div'> {
 
   subscribe(listener: IEventListener): void {
     this.eventManager.subscribe(listener);
+  }
+
+  inform(eventType: string, data1: number | null = null, data2: number | null = null): void {
+    switch (eventType) {
+      case 'scaleClick':
+        if (typeof data1 === 'number' && typeof data2 === 'number') {
+          this.handleScaleOrTrackClick(data1, data2);
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 
   setMinValue(min: number): void {
@@ -221,8 +234,9 @@ class View extends BaseElement<'div'> {
   }
 
   addScale(min: number, max: number): void {
-    this.scale = new Scale(min, max, this);
+    this.scale = new Scale(min, max, this.getScaleIntervals());
     this.slider.after(this.scale.getComponent());
+    this.scale.subscribe(this);
 
     if (!this.vertical) {
       this.scale.fitHeightForHorizontal();
