@@ -1,46 +1,35 @@
 import Thumb from './Thumb';
-import View from '../../View';
 
 describe('Thumb', () => {
   describe('constructor(type)', () => {
     describe('set up component property with necessary classes', () => {
       it('common class', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
-        const thumb = new Thumb(view);
+        const thumb = new Thumb();
         expect(thumb.getComponent().classList).toContain('range-slider__thumb');
       });
 
       it('class for left thumb if argument "type" == "left" or by default', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
-        let thumb = new Thumb(view);
+        let thumb = new Thumb();
         expect(thumb.getComponent().classList).toContain('range-slider__thumb_left');
 
-        thumb = new Thumb(view, 'left');
+        thumb = new Thumb('left');
         expect(thumb.getComponent().classList).toContain('range-slider__thumb_left');
       });
 
       it('class for right thumb if argument "type" == "right"', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
-        const thumb = new Thumb(view, 'right');
+        const thumb = new Thumb('right');
         expect(thumb.getComponent().classList).toContain('range-slider__thumb_right');
       });
 
       it('component property is div element', () => {
-        const slider = document.createElement('div');
-        const view = new View(slider);
-        const thumb = new Thumb(view);
+        const thumb = new Thumb();
         expect(thumb.getComponent()).toBeInstanceOf(HTMLDivElement);
       });
     });
   });
 
   describe('getLeftIndent()', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const thumb = new Thumb(view);
+    const thumb = new Thumb();
 
     it('return left property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
@@ -51,9 +40,7 @@ describe('Thumb', () => {
   });
 
   describe('getTopIndent()', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const thumb = new Thumb(view);
+    const thumb = new Thumb();
 
     it('return top property of component', () => {
       for (let i = 0; i <= 100; i += 1) {
@@ -64,9 +51,7 @@ describe('Thumb', () => {
   });
 
   describe('setZIndex(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const thumb = new Thumb(view);
+    const thumb = new Thumb();
 
     it('change z-index of component', () => {
       for (let i = 0; i <= 100; i += 1) {
@@ -77,9 +62,7 @@ describe('Thumb', () => {
   });
 
   describe('handle events', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const thumb = new Thumb(view);
+    const thumb = new Thumb();
 
     it('handle pointerover', () => {
       const event = new Event('pointerover');
@@ -110,30 +93,6 @@ describe('Thumb', () => {
       thumb.getComponent().dispatchEvent(event);
 
       expect(thumb.getComponent().classList).not.toContain('range-slider__thumb_active');
-    });
-
-    describe('handle dragging', () => {
-      it('call handler for left input if thumb type is left', () => {
-        const newThumb = new Thumb(view, 'left');
-        view.handleLeftInput = jest.fn();
-        newThumb.getComponent().setPointerCapture = jest.fn();
-
-        newThumb.getComponent().dispatchEvent(new Event('pointerdown'));
-        newThumb.getComponent().dispatchEvent(new Event('pointermove'));
-
-        expect(view.handleLeftInput).toBeCalled();
-      });
-
-      it('call handler for right input if thumb type is right', () => {
-        const newThumb = new Thumb(view, 'right');
-        view.handleRightInput = jest.fn();
-        newThumb.getComponent().setPointerCapture = jest.fn();
-
-        newThumb.getComponent().dispatchEvent(new Event('pointerdown'));
-        newThumb.getComponent().dispatchEvent(new Event('pointermove'));
-
-        expect(view.handleRightInput).toBeCalled();
-      });
     });
   });
 });

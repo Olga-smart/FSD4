@@ -1,22 +1,20 @@
 import BaseElement from '../../BaseElement/BaseElement';
-
-type ViewForThumb = {
-  handleLeftInput(clientX: number, clientY: number, shiftX: number, shiftY: number): void,
-  handleRightInput(clientX: number, clientY: number, shiftX: number, shiftY: number): void,
-};
+import { EventManager, IEventListener } from '../../../EventManager/EventManager';
 
 class Thumb extends BaseElement<'div'> {
   private type: 'left' | 'right';
 
-  private view: ViewForThumb;
+  private eventManager: EventManager;
 
-  constructor(view: ViewForThumb, type: 'left' | 'right' = 'left') {
+  constructor(type: 'left' | 'right' = 'left') {
     super('div', `range-slider__thumb range-slider__thumb_${type}`);
-
+    this.eventManager = new EventManager();
     this.type = type;
-    this.view = view;
-
     this.attachEventHandlers();
+  }
+
+  subscribe(listener: IEventListener): void {
+    this.eventManager.subscribe(listener);
   }
 
   getLeftIndent(): string {
@@ -66,12 +64,15 @@ class Thumb extends BaseElement<'div'> {
       const shiftY: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
 
       const handlePointerMove = (newEvent: PointerEvent) => {
+        const x = newEvent.clientX - shiftX;
+        const y = newEvent.clientY - shiftY;
+
         if (this.type === 'left') {
-          this.view.handleLeftInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
+          this.eventManager.notify('leftThumbChangePosition', x, y);
         }
 
         if (this.type === 'right') {
-          this.view.handleRightInput(newEvent.clientX, newEvent.clientY, shiftX, shiftY);
+          this.eventManager.notify('rightThumbChangePosition', x, y);
         }
       };
 

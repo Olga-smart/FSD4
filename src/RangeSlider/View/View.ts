@@ -66,12 +66,14 @@ class View extends BaseElement<'div'> {
     this.track.subscribe(this);
     this.range = new Range();
 
-    this.thumbLeft = new Thumb(this, 'left');
+    this.thumbLeft = new Thumb('left');
+    this.thumbLeft.subscribe(this);
 
     this.input = new Input();
 
     if (options.range) {
-      this.thumbRight = new Thumb(this, 'right');
+      this.thumbRight = new Thumb('right');
+      this.thumbRight.subscribe(this);
     }
 
     // this field is always initialized in case the toggleScaleFromOutside() method will be called
@@ -122,6 +124,16 @@ class View extends BaseElement<'div'> {
       case 'trackClick':
         if (typeof data1 === 'number' && typeof data2 === 'number') {
           this.handleScaleOrTrackClick(data1, data2);
+        }
+        break;
+      case 'leftThumbChangePosition':
+        if (typeof data1 === 'number' && typeof data2 === 'number') {
+          this.handleLeftInput(data1, data2);
+        }
+        break;
+      case 'rightThumbChangePosition':
+        if (typeof data1 === 'number' && typeof data2 === 'number') {
+          this.handleRightInput(data1, data2);
         }
         break;
 
@@ -201,34 +213,34 @@ class View extends BaseElement<'div'> {
     this.input.setValue(value1, value2);
   }
 
-  handleLeftInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
+  handleLeftInput(x: number, y: number): void {
     if (!this.vertical) {
       const trackShift = this.track.getBoundingClientRect().left;
-      const newLeft = clientX - shiftX - trackShift;
+      const newLeft = x - trackShift;
 
       this.eventManager.notify('viewInputLeft', newLeft);
     }
 
     if (this.vertical) {
       const trackShift = this.track.getBoundingClientRect().top;
-      const newTop = clientY - shiftY - trackShift;
+      const newTop = y - trackShift;
       const newBottom = this.getTrackLength() - newTop;
 
       this.eventManager.notify('viewInputLeft', newBottom);
     }
   }
 
-  handleRightInput(clientX: number, clientY: number, shiftX: number = 0, shiftY: number = 0): void {
+  handleRightInput(x: number, y: number): void {
     if (!this.vertical) {
       const trackShift = this.track.getBoundingClientRect().left;
-      const newLeft = clientX - shiftX - trackShift;
+      const newLeft = x - trackShift;
 
       this.eventManager.notify('viewInputRight', newLeft);
     }
 
     if (this.vertical) {
       const trackShift = this.track.getBoundingClientRect().top;
-      const newTop = clientY - shiftY - trackShift;
+      const newTop = y - trackShift;
       const newBottom = this.getTrackLength() - newTop;
 
       this.eventManager.notify('viewInputRight', newBottom);
@@ -415,7 +427,8 @@ class View extends BaseElement<'div'> {
     this.destroy();
 
     if (isRange) {
-      this.thumbRight = new Thumb(this, 'right');
+      this.thumbRight = new Thumb('right');
+      this.thumbRight.subscribe(this);
 
       if (this.valueLabelLeft) {
         this.valueLabelRight = new Label('range-slider__value-label range-slider__value-label_right');
