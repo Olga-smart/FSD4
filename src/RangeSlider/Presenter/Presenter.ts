@@ -2,15 +2,46 @@ import Model from '../Model/Model';
 import View from '../View/View';
 import { IEventListener } from '../EventManager/EventManager';
 
+type SliderOptions = {
+  min: number,
+  max: number,
+  leftValue: number,
+  rightValue: number,
+  range: boolean,
+  step: number,
+  minMaxLabels: boolean,
+  valueLabels: boolean,
+  vertical: boolean,
+  scale: boolean,
+  scaleIntervals: number,
+  panel: boolean,
+};
+
 class Presenter implements IEventListener {
   private model: Model;
 
   private view: View;
 
-  // возможно нужно чтобы model и view создавались с конструкторе презентера
-  constructor(model: Model, view: View) {
-    this.model = model;
-    this.view = view;
+  onChange?: (leftValue: number, rightValue: number | undefined) => void;
+
+  constructor(element: HTMLDivElement, options: SliderOptions) {
+    this.model = new Model({
+      min: options.min,
+      max: options.max,
+      leftValue: options.leftValue,
+      rightValue: options.rightValue,
+      range: options.range,
+      step: options.step,
+    });
+    this.view = new View(element, {
+      minMaxLabels: options.minMaxLabels,
+      valueLabels: options.valueLabels,
+      vertical: options.vertical,
+      range: options.range,
+      scale: options.scale,
+      scaleIntervals: options.scaleIntervals,
+      panel: options.panel,
+    });
 
     this.initViewValues();
     this.model.subscribe(this);
@@ -82,9 +113,15 @@ class Presenter implements IEventListener {
 
       case 'modelSetLeft':
         this.handleModelSetLeft();
+        if (this.onChange) {
+          this.onChange(this.model.getLeftValue(), this.model.getRightValue());
+        }
         break;
       case 'modelSetRight':
         this.handleModelSetRight();
+        if (this.onChange) {
+          this.onChange(this.model.getLeftValue(), this.model.getRightValue());
+        }
         break;
       case 'modelSetMin':
         this.handleModelSetMin();
@@ -102,6 +139,21 @@ class Presenter implements IEventListener {
       default:
         break;
     }
+  }
+
+  setLeftValue(value: number): this {
+    this.handleViewSetLeftFromOutside(value);
+    return this;
+  }
+
+  setRightValue(value: number): this {
+    this.handleViewSetRightFromOutside(value);
+    return this;
+  }
+
+  setStep(value: number): this {
+    this.handleViewSetStep(value);
+    return this;
   }
 
   private initViewValues(): void {
@@ -421,4 +473,4 @@ class Presenter implements IEventListener {
   }
 }
 
-export default Presenter;
+export { Presenter, SliderOptions };

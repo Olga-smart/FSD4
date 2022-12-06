@@ -1,6 +1,6 @@
 import 'airbnb-browser-shims';
 
-import { Slider, SliderOptions } from './Slider/Slider';
+import { Presenter, SliderOptions } from './Presenter/Presenter';
 import './style.scss';
 
 declare global {
@@ -125,7 +125,7 @@ declare global {
       settings = validate(settings);
 
       if (this instanceof HTMLDivElement) {
-        $(this).data('rangeSlider', new Slider(this, settings));
+        $(this).data('rangeSlider', new Presenter(this, settings));
       }
     });
   };

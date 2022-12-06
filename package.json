@@ -11,6 +11,7 @@
     "test": "jest --detectOpenHandles",
     "testview": "jest src/RangeSlider/View/View-jest.test.ts --detectOpenHandles",
     "testscale": "jest src/RangeSlider/View/subviews/Scale/Scale.test.ts --detectOpenHandles",
+    "testpresenter": "jest src/RangeSlider/Presenter/Presenter.test.ts --detectOpenHandles",
     "make-badges": "istanbul-badges-readme",
     "prepare": "husky install",
     "deploy": "gh-pages -d dist",

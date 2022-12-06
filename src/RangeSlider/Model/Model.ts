@@ -55,6 +55,8 @@ class Model {
       if (this.isRange() && this.rightValue !== undefined) {
         this.leftValue = Math.min(value, this.rightValue);
       }
+
+      this.leftValue = this.fitToStep(this.leftValue);
     }
 
     this.eventManager.notify('modelSetLeft');
@@ -68,6 +70,8 @@ class Model {
     } else {
       this.rightValue = Math.max(value, this.leftValue);
     }
+
+    this.rightValue = this.fitToStep(this.rightValue);
 
     this.eventManager.notify('modelSetRight');
   }
@@ -158,7 +162,6 @@ class Model {
 
     let value = ((this.max - this.min) * (percent / 100) + this.min);
     value = this.fitToStep(value);
-    value = Model.removeCalcInaccuracy(value);
 
     return value;
   }
