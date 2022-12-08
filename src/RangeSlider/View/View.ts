@@ -20,6 +20,16 @@ type ViewOptions = {
 };
 
 class View extends BaseElement<'div'> {
+  static defaults: Readonly<ViewOptions> = {
+    minMaxLabels: true,
+    valueLabels: true,
+    vertical: false,
+    range: true,
+    scale: false,
+    scaleIntervals: 5,
+    panel: false,
+  };
+
   private eventManager: EventManager;
 
   private slider: HTMLDivElement;
@@ -61,6 +71,8 @@ class View extends BaseElement<'div'> {
     this.component = component;
     this.eventManager = new EventManager();
 
+    const validOptions = View.validate({ ...View.defaults, ...options });
+
     this.slider = BaseElement.createComponent('div', 'range-slider__slider');
     this.track = new Track();
     this.track.subscribe(this);
@@ -71,47 +83,91 @@ class View extends BaseElement<'div'> {
 
     this.input = new Input();
 
-    if (options.range) {
+    if (validOptions.range) {
       this.thumbRight = new Thumb('right');
       this.thumbRight.subscribe(this);
     }
 
     // this field is always initialized in case the toggleScaleFromOutside() method will be called
-    this.scaleIntervals = options.scaleIntervals ?? 4;
+    this.scaleIntervals = validOptions.scaleIntervals ?? 4;
 
-    if (options.scale) {
+    if (validOptions.scale) {
       /* create scale with arbitrary values, which will be replaced later by Presenter
        * it is necessary for hasScale() return true */
       this.scale = new Scale(0, 100, this.getScaleIntervals());
     }
 
-    if (options.minMaxLabels || options.valueLabels) {
+    if (validOptions.minMaxLabels || validOptions.valueLabels) {
       this.labelsContainer = new LabelsContainer();
 
-      if (options.minMaxLabels) {
+      if (validOptions.minMaxLabels) {
         this.minLabel = new Label('range-slider__min-max-label range-slider__min-max-label_left');
         this.maxLabel = new Label('range-slider__min-max-label range-slider__min-max-label_right');
       }
 
-      if (options.valueLabels) {
+      if (validOptions.valueLabels) {
         this.valueLabelLeft = new Label('range-slider__value-label range-slider__value-label_left');
 
-        if (options.range) {
+        if (validOptions.range) {
           this.valueLabelRight = new Label('range-slider__value-label range-slider__value-label_right');
           this.valueLabelCommon = new Label('range-slider__value-label range-slider__value-label_common');
         }
       }
     }
 
-    if (options.vertical) {
+    if (validOptions.vertical) {
       this.vertical = true;
     }
 
-    if (options.panel) {
+    if (validOptions.panel) {
       this.panel = new Panel(this);
     }
 
     this.render();
+  }
+
+  static validate(options: ViewOptions): ViewOptions {
+    let fixedOptions: ViewOptions = { ...options };
+
+    const removeWrongTypes = (): void => {
+      const checkType = (property: keyof ViewOptions): void => {
+        if (typeof options[property] !== typeof View.defaults[property]) {
+          delete fixedOptions[property];
+        }
+      };
+
+      /* There is no Object.keys().forEach because TS throws an error:
+       * "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'" */
+      checkType('range');
+      checkType('minMaxLabels');
+      checkType('valueLabels');
+      checkType('vertical');
+      checkType('scale');
+      checkType('scaleIntervals');
+      checkType('panel');
+    };
+
+    const mergeWithDefaults = (): void => {
+      fixedOptions = { ...View.defaults, ...fixedOptions };
+    };
+
+    const fixValues = (): void => {
+      if (fixedOptions.scaleIntervals !== undefined) {
+        if (fixedOptions.scaleIntervals < 1) {
+          fixedOptions.scaleIntervals = 1;
+        }
+
+        if (!Number.isInteger(fixedOptions.scaleIntervals)) {
+          fixedOptions.scaleIntervals = Math.floor(fixedOptions.scaleIntervals);
+        }
+      }
+    };
+
+    removeWrongTypes();
+    mergeWithDefaults();
+    fixValues();
+
+    return fixedOptions;
   }
 
   subscribe(listener: IEventListener): void {

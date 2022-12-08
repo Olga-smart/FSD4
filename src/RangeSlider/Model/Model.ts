@@ -10,6 +10,15 @@ type ModelOptions = {
 };
 
 class Model {
+  static defaults: Readonly<ModelOptions> = {
+    min: 0,
+    max: 100,
+    leftValue: 25,
+    rightValue: 75,
+    step: 1,
+    range: true,
+  };
+
   private eventManager: EventManager;
 
   private min: number;
@@ -24,20 +33,83 @@ class Model {
 
   private range: boolean;
 
-  constructor(options: ModelOptions) {
+  constructor(options: Partial<ModelOptions>) {
     this.eventManager = new EventManager();
 
-    this.min = options.min;
-    this.max = options.max;
-    this.leftValue = options.leftValue;
-    this.step = options.step;
+    const validOptions = Model.validate({ ...Model.defaults, ...options });
 
-    if (options.range) {
-      this.rightValue = options.rightValue;
+    this.min = validOptions.min;
+    this.max = validOptions.max;
+    this.leftValue = validOptions.leftValue;
+    this.step = validOptions.step;
+
+    if (validOptions.range) {
+      this.rightValue = validOptions.rightValue;
       this.range = true;
     } else {
       this.range = false;
     }
+  }
+
+  static validate(options: ModelOptions): ModelOptions {
+    let fixedOptions: ModelOptions = { ...options };
+
+    const removeWrongTypes = (): void => {
+      const checkType = (property: keyof ModelOptions): void => {
+        if (typeof options[property] !== typeof Model.defaults[property]) {
+          delete fixedOptions[property];
+        }
+      };
+
+      /* There is no Object.keys().forEach because TS throws an error:
+       * "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'" */
+      checkType('min');
+      checkType('max');
+      checkType('leftValue');
+      checkType('rightValue');
+      checkType('range');
+      checkType('step');
+    };
+
+    const mergeWithDefaults = (): void => {
+      fixedOptions = { ...Model.defaults, ...fixedOptions };
+    };
+
+    const fixValues = (): void => {
+      if (fixedOptions.min > fixedOptions.max) {
+        [fixedOptions.min, fixedOptions.max] = [fixedOptions.max, fixedOptions.min];
+      }
+
+      if (fixedOptions.rightValue !== undefined) {
+        if (fixedOptions.leftValue > fixedOptions.rightValue) {
+          [fixedOptions.leftValue, fixedOptions.rightValue] = (
+            [fixedOptions.rightValue, fixedOptions.leftValue]
+          );
+        }
+
+        if (fixedOptions.rightValue > fixedOptions.max) {
+          fixedOptions.rightValue = fixedOptions.max;
+        }
+      }
+
+      if (fixedOptions.leftValue < fixedOptions.min) {
+        fixedOptions.leftValue = fixedOptions.min;
+      }
+
+      if (fixedOptions.leftValue > fixedOptions.max) {
+        fixedOptions.leftValue = fixedOptions.max;
+      }
+
+      if (fixedOptions.step > Math.abs(fixedOptions.max - fixedOptions.min)) {
+        fixedOptions.step = Math.abs(fixedOptions.max - fixedOptions.min);
+      }
+    };
+
+    removeWrongTypes();
+    mergeWithDefaults();
+    fixValues();
+
+    return fixedOptions;
   }
 
   subscribe(listener: IEventListener): void {

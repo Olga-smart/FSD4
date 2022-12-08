@@ -24,7 +24,7 @@ class Presenter implements IEventListener {
 
   onChange?: (leftValue: number, rightValue: number | undefined) => void;
 
-  constructor(element: HTMLDivElement, options: SliderOptions) {
+  constructor(element: HTMLDivElement, options: Partial<SliderOptions>) {
     this.model = new Model({
       min: options.min,
       max: options.max,
@@ -301,11 +301,13 @@ class Presenter implements IEventListener {
   private passLeftValueToView(value: number): void {
     const percent = this.model.convertValueToPercent(value);
     this.view.setLeftValue(value, percent);
+    this.handleViewSetLeft();
   }
 
   private passRightValueToView(value: number): void {
     const percent = this.model.convertValueToPercent(value);
     this.view.setRightValue(value, percent);
+    this.handleViewSetRight();
   }
 
   private updateViewInput(): void {
