@@ -2167,7 +2167,7 @@ describe('View', () => {
     });
   });
 
-  describe('toggleOrientationFromOutside()', () => {
+  describe('toggleOrientation()', () => {
     describe('if slider was horizontal', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
@@ -2187,7 +2187,7 @@ describe('View', () => {
       const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
       const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
 
-      view.toggleOrientationFromOutside();
+      view.toggleOrientation();
 
       it('set property vertical to true', () => {
         expect(view.isVertical()).toBe(true);
@@ -2264,7 +2264,7 @@ describe('View', () => {
       const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
       const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
 
-      view.toggleOrientationFromOutside();
+      view.toggleOrientation();
 
       it('set property vertical to false', () => {
         expect(view.isVertical()).toBe(false);
@@ -2319,7 +2319,7 @@ describe('View', () => {
     });
   });
 
-  describe('toggleRangeFromOutside()', () => {
+  describe('toggleRange()', () => {
     describe('if slider becomes range', () => {
       describe('if slider is horizontal', () => {
         const slider = document.createElement('div');
@@ -2335,7 +2335,7 @@ describe('View', () => {
         subscriber.inform = jest.fn();
         view.subscribe(subscriber);
 
-        view.toggleRangeFromOutside();
+        view.toggleRange();
 
         it('set property isRange to true', () => {
           expect(view.isRange()).toBe(true);
@@ -2388,7 +2388,7 @@ describe('View', () => {
         subscriber.inform = jest.fn();
         view.subscribe(subscriber);
 
-        view.toggleRangeFromOutside();
+        view.toggleRange();
 
         it('set property isRange to true', () => {
           expect(view.isRange()).toBe(true);
@@ -2443,7 +2443,7 @@ describe('View', () => {
         subscriber.inform = jest.fn();
         view.subscribe(subscriber);
 
-        view.toggleRangeFromOutside();
+        view.toggleRange();
 
         it('say subscribers that range was changed', () => {
           expect(subscriber.inform).toBeCalledWith('viewToggleRange', null);
@@ -2464,7 +2464,7 @@ describe('View', () => {
         subscriber.inform = jest.fn();
         view.subscribe(subscriber);
 
-        view.toggleRangeFromOutside();
+        view.toggleRange();
 
         it('reset range top indent', () => {
           const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
@@ -2478,7 +2478,7 @@ describe('View', () => {
     });
   });
 
-  describe('toggleScaleFromOutside()', () => {
+  describe('toggleScale()', () => {
     describe('if slider had no scale', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
@@ -2491,7 +2491,7 @@ describe('View', () => {
       subscriber.inform = jest.fn();
       view.subscribe(subscriber);
 
-      view.toggleScaleFromOutside();
+      view.toggleScale();
 
       it('say subscribers that scale was toggled', () => {
         expect(subscriber.inform).toBeCalledWith('viewToggleScale', null);
@@ -2510,7 +2510,7 @@ describe('View', () => {
       subscriber.inform = jest.fn();
       view.subscribe(subscriber);
 
-      view.toggleScaleFromOutside();
+      view.toggleScale();
 
       it('say subscribers that scale was toggled', () => {
         expect(subscriber.inform).toBeCalledWith('viewToggleScale', null);
@@ -2526,7 +2526,7 @@ describe('View', () => {
         scaleIntervals: 3,
       });
 
-      view.removeScale = jest.fn();
+      // view.removeScale = jest.fn();
 
       const subscriber = {
         inform() {},
@@ -2540,9 +2540,9 @@ describe('View', () => {
         expect(view.getScaleIntervals()).toBe(5);
       });
 
-      it('remove scale', () => {
-        expect(view.removeScale).toBeCalled();
-      });
+      // it('remove scale', () => {
+      //   expect(view.removeScale).toBeCalled();
+      // });
 
       it('say subscribers that scaleIntervals was changed', () => {
         expect(subscriber.inform).toBeCalledWith('viewSetScaleIntervals', null);

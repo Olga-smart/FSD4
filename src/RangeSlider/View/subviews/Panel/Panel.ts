@@ -21,9 +21,9 @@ type ViewForPanel = {
   setStepFromOutside(value: number): void,
   setLeftFromOutside(value: number): void,
   setRightFromOutside(value: number): void,
-  toggleOrientationFromOutside(): void,
-  toggleRangeFromOutside(): void,
-  toggleScaleFromOutside(): void,
+  toggleOrientation(): void,
+  toggleRange(): void,
+  toggleScale(): void,
   setScaleIntervals(value: number): void,
   toggleValueLabels(): void,
   toggleMinMaxLabels(): void,
@@ -345,12 +345,12 @@ class Panel extends BaseElement<'form'> {
   }
 
   private handleVerticalChange(): void {
-    this.view.toggleOrientationFromOutside();
+    this.view.toggleOrientation();
     Panel.toggleCheckbox(this.vertical);
   }
 
   private handleRangeChange(): void {
-    this.view.toggleRangeFromOutside();
+    this.view.toggleRange();
 
     this.to.disabled = !this.to.disabled;
 
@@ -364,7 +364,7 @@ class Panel extends BaseElement<'form'> {
   }
 
   private handleScaleChange(): void {
-    this.view.toggleScaleFromOutside();
+    this.view.toggleScale();
 
     this.scaleIntervals.disabled = !this.scaleIntervals.disabled;
 

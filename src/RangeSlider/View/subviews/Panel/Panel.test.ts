@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Panel } from './Panel';
 import View from '../../View';
 
@@ -1062,13 +1063,13 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       const panel = new Panel(view);
-      view.toggleOrientationFromOutside = jest.fn();
+      view.toggleOrientation = jest.fn();
       const event = new Event('change');
       const vertical = panel.getComponent().querySelector('.panel__vertical');
       vertical?.dispatchEvent(event);
 
       it('say view that orientation was changed', () => {
-        expect(view.toggleOrientationFromOutside).toBeCalled();
+        expect(view.toggleOrientation).toBeCalled();
       });
     });
 
@@ -1076,14 +1077,14 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       const panel = new Panel(view);
-      view.toggleRangeFromOutside = jest.fn();
+      view.toggleRange = jest.fn();
       const event = new Event('change');
       const to: HTMLInputElement | null = panel.getComponent().querySelector('.panel__to');
       const range: HTMLInputElement | null = panel.getComponent().querySelector('.panel__range');
       range?.dispatchEvent(event);
 
       it('say view that range was changed', () => {
-        expect(view.toggleRangeFromOutside).toBeCalled();
+        expect(view.toggleRange).toBeCalled();
       });
 
       it('make to disabled, if it was not disabled', () => {
@@ -1137,14 +1138,14 @@ describe('Panel', () => {
       const slider = document.createElement('div');
       const view = new View(slider);
       const panel = new Panel(view);
-      view.toggleScaleFromOutside = jest.fn();
+      view.toggleScale = jest.fn();
       const event = new Event('change');
       const scale: HTMLInputElement | null = panel.getComponent().querySelector('.panel__scale');
       const scaleIntervals: HTMLInputElement | null = panel.getComponent().querySelector('.panel__scale-intervals');
       scale?.dispatchEvent(event);
 
       it('say view that scale was changed', () => {
-        expect(view.toggleScaleFromOutside).toBeCalled();
+        expect(view.toggleScale).toBeCalled();
       });
 
       it('make scaleIntervals disabled, if it was not disabled', () => {

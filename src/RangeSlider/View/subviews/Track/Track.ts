@@ -25,7 +25,7 @@ class Track extends BaseElement<'div'> {
       const x: number = event.clientX - event.currentTarget.getBoundingClientRect().left;
       const y: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
 
-      this.eventManager.notify('trackClick', x, y);
+      this.eventManager.notify('trackClick', [x, y]);
     }
   }
 

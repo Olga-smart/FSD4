@@ -7,16 +7,16 @@ import LabelsContainer from './subviews/LabelsContainer/LabelsContainer';
 import Label from './subviews/Label/Label';
 import Input from './subviews/Input/Input';
 import { Panel, PanelOptions } from './subviews/Panel/Panel';
-import { EventManager, IEventListener } from '../EventManager/EventManager';
+import { EventManager, IEventListener, PossibleEvents } from '../EventManager/EventManager';
 
 type ViewOptions = {
-  minMaxLabels?: boolean,
-  valueLabels?: boolean,
-  vertical?: boolean,
-  range?: boolean,
-  scale?: boolean,
-  scaleIntervals?: number,
-  panel?: boolean
+  minMaxLabels: boolean,
+  valueLabels: boolean,
+  vertical: boolean,
+  range: boolean,
+  scale: boolean,
+  scaleIntervals: number,
+  panel: boolean,
 };
 
 class View extends BaseElement<'div'> {
@@ -65,7 +65,7 @@ class View extends BaseElement<'div'> {
   private panel?: Panel;
 
   // возможно конструктор перегружен
-  constructor(component: HTMLDivElement, options: ViewOptions = {}) {
+  constructor(component: HTMLDivElement, options: Partial<ViewOptions> = View.defaults) {
     super('div');
 
     this.component = component;
@@ -88,7 +88,7 @@ class View extends BaseElement<'div'> {
       this.thumbRight.subscribe(this);
     }
 
-    // this field is always initialized in case the toggleScaleFromOutside() method will be called
+    // this field is always initialized in case the toggleScale() method will be called
     this.scaleIntervals = validOptions.scaleIntervals ?? 4;
 
     if (validOptions.scale) {
@@ -174,22 +174,28 @@ class View extends BaseElement<'div'> {
     this.eventManager.subscribe(listener);
   }
 
-  inform(eventType: string, data1: number | null = null, data2: number | null = null): void {
+  inform<E extends keyof PossibleEvents>(eventType: E, data: PossibleEvents[E]): void {
     switch (eventType) {
       case 'scaleClick':
       case 'trackClick':
-        if (typeof data1 === 'number' && typeof data2 === 'number') {
-          this.handleScaleOrTrackClick(data1, data2);
+        if (Array.isArray(data)) {
+          const x: number = data[0];
+          const y: number = data[1];
+          this.handleScaleOrTrackClick(x, y);
         }
         break;
       case 'leftThumbChangePosition':
-        if (typeof data1 === 'number' && typeof data2 === 'number') {
-          this.handleLeftInput(data1, data2);
+        if (Array.isArray(data)) {
+          const x: number = data[0];
+          const y: number = data[1];
+          this.handleLeftInput(x, y);
         }
         break;
       case 'rightThumbChangePosition':
-        if (typeof data1 === 'number' && typeof data2 === 'number') {
-          this.handleRightInput(data1, data2);
+        if (Array.isArray(data)) {
+          const x: number = data[0];
+          const y: number = data[1];
+          this.handleRightInput(x, y);
         }
         break;
 
@@ -241,7 +247,7 @@ class View extends BaseElement<'div'> {
       }
     }
 
-    this.eventManager.notify('viewSetLeft');
+    this.eventManager.notify('viewSetLeft', null);
   }
 
   setRightValue(value: number, percent: number): void {
@@ -262,7 +268,7 @@ class View extends BaseElement<'div'> {
       this.valueLabelCommon?.setValue(`${this.valueLabelLeft?.getValue()} - ${value}`);
     }
 
-    this.eventManager.notify('viewSetRight');
+    this.eventManager.notify('viewSetRight', null);
   }
 
   updateInput(value1: number, value2: number | null = null): void {
@@ -441,7 +447,7 @@ class View extends BaseElement<'div'> {
   }
 
   // уберется когда сделаю независимую панель
-  toggleOrientationFromOutside(): void {
+  toggleOrientation(): void {
     this.vertical = !this.vertical;
     this.destroy();
     this.render();
@@ -474,11 +480,11 @@ class View extends BaseElement<'div'> {
       this.scale?.handleSwitchFromVerticalToHorizontal();
     }
 
-    this.eventManager.notify('viewToggleOrientation');
+    this.eventManager.notify('viewToggleOrientation', null);
   }
 
-  // уберется когда сделаю независимую панель
-  toggleRangeFromOutside(): void {
+  // уберется когда сделаю независимую панель (не уберется)
+  toggleRange(): void {
     const isRange = !this.isRange();
     this.destroy();
 
@@ -502,6 +508,8 @@ class View extends BaseElement<'div'> {
 
     if (!isRange) {
       this.thumbRight = undefined;
+      this.valueLabelRight = undefined;
+      this.valueLabelCommon = undefined;
 
       if (this.vertical) {
         this.range.resetTopIndent();
@@ -509,12 +517,12 @@ class View extends BaseElement<'div'> {
     }
 
     this.render();
-    this.eventManager.notify('viewToggleRange');
+    this.eventManager.notify('viewToggleRange', null);
   }
 
   // уберется когда сделаю независимую панель
-  toggleScaleFromOutside(): void {
-    this.eventManager.notify('viewToggleScale');
+  toggleScale(): void {
+    this.eventManager.notify('viewToggleScale', null);
   }
 
   // уберется когда сделаю независимую панель
@@ -522,8 +530,7 @@ class View extends BaseElement<'div'> {
     if (value <= 0) return;
 
     this.scaleIntervals = Math.floor(value);
-    this.removeScale();
-    this.eventManager.notify('viewSetScaleIntervals');
+    this.eventManager.notify('viewSetScaleIntervals', null);
   }
 
   // уберется когда сделаю независимую панель
@@ -573,7 +580,7 @@ class View extends BaseElement<'div'> {
           .append(this.valueLabelRight?.getComponent(), this.valueLabelCommon?.getComponent());
       }
 
-      this.eventManager.notify('viewAddValueLabels');
+      this.eventManager.notify('viewAddValueLabels', null);
 
       if (!this.vertical) {
         this.fixLabelsContainerHeightForHorizontal();
@@ -623,7 +630,7 @@ class View extends BaseElement<'div'> {
 
       this.labelsContainer.append(this.minLabel.getComponent(), this.maxLabel.getComponent());
 
-      this.eventManager.notify('viewAddMinMaxLabels');
+      this.eventManager.notify('viewAddMinMaxLabels', null);
 
       if (!this.vertical) {
         this.fixLabelsContainerHeightForHorizontal();
@@ -667,6 +674,18 @@ class View extends BaseElement<'div'> {
   getTrackLength(): number {
     const length = this.isVertical() ? this.track.getHeight() : this.track.getWidth();
     return length;
+  }
+
+  getOptions(): ViewOptions {
+    return {
+      minMaxLabels: this.hasMinMaxLabels(),
+      valueLabels: this.hasValueLabels(),
+      vertical: this.isVertical(),
+      range: this.isRange(),
+      scale: this.hasScale(),
+      scaleIntervals: this.getScaleIntervals(),
+      panel: this.hasPanel(),
+    };
   }
 
   private render(): void {

@@ -1,13 +1,5 @@
 import { EventManager, IEventListener } from '../EventManager/EventManager';
-
-type ModelOptions = {
-  min: number;
-  max: number;
-  leftValue: number;
-  rightValue?: number;
-  step: number;
-  range?: boolean;
-};
+import ModelOptions from './ModelOptions';
 
 class Model {
   static defaults: Readonly<ModelOptions> = {
@@ -131,7 +123,7 @@ class Model {
       this.leftValue = this.fitToStep(this.leftValue);
     }
 
-    this.eventManager.notify('modelSetLeft');
+    this.eventManager.notify('modelSetLeft', null);
   }
 
   setRightValue(value: number = this.max): void {
@@ -145,7 +137,7 @@ class Model {
 
     this.rightValue = this.fitToStep(this.rightValue);
 
-    this.eventManager.notify('modelSetRight');
+    this.eventManager.notify('modelSetRight', null);
   }
 
   setLeftValueFromPx(px: number, trackLengthInPx: number): void {
@@ -166,7 +158,7 @@ class Model {
     if (value > this.leftValue) return;
     this.min = value;
 
-    this.eventManager.notify('modelSetMin');
+    this.eventManager.notify('modelSetMin', null);
   }
 
   setMax(value: number): void {
@@ -180,7 +172,7 @@ class Model {
 
     this.max = value;
 
-    this.eventManager.notify('modelSetMax');
+    this.eventManager.notify('modelSetMax', null);
   }
 
   setStep(value: number): void {
@@ -189,13 +181,13 @@ class Model {
 
     this.step = value;
 
-    this.eventManager.notify('modelSetStep');
+    this.eventManager.notify('modelSetStep', null);
   }
 
   toggleRange(): void {
     this.range = !this.range;
 
-    this.eventManager.notify('modelToggleRange');
+    this.eventManager.notify('modelToggleRange', null);
   }
 
   getMin(): number {
@@ -220,6 +212,17 @@ class Model {
 
   isRange(): boolean {
     return this.range;
+  }
+
+  getOptions(): ModelOptions {
+    return {
+      min: this.min,
+      max: this.max,
+      leftValue: this.leftValue,
+      rightValue: this.rightValue,
+      step: this.step,
+      range: this.range,
+    };
   }
 
   convertValueToPercent(value: number): number {

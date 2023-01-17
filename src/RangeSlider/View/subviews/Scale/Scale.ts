@@ -131,7 +131,7 @@ class Scale extends BaseElement<'div'> {
       const x: number = event.clientX - event.currentTarget.getBoundingClientRect().left;
       const y: number = event.clientY - event.currentTarget.getBoundingClientRect().top;
 
-      this.eventManager.notify('scaleClick', x, y);
+      this.eventManager.notify('scaleClick', [x, y]);
     }
   }
 

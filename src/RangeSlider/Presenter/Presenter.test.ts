@@ -1,5 +1,5 @@
 /* eslint-disable no-new */
-import { Presenter } from './Presenter';
+import Presenter from './Presenter';
 
 describe('Presenter', () => {
   const defaultSliderOptions = {
@@ -626,7 +626,7 @@ describe('Presenter', () => {
         const element = document.createElement('div');
         const slider = new Presenter(element, defaultSliderOptions);
         slider.onChange = jest.fn();
-        slider.inform('modelSetLeft');
+        slider.inform('modelSetLeft', null);
 
         expect(slider.onChange).toBeCalledWith(25, 75);
       });
@@ -754,7 +754,7 @@ describe('Presenter', () => {
         const element = document.createElement('div');
         const slider = new Presenter(element, defaultSliderOptions);
         slider.onChange = jest.fn();
-        slider.inform('modelSetRight');
+        slider.inform('modelSetRight', null);
 
         expect(slider.onChange).toBeCalledWith(25, 75);
       });

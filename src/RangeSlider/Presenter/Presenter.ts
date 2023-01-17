@@ -1,26 +1,14 @@
 import Model from '../Model/Model';
 import View from '../View/View';
-import { IEventListener } from '../EventManager/EventManager';
-
-type SliderOptions = {
-  min: number,
-  max: number,
-  leftValue: number,
-  rightValue: number,
-  range: boolean,
-  step: number,
-  minMaxLabels: boolean,
-  valueLabels: boolean,
-  vertical: boolean,
-  scale: boolean,
-  scaleIntervals: number,
-  panel: boolean,
-};
+import { EventManager, IEventListener, PossibleEvents } from '../EventManager/EventManager';
+import SliderOptions from './SliderOptions';
 
 class Presenter implements IEventListener {
   private model: Model;
 
   private view: View;
+
+  private eventManager: EventManager;
 
   onChange?: (leftValue: number, rightValue: number | undefined) => void;
 
@@ -43,13 +31,15 @@ class Presenter implements IEventListener {
       panel: options.panel,
     });
 
+    this.eventManager = new EventManager();
+
     this.initViewValues();
     this.model.subscribe(this);
     this.view.subscribe(this);
   }
 
   // очень длинный свичкейс, но много кейсов уберется когда сделаю независимую панель
-  inform(eventType: string, data: number | null = null): void {
+  inform<E extends keyof PossibleEvents>(eventType: E, data: PossibleEvents[E]): void {
     switch (eventType) {
       case 'viewInputLeft':
         if (typeof data === 'number') {
@@ -141,6 +131,10 @@ class Presenter implements IEventListener {
     }
   }
 
+  subscribe(listener: IEventListener): void {
+    this.eventManager.subscribe(listener);
+  }
+
   setLeftValue(value: number): this {
     this.handleViewSetLeftFromOutside(value);
     return this;
@@ -152,8 +146,57 @@ class Presenter implements IEventListener {
   }
 
   setStep(value: number): this {
-    this.handleViewSetStep(value);
+    this.model.setStep(value);
     return this;
+  }
+
+  setMin(value: number): this {
+    this.model.setMin(value);
+    return this;
+  }
+
+  setMax(value: number): this {
+    this.model.setMax(value);
+    return this;
+  }
+
+  toggleOrientation(): this {
+    this.view.toggleOrientation();
+    this.eventManager.notify('sliderToggleOrientation', null);
+    return this;
+  }
+
+  toggleRange(): this {
+    this.model.toggleRange();
+    return this;
+  }
+
+  toggleValueLabels(): this {
+    this.view.toggleValueLabels();
+    this.eventManager.notify('sliderToggleValueLabels', null);
+    return this;
+  }
+
+  toggleMinMaxLabels(): this {
+    this.view.toggleMinMaxLabels();
+    this.eventManager.notify('sliderToggleMinMaxLabels', null);
+    return this;
+  }
+
+  toggleScale(): this {
+    this.view.toggleScale();
+    this.eventManager.notify('sliderToggleScale', null);
+    return this;
+  }
+
+  setScaleIntervals(value: number): this {
+    this.view.setScaleIntervals(value);
+    this.eventManager.notify('sliderSetScaleIntervals', value);
+    return this;
+  }
+
+  getValues(): SliderOptions {
+    return { ...this.model.getOptions(), ...this.view.getOptions() };
   }
 
   private initViewValues(): void {
@@ -214,13 +257,15 @@ class Presenter implements IEventListener {
   }
 
   private handleModelSetLeft(): void {
-    const value = this.model.getLeftValue();
+    const value: number = this.model.getLeftValue();
     this.passLeftValueToView(value);
     this.updateViewInput();
 
     if (this.view.hasPanel()) {
       this.view.updatePanelFrom(value);
     }
+
+    this.eventManager.notify('sliderSetLeft', value);
   }
 
   private handleViewInputRight(px: number): void {
@@ -235,6 +280,8 @@ class Presenter implements IEventListener {
     if (this.view.hasPanel()) {
       this.view.updatePanelTo(value);
     }
+
+    this.eventManager.notify('sliderSetRight', value);
   }
 
   private handleViewSetValue(): void {
@@ -301,13 +348,11 @@ class Presenter implements IEventListener {
   private passLeftValueToView(value: number): void {
     const percent = this.model.convertValueToPercent(value);
     this.view.setLeftValue(value, percent);
-    this.handleViewSetLeft();
   }
 
   private passRightValueToView(value: number): void {
     const percent = this.model.convertValueToPercent(value);
     this.view.setRightValue(value, percent);
-    this.handleViewSetRight();
   }
 
   private updateViewInput(): void {
@@ -336,7 +381,8 @@ class Presenter implements IEventListener {
   }
 
   private handleModelSetMin(): void {
-    this.view.setMinValue(this.model.getMin());
+    const value = this.model.getMin();
+    this.view.setMinValue(value);
     this.passLeftValueToView(this.model.getLeftValue());
 
     const rightValue = this.model.getRightValue();
@@ -352,6 +398,8 @@ class Presenter implements IEventListener {
     if (this.view.hasPanel()) {
       this.view.updatePanelMin(this.model.getMin());
     }
+
+    this.eventManager.notify('sliderSetMin', value);
   }
 
   // изменится когда сделаю независимую панель
@@ -360,7 +408,8 @@ class Presenter implements IEventListener {
   }
 
   private handleModelSetMax(): void {
-    this.view.setMaxValue(this.model.getMax());
+    const value = this.model.getMax();
+    this.view.setMaxValue(value);
     this.passLeftValueToView(this.model.getLeftValue());
 
     const rightValue = this.model.getRightValue();
@@ -376,6 +425,8 @@ class Presenter implements IEventListener {
     if (this.view.hasPanel()) {
       this.view.updatePanelMax(this.model.getMax());
     }
+
+    this.eventManager.notify('sliderSetMax', value);
   }
 
   // изменится когда сделаю независимую панель
@@ -397,10 +448,6 @@ class Presenter implements IEventListener {
 
   // изменится когда сделаю независимую панель
   private handleViewToggleRange(): void {
-    this.model.toggleRange();
-  }
-
-  private handleModelToggleRange(): void {
     this.passLeftValueToView(this.model.getLeftValue());
 
     if (this.model.isRange()) {
@@ -422,13 +469,22 @@ class Presenter implements IEventListener {
         this.view.updatePanelTo('');
       }
     }
+
+    this.eventManager.notify('sliderToggleRange', null);
+  }
+
+  private handleModelToggleRange(): void {
+    this.view.toggleRange();
   }
 
   // изменится когда сделаю независимую панель
   private handleModelSetStep(): void {
+    const value = this.model.getStep();
     if (this.view.hasPanel()) {
-      this.view.updatePanelStep(this.model.getStep());
+      this.view.updatePanelStep(value);
     }
+
+    this.eventManager.notify('sliderSetStep', value);
   }
 
   // изменится когда сделаю независимую панель
@@ -454,7 +510,10 @@ class Presenter implements IEventListener {
 
   // изменится когда сделаю независимую панель
   private handleViewSetScaleIntervals(): void {
-    this.view.addScale(this.model.getMin(), this.model.getMax());
+    if (this.view.hasScale()) {
+      this.view.removeScale();
+      this.view.addScale(this.model.getMin(), this.model.getMax());
+    }
   }
 
   // изменится когда сделаю независимую панель
@@ -475,4 +534,4 @@ class Presenter implements IEventListener {
   }
 }
 
-export { Presenter, SliderOptions };
+export default Presenter;

@@ -10,31 +10,46 @@ html(lang="en")
 
       section.demo__section
         h2 Default params
-        .range-slider.js-range-slider
+        .range-slider.js-range-slider#slider1
+        form.panel.js-panel(
+          data-slider="slider1"
+        )
 
       section.demo__section
         h2 Minimalistic
-        .range-slider.js-range-slider(
+        .range-slider.js-range-slider#slider2(
           data-min-max-labels="false",
           data-value-labels="false"
+        )
+        form.panel.js-panel(
+          data-slider="slider2"
         )
 
       section.demo__section
         h2 Single
-        .range-slider.js-range-slider(
+        .range-slider.js-range-slider#slider3(
           data-range="false"
+        )
+        form.panel.js-panel(
+          data-slider="slider3"
         )
 
       section.demo__section
         h2 With scale
-        .range-slider.js-range-slider(
+        .range-slider.js-range-slider#slider4(
           data-scale="true"
-        )  
+        )
+        form.panel.js-panel(
+          data-slider="slider4"
+        )
 
       section.demo__section
         h2 Vertical
-        .range-slider.js-range-slider(
+        .range-slider.js-range-slider#slider5(
           data-vertical="true"
+        )
+        form.panel.js-panel(
+          data-slider="slider5"
         )
 
     

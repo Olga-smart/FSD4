@@ -68,11 +68,11 @@ class Thumb extends BaseElement<'div'> {
         const y = newEvent.clientY - shiftY;
 
         if (this.type === 'left') {
-          this.eventManager.notify('leftThumbChangePosition', x, y);
+          this.eventManager.notify('leftThumbChangePosition', [x, y]);
         }
 
         if (this.type === 'right') {
-          this.eventManager.notify('rightThumbChangePosition', x, y);
+          this.eventManager.notify('rightThumbChangePosition', [x, y]);
         }
       };
 

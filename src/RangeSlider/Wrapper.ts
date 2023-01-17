@@ -1,6 +1,8 @@
 import 'airbnb-browser-shims';
 
-import { Presenter, SliderOptions } from './Presenter/Presenter';
+// import { Presenter, SliderOptions } from './Presenter/Presenter';
+import Presenter from './Presenter/Presenter';
+import SliderOptions from './Presenter/SliderOptions';
 import './style.scss';
 
 declare global {

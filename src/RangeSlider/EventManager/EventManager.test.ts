@@ -9,7 +9,7 @@ describe('EventManager', () => {
       };
       listener.inform = jest.fn();
       eventManager.subscribe(listener);
-      eventManager.notify('someEvent');
+      eventManager.notify('modelSetLeft', null);
 
       expect(listener.inform).toBeCalled();
     });
@@ -24,7 +24,7 @@ describe('EventManager', () => {
       listener.inform = jest.fn();
       eventManager.subscribe(listener);
       eventManager.unsubscribe(listener);
-      eventManager.notify('someEvent');
+      eventManager.notify('modelSetLeft', null);
 
       expect(listener.inform).not.toBeCalled();
     });
@@ -51,24 +51,24 @@ describe('EventManager', () => {
     listener3.inform = jest.fn();
 
     it('call inform methods of all listeners', () => {
-      eventManager.notify('someEvent', 5);
+      eventManager.notify('viewInputLeft', 5);
 
       [listener1, listener2, listener3].forEach((listener) => {
-        expect(listener.inform).toBeCalledWith('someEvent', 5);
+        expect(listener.inform).toBeCalledWith('viewInputLeft', 5);
       });
     });
 
-    it('if data is not passed, it is null by default', () => {
-      eventManager.notify('someEvent');
+    // it('if data is not passed, it is null by default', () => {
+    //   eventManager.notify('modelSetLeft');
 
-      [listener1, listener2, listener3].forEach((listener) => {
-        expect(listener.inform).toBeCalledWith('someEvent', null);
-      });
-    });
+    //   [listener1, listener2, listener3].forEach((listener) => {
+    //     expect(listener.inform).toBeCalledWith('someEvent', null);
+    //   });
+    // });
 
     it('if listeners list is empty, nothing happens', () => {
       const newEventManager = new EventManager();
-      newEventManager.notify('someEvent', 5);
+      newEventManager.notify('modelSetLeft', null);
     });
   });
 });
