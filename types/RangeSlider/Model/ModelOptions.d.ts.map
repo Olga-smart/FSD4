@@ -1,0 +1,1 @@
+{"version":3,"file":"ModelOptions.d.ts","sourceRoot":"","sources":["../../../../src/RangeSlider/Model/ModelOptions.ts"],"names":[],"mappings":"AAAA,aAAK,YAAY,GAAG;IAClB,GAAG,EAAE,MAAM,CAAC;IACZ,GAAG,EAAE,MAAM,CAAC;IACZ,SAAS,EAAE,MAAM,CAAC;IAClB,UAAU,EAAE,MAAM,GAAG,SAAS,CAAC;IAC/B,IAAI,EAAE,MAAM,CAAC;IACb,KAAK,EAAE,OAAO,CAAC;CAChB,CAAC;AAEF,eAAe,YAAY,CAAC"}
