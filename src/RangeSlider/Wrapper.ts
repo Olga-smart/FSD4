@@ -32,7 +32,6 @@ declare global {
         vertical: $(this).data('vertical'),
         scale: $(this).data('scale'),
         scaleIntervals: $(this).data('scaleIntervals'),
-        panel: $(this).data('panel'),
       };
 
       const settings: Partial<SliderOptions> = $.extend({}, options, settingsFromDataset);

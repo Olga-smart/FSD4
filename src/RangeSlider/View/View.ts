@@ -6,7 +6,6 @@ import Scale from './subviews/Scale/Scale';
 import LabelsContainer from './subviews/LabelsContainer/LabelsContainer';
 import Label from './subviews/Label/Label';
 import Input from './subviews/Input/Input';
-import { Panel, PanelOptions } from './subviews/Panel/Panel';
 import { EventManager, IEventListener, PossibleEvents } from '../EventManager/EventManager';
 
 type ViewOptions = {
@@ -16,7 +15,6 @@ type ViewOptions = {
   range: boolean,
   scale: boolean,
   scaleIntervals: number,
-  panel: boolean,
 };
 
 class View extends BaseElement<'div'> {
@@ -27,7 +25,6 @@ class View extends BaseElement<'div'> {
     range: true,
     scale: false,
     scaleIntervals: 5,
-    panel: false,
   };
 
   private eventManager: EventManager;
@@ -61,8 +58,6 @@ class View extends BaseElement<'div'> {
   private vertical?: boolean;
 
   private labelsContainer?: LabelsContainer;
-
-  private panel?: Panel;
 
   // возможно конструктор перегружен
   constructor(component: HTMLDivElement, options: Partial<ViewOptions> = View.defaults) {
@@ -119,10 +114,6 @@ class View extends BaseElement<'div'> {
       this.vertical = true;
     }
 
-    if (validOptions.panel) {
-      this.panel = new Panel(this);
-    }
-
     this.render();
   }
 
@@ -144,7 +135,6 @@ class View extends BaseElement<'div'> {
       checkType('vertical');
       checkType('scale');
       checkType('scaleIntervals');
-      checkType('panel');
     };
 
     const mergeWithDefaults = (): void => {
@@ -386,67 +376,6 @@ class View extends BaseElement<'div'> {
     this.labelsContainer?.fixHeightForHorizontal(labels);
   }
 
-  // уберется когда сделаю независимую панель
-  setPanelValues(options: PanelOptions): void {
-    this.panel?.setValues(options);
-  }
-
-  // уберется когда сделаю независимую панель
-  updatePanelFrom(value: number): void {
-    this.panel?.updateFrom(value);
-  }
-
-  // уберется когда сделаю независимую панель
-  updatePanelTo(value: number | ''): void {
-    this.panel?.updateTo(value);
-  }
-
-  // уберется когда сделаю независимую панель
-  updatePanelScaleIntervals(value: number | ''): void {
-    this.panel?.updateScaleIntervals(value);
-  }
-
-  // уберется когда сделаю независимую панель
-  updatePanelStep(value: number): void {
-    this.panel?.updateStep(value);
-  }
-
-  // уберется когда сделаю независимую панель
-  updatePanelMin(value: number): void {
-    this.panel?.updateMin(value);
-  }
-
-  // уберется когда сделаю независимую панель
-  updatePanelMax(value: number): void {
-    this.panel?.updateMax(value);
-  }
-
-  // уберется когда сделаю независимую панель
-  setLeftFromOutside(value: number): void {
-    this.eventManager.notify('viewSetLeftFromOutside', value);
-  }
-
-  // уберется когда сделаю независимую панель
-  setRightFromOutside(value: number): void {
-    this.eventManager.notify('viewSetRightFromOutside', value);
-  }
-
-  // уберется когда сделаю независимую панель
-  setMinFromOutside(value: number): void {
-    this.eventManager.notify('viewSetMin', value);
-  }
-
-  // уберется когда сделаю независимую панель
-  setMaxFromOutside(value: number): void {
-    this.eventManager.notify('viewSetMax', value);
-  }
-
-  // уберется когда сделаю независимую панель
-  setStepFromOutside(value: number): void {
-    this.eventManager.notify('viewSetStep', value);
-  }
-
-  // уберется когда сделаю независимую панель
   toggleOrientation(): void {
     this.vertical = !this.vertical;
     this.destroy();
@@ -483,7 +412,6 @@ class View extends BaseElement<'div'> {
     this.eventManager.notify('viewToggleOrientation', null);
   }
 
-  // уберется когда сделаю независимую панель (не уберется)
   toggleRange(): void {
     const isRange = !this.isRange();
     this.destroy();
@@ -520,12 +448,6 @@ class View extends BaseElement<'div'> {
     this.eventManager.notify('viewToggleRange', null);
   }
 
-  // уберется когда сделаю независимую панель
-  toggleScale(): void {
-    this.eventManager.notify('viewToggleScale', null);
-  }
-
-  // уберется когда сделаю независимую панель
   setScaleIntervals(value: number): void {
     if (value <= 0) return;
 
@@ -533,7 +455,6 @@ class View extends BaseElement<'div'> {
     this.eventManager.notify('viewSetScaleIntervals', null);
   }
 
-  // уберется когда сделаю независимую панель
   toggleValueLabels(): void {
     if (this.valueLabelLeft) {
       this.valueLabelLeft.remove();
@@ -592,7 +513,6 @@ class View extends BaseElement<'div'> {
     }
   }
 
-  // уберется когда сделаю независимую панель
   toggleMinMaxLabels(): void {
     if (this.minLabel) {
       this.minLabel.remove();
@@ -658,11 +578,6 @@ class View extends BaseElement<'div'> {
     return Boolean(this.valueLabelLeft);
   }
 
-  // уберется когда сделаю независимую панель
-  hasPanel(): boolean {
-    return Boolean(this.panel);
-  }
-
   isRange(): boolean {
     return Boolean(this.thumbRight);
   }
@@ -684,7 +599,6 @@ class View extends BaseElement<'div'> {
       range: this.isRange(),
       scale: this.hasScale(),
       scaleIntervals: this.getScaleIntervals(),
-      panel: this.hasPanel(),
     };
   }
 
@@ -730,12 +644,6 @@ class View extends BaseElement<'div'> {
 
     if (this.vertical) {
       this.component.classList.add('range-slider_vertical');
-    }
-
-    if (this.panel) {
-      const panelWrapper = BaseElement.createComponent('div', 'range-slider__panel');
-      panelWrapper.append(this.panel.getComponent());
-      fragment.append(panelWrapper);
     }
 
     if (this.scale) {

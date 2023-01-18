@@ -14,7 +14,6 @@ describe('Presenter', () => {
     vertical: false,
     scale: true,
     scaleIntervals: 4,
-    panel: false,
   };
 
   describe('constructor()', () => {

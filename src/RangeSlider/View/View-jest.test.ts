@@ -143,16 +143,6 @@ describe('View', () => {
 
         expect(newView.getComponent().classList).toContain('range-slider_vertical');
       });
-
-      it('append panel component to view component if necessary', () => {
-        const newSlider = document.createElement('div');
-        const newView = new View(newSlider, {
-          panel: true,
-        });
-        const panel = newView.getComponent().querySelector('.range-slider__panel');
-
-        expect(newView.getComponent().children).toContain(panel);
-      });
     });
   });
 
@@ -2018,155 +2008,6 @@ describe('View', () => {
     });
   });
 
-  describe('updatePanelFrom(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider, {
-      panel: true,
-    });
-
-    it('update from field with passed value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        view.updatePanelFrom(i);
-        const panel = view.getComponent().querySelector('.range-slider__panel');
-        const from: HTMLInputElement | null | undefined = panel?.querySelector('.panel__from');
-        expect(from?.value).toBe(`${i}`);
-      }
-    });
-  });
-
-  describe('updatePanelTo(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider, {
-      panel: true,
-    });
-
-    it('update to field with passed value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        view.updatePanelTo(i);
-        const panel = view.getComponent().querySelector('.range-slider__panel');
-        const to: HTMLInputElement | null | undefined = panel?.querySelector('.panel__to');
-        expect(to?.value).toBe(`${i}`);
-      }
-    });
-  });
-
-  describe('updatePanelScaleIntervals(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider, {
-      panel: true,
-    });
-
-    it('update scaleIntervals field with passed value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        view.updatePanelScaleIntervals(i);
-        const panel = view.getComponent().querySelector('.range-slider__panel');
-        const scaleIntervals: HTMLInputElement | null | undefined = panel?.querySelector('.panel__scale-intervals');
-        expect(scaleIntervals?.value).toBe(`${i}`);
-      }
-    });
-  });
-
-  describe('updatePanelStep(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider, {
-      panel: true,
-    });
-
-    it('update step field with passed value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        view.updatePanelStep(i);
-        const panel = view.getComponent().querySelector('.range-slider__panel');
-        const step: HTMLInputElement | null | undefined = panel?.querySelector('.panel__step');
-        expect(step?.value).toBe(`${i}`);
-      }
-    });
-  });
-
-  describe('setLeftFromOutside(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const subscriber = {
-      inform() {},
-    };
-    subscriber.inform = jest.fn();
-    view.subscribe(subscriber);
-
-    it('say subscribers that view wants to change left value and pass this value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        view.setLeftFromOutside(i);
-        expect(subscriber.inform).toBeCalledWith('viewSetLeftFromOutside', i);
-      }
-    });
-  });
-
-  describe('setRightFromOutside(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const subscriber = {
-      inform() {},
-    };
-    subscriber.inform = jest.fn();
-    view.subscribe(subscriber);
-
-    it('say subscribers that view wants to change right value and pass this value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        view.setRightFromOutside(i);
-        expect(subscriber.inform).toBeCalledWith('viewSetRightFromOutside', i);
-      }
-    });
-  });
-
-  describe('setMinFromOutside(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const subscriber = {
-      inform() {},
-    };
-    subscriber.inform = jest.fn();
-    view.subscribe(subscriber);
-
-    it('say subscribers that view wants to change min value and pass this value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        view.setMinFromOutside(i);
-        expect(subscriber.inform).toBeCalledWith('viewSetMin', i);
-      }
-    });
-  });
-
-  describe('setMaxFromOutside(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const subscriber = {
-      inform() {},
-    };
-    subscriber.inform = jest.fn();
-    view.subscribe(subscriber);
-
-    it('say subscribers that view wants to change maz value and pass this value', () => {
-      for (let i = 0; i <= 100; i += 1) {
-        view.setMaxFromOutside(i);
-        expect(subscriber.inform).toBeCalledWith('viewSetMax', i);
-      }
-    });
-  });
-
-  describe('setStepFromOutside(value)', () => {
-    const slider = document.createElement('div');
-    const view = new View(slider);
-    const subscriber = {
-      inform() {},
-    };
-    subscriber.inform = jest.fn();
-    view.subscribe(subscriber);
-
-    it('say subscribers that view wants to change maz value and pass this value', () => {
-      for (let i = 0; i <= 10; i += 0.1) {
-        view.setStepFromOutside(i);
-        expect(subscriber.inform).toBeCalledWith('viewSetStep', i);
-      }
-    });
-  });
-
   describe('toggleOrientation()', () => {
     describe('if slider was horizontal', () => {
       const slider = document.createElement('div');
@@ -2474,46 +2315,6 @@ describe('View', () => {
         it('say subscribers that range was changed', () => {
           expect(subscriber.inform).toBeCalledWith('viewToggleRange', null);
         });
-      });
-    });
-  });
-
-  describe('toggleScale()', () => {
-    describe('if slider had no scale', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        scale: false,
-      });
-
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      view.toggleScale();
-
-      it('say subscribers that scale was toggled', () => {
-        expect(subscriber.inform).toBeCalledWith('viewToggleScale', null);
-      });
-    });
-
-    describe('if slider had scale', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        scale: true,
-      });
-
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      view.toggleScale();
-
-      it('say subscribers that scale was toggled', () => {
-        expect(subscriber.inform).toBeCalledWith('viewToggleScale', null);
       });
     });
   });
@@ -3030,26 +2831,6 @@ describe('View', () => {
       });
 
       expect(view.hasValueLabels()).toBe(false);
-    });
-  });
-
-  describe('hasPanel()', () => {
-    it('return true, if slider has panel', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        panel: true,
-      });
-
-      expect(view.hasPanel()).toBe(true);
-    });
-
-    it('return false, if slider has no panel', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        panel: false,
-      });
-
-      expect(view.hasPanel()).toBe(false);
     });
   });
 

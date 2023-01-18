@@ -10,7 +10,6 @@ type SliderOptions = {
   vertical: boolean,
   scale: boolean,
   scaleIntervals: number,
-  panel: boolean,
 };
 
 export default SliderOptions;
