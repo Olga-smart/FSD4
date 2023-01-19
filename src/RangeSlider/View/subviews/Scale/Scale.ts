@@ -2,22 +2,16 @@ import BaseElement from '../../BaseElement/BaseElement';
 import { EventManager, IEventListener } from '../../../EventManager/EventManager';
 
 class Scale extends BaseElement<'div'> {
-  private eventManager: EventManager;
+  private eventManager: EventManager = new EventManager();
 
-  private intervals: HTMLDivElement[];
+  private intervals: HTMLDivElement[] = [];
 
-  private values: number[];
+  private values: number[] = [];
 
-  private valueElements: HTMLSpanElement[];
+  private valueElements: HTMLSpanElement[] = [];
 
   constructor(min: number, max: number, intervalsNumber: number = 4) {
     super('div', 'range-slider__scale');
-
-    this.eventManager = new EventManager();
-
-    this.intervals = [];
-    this.values = [];
-    this.valueElements = [];
 
     this.createIntervals(intervalsNumber);
     this.addMarksInIntervals(intervalsNumber);
