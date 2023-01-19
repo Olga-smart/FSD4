@@ -11,7 +11,7 @@ class Model {
     range: true,
   };
 
-  private eventManager: EventManager;
+  private eventManager: EventManager = new EventManager();
 
   private min: number;
 
@@ -26,8 +26,6 @@ class Model {
   private range: boolean;
 
   constructor(options: Partial<ModelOptions>) {
-    this.eventManager = new EventManager();
-
     const validOptions = Model.validate({ ...Model.defaults, ...options });
 
     this.min = validOptions.min;
