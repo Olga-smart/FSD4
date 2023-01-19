@@ -34,6 +34,7 @@ class Panel extends BaseElement<'form'> implements IEventListener {
 
   constructor(component: HTMLFormElement, slider: Presenter) {
     super('form');
+    this.component = component;
     this.slider = slider;
     this.min = BaseElement.createComponent('input', 'panel__min panel__input');
     this.max = BaseElement.createComponent('input', 'panel__max panel__input');
@@ -47,7 +48,7 @@ class Panel extends BaseElement<'form'> implements IEventListener {
     this.valueLabels = BaseElement.createComponent('input', 'panel__value-labels panel__checkbox');
     this.minMaxLabels = BaseElement.createComponent('input', 'panel__min-max-labels panel__checkbox');
 
-    this.render(component);
+    this.render();
     this.setValues(slider.getValues());
     this.attachEventHandlers();
     slider.subscribe(this);
@@ -115,7 +116,7 @@ class Panel extends BaseElement<'form'> implements IEventListener {
     label?.classList.toggle('panel__label_for-checkbox_checked');
   }
 
-  private render(component: HTMLFormElement): void {
+  private render(): void {
     const setTypes = () => {
       this.min.type = 'number';
       this.max.type = 'number';
@@ -145,7 +146,7 @@ class Panel extends BaseElement<'form'> implements IEventListener {
 
       return label;
     };
-    component.append(
+    this.component.append(
       addLabel(this.range, 'Range:', 'panel__label_for-checkbox'),
       addLabel(this.vertical, 'Vertical:', 'panel__label_for-checkbox'),
       addLabel(this.valueLabels, 'Value labels:', 'panel__label_for-checkbox'),
