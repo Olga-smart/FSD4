@@ -4,11 +4,10 @@ import { EventManager, IEventListener } from '../../../EventManager/EventManager
 class Thumb extends BaseElement<'div'> {
   private type: 'left' | 'right';
 
-  private eventManager: EventManager;
+  private eventManager: EventManager = new EventManager();
 
   constructor(type: 'left' | 'right' = 'left') {
     super('div', `range-slider__thumb range-slider__thumb_${type}`);
-    this.eventManager = new EventManager();
     this.type = type;
     this.attachEventHandlers();
   }
