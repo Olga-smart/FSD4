@@ -34,10 +34,7 @@ class Panel extends BaseElement<'form'> implements IEventListener {
 
   constructor(component: HTMLFormElement, slider: Presenter) {
     super('form');
-
-    // this.component = component;
     this.slider = slider;
-
     this.min = BaseElement.createComponent('input', 'panel__min panel__input');
     this.max = BaseElement.createComponent('input', 'panel__max panel__input');
     this.step = BaseElement.createComponent('input', 'panel__step panel__input');
