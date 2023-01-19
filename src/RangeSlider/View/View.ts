@@ -27,23 +27,23 @@ class View extends BaseElement<'div'> {
     scaleIntervals: 5,
   };
 
-  private eventManager: EventManager;
+  private eventManager: EventManager = new EventManager();
 
-  private slider: HTMLDivElement;
+  private slider: HTMLDivElement = BaseElement.createComponent('div', 'range-slider__slider');
 
-  private track: Track;
+  private track: Track = new Track();
 
-  private range: Range;
+  private range: Range = new Range();
 
-  private input: Input;
+  private input: Input = new Input();
 
-  private thumbLeft: Thumb;
+  private thumbLeft: Thumb = new Thumb('left');
 
   private thumbRight?: Thumb;
 
   private scale?: Scale;
 
-  private scaleIntervals: number;
+  private scaleIntervals: number = 5;
 
   private minLabel?: Label;
 
@@ -59,61 +59,12 @@ class View extends BaseElement<'div'> {
 
   private labelsContainer?: LabelsContainer;
 
-  // возможно конструктор перегружен
-  constructor(component: HTMLDivElement, options: Partial<ViewOptions> = View.defaults) {
+  constructor(component: HTMLDivElement, options?: Partial<ViewOptions>) {
     super('div');
-
     this.component = component;
-    this.eventManager = new EventManager();
-
     const validOptions = View.validate({ ...View.defaults, ...options });
-
-    this.slider = BaseElement.createComponent('div', 'range-slider__slider');
-    this.track = new Track();
-    this.track.subscribe(this);
-    this.range = new Range();
-
-    this.thumbLeft = new Thumb('left');
-    this.thumbLeft.subscribe(this);
-
-    this.input = new Input();
-
-    if (validOptions.range) {
-      this.thumbRight = new Thumb('right');
-      this.thumbRight.subscribe(this);
-    }
-
-    // this field is always initialized in case the toggleScale() method will be called
-    this.scaleIntervals = validOptions.scaleIntervals ?? 4;
-
-    if (validOptions.scale) {
-      /* create scale with arbitrary values, which will be replaced later by Presenter
-       * it is necessary for hasScale() return true */
-      this.scale = new Scale(0, 100, this.getScaleIntervals());
-    }
-
-    if (validOptions.minMaxLabels || validOptions.valueLabels) {
-      this.labelsContainer = new LabelsContainer();
-
-      if (validOptions.minMaxLabels) {
-        this.minLabel = new Label('range-slider__min-max-label range-slider__min-max-label_left');
-        this.maxLabel = new Label('range-slider__min-max-label range-slider__min-max-label_right');
-      }
-
-      if (validOptions.valueLabels) {
-        this.valueLabelLeft = new Label('range-slider__value-label range-slider__value-label_left');
-
-        if (validOptions.range) {
-          this.valueLabelRight = new Label('range-slider__value-label range-slider__value-label_right');
-          this.valueLabelCommon = new Label('range-slider__value-label range-slider__value-label_common');
-        }
-      }
-    }
-
-    if (validOptions.vertical) {
-      this.vertical = true;
-    }
-
+    this.initOptionalFields(validOptions);
+    this.subscribeToSubviews();
     this.render();
   }
 
@@ -602,73 +553,6 @@ class View extends BaseElement<'div'> {
     };
   }
 
-  private render(): void {
-    const fragment = new DocumentFragment();
-
-    this.track.append(this.range.getComponent());
-    this.slider.append(this.track.getComponent(), this.thumbLeft.getComponent());
-    fragment.append(this.slider, this.input.getComponent());
-
-    if (this.isRange() && this.thumbRight) {
-      this.slider.append(this.thumbRight.getComponent());
-    } else {
-      if (!this.vertical) {
-        this.range.setIndent('left', 0);
-      }
-
-      if (this.vertical) {
-        this.range.setIndent('bottom', 0);
-      }
-    }
-
-    if (this.minLabel && this.maxLabel) {
-      this.labelsContainer?.append(this.minLabel.getComponent(), this.maxLabel.getComponent());
-    }
-
-    if (this.valueLabelLeft) {
-      this.labelsContainer?.append(this.valueLabelLeft.getComponent());
-
-      if (this.isRange()) {
-        if (this.valueLabelRight && this.valueLabelCommon) {
-          this.labelsContainer?.append(
-            this.valueLabelRight.getComponent(),
-            this.valueLabelCommon.getComponent(),
-          );
-        }
-      }
-    }
-
-    if (this.labelsContainer) {
-      this.slider.before(this.labelsContainer.getComponent());
-    }
-
-    if (this.vertical) {
-      this.component.classList.add('range-slider_vertical');
-    }
-
-    if (this.scale) {
-      this.slider.after(this.scale.getComponent());
-    }
-
-    this.component.append(fragment);
-  }
-
-  private destroy(): void {
-    if (this.labelsContainer) {
-      [...this.labelsContainer.getComponent().children].forEach((element) => {
-        element.remove();
-      });
-    }
-
-    [...this.slider.children].forEach((element) => {
-      element.remove();
-    });
-
-    [...this.component.children].forEach((element) => {
-      element.remove();
-    });
-  }
-
   mergeLabels(): void {
     this.valueLabelLeft?.setOpacity(0);
     this.valueLabelRight?.setOpacity(0);
@@ -758,6 +642,119 @@ class View extends BaseElement<'div'> {
       return this.getDistanceBetweenTwoLabels(this.valueLabelRight, this.maxLabel);
     }
     return undefined;
+  }
+
+  private initOptionalFields(options: ViewOptions): void {
+    if (options.range) {
+      this.thumbRight = new Thumb('right');
+    }
+
+    // this field is always initialized in case the toggleScale() method will be called
+    this.scaleIntervals = options.scaleIntervals;
+
+    if (options.scale) {
+      /* create scale with arbitrary values, which will be replaced later by Presenter
+       * it is necessary for hasScale() return true */
+      this.scale = new Scale(0, 100, this.getScaleIntervals());
+    }
+
+    if (options.minMaxLabels || options.valueLabels) {
+      this.labelsContainer = new LabelsContainer();
+
+      if (options.minMaxLabels) {
+        this.minLabel = new Label('range-slider__min-max-label range-slider__min-max-label_left');
+        this.maxLabel = new Label('range-slider__min-max-label range-slider__min-max-label_right');
+      }
+
+      if (options.valueLabels) {
+        this.valueLabelLeft = new Label('range-slider__value-label range-slider__value-label_left');
+
+        if (options.range) {
+          this.valueLabelRight = new Label('range-slider__value-label range-slider__value-label_right');
+          this.valueLabelCommon = new Label('range-slider__value-label range-slider__value-label_common');
+        }
+      }
+    }
+
+    if (options.vertical) {
+      this.vertical = true;
+    }
+  }
+
+  private subscribeToSubviews(): void {
+    this.track.subscribe(this);
+    this.thumbLeft.subscribe(this);
+
+    if (this.isRange()) {
+      this.thumbRight?.subscribe(this);
+    }
+  }
+
+  private render(): void {
+    const fragment = new DocumentFragment();
+
+    this.track.append(this.range.getComponent());
+    this.slider.append(this.track.getComponent(), this.thumbLeft.getComponent());
+    fragment.append(this.slider, this.input.getComponent());
+
+    if (this.isRange() && this.thumbRight) {
+      this.slider.append(this.thumbRight.getComponent());
+    } else {
+      if (!this.vertical) {
+        this.range.setIndent('left', 0);
+      }
+
+      if (this.vertical) {
+        this.range.setIndent('bottom', 0);
+      }
+    }
+
+    if (this.minLabel && this.maxLabel) {
+      this.labelsContainer?.append(this.minLabel.getComponent(), this.maxLabel.getComponent());
+    }
+
+    if (this.valueLabelLeft) {
+      this.labelsContainer?.append(this.valueLabelLeft.getComponent());
+
+      if (this.isRange()) {
+        if (this.valueLabelRight && this.valueLabelCommon) {
+          this.labelsContainer?.append(
+            this.valueLabelRight.getComponent(),
+            this.valueLabelCommon.getComponent(),
+          );
+        }
+      }
+    }
+
+    if (this.labelsContainer) {
+      this.slider.before(this.labelsContainer.getComponent());
+    }
+
+    if (this.vertical) {
+      this.component.classList.add('range-slider_vertical');
+    }
+
+    if (this.scale) {
+      this.slider.after(this.scale.getComponent());
+    }
+
+    this.component.append(fragment);
+  }
+
+  private destroy(): void {
+    if (this.labelsContainer) {
+      [...this.labelsContainer.getComponent().children].forEach((element) => {
+        element.remove();
+      });
+    }
+
+    [...this.slider.children].forEach((element) => {
+      element.remove();
+    });
+
+    [...this.component.children].forEach((element) => {
+      element.remove();
+    });
   }
 
   private whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
