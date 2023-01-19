@@ -2,13 +2,10 @@ import BaseElement from '../../BaseElement/BaseElement';
 import { EventManager, IEventListener } from '../../../EventManager/EventManager';
 
 class Track extends BaseElement<'div'> {
-  private eventManager: EventManager;
+  private eventManager: EventManager = new EventManager();
 
   constructor() {
     super('div', 'range-slider__track');
-
-    this.eventManager = new EventManager();
-
     this.attachEventHandlers();
   }
 
