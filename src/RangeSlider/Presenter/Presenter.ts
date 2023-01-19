@@ -8,7 +8,7 @@ class Presenter implements IEventListener {
 
   private view: View;
 
-  private eventManager: EventManager;
+  private eventManager: EventManager = new EventManager();
 
   onChange?: (leftValue: number, rightValue: number | undefined) => void;
 
@@ -29,8 +29,6 @@ class Presenter implements IEventListener {
       scale: options.scale,
       scaleIntervals: options.scaleIntervals,
     });
-
-    this.eventManager = new EventManager();
 
     this.initViewValues();
     this.model.subscribe(this);
