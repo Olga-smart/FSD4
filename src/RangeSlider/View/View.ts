@@ -6,7 +6,9 @@ import Scale from './subviews/Scale/Scale';
 import LabelsContainer from './subviews/LabelsContainer/LabelsContainer';
 import Label from './subviews/Label/Label';
 import Input from './subviews/Input/Input';
-import { EventManager, IEventListener, PossibleEvents } from '../EventManager/EventManager';
+import {
+  EventManager, IEventListener, PossibleEvents, EventHandlers,
+} from '../EventManager/EventManager';
 
 type ViewOptions = {
   minMaxLabels: boolean,
@@ -116,32 +118,18 @@ class View extends BaseElement<'div'> {
   }
 
   inform<E extends keyof PossibleEvents>(eventType: E, data: PossibleEvents[E]): void {
-    switch (eventType) {
-      case 'scaleClick':
-      case 'trackClick':
-        if (Array.isArray(data)) {
-          const x: number = data[0];
-          const y: number = data[1];
-          this.handleScaleOrTrackClick(x, y);
-        }
-        break;
-      case 'leftThumbChangePosition':
-        if (Array.isArray(data)) {
-          const x: number = data[0];
-          const y: number = data[1];
-          this.handleLeftInput(x, y);
-        }
-        break;
-      case 'rightThumbChangePosition':
-        if (Array.isArray(data)) {
-          const x: number = data[0];
-          const y: number = data[1];
-          this.handleRightInput(x, y);
-        }
-        break;
+    const eventHandlers: EventHandlers = {
+      scaleClick: [this.handleScaleOrTrackClick],
+      trackClick: [this.handleScaleOrTrackClick],
+      leftThumbChangePosition: [this.handleLeftInput],
+      rightThumbChangePosition: [this.handleRightInput],
+    };
 
-      default:
-        break;
+    const handler = eventHandlers[eventType];
+    if (handler !== undefined && Array.isArray(data)) {
+      const x: number = data[0];
+      const y: number = data[1];
+      handler[0].call(this, x, y);
     }
   }
 
