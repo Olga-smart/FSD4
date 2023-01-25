@@ -1,6 +1,8 @@
 import Model from '../Model/Model';
 import View from '../View/View';
-import { EventManager, IEventListener, PossibleEvents } from '../EventManager/EventManager';
+import {
+  EventManager, IEventListener, PossibleEvents, EventHandlers,
+} from '../EventManager/EventManager';
 import SliderOptions from './SliderOptions';
 
 class Presenter implements IEventListener {
@@ -35,68 +37,30 @@ class Presenter implements IEventListener {
     this.view.subscribe(this);
   }
 
-  // очень длинный свичкейс, но много кейсов уберется когда сделаю независимую панель
   inform<E extends keyof PossibleEvents>(eventType: E, data: PossibleEvents[E]): void {
-    switch (eventType) {
-      case 'viewInputLeft':
-        if (typeof data === 'number') {
-          this.handleViewInputLeft(data);
-        }
-        break;
-      case 'viewInputRight':
-        if (typeof data === 'number') {
-          this.handleViewInputRight(data);
-        }
-        break;
-      case 'viewSetLeft':
-        this.handleViewSetLeft();
-        break;
-      case 'viewSetRight':
-        this.handleViewSetRight();
-        break;
-      case 'viewToggleOrientation':
-        this.handleViewToggleOrientation();
-        break;
-      case 'viewToggleRange':
-        this.handleViewToggleRange();
-        break;
-      case 'viewSetScaleIntervals':
-        this.handleViewSetScaleIntervals();
-        break;
-      case 'viewAddValueLabels':
-        this.handleViewAddValueLabels();
-        break;
-      case 'viewAddMinMaxLabels':
-        this.handleViewAddMinMaxLabels();
-        break;
+    const eventHandlers: EventHandlers = {
+      viewInputLeft: [this.handleViewInputLeft, 'number', data],
+      viewInputRight: [this.handleViewInputRight, 'number', data],
+      viewSetLeft: [this.handleViewSetLeft],
+      viewSetRight: [this.handleViewSetRight],
+      viewToggleOrientation: [this.handleViewToggleOrientation],
+      viewToggleRange: [this.handleViewToggleRange],
+      viewSetScaleIntervals: [this.handleViewSetScaleIntervals],
+      viewAddValueLabels: [this.handleViewAddValueLabels],
+      viewAddMinMaxLabels: [this.handleViewAddMinMaxLabels],
+      modelSetLeft: [this.handleModelSetLeft],
+      modelSetRight: [this.handleModelSetRight],
+      modelSetMin: [this.handleModelSetMin],
+      modelSetMax: [this.handleModelSetMax],
+      modelToggleRange: [this.handleModelToggleRange],
+      modelSetStep: [this.handleModelSetStep],
+    };
 
-      case 'modelSetLeft':
-        this.handleModelSetLeft();
-        if (this.onChange) {
-          this.onChange(this.model.getLeftValue(), this.model.getRightValue());
-        }
-        break;
-      case 'modelSetRight':
-        this.handleModelSetRight();
-        if (this.onChange) {
-          this.onChange(this.model.getLeftValue(), this.model.getRightValue());
-        }
-        break;
-      case 'modelSetMin':
-        this.handleModelSetMin();
-        break;
-      case 'modelSetMax':
-        this.handleModelSetMax();
-        break;
-      case 'modelToggleRange':
-        this.handleModelToggleRange();
-        break;
-      case 'modelSetStep':
-        this.handleModelSetStep();
-        break;
-
-      default:
-        break;
+    const handler = eventHandlers[eventType];
+    if (handler !== undefined) {
+      if (typeof data === handler[1] || data === null) {
+        handler[0].call(this, handler[2]);
+      }
     }
   }
 
@@ -217,6 +181,10 @@ class Presenter implements IEventListener {
     this.passLeftValueToView(value);
     this.updateViewInput();
 
+    if (this.onChange) {
+      this.onChange(this.model.getLeftValue(), this.model.getRightValue());
+    }
+
     this.eventManager.notify('sliderSetLeft', value);
   }
 
@@ -228,6 +196,10 @@ class Presenter implements IEventListener {
     const value = this.model.getRightValue()!;
     this.passRightValueToView(value);
     this.updateViewInput();
+
+    if (this.onChange) {
+      this.onChange(this.model.getLeftValue(), this.model.getRightValue());
+    }
 
     this.eventManager.notify('sliderSetRight', value);
   }

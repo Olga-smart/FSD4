@@ -12,6 +12,14 @@ type PossibleEvents = SliderEvents
 & ThumbEvents
 & TrackEvents;
 
+interface IEventListener {
+  inform<E extends keyof PossibleEvents>(eventType: E, data: PossibleEvents[E]): void;
+}
+
+type EventHandlers = {
+  [event in keyof PossibleEvents]?: [Function, string?, unknown?];
+};
+
 class EventManager {
   private listeners: IEventListener[] = [];
 
@@ -32,8 +40,6 @@ class EventManager {
   }
 }
 
-interface IEventListener {
-  inform<E extends keyof PossibleEvents>(eventType: E, data: PossibleEvents[E]): void;
-}
-
-export { EventManager, IEventListener, PossibleEvents };
+export {
+  EventManager, IEventListener, PossibleEvents, EventHandlers,
+};
