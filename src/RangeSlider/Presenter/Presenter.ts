@@ -69,27 +69,37 @@ class Presenter implements IEventListener {
   }
 
   setLeftValue(value: number): this {
-    this.model.setLeftValue(value);
+    if (typeof value === 'number') {
+      this.model.setLeftValue(value);
+    }
     return this;
   }
 
   setRightValue(value: number): this {
-    this.model.setRightValue(value);
+    if (typeof value === 'number') {
+      this.model.setRightValue(value);
+    }
     return this;
   }
 
   setStep(value: number): this {
-    this.model.setStep(value);
+    if (typeof value === 'number') {
+      this.model.setStep(value);
+    }
     return this;
   }
 
   setMin(value: number): this {
-    this.model.setMin(value);
+    if (typeof value === 'number') {
+      this.model.setMin(value);
+    }
     return this;
   }
 
   setMax(value: number): this {
-    this.model.setMax(value);
+    if (typeof value === 'number') {
+      this.model.setMax(value);
+    }
     return this;
   }
 
@@ -127,7 +137,9 @@ class Presenter implements IEventListener {
   }
 
   setScaleIntervals(value: number): this {
-    this.view.setScaleIntervals(value);
+    if (typeof value === 'number') {
+      this.view.setScaleIntervals(value);
+    }
     return this;
   }
 
