@@ -58,14 +58,6 @@ describe('EventManager', () => {
       });
     });
 
-    // it('if data is not passed, it is null by default', () => {
-    //   eventManager.notify('modelSetLeft');
-
-    //   [listener1, listener2, listener3].forEach((listener) => {
-    //     expect(listener.inform).toBeCalledWith('someEvent', null);
-    //   });
-    // });
-
     it('if listeners list is empty, nothing happens', () => {
       const newEventManager = new EventManager();
       newEventManager.notify('modelSetLeft', null);
