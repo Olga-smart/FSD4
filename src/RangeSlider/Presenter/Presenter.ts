@@ -127,7 +127,7 @@ class Presenter implements IEventListener {
 
   toggleScale(): this {
     if (!this.view.hasScale()) {
-      this.view.addScale(this.model.getMin(), this.model.getMax());
+      this.view.addScale(this.model.getOptions().min, this.model.getOptions().max);
     } else {
       this.view.removeScale();
     }
@@ -151,10 +151,10 @@ class Presenter implements IEventListener {
     const { model } = this;
     const { view } = this;
 
-    const min = model.getMin();
-    const max = model.getMax();
-    const leftValue = model.getLeftValue();
-    const rightValue = model.getRightValue();
+    const { min } = model.getOptions();
+    const { max } = model.getOptions();
+    const { leftValue } = model.getOptions();
+    const { rightValue } = model.getOptions();
 
     view.setMinValue(min);
     view.setMaxValue(max);
@@ -189,12 +189,12 @@ class Presenter implements IEventListener {
   }
 
   private handleModelSetLeft(): void {
-    const value: number = this.model.getLeftValue();
+    const value: number = this.model.getOptions().leftValue;
     this.passLeftValueToView(value);
     this.updateViewInput();
 
     if (this.onChange) {
-      this.onChange(this.model.getLeftValue(), this.model.getRightValue());
+      this.onChange(this.model.getOptions().leftValue, this.model.getOptions().rightValue);
     }
 
     this.eventManager.notify('sliderSetLeft', value);
@@ -205,12 +205,12 @@ class Presenter implements IEventListener {
   }
 
   private handleModelSetRight(): void {
-    const value = this.model.getRightValue()!;
+    const value = this.model.getOptions().rightValue!;
     this.passRightValueToView(value);
     this.updateViewInput();
 
     if (this.onChange) {
-      this.onChange(this.model.getLeftValue(), this.model.getRightValue());
+      this.onChange(this.model.getOptions().leftValue, this.model.getOptions().rightValue);
     }
 
     this.eventManager.notify('sliderSetRight', value);
@@ -289,55 +289,55 @@ class Presenter implements IEventListener {
 
   private updateViewInput(): void {
     if (!this.view.isRange()) {
-      this.view.updateInput(this.model.getLeftValue());
+      this.view.updateInput(this.model.getOptions().leftValue);
     }
 
     if (this.view.isRange()) {
-      this.view.updateInput(this.model.getLeftValue(), this.model.getRightValue());
+      this.view.updateInput(this.model.getOptions().leftValue, this.model.getOptions().rightValue);
     }
   }
 
   private handleModelSetMin(): void {
-    const value = this.model.getMin();
+    const value = this.model.getOptions().min;
     this.view.setMinValue(value);
-    this.passLeftValueToView(this.model.getLeftValue());
+    this.passLeftValueToView(this.model.getOptions().leftValue);
 
-    const rightValue = this.model.getRightValue();
+    const { rightValue } = this.model.getOptions();
     if (rightValue !== undefined) {
       this.passRightValueToView(rightValue);
     }
 
     if (this.view.hasScale()) {
       this.view.removeScale();
-      this.view.addScale(this.model.getMin(), this.model.getMax());
+      this.view.addScale(this.model.getOptions().min, this.model.getOptions().max);
     }
 
     this.eventManager.notify('sliderSetMin', value);
   }
 
   private handleModelSetMax(): void {
-    const value = this.model.getMax();
+    const value = this.model.getOptions().max;
     this.view.setMaxValue(value);
-    this.passLeftValueToView(this.model.getLeftValue());
+    this.passLeftValueToView(this.model.getOptions().leftValue);
 
-    const rightValue = this.model.getRightValue();
+    const { rightValue } = this.model.getOptions();
     if (rightValue !== undefined) {
       this.passRightValueToView(rightValue);
     }
 
     if (this.view.hasScale()) {
       this.view.removeScale();
-      this.view.addScale(this.model.getMin(), this.model.getMax());
+      this.view.addScale(this.model.getOptions().min, this.model.getOptions().max);
     }
 
     this.eventManager.notify('sliderSetMax', value);
   }
 
   private handleViewToggleOrientation(): void {
-    this.passLeftValueToView(this.model.getLeftValue());
+    this.passLeftValueToView(this.model.getOptions().leftValue);
 
     if (this.view.isRange()) {
-      const rightValue = this.model.getRightValue();
+      const { rightValue } = this.model.getOptions();
       if (rightValue !== undefined) {
         this.passRightValueToView(rightValue);
       }
@@ -347,20 +347,20 @@ class Presenter implements IEventListener {
   }
 
   private handleViewToggleRange(): void {
-    this.passLeftValueToView(this.model.getLeftValue());
+    this.passLeftValueToView(this.model.getOptions().leftValue);
 
-    if (this.model.isRange()) {
+    if (this.model.getOptions().range) {
       this.model.setRightValue();
-      const rightValue = this.model.getRightValue();
+      const { rightValue } = this.model.getOptions();
       if (rightValue !== undefined) {
         this.passRightValueToView(rightValue);
-        this.view.updateInput(this.model.getLeftValue(), rightValue);
+        this.view.updateInput(this.model.getOptions().leftValue, rightValue);
       }
     }
 
-    if (!this.model.isRange()) {
+    if (!this.model.getOptions().range) {
       this.model.removeRightValue();
-      this.view.updateInput(this.model.getLeftValue());
+      this.view.updateInput(this.model.getOptions().leftValue);
     }
 
     this.eventManager.notify('sliderToggleRange', null);
@@ -371,21 +371,21 @@ class Presenter implements IEventListener {
   }
 
   private handleModelSetStep(): void {
-    this.eventManager.notify('sliderSetStep', this.model.getStep());
+    this.eventManager.notify('sliderSetStep', this.model.getOptions().step);
   }
 
   private handleViewSetScaleIntervals(): void {
     if (this.view.hasScale()) {
       this.view.removeScale();
-      this.view.addScale(this.model.getMin(), this.model.getMax());
+      this.view.addScale(this.model.getOptions().min, this.model.getOptions().max);
     }
     this.eventManager.notify('sliderSetScaleIntervals', this.view.getScaleIntervals());
   }
 
   private handleViewAddValueLabels(): void {
-    this.passLeftValueToView(this.model.getLeftValue());
+    this.passLeftValueToView(this.model.getOptions().leftValue);
     if (this.view.isRange()) {
-      const rightValue = this.model.getRightValue();
+      const { rightValue } = this.model.getOptions();
       if (rightValue !== undefined) {
         this.passRightValueToView(rightValue);
       }
@@ -393,8 +393,8 @@ class Presenter implements IEventListener {
   }
 
   private handleViewAddMinMaxLabels(): void {
-    this.view.setMinValue(this.model.getMin());
-    this.view.setMaxValue(this.model.getMax());
+    this.view.setMinValue(this.model.getOptions().min);
+    this.view.setMaxValue(this.model.getOptions().max);
   }
 }
 

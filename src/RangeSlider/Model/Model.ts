@@ -41,67 +41,6 @@ class Model {
     }
   }
 
-  static validate(options: ModelOptions): ModelOptions {
-    let fixedOptions: ModelOptions = { ...options };
-
-    const removeWrongTypes = (): void => {
-      const checkType = (property: keyof ModelOptions): void => {
-        if (typeof options[property] !== typeof Model.defaults[property]) {
-          delete fixedOptions[property];
-        }
-      };
-
-      /* There is no Object.keys().forEach because TS throws an error:
-       * "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'" */
-      checkType('min');
-      checkType('max');
-      checkType('leftValue');
-      checkType('rightValue');
-      checkType('range');
-      checkType('step');
-    };
-
-    const mergeWithDefaults = (): void => {
-      fixedOptions = { ...Model.defaults, ...fixedOptions };
-    };
-
-    const fixValues = (): void => {
-      if (fixedOptions.min > fixedOptions.max) {
-        [fixedOptions.min, fixedOptions.max] = [fixedOptions.max, fixedOptions.min];
-      }
-
-      if (fixedOptions.rightValue !== undefined) {
-        if (fixedOptions.leftValue > fixedOptions.rightValue) {
-          [fixedOptions.leftValue, fixedOptions.rightValue] = (
-            [fixedOptions.rightValue, fixedOptions.leftValue]
-          );
-        }
-
-        if (fixedOptions.rightValue > fixedOptions.max) {
-          fixedOptions.rightValue = fixedOptions.max;
-        }
-      }
-
-      if (fixedOptions.leftValue < fixedOptions.min) {
-        fixedOptions.leftValue = fixedOptions.min;
-      }
-
-      if (fixedOptions.leftValue > fixedOptions.max) {
-        fixedOptions.leftValue = fixedOptions.max;
-      }
-
-      if (fixedOptions.step > Math.abs(fixedOptions.max - fixedOptions.min)) {
-        fixedOptions.step = Math.abs(fixedOptions.max - fixedOptions.min);
-      }
-    };
-
-    removeWrongTypes();
-    mergeWithDefaults();
-    fixValues();
-
-    return fixedOptions;
-  }
-
   subscribe(listener: IEventListener): void {
     this.eventManager.subscribe(listener);
   }
@@ -110,11 +49,11 @@ class Model {
     if (value < this.min) {
       this.leftValue = this.min;
     } else {
-      if (!this.isRange()) {
+      if (!this.range) {
         this.leftValue = Math.min(value, this.max);
       }
 
-      if (this.isRange() && this.rightValue !== undefined) {
+      if (this.range && this.rightValue !== undefined) {
         this.leftValue = Math.min(value, this.rightValue);
       }
 
@@ -125,7 +64,7 @@ class Model {
   }
 
   setRightValue(value: number = this.max): void {
-    if (!this.isRange()) return;
+    if (!this.range) return;
 
     if (value > this.max) {
       this.rightValue = this.max;
@@ -160,11 +99,11 @@ class Model {
   }
 
   setMax(value: number): void {
-    if (!this.isRange()) {
+    if (!this.range) {
       if (value < this.leftValue) return;
     }
 
-    if (this.isRange() && this.rightValue !== undefined) {
+    if (this.range && this.rightValue !== undefined) {
       if (value < this.rightValue) return;
     }
 
@@ -188,30 +127,6 @@ class Model {
     this.eventManager.notify('modelToggleRange', null);
   }
 
-  getMin(): number {
-    return this.min;
-  }
-
-  getMax(): number {
-    return this.max;
-  }
-
-  getLeftValue(): number {
-    return this.leftValue;
-  }
-
-  getRightValue(): number | undefined {
-    return this.rightValue;
-  }
-
-  getStep(): number {
-    return this.step;
-  }
-
-  isRange(): boolean {
-    return this.range;
-  }
-
   getOptions(): ModelOptions {
     return {
       min: this.min,
@@ -230,15 +145,6 @@ class Model {
     return percent;
   }
 
-  convertPxToValue(px: number, trackLengthInPx: number): number {
-    const percent = (px * 100) / trackLengthInPx;
-
-    let value = ((this.max - this.min) * (percent / 100) + this.min);
-    value = this.fitToStep(value);
-
-    return value;
-  }
-
   static isTwoLabelsClose(distanceInPx: number): boolean {
     const minDistanceBetweenLabels = 3;
 
@@ -249,8 +155,83 @@ class Model {
     return false;
   }
 
+  private static validate(options: ModelOptions): ModelOptions {
+    let fixedOptions: ModelOptions = { ...options };
+
+    const removeWrongTypes = (): void => {
+      const checkType = (property: keyof ModelOptions): void => {
+        if (typeof options[property] !== typeof Model.defaults[property]) {
+          delete fixedOptions[property];
+        }
+      };
+
+      /* There is no Object.keys().forEach because TS throws an error:
+       * "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'" */
+      checkType('min');
+      checkType('max');
+      checkType('leftValue');
+      checkType('rightValue');
+      checkType('range');
+      checkType('step');
+    };
+
+    const mergeWithDefaults = (): void => {
+      fixedOptions = { ...Model.defaults, ...fixedOptions };
+    };
+
+    const fixValues = (): void => {
+      if (fixedOptions.min > fixedOptions.max) {
+        [fixedOptions.min, fixedOptions.max] = [fixedOptions.max, fixedOptions.min];
+      }
+
+      if (!fixedOptions.range) {
+        fixedOptions.rightValue = undefined;
+      }
+
+      if (fixedOptions.rightValue !== undefined) {
+        if (fixedOptions.leftValue > fixedOptions.rightValue) {
+          [fixedOptions.leftValue, fixedOptions.rightValue] = (
+            [fixedOptions.rightValue, fixedOptions.leftValue]
+          );
+        }
+
+        if (fixedOptions.rightValue > fixedOptions.max) {
+          fixedOptions.rightValue = fixedOptions.max;
+        }
+      }
+
+      if (fixedOptions.leftValue < fixedOptions.min) {
+        fixedOptions.leftValue = fixedOptions.min;
+      }
+
+      if (fixedOptions.leftValue > fixedOptions.max) {
+        fixedOptions.leftValue = fixedOptions.max;
+      }
+
+      if (fixedOptions.step > Math.abs(fixedOptions.max - fixedOptions.min)) {
+        fixedOptions.step = Math.abs(fixedOptions.max - fixedOptions.min);
+      }
+    };
+
+    removeWrongTypes();
+    mergeWithDefaults();
+    fixValues();
+
+    return fixedOptions;
+  }
+
   private static removeCalcInaccuracy(value: number): number {
     return Number(value.toFixed(10));
+  }
+
+  private convertPxToValue(px: number, trackLengthInPx: number): number {
+    const percent = (px * 100) / trackLengthInPx;
+
+    let value = ((this.max - this.min) * (percent / 100) + this.min);
+    value = Model.removeCalcInaccuracy(value);
+    value = this.fitToStep(value);
+
+    return value;
   }
 
   private fitToStep(value: number): number {
