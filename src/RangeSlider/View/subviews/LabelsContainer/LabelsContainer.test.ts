@@ -60,6 +60,11 @@ describe('LabelsContainer', () => {
         expect(labelsContainer.getComponent().style.paddingLeft).toBe(`${30 + i}px`);
       }
     });
+
+    it('by default indent is 4', () => {
+      labelsContainer.fixWidthForVertical([label1, label2, label3] as HTMLElement[]);
+      expect(labelsContainer.getComponent().style.paddingLeft).toBe('34px');
+    });
   });
 
   describe('fixHeightForHorizontal(labels, indent)', () => {
@@ -80,6 +85,11 @@ describe('LabelsContainer', () => {
         labelsContainer.fixHeightForHorizontal([label1, label2, label3] as HTMLElement[], i);
         expect(labelsContainer.getComponent().style.paddingTop).toBe(`${30 + i}px`);
       }
+    });
+
+    it('by default indent is 4', () => {
+      labelsContainer.fixHeightForHorizontal([label1, label2, label3] as HTMLElement[]);
+      expect(labelsContainer.getComponent().style.paddingTop).toBe('34px');
     });
   });
 });
