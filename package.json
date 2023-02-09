@@ -9,7 +9,7 @@
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
     "start": "cross-env NODE_ENV=development webpack serve --mode development",
     "test": "jest --detectOpenHandles",
-    "testpresenter": "jest src/RangeSlider/Presenter/Presenter.test.ts --detectOpenHandles",
+    "testmodel": "jest src/RangeSlider/Model/Model.test.ts --detectOpenHandles",
     "make-badges": "istanbul-badges-readme",
     "prepare": "husky install",
     "deploy": "gh-pages -d dist",
