@@ -73,6 +73,35 @@ describe('Scale', () => {
           expect(valuesCollection[valuesCollection.length - 1].textContent).toBe(`${i}`);
         }
       });
+
+      it('float values are supported', () => {
+        const scale = new Scale(0, 1, 4);
+        const values = scale.getComponent().querySelectorAll('.range-slider__scale-interval-value');
+
+        for (let i = 0; i < 4; i += 1) {
+          expect(values[i].textContent).not.toEqual(values[i + 1].textContent);
+        }
+      });
+    });
+
+    describe('attach event handlers', () => {
+      it('notify subscribers, if click occurs', () => {
+        const scale = new Scale(0, 150);
+
+        const subscriber = {
+          inform() {},
+        };
+        subscriber.inform = jest.fn();
+        scale.subscribe(subscriber);
+
+        const event = new MouseEvent('click', {
+          clientX: 100,
+          clientY: 100,
+        });
+        scale.getComponent().dispatchEvent(event);
+
+        expect(subscriber.inform).toBeCalledWith('scaleClick', [event.clientX, event.clientY]);
+      });
     });
   });
 
