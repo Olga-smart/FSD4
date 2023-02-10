@@ -38,4 +38,40 @@ describe('Track', () => {
       expect(track.getComponent().append).toBeCalledWith(div1, div2, div3);
     });
   });
+
+  describe('handle events', () => {
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('handle click', () => {
+      const track = new Track();
+      const event = new MouseEvent('click', {
+        clientX: 100,
+        clientY: 100,
+      });
+
+      Element.prototype.getBoundingClientRect = jest.fn(() => ({
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        x: 0,
+        y: 0,
+        height: 0,
+        width: 0,
+        toJSON() { return undefined; },
+      }));
+
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      track.subscribe(subscriber);
+
+      track.getComponent().dispatchEvent(event);
+
+      expect(subscriber.inform).toBeCalledWith('trackClick', [100, 100]);
+    });
+  });
 });
