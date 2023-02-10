@@ -64,6 +64,10 @@ describe('Thumb', () => {
   describe('handle events', () => {
     const thumb = new Thumb();
 
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+
     it('handle pointerover', () => {
       const event = new Event('pointerover');
       thumb.getComponent().dispatchEvent(event);
@@ -85,6 +89,54 @@ describe('Thumb', () => {
       thumb.getComponent().dispatchEvent(event);
 
       expect(thumb.getComponent().classList).toContain('range-slider__thumb_active');
+    });
+
+    describe('handle pointermove', () => {
+      const downEvent = new MouseEvent('pointerdown', {
+        clientX: 0,
+        clientY: 0,
+      });
+      const moveEvent = new MouseEvent('pointermove', {
+        clientX: 100,
+        clientY: 100,
+      });
+
+      Element.prototype.setPointerCapture = jest.fn();
+      Element.prototype.getBoundingClientRect = jest.fn(() => ({
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        x: 0,
+        y: 0,
+        height: 0,
+        width: 0,
+        toJSON() { return undefined; },
+      }));
+
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+
+      it('if thumb is left', () => {
+        thumb.subscribe(subscriber);
+
+        thumb.getComponent().dispatchEvent(downEvent);
+        thumb.getComponent().dispatchEvent(moveEvent);
+
+        expect(subscriber.inform).toBeCalledWith('leftThumbChangePosition', [100, 100]);
+      });
+
+      it('if thumb is right', () => {
+        const newThumb = new Thumb('right');
+        newThumb.subscribe(subscriber);
+
+        newThumb.getComponent().dispatchEvent(downEvent);
+        newThumb.getComponent().dispatchEvent(moveEvent);
+
+        expect(subscriber.inform).toBeCalledWith('rightThumbChangePosition', [100, 100]);
+      });
     });
 
     it('handle pointerup', () => {
