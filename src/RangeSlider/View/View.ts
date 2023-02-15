@@ -133,12 +133,12 @@ class View extends BaseElement<'div'> {
     }
   }
 
-  setMinValue(min: number): void {
-    this.minLabel?.setValue(min);
+  setMinValue(value: number): void {
+    this.minLabel?.setValue(value);
   }
 
-  setMaxValue(max: number): void {
-    this.maxLabel?.setValue(max);
+  setMaxValue(value: number): void {
+    this.maxLabel?.setValue(value);
   }
 
   setLeftValue(value: number, percent: number): void {
@@ -204,40 +204,6 @@ class View extends BaseElement<'div'> {
     this.input.setValue(value1, value2);
   }
 
-  handleLeftInput(x: number, y: number): void {
-    if (!this.vertical) {
-      const trackShift = this.track.getBoundingClientRect().left;
-      const newLeft = x - trackShift;
-
-      this.eventManager.notify('viewInputLeft', newLeft);
-    }
-
-    if (this.vertical) {
-      const trackShift = this.track.getBoundingClientRect().top;
-      const newTop = y - trackShift;
-      const newBottom = this.getTrackLength() - newTop;
-
-      this.eventManager.notify('viewInputLeft', newBottom);
-    }
-  }
-
-  handleRightInput(x: number, y: number): void {
-    if (!this.vertical) {
-      const trackShift = this.track.getBoundingClientRect().left;
-      const newLeft = x - trackShift;
-
-      this.eventManager.notify('viewInputRight', newLeft);
-    }
-
-    if (this.vertical) {
-      const trackShift = this.track.getBoundingClientRect().top;
-      const newTop = y - trackShift;
-      const newBottom = this.getTrackLength() - newTop;
-
-      this.eventManager.notify('viewInputRight', newBottom);
-    }
-  }
-
   addScale(min: number, max: number): void {
     this.scale = new Scale(min, max, this.getScaleIntervals());
     this.slider.after(this.scale.getComponent());
@@ -257,52 +223,15 @@ class View extends BaseElement<'div'> {
     this.scale = undefined;
   }
 
-  getScaleIntervals(): number {
-    return this.scaleIntervals || 0;
+  setScaleIntervals(value: number): void {
+    if (value <= 0) return;
+
+    this.scaleIntervals = Math.floor(value);
+    this.eventManager.notify('viewSetScaleIntervals', null);
   }
 
-  handleScaleOrTrackClick(x: number, y: number): void {
-    if (!this.isRange()) {
-      this.addSmoothTransition('left');
-
-      if (this.vertical) {
-        this.eventManager.notify('viewInputLeft', this.getTrackLength() - y);
-      } else {
-        this.eventManager.notify('viewInputLeft', x);
-      }
-
-      setTimeout(() => {
-        this.removeSmoothTransition('left');
-      }, 1000);
-    }
-
-    if (this.isRange()) {
-      if (this.whichThumbIsNearer(x, y) === 'left') {
-        this.addSmoothTransition('left');
-
-        if (this.vertical) {
-          this.eventManager.notify('viewInputLeft', this.getTrackLength() - y);
-        } else {
-          this.eventManager.notify('viewInputLeft', x);
-        }
-
-        setTimeout(() => {
-          this.removeSmoothTransition('left');
-        }, 1000);
-      } else {
-        this.addSmoothTransition('right');
-
-        if (this.vertical) {
-          this.eventManager.notify('viewInputRight', this.getTrackLength() - y);
-        } else {
-          this.eventManager.notify('viewInputRight', x);
-        }
-
-        setTimeout(() => {
-          this.removeSmoothTransition('right');
-        }, 1000);
-      }
-    }
+  getScaleIntervals(): number {
+    return this.scaleIntervals;
   }
 
   fixLabelsContainerWidthForVertical(): void {
@@ -385,13 +314,6 @@ class View extends BaseElement<'div'> {
 
     this.render();
     this.eventManager.notify('viewToggleRange', null);
-  }
-
-  setScaleIntervals(value: number): void {
-    if (value <= 0) return;
-
-    this.scaleIntervals = Math.floor(value);
-    this.eventManager.notify('viewSetScaleIntervals', null);
   }
 
   toggleValueLabels(): void {
@@ -559,11 +481,11 @@ class View extends BaseElement<'div'> {
 
     if (this.vertical && this.thumbRight) {
       const distanceBetweenThumbs = (
-        parseInt(this.thumbRight.getTopIndent(), 10) - parseInt(this.thumbLeft.getTopIndent(), 10)
+        parseInt(this.thumbLeft.getTopIndent(), 10) - parseInt(this.thumbRight.getTopIndent(), 10)
       );
 
       if (this.valueLabelRight) {
-        this.valueLabelCommon?.setIndent('top', `${parseInt(this.valueLabelRight.getTopIndent(), 10) - distanceBetweenThumbs / 2}%`);
+        this.valueLabelCommon?.setIndent('top', `${parseInt(this.valueLabelRight.getTopIndent(), 10) + distanceBetweenThumbs / 2}%`);
       }
     }
   }
@@ -588,20 +510,6 @@ class View extends BaseElement<'div'> {
 
   showMaxLabel(): void {
     this.maxLabel?.setOpacity(1);
-  }
-
-  getDistanceBetweenTwoLabels(label1: Label, label2: Label): number {
-    if (this.vertical) {
-      const bottomLabelEdge = label1.getBoundingClientRect().top;
-      const topLabelEdge = label2.getBoundingClientRect().bottom;
-
-      return (bottomLabelEdge - topLabelEdge);
-    }
-
-    const leftLabelEdge = label1.getBoundingClientRect().right;
-    const rightLabelEdge = label2.getBoundingClientRect().left;
-
-    return (rightLabelEdge - leftLabelEdge);
   }
 
   getDistanceBetweenValueLabels(): number | undefined {
@@ -745,6 +653,84 @@ class View extends BaseElement<'div'> {
     });
   }
 
+  private handleLeftInput(x: number, y: number): void {
+    if (!this.vertical) {
+      const trackShift = this.track.getBoundingClientRect().left;
+      const newLeft = x - trackShift;
+
+      this.eventManager.notify('viewInputLeft', newLeft);
+    }
+
+    if (this.vertical) {
+      const trackShift = this.track.getBoundingClientRect().top;
+      const newTop = y - trackShift;
+      const newBottom = this.getTrackLength() - newTop;
+
+      this.eventManager.notify('viewInputLeft', newBottom);
+    }
+  }
+
+  private handleRightInput(x: number, y: number): void {
+    if (!this.vertical) {
+      const trackShift = this.track.getBoundingClientRect().left;
+      const newLeft = x - trackShift;
+
+      this.eventManager.notify('viewInputRight', newLeft);
+    }
+
+    if (this.vertical) {
+      const trackShift = this.track.getBoundingClientRect().top;
+      const newTop = y - trackShift;
+      const newBottom = this.getTrackLength() - newTop;
+
+      this.eventManager.notify('viewInputRight', newBottom);
+    }
+  }
+
+  private handleScaleOrTrackClick(x: number, y: number): void {
+    if (!this.isRange()) {
+      this.addSmoothTransition('left');
+
+      if (this.vertical) {
+        this.eventManager.notify('viewInputLeft', this.getTrackLength() - y);
+      } else {
+        this.eventManager.notify('viewInputLeft', x);
+      }
+
+      setTimeout(() => {
+        this.removeSmoothTransition('left');
+      }, 1000);
+    }
+
+    if (this.isRange()) {
+      if (this.whichThumbIsNearer(x, y) === 'left') {
+        this.addSmoothTransition('left');
+
+        if (this.vertical) {
+          this.eventManager.notify('viewInputLeft', this.getTrackLength() - y);
+        } else {
+          this.eventManager.notify('viewInputLeft', x);
+        }
+
+        setTimeout(() => {
+          this.removeSmoothTransition('left');
+        }, 1000);
+      } else {
+        this.addSmoothTransition('right');
+
+        if (this.vertical) {
+          this.eventManager.notify('viewInputRight', this.getTrackLength() - y);
+        } else {
+          this.eventManager.notify('viewInputRight', x);
+        }
+
+        setTimeout(() => {
+          this.removeSmoothTransition('right');
+        }, 1000);
+      }
+    }
+  }
+
   private whichThumbIsNearer(x: number, y: number): 'left' | 'right' {
     const leftThumbCoords = this.thumbLeft.getBoundingClientRect();
     const rightThumbCoords = this.thumbRight?.getBoundingClientRect();
@@ -823,6 +809,20 @@ class View extends BaseElement<'div'> {
     }
 
     return labels;
+  }
+
+  private getDistanceBetweenTwoLabels(label1: Label, label2: Label): number {
+    if (this.vertical) {
+      const bottomLabelEdge = label1.getBoundingClientRect().top;
+      const topLabelEdge = label2.getBoundingClientRect().bottom;
+
+      return (bottomLabelEdge - topLabelEdge);
+    }
+
+    const leftLabelEdge = label1.getBoundingClientRect().right;
+    const rightLabelEdge = label2.getBoundingClientRect().left;
+
+    return (rightLabelEdge - leftLabelEdge);
   }
 }
 
