@@ -1,6 +1,4 @@
-/* eslint-disable max-len */
 import View from './View';
-// import Range from './subviews/Range/Range';
 
 describe('View', () => {
   const defaultDomRect = {
@@ -23,10 +21,30 @@ describe('View', () => {
       expect(view.getComponent()).toBe(slider);
     });
 
+    describe('validate options', () => {
+      it('if scaleIntervals < 1, scaleIntervals = 1', () => {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
+          scaleIntervals: -1,
+        });
+
+        expect(newView).toHaveProperty('scaleIntervals', 1);
+      });
+
+      it('if scaleIntervals is float, scaleIntervals = Math.floor(scaleIntervals)', () => {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
+          scaleIntervals: 4.5,
+        });
+
+        expect(newView).toHaveProperty('scaleIntervals', 4);
+      });
+    });
+
     describe('render', () => {
-      const track = view.getComponent().querySelector('.range-slider__track');
-      const sliderElement = view.getComponent().querySelector('.range-slider__slider');
-      const range = view.getComponent().querySelector('.range-slider__range');
+      const track: HTMLElement | null = view.getComponent().querySelector('.range-slider__track');
+      const sliderElement: HTMLElement | null = view.getComponent().querySelector('.range-slider__slider');
+      const range: HTMLElement | null = view.getComponent().querySelector('.range-slider__range');
 
       it('append range component to track component', () => {
         expect(track?.children).toContain(range);
@@ -37,7 +55,7 @@ describe('View', () => {
       });
 
       it('append thumbLeft component to slider component', () => {
-        const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+        const thumbLeft: HTMLElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
         expect(sliderElement?.children).toContain(thumbLeft);
       });
 
@@ -56,33 +74,7 @@ describe('View', () => {
         expect(newSliderElement?.children).toContain(thumbRight);
       });
 
-      // describe('set initial indent for range component', () => {
-      //   afterAll(() => {
-      //     jest.restoreAllMocks();
-      //   });
-
-      //   it('set left indent = 0 if slider is horizontal or by default', () => {
-      //     const newSlider = document.createElement('div');
-      //     jest.spyOn(Range.prototype, 'setIndent');
-      //     // eslint-disable-next-line no-new
-      //     new View(newSlider);
-
-      //     expect(Range.prototype.setIndent).toBeCalledWith('left', 0);
-      //   });
-
-      //   it('set bottom indent = 0 if slider is vertical', () => {
-      //     const newSlider = document.createElement('div');
-      //     jest.spyOn(Range.prototype, 'setIndent');
-      //     // eslint-disable-next-line no-new
-      //     new View(newSlider, {
-      //       vertical: true,
-      //     });
-
-      //     expect(Range.prototype.setIndent).toBeCalledWith('bottom', 0);
-      //   });
-      // });
-
-      describe('append minLabel and maxLabel components to labelsContainer if necessary', () => {
+      describe('append minLabel and maxLabel components to labelsContainer, if necessary', () => {
         const newSlider = document.createElement('div');
         const newView = new View(newSlider, {
           minMaxLabels: true,
@@ -100,7 +92,7 @@ describe('View', () => {
         });
       });
 
-      describe('append labels components to labelsContainer if necessary', () => {
+      describe('append labels components to labelsContainer, if necessary', () => {
         const newSlider = document.createElement('div');
         const newView = new View(newSlider, {
           valueLabels: true,
@@ -124,7 +116,7 @@ describe('View', () => {
         });
       });
 
-      it('append labelsContainer component to view component if necessary', () => {
+      it('append labelsContainer component to view component, if necessary', () => {
         const newSlider = document.createElement('div');
         const newView = new View(newSlider, {
           minMaxLabels: true,
@@ -146,7 +138,1052 @@ describe('View', () => {
     });
   });
 
-  describe('setMinValue(min)', () => {
+  describe('inform(eventType, data)', () => {
+    describe('if eventType is "scaleClick"', () => {
+      describe('if !slider.isRange', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          range: false,
+          scale: true,
+          valueLabels: true,
+        });
+
+        const subscriber = {
+          inform() {},
+        };
+        subscriber.inform = jest.fn();
+        view.subscribe(subscriber);
+
+        const range = view.getComponent().querySelector('.range-slider__range');
+        const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+        const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
+
+        view.inform('scaleClick', [100, 100]);
+
+        describe('add smooth transition', () => {
+          it('add necessary class to thumb', () => {
+            expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
+          });
+
+          it('add necessary class to range', () => {
+            expect(range?.classList).toContain('range-slider__range_smooth-transition');
+          });
+
+          it('add necessary class to label', () => {
+            expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
+          });
+        });
+
+        describe('say subscribers that view wants to change left value and pass this value', () => {
+          it('if slider is horizontal', () => {
+            expect(subscriber.inform).toBeCalledWith('viewInputLeft', 100);
+          });
+
+          it('if slider is vertical', () => {
+            const newSlider = document.createElement('div');
+            const newView = new View(newSlider, {
+              scale: true,
+              valueLabels: true,
+              vertical: true,
+            });
+
+            const newSubscriber = {
+              inform() {},
+            };
+            newSubscriber.inform = jest.fn();
+            newView.subscribe(newSubscriber);
+
+            newView.getTrackLength = jest.fn(() => 500);
+
+            newView.inform('scaleClick', [100, 100]);
+
+            expect(newSubscriber.inform).toBeCalledWith('viewInputLeft', 500 - 100);
+          });
+        });
+
+        describe('remove smooth transition', () => {
+          beforeAll(() => {
+            jest.useFakeTimers();
+            view.inform('scaleClick', [100, 100]);
+            jest.runAllTimers();
+          });
+
+          it('remove necessary class from thumb', () => {
+            expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
+          });
+
+          it('remove necessary class from range', () => {
+            expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+          });
+
+          it('remove necessary class from label', () => {
+            expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
+          });
+
+          afterAll(() => {
+            jest.useRealTimers();
+          });
+        });
+      });
+
+      describe('if slider.isRange', () => {
+        describe('if left thumb is nearer', () => {
+          describe('if slider is horizontal', () => {
+            const slider = document.createElement('div');
+            const view = new View(slider, {
+              scale: true,
+              valueLabels: true,
+              range: true,
+            });
+
+            const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+            if (track) {
+              track.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 0,
+              }));
+            }
+
+            const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+
+            if (thumbLeft) {
+              thumbLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 10,
+                width: 16,
+              }));
+            }
+
+            const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
+
+            if (thumbRight) {
+              thumbRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 40,
+                width: 16,
+              }));
+            }
+
+            const range = view.getComponent().querySelector('.range-slider__range');
+            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            const subscriber = {
+              inform() {},
+            };
+            subscriber.inform = jest.fn();
+            view.subscribe(subscriber);
+
+            view.inform('scaleClick', [30, 0]);
+
+            describe('add smooth transition', () => {
+              it('add necessary class to thumb', () => {
+                expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('add necessary class to range', () => {
+                expect(range?.classList).toContain('range-slider__range_smooth-transition');
+              });
+
+              it('add necessary class to label', () => {
+                expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
+              });
+            });
+
+            it('say subscribers that view wants to change left value and pass this value', () => {
+              expect(subscriber.inform).toBeCalledWith('viewInputLeft', 30);
+            });
+
+            describe('remove smooth transition', () => {
+              beforeAll(() => {
+                jest.useFakeTimers();
+                view.inform('scaleClick', [30, 0]);
+                jest.runAllTimers();
+              });
+
+              it('remove necessary class from thumb', () => {
+                expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('remove necessary class from range', () => {
+                expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+              });
+
+              it('remove necessary class from label', () => {
+                expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
+              });
+
+              afterAll(() => {
+                jest.useRealTimers();
+              });
+            });
+          });
+
+          describe('if slider is vertical', () => {
+            const slider = document.createElement('div');
+            const view = new View(slider, {
+              range: true,
+              vertical: true,
+              valueLabels: true,
+            });
+
+            const track = view.getComponent().querySelector('.range-slider__track');
+
+            if (track) {
+              track.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 0,
+              }));
+            }
+
+            view.getTrackLength = jest.fn(() => 500);
+
+            const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+
+            if (thumbLeft) {
+              thumbLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 40,
+                height: 16,
+              }));
+            }
+
+            const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
+
+            if (thumbRight) {
+              thumbRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 10,
+                height: 16,
+              }));
+            }
+
+            const range = view.getComponent().querySelector('.range-slider__range');
+            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            const subscriber = {
+              inform() {},
+            };
+            subscriber.inform = jest.fn();
+            view.subscribe(subscriber);
+
+            view.inform('scaleClick', [0, 38]);
+
+            describe('add smooth transition', () => {
+              it('add necessary class to thumb', () => {
+                expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('add necessary class to range', () => {
+                expect(range?.classList).toContain('range-slider__range_smooth-transition');
+              });
+
+              it('add necessary class to label', () => {
+                expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
+              });
+            });
+
+            it('say subscribers that view wants to change left value and pass this value', () => {
+              expect(subscriber.inform).toBeCalledWith('viewInputLeft', 500 - 38);
+            });
+
+            describe('remove smooth transition', () => {
+              beforeAll(() => {
+                jest.useFakeTimers();
+                view.inform('scaleClick', [0, 38]);
+                jest.runAllTimers();
+              });
+
+              it('remove necessary class from thumb', () => {
+                expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('remove necessary class from range', () => {
+                expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+              });
+
+              it('remove necessary class from label', () => {
+                expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
+              });
+
+              afterAll(() => {
+                jest.useRealTimers();
+              });
+            });
+          });
+        });
+
+        describe('if right thumb is nearer', () => {
+          describe('if slider is horizontal', () => {
+            const slider = document.createElement('div');
+            const view = new View(slider, {
+              range: true,
+              valueLabels: true,
+            });
+
+            const track = view.getComponent().querySelector('.range-slider__track');
+
+            if (track) {
+              track.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 0,
+              }));
+            }
+
+            const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+
+            if (thumbLeft) {
+              thumbLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 10,
+                width: 16,
+              }));
+            }
+
+            const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
+
+            if (thumbRight) {
+              thumbRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 40,
+                width: 16,
+              }));
+            }
+
+            const range = view.getComponent().querySelector('.range-slider__range');
+            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            const subscriber = {
+              inform() {},
+            };
+            subscriber.inform = jest.fn();
+            view.subscribe(subscriber);
+
+            view.inform('scaleClick', [38, 0]);
+
+            describe('add smooth transition', () => {
+              it('add necessary class to thumb', () => {
+                expect(thumbRight?.classList).toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('add necessary class to range', () => {
+                expect(range?.classList).toContain('range-slider__range_smooth-transition');
+              });
+
+              it('add necessary class to label', () => {
+                expect(valueLabelRight?.classList).toContain('range-slider__value-label_smooth-transition');
+              });
+            });
+
+            it('say subscribers that view wants to change right value and pass this value', () => {
+              expect(subscriber.inform).toBeCalledWith('viewInputRight', 38);
+            });
+
+            describe('remove smooth transition', () => {
+              beforeAll(() => {
+                jest.useFakeTimers();
+                view.inform('scaleClick', [38, 0]);
+                jest.runAllTimers();
+              });
+
+              it('remove necessary class from thumb', () => {
+                expect(thumbRight?.classList).not.toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('remove necessary class from range', () => {
+                expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+              });
+
+              it('remove necessary class from label', () => {
+                expect(valueLabelRight?.classList).not.toContain('range-slider__value-label_smooth-transition');
+              });
+
+              afterAll(() => {
+                jest.useRealTimers();
+              });
+            });
+          });
+
+          describe('if slider is vertical', () => {
+            const slider = document.createElement('div');
+            const view = new View(slider, {
+              range: true,
+              vertical: true,
+              valueLabels: true,
+            });
+
+            const track = view.getComponent().querySelector('.range-slider__track');
+
+            if (track) {
+              track.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 0,
+              }));
+            }
+
+            view.getTrackLength = jest.fn(() => 500);
+
+            const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+
+            if (thumbLeft) {
+              thumbLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 40,
+                height: 16,
+              }));
+            }
+
+            const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
+
+            if (thumbRight) {
+              thumbRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 10,
+                height: 16,
+              }));
+            }
+
+            const subscriber = {
+              inform() {},
+            };
+            subscriber.inform = jest.fn();
+            view.subscribe(subscriber);
+
+            const range = view.getComponent().querySelector('.range-slider__range');
+            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            view.inform('scaleClick', [0, 30]);
+
+            describe('add smooth transition', () => {
+              it('add necessary class to thumb', () => {
+                expect(thumbRight?.classList).toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('add necessary class to range', () => {
+                expect(range?.classList).toContain('range-slider__range_smooth-transition');
+              });
+
+              it('add necessary class to label', () => {
+                expect(valueLabelRight?.classList).toContain('range-slider__value-label_smooth-transition');
+              });
+            });
+
+            it('say subscribers that view wants to change right value and pass this value', () => {
+              expect(subscriber.inform).toBeCalledWith('viewInputRight', 500 - 30);
+            });
+
+            describe('remove smooth transition', () => {
+              beforeAll(() => {
+                jest.useFakeTimers();
+                view.inform('scaleClick', [0, 30]);
+                jest.runAllTimers();
+              });
+
+              it('remove necessary class from thumb', () => {
+                expect(thumbRight?.classList).not.toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('remove necessary class from range', () => {
+                expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+              });
+
+              it('remove necessary class from label', () => {
+                expect(valueLabelRight?.classList).not.toContain('range-slider__value-label_smooth-transition');
+              });
+
+              afterAll(() => {
+                jest.useRealTimers();
+              });
+            });
+          });
+        });
+      });
+    });
+
+    describe('if eventType is "trackClick"', () => {
+      describe('if !slider.isRange', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          range: false,
+          scale: true,
+          valueLabels: true,
+        });
+
+        const subscriber = {
+          inform() {},
+        };
+        subscriber.inform = jest.fn();
+        view.subscribe(subscriber);
+
+        const range = view.getComponent().querySelector('.range-slider__range');
+        const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+        const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
+
+        view.inform('trackClick', [100, 100]);
+
+        describe('add smooth transition', () => {
+          it('add necessary class to thumb', () => {
+            expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
+          });
+
+          it('add necessary class to range', () => {
+            expect(range?.classList).toContain('range-slider__range_smooth-transition');
+          });
+
+          it('add necessary class to label', () => {
+            expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
+          });
+        });
+
+        describe('say subscribers that view wants to change left value and pass this value', () => {
+          it('if slider is horizontal', () => {
+            expect(subscriber.inform).toBeCalledWith('viewInputLeft', 100);
+          });
+
+          it('if slider is vertical', () => {
+            const newSlider = document.createElement('div');
+            const newView = new View(newSlider, {
+              scale: true,
+              valueLabels: true,
+              vertical: true,
+            });
+
+            const newSubscriber = {
+              inform() {},
+            };
+            newSubscriber.inform = jest.fn();
+            newView.subscribe(newSubscriber);
+
+            newView.getTrackLength = jest.fn(() => 500);
+
+            newView.inform('trackClick', [100, 100]);
+
+            expect(newSubscriber.inform).toBeCalledWith('viewInputLeft', 500 - 100);
+          });
+        });
+
+        describe('remove smooth transition', () => {
+          beforeAll(() => {
+            jest.useFakeTimers();
+            view.inform('trackClick', [100, 100]);
+            jest.runAllTimers();
+          });
+
+          it('remove necessary class from thumb', () => {
+            expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
+          });
+
+          it('remove necessary class from range', () => {
+            expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+          });
+
+          it('remove necessary class from label', () => {
+            expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
+          });
+
+          afterAll(() => {
+            jest.useRealTimers();
+          });
+        });
+      });
+
+      describe('if slider.isRange', () => {
+        describe('if left thumb is nearer', () => {
+          describe('if slider is horizontal', () => {
+            const slider = document.createElement('div');
+            const view = new View(slider, {
+              scale: true,
+              valueLabels: true,
+              range: true,
+            });
+
+            const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+            if (track) {
+              track.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 0,
+              }));
+            }
+
+            const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
+
+            if (thumbLeft) {
+              thumbLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 10,
+                width: 16,
+              }));
+            }
+
+            const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
+
+            if (thumbRight) {
+              thumbRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 40,
+                width: 16,
+              }));
+            }
+
+            const range = view.getComponent().querySelector('.range-slider__range');
+            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            const subscriber = {
+              inform() {},
+            };
+            subscriber.inform = jest.fn();
+            view.subscribe(subscriber);
+
+            view.inform('trackClick', [30, 0]);
+
+            describe('add smooth transition', () => {
+              it('add necessary class to thumb', () => {
+                expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('add necessary class to range', () => {
+                expect(range?.classList).toContain('range-slider__range_smooth-transition');
+              });
+
+              it('add necessary class to label', () => {
+                expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
+              });
+            });
+
+            it('say subscribers that view wants to change left value and pass this value', () => {
+              expect(subscriber.inform).toBeCalledWith('viewInputLeft', 30);
+            });
+
+            describe('remove smooth transition', () => {
+              beforeAll(() => {
+                jest.useFakeTimers();
+                view.inform('trackClick', [30, 0]);
+                jest.runAllTimers();
+              });
+
+              it('remove necessary class from thumb', () => {
+                expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('remove necessary class from range', () => {
+                expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+              });
+
+              it('remove necessary class from label', () => {
+                expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
+              });
+
+              afterAll(() => {
+                jest.useRealTimers();
+              });
+            });
+          });
+
+          describe('if slider is vertical', () => {
+            const slider = document.createElement('div');
+            const view = new View(slider, {
+              range: true,
+              vertical: true,
+              valueLabels: true,
+            });
+
+            const track = view.getComponent().querySelector('.range-slider__track');
+
+            if (track) {
+              track.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 0,
+              }));
+            }
+
+            view.getTrackLength = jest.fn(() => 500);
+
+            const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+
+            if (thumbLeft) {
+              thumbLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 40,
+                height: 16,
+              }));
+            }
+
+            const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
+
+            if (thumbRight) {
+              thumbRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 10,
+                height: 16,
+              }));
+            }
+
+            const range = view.getComponent().querySelector('.range-slider__range');
+            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
+
+            const subscriber = {
+              inform() {},
+            };
+            subscriber.inform = jest.fn();
+            view.subscribe(subscriber);
+
+            view.inform('trackClick', [0, 38]);
+
+            describe('add smooth transition', () => {
+              it('add necessary class to thumb', () => {
+                expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('add necessary class to range', () => {
+                expect(range?.classList).toContain('range-slider__range_smooth-transition');
+              });
+
+              it('add necessary class to label', () => {
+                expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
+              });
+            });
+
+            it('say subscribers that view wants to change left value and pass this value', () => {
+              expect(subscriber.inform).toBeCalledWith('viewInputLeft', 500 - 38);
+            });
+
+            describe('remove smooth transition', () => {
+              beforeAll(() => {
+                jest.useFakeTimers();
+                view.inform('trackClick', [0, 38]);
+                jest.runAllTimers();
+              });
+
+              it('remove necessary class from thumb', () => {
+                expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('remove necessary class from range', () => {
+                expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+              });
+
+              it('remove necessary class from label', () => {
+                expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
+              });
+
+              afterAll(() => {
+                jest.useRealTimers();
+              });
+            });
+          });
+        });
+
+        describe('if right thumb is nearer', () => {
+          describe('if slider is horizontal', () => {
+            const slider = document.createElement('div');
+            const view = new View(slider, {
+              range: true,
+              valueLabels: true,
+            });
+
+            const track = view.getComponent().querySelector('.range-slider__track');
+
+            if (track) {
+              track.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 0,
+              }));
+            }
+
+            const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+
+            if (thumbLeft) {
+              thumbLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 10,
+                width: 16,
+              }));
+            }
+
+            const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
+
+            if (thumbRight) {
+              thumbRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                left: 40,
+                width: 16,
+              }));
+            }
+
+            const range = view.getComponent().querySelector('.range-slider__range');
+            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            const subscriber = {
+              inform() {},
+            };
+            subscriber.inform = jest.fn();
+            view.subscribe(subscriber);
+
+            view.inform('trackClick', [38, 0]);
+
+            describe('add smooth transition', () => {
+              it('add necessary class to thumb', () => {
+                expect(thumbRight?.classList).toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('add necessary class to range', () => {
+                expect(range?.classList).toContain('range-slider__range_smooth-transition');
+              });
+
+              it('add necessary class to label', () => {
+                expect(valueLabelRight?.classList).toContain('range-slider__value-label_smooth-transition');
+              });
+            });
+
+            it('say subscribers that view wants to change right value and pass this value', () => {
+              expect(subscriber.inform).toBeCalledWith('viewInputRight', 38);
+            });
+
+            describe('remove smooth transition', () => {
+              beforeAll(() => {
+                jest.useFakeTimers();
+                view.inform('trackClick', [38, 0]);
+                jest.runAllTimers();
+              });
+
+              it('remove necessary class from thumb', () => {
+                expect(thumbRight?.classList).not.toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('remove necessary class from range', () => {
+                expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+              });
+
+              it('remove necessary class from label', () => {
+                expect(valueLabelRight?.classList).not.toContain('range-slider__value-label_smooth-transition');
+              });
+
+              afterAll(() => {
+                jest.useRealTimers();
+              });
+            });
+          });
+
+          describe('if slider is vertical', () => {
+            const slider = document.createElement('div');
+            const view = new View(slider, {
+              range: true,
+              vertical: true,
+              valueLabels: true,
+            });
+
+            const track = view.getComponent().querySelector('.range-slider__track');
+
+            if (track) {
+              track.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 0,
+              }));
+            }
+
+            view.getTrackLength = jest.fn(() => 500);
+
+            const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
+
+            if (thumbLeft) {
+              thumbLeft.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 40,
+                height: 16,
+              }));
+            }
+
+            const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
+
+            if (thumbRight) {
+              thumbRight.getBoundingClientRect = jest.fn(() => ({
+                ...defaultDomRect,
+                top: 10,
+                height: 16,
+              }));
+            }
+
+            const subscriber = {
+              inform() {},
+            };
+            subscriber.inform = jest.fn();
+            view.subscribe(subscriber);
+
+            const range = view.getComponent().querySelector('.range-slider__range');
+            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
+
+            view.inform('trackClick', [0, 30]);
+
+            describe('add smooth transition', () => {
+              it('add necessary class to thumb', () => {
+                expect(thumbRight?.classList).toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('add necessary class to range', () => {
+                expect(range?.classList).toContain('range-slider__range_smooth-transition');
+              });
+
+              it('add necessary class to label', () => {
+                expect(valueLabelRight?.classList).toContain('range-slider__value-label_smooth-transition');
+              });
+            });
+
+            it('say subscribers that view wants to change right value and pass this value', () => {
+              expect(subscriber.inform).toBeCalledWith('viewInputRight', 500 - 30);
+            });
+
+            describe('remove smooth transition', () => {
+              beforeAll(() => {
+                jest.useFakeTimers();
+                view.inform('trackClick', [0, 30]);
+                jest.runAllTimers();
+              });
+
+              it('remove necessary class from thumb', () => {
+                expect(thumbRight?.classList).not.toContain('range-slider__thumb_smooth-transition');
+              });
+
+              it('remove necessary class from range', () => {
+                expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
+              });
+
+              it('remove necessary class from label', () => {
+                expect(valueLabelRight?.classList).not.toContain('range-slider__value-label_smooth-transition');
+              });
+
+              afterAll(() => {
+                jest.useRealTimers();
+              });
+            });
+          });
+        });
+      });
+    });
+
+    describe('if eventType is "leftThumbChangePosition"', () => {
+      it('calc new left indent, if slider is horizontal, and notify subscribers', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider);
+        const subscriber = {
+          inform() {},
+        };
+        subscriber.inform = jest.fn();
+        view.subscribe(subscriber);
+
+        const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+        if (track) {
+          const trackShift = 200;
+
+          track.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: trackShift,
+          }));
+
+          for (let i = 100; i < 800; i += 10) {
+            view.inform('leftThumbChangePosition', [i, 200]);
+            expect(subscriber.inform).toBeCalledWith('viewInputLeft', i - trackShift);
+          }
+        }
+      });
+
+      it('calc new bottom indent, if slider is vertical, and notify subscribers', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: true,
+        });
+        const subscriber = {
+          inform() {},
+        };
+        subscriber.inform = jest.fn();
+        view.subscribe(subscriber);
+
+        const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+        if (track) {
+          const trackShift = 200;
+          const trackLength = 500;
+
+          track.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: trackShift,
+          }));
+
+          view.getTrackLength = jest.fn(() => trackLength);
+
+          for (let i = 100; i < 800; i += 10) {
+            view.inform('leftThumbChangePosition', [200, i]);
+            expect(subscriber.inform).toBeCalledWith('viewInputLeft', trackLength - (i - trackShift));
+          }
+        }
+      });
+    });
+
+    describe('if eventType is "rightThumbChangePosition"', () => {
+      it('calc new left indent, if slider is horizontal, and notify subscribers', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          range: true,
+        });
+        const subscriber = {
+          inform() {},
+        };
+        subscriber.inform = jest.fn();
+        view.subscribe(subscriber);
+
+        const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+        if (track) {
+          const trackShift = 200;
+
+          track.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: trackShift,
+          }));
+
+          for (let i = 100; i < 800; i += 10) {
+            view.inform('rightThumbChangePosition', [i, 200]);
+            expect(subscriber.inform).toBeCalledWith('viewInputRight', i - trackShift);
+          }
+        }
+      });
+
+      it('calc new bottom indent, if slider is vertical, and notify subscribers', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: true,
+          range: true,
+        });
+        const subscriber = {
+          inform() {},
+        };
+        subscriber.inform = jest.fn();
+        view.subscribe(subscriber);
+
+        const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
+
+        if (track) {
+          const trackShift = 200;
+          const trackLength = 500;
+
+          track.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: trackShift,
+          }));
+
+          view.getTrackLength = jest.fn(() => trackLength);
+
+          for (let i = 100; i < 800; i += 10) {
+            view.inform('rightThumbChangePosition', [200, i]);
+            expect(subscriber.inform).toBeCalledWith('viewInputRight', trackLength - (i - trackShift));
+          }
+        }
+      });
+    });
+  });
+
+  describe('setMinValue(value)', () => {
     it('if view has min label, set up its value', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
@@ -161,7 +1198,7 @@ describe('View', () => {
     });
   });
 
-  describe('setMaxValue(max)', () => {
+  describe('setMaxValue(value)', () => {
     it('if view has maxLabel, set up its value', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
@@ -179,7 +1216,7 @@ describe('View', () => {
   describe('setLeftValue(value, percent)', () => {
     describe('do necessary actions with thumb', () => {
       describe('set up left thumb position', () => {
-        it('change left indent if slider is horizontal', () => {
+        it('change left indent, if slider is horizontal', () => {
           const slider = document.createElement('div');
           const view = new View(slider);
           const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
@@ -190,7 +1227,7 @@ describe('View', () => {
           }
         });
 
-        it('change top indent if slider is vertical', () => {
+        it('change top indent, if slider is vertical', () => {
           const slider = document.createElement('div');
           const view = new View(slider, {
             vertical: true,
@@ -228,62 +1265,65 @@ describe('View', () => {
       });
     });
 
-    // describe('do necessary actions with range', () => {
-    //   describe('if slider is horizontal', () => {
-    //     it('set up range width if !view.isRange', () => {
-    //       const slider = document.createElement('div');
-    //       const view = new View(slider);
-    //       const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+    describe('do necessary actions with range', () => {
+      describe('if slider is horizontal', () => {
+        it('set up range width if !view.isRange', () => {
+          const slider = document.createElement('div');
+          const view = new View(slider, {
+            range: false,
+          });
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
-    //       for (let i = 0; i <= 100; i += 1) {
-    //         view.setLeftValue(50, i);
-    //         expect(range?.style.width).toBe(`${i}%`);
-    //       }
-    //     });
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(range?.style.width).toBe(`${i}%`);
+          }
+        });
 
-    //     it('set up range left indent if view.isRange', () => {
-    //       const slider = document.createElement('div');
-    //       const view = new View(slider, {
-    //         range: true,
-    //       });
-    //       const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+        it('set up range left indent if view.isRange', () => {
+          const slider = document.createElement('div');
+          const view = new View(slider, {
+            range: true,
+          });
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
-    //       for (let i = 0; i <= 100; i += 1) {
-    //         view.setLeftValue(50, i);
-    //         expect(range?.style.left).toBe(`${i}%`);
-    //       }
-    //     });
-    //   });
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(range?.style.left).toBe(`${i}%`);
+          }
+        });
+      });
 
-    //   describe('if slider is vertical', () => {
-    //     it('set up range height if !view.isRange', () => {
-    //       const slider = document.createElement('div');
-    //       const view = new View(slider, {
-    //         vertical: true,
-    //       });
-    //       const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+      describe('if slider is vertical', () => {
+        it('set up range height if !view.isRange', () => {
+          const slider = document.createElement('div');
+          const view = new View(slider, {
+            vertical: true,
+            range: false,
+          });
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
-    //       for (let i = 0; i <= 100; i += 1) {
-    //         view.setLeftValue(50, i);
-    //         expect(range?.style.height).toBe(`${i}%`);
-    //       }
-    //     });
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(range?.style.height).toBe(`${i}%`);
+          }
+        });
 
-    //     it('set up range bottom indent if view.isRange', () => {
-    //       const slider = document.createElement('div');
-    //       const view = new View(slider, {
-    //         vertical: true,
-    //         range: true,
-    //       });
-    //       const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+        it('set up range bottom indent if view.isRange', () => {
+          const slider = document.createElement('div');
+          const view = new View(slider, {
+            vertical: true,
+            range: true,
+          });
+          const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
-    //       for (let i = 0; i <= 100; i += 1) {
-    //         view.setLeftValue(50, i);
-    //         expect(range?.style.bottom).toBe(`${i}%`);
-    //       }
-    //     });
-    //   });
-    // });
+          for (let i = 0; i <= 100; i += 1) {
+            view.setLeftValue(50, i);
+            expect(range?.style.bottom).toBe(`${i}%`);
+          }
+        });
+      });
+    });
 
     describe('do necessary actions with labels, if slider has labels', () => {
       describe('set up labels value', () => {
@@ -349,444 +1389,21 @@ describe('View', () => {
           }
         });
       });
+    });
 
-      // describe('check if 2 value labels are close to each other, if view.isRange', () => {
-      //   describe('merge labels, if 2 value labels are close to each other', () => {
-      //     describe('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         vertical: false,
-      //         range: true,
-      //       });
+    it('notify subscribers', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider);
 
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      view.subscribe(subscriber);
 
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
+      view.setLeftValue(50, 50);
 
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 52,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       it('make left value label transparent', () => {
-      //         expect(valueLabelLeft?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make right value label transparent', () => {
-      //         expect(valueLabelRight?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make common value label opaque', () => {
-      //         const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
-      //         expect(valueLabelCommon?.style.opacity).toBe('1');
-      //       });
-      //     });
-
-      //     describe('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         vertical: true,
-      //         range: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 52,
-      //         }));
-      //       }
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       it('make left value label transparent', () => {
-      //         expect(valueLabelLeft?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make right value label transparent', () => {
-      //         expect(valueLabelRight?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make common value label opaque', () => {
-      //         const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
-      //         expect(valueLabelCommon?.style.opacity).toBe('1');
-      //       });
-      //     });
-      //   });
-
-      //   describe('split labels, if 2 value labels are not close to each other', () => {
-      //     describe('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         vertical: false,
-      //         range: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 55,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       it('make common value label transparent', () => {
-      //         const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
-      //         expect(valueLabelCommon?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make left value label opaque', () => {
-      //         expect(valueLabelLeft?.style.opacity).toBe('1');
-      //       });
-
-      //       it('make right value label opaque', () => {
-      //         expect(valueLabelRight?.style.opacity).toBe('1');
-      //       });
-      //     });
-
-      //     describe('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         vertical: true,
-      //         range: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 55,
-      //         }));
-      //       }
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       it('make common value label transparent', () => {
-      //         const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
-      //         expect(valueLabelCommon?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make left value label opaque', () => {
-      //         expect(valueLabelLeft?.style.opacity).toBe('1');
-      //       });
-
-      //       it('make right value label opaque', () => {
-      //         expect(valueLabelRight?.style.opacity).toBe('1');
-      //       });
-      //     });
-      //   });
-      // });
-
-      // eslint-disable-next-line max-len
-      // describe('check if left value label is close to min label, if slider has min and max labels', () => {
-      //   describe('make min label transparent, if left value label is close to it', () => {
-      //     it('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: false,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 52,
-      //         }));
-      //       }
-
-      //       const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
-
-      //       if (minLabel) {
-      //         minLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       expect(minLabel?.style.opacity).toBe('0');
-      //     });
-
-      //     it('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
-
-      //       if (minLabel) {
-      //         minLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 52,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       expect(minLabel?.style.opacity).toBe('0');
-      //     });
-      //   });
-
-      // eslint-disable-next-line max-len
-      //   describe('make min label not transparent, if left value label is not close to it', () => {
-      //     it('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: false,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 55,
-      //         }));
-      //       }
-
-      //       const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
-
-      //       if (minLabel) {
-      //         minLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       expect(minLabel?.style.opacity).toBe('1');
-      //     });
-
-      //     it('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
-
-      //       if (minLabel) {
-      //         minLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 55,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       expect(minLabel?.style.opacity).toBe('1');
-      //     });
-      //   });
-      // });
-
-      // eslint-disable-next-line max-len
-      // describe('check if left value label is close to max label, if slider has min and max labels and !view.isRange', () => {
-      //   describe('make max label transparent, if left value label is close to it', () => {
-      //     it('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: false,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
-
-      //       const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
-
-      //       if (maxLabel) {
-      //         maxLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 52,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       expect(maxLabel?.style.opacity).toBe('0');
-      //     });
-
-      //     it('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 52,
-      //         }));
-      //       }
-
-      //       const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
-
-      //       if (maxLabel) {
-      //         maxLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       expect(maxLabel?.style.opacity).toBe('0');
-      //     });
-      //   });
-
-      // eslint-disable-next-line max-len
-      //   describe('make max label not transparent, if left value label is not close to it', () => {
-      //     it('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: false,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
-
-      //       const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
-
-      //       if (maxLabel) {
-      //         maxLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 55,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       expect(maxLabel?.style.opacity).toBe('1');
-      //     });
-
-      //     it('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 55,
-      //         }));
-      //       }
-
-      //       const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
-
-      //       if (maxLabel) {
-      //         maxLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       expect(maxLabel?.style.opacity).toBe('1');
-      //     });
-      //   });
-      // });
+      expect(subscriber.inform).toBeCalledWith('viewSetLeft', null);
     });
   });
 
@@ -822,34 +1439,34 @@ describe('View', () => {
       });
     });
 
-    // describe('do necessary actions with range', () => {
-    //   it('set up range right indent, if slider is horizontal', () => {
-    //     const slider = document.createElement('div');
-    //     const view = new View(slider, {
-    //       range: true,
-    //     });
-    //     const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+    describe('do necessary actions with range', () => {
+      it('set up range right indent, if slider is horizontal', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          range: true,
+        });
+        const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
-    //     for (let i = 0; i <= 100; i += 1) {
-    //       view.setRightValue(50, i);
-    //       expect(range?.style.right).toBe(`${100 - i}%`);
-    //     }
-    //   });
+        for (let i = 0; i <= 100; i += 1) {
+          view.setRightValue(50, i);
+          expect(range?.style.right).toBe(`${100 - i}%`);
+        }
+      });
 
-    //   it('set up range top indent, if slider is vertical', () => {
-    //     const slider = document.createElement('div');
-    //     const view = new View(slider, {
-    //       vertical: true,
-    //       range: true,
-    //     });
-    //     const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
+      it('set up range top indent, if slider is vertical', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: true,
+          range: true,
+        });
+        const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
 
-    //     for (let i = 0; i <= 100; i += 1) {
-    //       view.setRightValue(50, i);
-    //       expect(range?.style.top).toBe(`${100 - i}%`);
-    //     }
-    //   });
-    // });
+        for (let i = 0; i <= 100; i += 1) {
+          view.setRightValue(50, i);
+          expect(range?.style.top).toBe(`${100 - i}%`);
+        }
+      });
+    });
 
     describe('do necessary actions with labels, if slider has labels', () => {
       describe('set up labels value', () => {
@@ -918,316 +1535,21 @@ describe('View', () => {
           }
         });
       });
+    });
 
-      // describe('check if 2 value labels are close to each other', () => {
-      //   describe('merge labels, if 2 value labels are close to each other', () => {
-      //     describe('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         vertical: false,
-      //         range: true,
-      //       });
+    it('notify subscribers', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider);
 
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      view.subscribe(subscriber);
 
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
+      view.setRightValue(50, 50);
 
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 52,
-      //         }));
-      //       }
-
-      //       view.setRightValue(100, 100);
-
-      //       it('make left value label transparent', () => {
-      //         expect(valueLabelLeft?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make right value label transparent', () => {
-      //         expect(valueLabelRight?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make common value label opaque', () => {
-      //         const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
-      //         expect(valueLabelCommon?.style.opacity).toBe('1');
-      //       });
-      //     });
-
-      //     describe('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         vertical: true,
-      //         range: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 52,
-      //         }));
-      //       }
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       view.setRightValue(100, 100);
-
-      //       it('make left value label transparent', () => {
-      //         expect(valueLabelLeft?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make right value label transparent', () => {
-      //         expect(valueLabelRight?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make common value label opaque', () => {
-      //         const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
-      //         expect(valueLabelCommon?.style.opacity).toBe('1');
-      //       });
-      //     });
-      //   });
-
-      //   describe('split labels, if 2 value labels are not close to each other', () => {
-      //     describe('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         vertical: false,
-      //         range: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 55,
-      //         }));
-      //       }
-
-      //       view.setLeftValue(100, 100);
-
-      //       it('make common value label transparent', () => {
-      //         const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
-      //         expect(valueLabelCommon?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make left value label opaque', () => {
-      //         expect(valueLabelLeft?.style.opacity).toBe('1');
-      //       });
-
-      //       it('make right value label opaque', () => {
-      //         expect(valueLabelRight?.style.opacity).toBe('1');
-      //       });
-      //     });
-
-      //     describe('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         vertical: true,
-      //         range: true,
-      //       });
-
-      //       const valueLabelLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
-
-      //       if (valueLabelLeft) {
-      //         valueLabelLeft.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 55,
-      //         }));
-      //       }
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       view.setRightValue(100, 100);
-
-      //       it('make common value label transparent', () => {
-      //         const valueLabelCommon: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
-      //         expect(valueLabelCommon?.style.opacity).toBe('0');
-      //       });
-
-      //       it('make left value label opaque', () => {
-      //         expect(valueLabelLeft?.style.opacity).toBe('1');
-      //       });
-
-      //       it('make right value label opaque', () => {
-      //         expect(valueLabelRight?.style.opacity).toBe('1');
-      //       });
-      //     });
-      //   });
-      // });
-
-      // eslint-disable-next-line max-len
-      // describe('check if right value label is close to max label, if slider has min and max labels', () => {
-      //   describe('make max label transparent, if right value label is close to it', () => {
-      //     it('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: false,
-      //         range: true,
-      //       });
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
-
-      //       const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
-
-      //       if (maxLabel) {
-      //         maxLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 52,
-      //         }));
-      //       }
-
-      //       view.setRightValue(100, 100);
-
-      //       expect(maxLabel?.style.opacity).toBe('0');
-      //     });
-
-      //     it('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: true,
-      //         range: true,
-      //       });
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 52,
-      //         }));
-      //       }
-
-      //       const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
-
-      //       if (maxLabel) {
-      //         maxLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       view.setRightValue(100, 100);
-
-      //       expect(maxLabel?.style.opacity).toBe('0');
-      //     });
-      //   });
-
-      // eslint-disable-next-line max-len
-      //   describe('make max label not transparent, if right value label is not close to it', () => {
-      //     it('if slider is horizontal', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: false,
-      //         range: true,
-      //       });
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           right: 50,
-      //         }));
-      //       }
-
-      //       const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
-
-      //       if (maxLabel) {
-      //         maxLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           left: 55,
-      //         }));
-      //       }
-
-      //       view.setRightValue(100, 100);
-
-      //       expect(maxLabel?.style.opacity).toBe('1');
-      //     });
-
-      //     it('if slider is vertical', () => {
-      //       const slider = document.createElement('div');
-      //       const view = new View(slider, {
-      //         valueLabels: true,
-      //         minMaxLabels: true,
-      //         vertical: true,
-      //         range: true,
-      //       });
-
-      //       const valueLabelRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
-
-      //       if (valueLabelRight) {
-      //         valueLabelRight.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           top: 55,
-      //         }));
-      //       }
-
-      //       const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
-
-      //       if (maxLabel) {
-      //         maxLabel.getBoundingClientRect = jest.fn(() => ({
-      //           ...defaultDomRect,
-      //           bottom: 50,
-      //         }));
-      //       }
-
-      //       view.setRightValue(100, 100);
-
-      //       expect(maxLabel?.style.opacity).toBe('1');
-      //     });
-      //   });
-      // });
+      expect(subscriber.inform).toBeCalledWith('viewSetRight', null);
     });
   });
 
@@ -1245,262 +1567,6 @@ describe('View', () => {
     it('if second value is not received, pass null instead of it', () => {
       view.updateInput(1);
       expect(input?.value).toBe('1');
-    });
-  });
-
-  describe('handleLeftInput(clientX, clientY, shiftX, shiftY)', () => {
-    it('calc new left indent, if slider is horizontal', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider);
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
-
-      if (track) {
-        const trackShift = 200;
-
-        track.getBoundingClientRect = jest.fn(() => ({
-          ...defaultDomRect,
-          left: trackShift,
-        }));
-
-        for (let i = 100; i < 800; i += 10) {
-          view.handleLeftInput(i, 200);
-          expect(subscriber.inform).toBeCalledWith('viewInputLeft', i - trackShift);
-        }
-      }
-
-      // view.getTrackLength = jest.fn(() => 500);
-
-      // it('if cursor is off left edge of track, new left indent is 0', () => {
-      //   view.handleLeftInput(100, 200);
-      //   expect(subscriber.inform).toBeCalledWith('viewInputLeft', 0);
-      // });
-
-      // it('if cursor is off right edge of track, new left indent = track width', () => {
-      //   view.handleLeftInput(800, 200);
-      //   expect(subscriber.inform).toBeCalledWith('viewInputLeft', 500);
-      // });
-
-      // it('if cursor is off right thumb position, new left indent = right thumb indent', () => {
-      //   const newSlider = document.createElement('div');
-      //   const newView = new View(newSlider, {
-      //     range: true,
-      //   });
-      //   const newSubscriber = {
-      //     inform() {},
-      //   };
-      //   newSubscriber.inform = jest.fn();
-      //   newView.subscribe(newSubscriber);
-
-      //   const newTrack: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__track');
-
-      //   if (newTrack) {
-      //     newTrack.getBoundingClientRect = jest.fn(() => ({
-      //       ...defaultDomRect,
-      //       left: 200,
-      //     }));
-      //   }
-
-      //   const thumbRight: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__thumb_right');
-
-      //   if (thumbRight) {
-      //     thumbRight.getBoundingClientRect = jest.fn(() => ({
-      //       ...defaultDomRect,
-      //       left: 400,
-      //     }));
-      //   }
-
-      //   newView.handleLeftInput(500, 200);
-
-      //   expect(newSubscriber.inform).toBeCalledWith('viewInputLeft', 200);
-      // });
-    });
-
-    it('calc new bottom indent, if slider is vertical', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        vertical: true,
-      });
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
-
-      if (track) {
-        const trackShift = 200;
-        const trackLength = 500;
-
-        track.getBoundingClientRect = jest.fn(() => ({
-          ...defaultDomRect,
-          top: trackShift,
-        }));
-
-        view.getTrackLength = jest.fn(() => trackLength);
-
-        for (let i = 100; i < 800; i += 10) {
-          view.handleLeftInput(200, i);
-          expect(subscriber.inform).toBeCalledWith('viewInputLeft', trackLength - (i - trackShift));
-        }
-      }
-
-      // it('if cursor is off bottom edge of track, new bottom indent is 0', () => {
-      //   view.handleLeftInput(100, 800);
-      //   expect(subscriber.inform).toBeCalledWith('viewInputLeft', 0);
-      // });
-
-      // it('if cursor is off top edge of track, new bottom indent = track height', () => {
-      //   view.handleLeftInput(100, 100);
-      //   expect(subscriber.inform).toBeCalledWith('viewInputLeft', 500);
-      // });
-
-      // it('if cursor is off right thumb position, new bottom indent = right thumb indent', () => {
-      //   const newSlider = document.createElement('div');
-      //   const newView = new View(newSlider, {
-      //     vertical: true,
-      //     range: true,
-      //   });
-      //   const newSubscriber = {
-      //     inform() {},
-      //   };
-      //   newSubscriber.inform = jest.fn();
-      //   newView.subscribe(newSubscriber);
-
-      //   const newTrack: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__track');
-
-      //   if (newTrack) {
-      //     newTrack.getBoundingClientRect = jest.fn(() => ({
-      //       ...defaultDomRect,
-      //       top: 200,
-      //     }));
-      //   }
-
-      //   newView.getTrackLength = jest.fn(() => 500);
-
-      //   const thumbRight: HTMLDivElement | null = newView.getComponent().querySelector('.range-slider__thumb_right');
-
-      //   if (thumbRight) {
-      //     thumbRight.getBoundingClientRect = jest.fn(() => ({
-      //       ...defaultDomRect,
-      //       top: 400,
-      //     }));
-      //   }
-
-      //   newView.handleLeftInput(100, 300);
-
-      //   expect(newSubscriber.inform).toBeCalledWith('viewInputLeft', 500 - 200);
-      // });
-    });
-  });
-
-  describe('handleRightInput(clientX, clientY, shiftX, shiftY)', () => {
-    it('calc new left indent, if slider is horizontal', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        range: true,
-      });
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
-
-      if (track) {
-        const trackShift = 200;
-
-        track.getBoundingClientRect = jest.fn(() => ({
-          ...defaultDomRect,
-          left: trackShift,
-        }));
-
-        for (let i = 100; i < 800; i += 10) {
-          view.handleRightInput(i, 200);
-          expect(subscriber.inform).toBeCalledWith('viewInputRight', i - trackShift);
-        }
-      }
-
-      // view.getTrackLength = jest.fn(() => 500);
-
-      // it('if cursor is off left thumb position, new left indent = left thumb indent', () => {
-      //   const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
-
-      //   if (thumbLeft) {
-      //     thumbLeft.getBoundingClientRect = jest.fn(() => ({
-      //       ...defaultDomRect,
-      //       left: 400,
-      //     }));
-      //   }
-
-      //   view.handleRightInput(300, 100);
-
-      //   expect(subscriber.inform).toBeCalledWith('viewInputRight', 200);
-      // });
-
-      // it('if cursor is off right edge of track, new left indent = track width', () => {
-      //   view.handleRightInput(800, 200);
-      //   expect(subscriber.inform).toBeCalledWith('viewInputRight', 500);
-      // });
-    });
-
-    it('calc new bottom indent, if slider is vertical', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        vertical: true,
-        range: true,
-      });
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
-
-      if (track) {
-        const trackShift = 200;
-        const trackLength = 500;
-
-        track.getBoundingClientRect = jest.fn(() => ({
-          ...defaultDomRect,
-          top: trackShift,
-        }));
-
-        view.getTrackLength = jest.fn(() => trackLength);
-
-        for (let i = 100; i < 800; i += 10) {
-          view.handleRightInput(200, i);
-          expect(subscriber.inform).toBeCalledWith('viewInputRight', trackLength - (i - trackShift));
-        }
-      }
-
-      // it('if cursor is off left thumb position, new bottom indent = left thumb indent', () => {
-      //   const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
-
-      //   if (thumbLeft) {
-      //     thumbLeft.getBoundingClientRect = jest.fn(() => ({
-      //       ...defaultDomRect,
-      //       top: 400,
-      //     }));
-      //   }
-
-      //   view.handleRightInput(100, 500);
-
-      //   expect(subscriber.inform).toBeCalledWith('viewInputRight', 500 - 200);
-      // });
-
-      // it('if cursor is off top edge of track, new bottom indent = track height', () => {
-      //   view.handleRightInput(100, 100);
-      //   expect(subscriber.inform).toBeCalledWith('viewInputRight', 500);
-      // });
     });
   });
 
@@ -1546,14 +1612,18 @@ describe('View', () => {
       const scale = view.getComponent().querySelector('.range-slider__scale');
       expect(scale).toBe(null);
     });
+
+    it('set scale property to undefined', () => {
+      expect(view).toHaveProperty('scale', undefined);
+    });
   });
 
-  describe('handleScaleOrTrackClick(x, y)', () => {
-    describe('if !slider.isRange', () => {
+  describe('setScaleIntervals(value)', () => {
+    describe('if passed value > 0', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
         scale: true,
-        valueLabels: true,
+        scaleIntervals: 3,
       });
 
       const subscriber = {
@@ -1562,449 +1632,80 @@ describe('View', () => {
       subscriber.inform = jest.fn();
       view.subscribe(subscriber);
 
-      const range = view.getComponent().querySelector('.range-slider__range');
-      const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
-      const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
+      view.setScaleIntervals(5);
 
-      view.handleScaleOrTrackClick(100, 100);
-
-      describe('add smooth transition', () => {
-        it('add necessary class to thumb', () => {
-          expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
-        });
-
-        it('add necessary class to range', () => {
-          expect(range?.classList).toContain('range-slider__range_smooth-transition');
-        });
-
-        it('add necessary class to label', () => {
-          expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
-        });
+      it('set scaleIntervals property to value', () => {
+        expect(view.getScaleIntervals()).toBe(5);
       });
 
-      describe('say subscribers that view wants to change left value and pass this value', () => {
-        it('if slider is horizontal', () => {
-          expect(subscriber.inform).toBeCalledWith('viewInputLeft', 100);
-        });
-
-        it('if slider is vertical', () => {
-          const newSlider = document.createElement('div');
-          const newView = new View(newSlider, {
-            scale: true,
-            valueLabels: true,
-            vertical: true,
-          });
-
-          const newSubscriber = {
-            inform() {},
-          };
-          newSubscriber.inform = jest.fn();
-          newView.subscribe(newSubscriber);
-
-          newView.getTrackLength = jest.fn(() => 500);
-
-          newView.handleScaleOrTrackClick(100, 100);
-
-          expect(newSubscriber.inform).toBeCalledWith('viewInputLeft', 500 - 100);
-        });
+      it('say subscribers that scaleIntervals was changed', () => {
+        expect(subscriber.inform).toBeCalledWith('viewSetScaleIntervals', null);
       });
 
-      describe('remove smooth transition', () => {
-        beforeAll(() => {
-          jest.useFakeTimers();
-          view.handleScaleOrTrackClick(100, 100);
-          jest.runAllTimers();
-        });
-
-        it('remove necessary class from thumb', () => {
-          expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
-        });
-
-        it('remove necessary class from range', () => {
-          expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
-        });
-
-        it('remove necessary class from label', () => {
-          expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
-        });
-
-        afterAll(() => {
-          jest.useRealTimers();
-        });
+      it('if value is float, scaleIntervals = Math.floor(value)', () => {
+        view.setScaleIntervals(6.2);
+        expect(view.getScaleIntervals()).toBe(6);
       });
     });
 
-    describe('if slider.isRange', () => {
-      describe('if left thumb is nearer', () => {
-        describe('if slider is horizontal', () => {
-          const slider = document.createElement('div');
-          const view = new View(slider, {
-            scale: true,
-            valueLabels: true,
-            range: true,
-          });
-
-          const track: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__track');
-
-          if (track) {
-            track.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              left: 0,
-            }));
-          }
-
-          const thumbLeft: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_left');
-
-          if (thumbLeft) {
-            thumbLeft.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              left: 10,
-              width: 16,
-            }));
-          }
-
-          const thumbRight: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__thumb_right');
-
-          if (thumbRight) {
-            thumbRight.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              left: 40,
-              width: 16,
-            }));
-          }
-
-          const range = view.getComponent().querySelector('.range-slider__range');
-          const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-
-          const subscriber = {
-            inform() {},
-          };
-          subscriber.inform = jest.fn();
-          view.subscribe(subscriber);
-
-          view.handleScaleOrTrackClick(30, 0);
-
-          describe('add smooth transition', () => {
-            it('add necessary class to thumb', () => {
-              expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
-            });
-
-            it('add necessary class to range', () => {
-              expect(range?.classList).toContain('range-slider__range_smooth-transition');
-            });
-
-            it('add necessary class to label', () => {
-              expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
-            });
-          });
-
-          it('say subscribers that view wants to change left value and pass this value', () => {
-            expect(subscriber.inform).toBeCalledWith('viewInputLeft', 30);
-          });
-
-          describe('remove smooth transition', () => {
-            beforeAll(() => {
-              jest.useFakeTimers();
-              view.handleScaleOrTrackClick(30, 0);
-              jest.runAllTimers();
-            });
-
-            it('remove necessary class from thumb', () => {
-              expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
-            });
-
-            it('remove necessary class from range', () => {
-              expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
-            });
-
-            it('remove necessary class from label', () => {
-              expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
-            });
-
-            afterAll(() => {
-              jest.useRealTimers();
-            });
-          });
-        });
-
-        describe('if slider is vertical', () => {
-          const slider = document.createElement('div');
-          const view = new View(slider, {
-            range: true,
-            vertical: true,
-            valueLabels: true,
-          });
-
-          const track = view.getComponent().querySelector('.range-slider__track');
-
-          if (track) {
-            track.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              top: 0,
-            }));
-          }
-
-          view.getTrackLength = jest.fn(() => 500);
-
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
-
-          if (thumbLeft) {
-            thumbLeft.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              top: 40,
-              height: 16,
-            }));
-          }
-
-          const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
-
-          if (thumbRight) {
-            thumbRight.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              top: 10,
-              height: 16,
-            }));
-          }
-
-          const range = view.getComponent().querySelector('.range-slider__range');
-          const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-
-          const subscriber = {
-            inform() {},
-          };
-          subscriber.inform = jest.fn();
-          view.subscribe(subscriber);
-
-          view.handleScaleOrTrackClick(0, 38);
-
-          describe('add smooth transition', () => {
-            it('add necessary class to thumb', () => {
-              expect(thumbLeft?.classList).toContain('range-slider__thumb_smooth-transition');
-            });
-
-            it('add necessary class to range', () => {
-              expect(range?.classList).toContain('range-slider__range_smooth-transition');
-            });
-
-            it('add necessary class to label', () => {
-              expect(valueLabelLeft?.classList).toContain('range-slider__value-label_smooth-transition');
-            });
-          });
-
-          it('say subscribers that view wants to change left value and pass this value', () => {
-            expect(subscriber.inform).toBeCalledWith('viewInputLeft', 500 - 38);
-          });
-
-          describe('remove smooth transition', () => {
-            beforeAll(() => {
-              jest.useFakeTimers();
-              view.handleScaleOrTrackClick(0, 38);
-              jest.runAllTimers();
-            });
-
-            it('remove necessary class from thumb', () => {
-              expect(thumbLeft?.classList).not.toContain('range-slider__thumb_smooth-transition');
-            });
-
-            it('remove necessary class from range', () => {
-              expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
-            });
-
-            it('remove necessary class from label', () => {
-              expect(valueLabelLeft?.classList).not.toContain('range-slider__value-label_smooth-transition');
-            });
-
-            afterAll(() => {
-              jest.useRealTimers();
-            });
-          });
-        });
+    describe('if passed value is 0', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        scale: true,
+        scaleIntervals: 3,
       });
 
-      describe('if right thumb is nearer', () => {
-        describe('if slider is horizontal', () => {
-          const slider = document.createElement('div');
-          const view = new View(slider, {
-            range: true,
-            valueLabels: true,
-          });
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      view.subscribe(subscriber);
 
-          const track = view.getComponent().querySelector('.range-slider__track');
+      view.setScaleIntervals(0);
 
-          if (track) {
-            track.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              left: 0,
-            }));
-          }
-
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
-
-          if (thumbLeft) {
-            thumbLeft.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              left: 10,
-              width: 16,
-            }));
-          }
-
-          const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
-
-          if (thumbRight) {
-            thumbRight.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              left: 40,
-              width: 16,
-            }));
-          }
-
-          const range = view.getComponent().querySelector('.range-slider__range');
-          const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
-
-          const subscriber = {
-            inform() {},
-          };
-          subscriber.inform = jest.fn();
-          view.subscribe(subscriber);
-
-          view.handleScaleOrTrackClick(38, 0);
-
-          describe('add smooth transition', () => {
-            it('add necessary class to thumb', () => {
-              expect(thumbRight?.classList).toContain('range-slider__thumb_smooth-transition');
-            });
-
-            it('add necessary class to range', () => {
-              expect(range?.classList).toContain('range-slider__range_smooth-transition');
-            });
-
-            it('add necessary class to label', () => {
-              expect(valueLabelRight?.classList).toContain('range-slider__value-label_smooth-transition');
-            });
-          });
-
-          it('say subscribers that view wants to change left value and pass this value', () => {
-            expect(subscriber.inform).toBeCalledWith('viewInputRight', 38);
-          });
-
-          describe('remove smooth transition', () => {
-            beforeAll(() => {
-              jest.useFakeTimers();
-              view.handleScaleOrTrackClick(38, 0);
-              jest.runAllTimers();
-            });
-
-            it('remove necessary class from thumb', () => {
-              expect(thumbRight?.classList).not.toContain('range-slider__thumb_smooth-transition');
-            });
-
-            it('remove necessary class from range', () => {
-              expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
-            });
-
-            it('remove necessary class from label', () => {
-              expect(valueLabelRight?.classList).not.toContain('range-slider__value-label_smooth-transition');
-            });
-
-            afterAll(() => {
-              jest.useRealTimers();
-            });
-          });
-        });
-
-        describe('if slider is vertical', () => {
-          const slider = document.createElement('div');
-          const view = new View(slider, {
-            range: true,
-            vertical: true,
-            valueLabels: true,
-          });
-
-          const track = view.getComponent().querySelector('.range-slider__track');
-
-          if (track) {
-            track.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              top: 0,
-            }));
-          }
-
-          view.getTrackLength = jest.fn(() => 500);
-
-          const thumbLeft = view.getComponent().querySelector('.range-slider__thumb_left');
-
-          if (thumbLeft) {
-            thumbLeft.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              top: 40,
-              height: 16,
-            }));
-          }
-
-          const thumbRight = view.getComponent().querySelector('.range-slider__thumb_right');
-
-          if (thumbRight) {
-            thumbRight.getBoundingClientRect = jest.fn(() => ({
-              ...defaultDomRect,
-              top: 10,
-              height: 16,
-            }));
-          }
-
-          const subscriber = {
-            inform() {},
-          };
-          subscriber.inform = jest.fn();
-          view.subscribe(subscriber);
-
-          const range = view.getComponent().querySelector('.range-slider__range');
-          const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
-
-          view.handleScaleOrTrackClick(0, 30);
-
-          describe('add smooth transition', () => {
-            it('add necessary class to thumb', () => {
-              expect(thumbRight?.classList).toContain('range-slider__thumb_smooth-transition');
-            });
-
-            it('add necessary class to range', () => {
-              expect(range?.classList).toContain('range-slider__range_smooth-transition');
-            });
-
-            it('add necessary class to label', () => {
-              expect(valueLabelRight?.classList).toContain('range-slider__value-label_smooth-transition');
-            });
-          });
-
-          it('say subscribers that view wants to change left value and pass this value', () => {
-            expect(subscriber.inform).toBeCalledWith('viewInputRight', 470);
-          });
-
-          describe('remove smooth transition', () => {
-            beforeAll(() => {
-              jest.useFakeTimers();
-              view.handleScaleOrTrackClick(0, 30);
-              jest.runAllTimers();
-            });
-
-            it('remove necessary class from thumb', () => {
-              expect(thumbRight?.classList).not.toContain('range-slider__thumb_smooth-transition');
-            });
-
-            it('remove necessary class from range', () => {
-              expect(range?.classList).not.toContain('range-slider__range_smooth-transition');
-            });
-
-            it('remove necessary class from label', () => {
-              expect(valueLabelRight?.classList).not.toContain('range-slider__value-label_smooth-transition');
-            });
-
-            afterAll(() => {
-              jest.useRealTimers();
-            });
-          });
-        });
+      it('scaleIntervals will not be changed', () => {
+        expect(view.getScaleIntervals()).toBe(3);
       });
+
+      it('subscribers will not be informed', () => {
+        expect(subscriber.inform).not.toBeCalled();
+      });
+    });
+
+    describe('if passed value < 0', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        scale: true,
+        scaleIntervals: 3,
+      });
+
+      const subscriber = {
+        inform() {},
+      };
+      subscriber.inform = jest.fn();
+      view.subscribe(subscriber);
+
+      view.setScaleIntervals(-2);
+
+      it('scaleIntervals will not be changed', () => {
+        expect(view.getScaleIntervals()).toBe(3);
+      });
+
+      it('subscribers will not be informed', () => {
+        expect(subscriber.inform).not.toBeCalled();
+      });
+    });
+  });
+
+  describe('getScaleIntervals()', () => {
+    it('return number of scale intervals', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        scale: true,
+        scaleIntervals: 3,
+      });
+
+      expect(view.getScaleIntervals()).toBe(3);
     });
   });
 
@@ -2193,7 +1894,7 @@ describe('View', () => {
           });
         });
 
-        describe('add second value label if necessary', () => {
+        describe('add second value label, if necessary', () => {
           it('right', () => {
             const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
             expect(valueLabelRight).toBeDefined();
@@ -2202,6 +1903,27 @@ describe('View', () => {
           it('common', () => {
             const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common');
             expect(valueLabelCommon).toBeDefined();
+          });
+        });
+
+        describe('do not add second value label, if not necessary', () => {
+          const newSlider = document.createElement('div');
+          const newView = new View(newSlider, {
+            vertical: false,
+            range: false,
+            valueLabels: false,
+          });
+
+          newView.toggleRange();
+
+          it('right', () => {
+            const valueLabelRight = newView.getComponent().querySelector('.range-slider__value-label_right');
+            expect(valueLabelRight).toBeFalsy();
+          });
+
+          it('common', () => {
+            const valueLabelCommon = newView.getComponent().querySelector('.range-slider__value-label_common');
+            expect(valueLabelCommon).toBeFalsy();
           });
         });
 
@@ -2286,6 +2008,36 @@ describe('View', () => {
 
         view.toggleRange();
 
+        describe('remove right thumb', () => {
+          it('reset property', () => {
+            expect(view).toHaveProperty('rightThumb', undefined);
+          });
+
+          it('remove from DOM', () => {
+            expect(view.getComponent().querySelector('.range-slider__thumb_right')).toBeFalsy();
+          });
+        });
+
+        describe('remove right value label', () => {
+          it('reset property', () => {
+            expect(view).toHaveProperty('valueLabelRight', undefined);
+          });
+
+          it('remove from DOM', () => {
+            expect(view.getComponent().querySelector('.range-slider__value-label_right')).toBeFalsy();
+          });
+        });
+
+        describe('remove common value label', () => {
+          it('reset property', () => {
+            expect(view).toHaveProperty('valueLabelCommon', undefined);
+          });
+
+          it('remove from DOM', () => {
+            expect(view.getComponent().querySelector('.range-slider__value-label_common')).toBeFalsy();
+          });
+        });
+
         it('say subscribers that range was changed', () => {
           expect(subscriber.inform).toBeCalledWith('viewToggleRange', null);
         });
@@ -2307,6 +2059,36 @@ describe('View', () => {
 
         view.toggleRange();
 
+        describe('remove right thumb', () => {
+          it('reset property', () => {
+            expect(view).toHaveProperty('rightThumb', undefined);
+          });
+
+          it('remove from DOM', () => {
+            expect(view.getComponent().querySelector('.range-slider__thumb_right')).toBeFalsy();
+          });
+        });
+
+        describe('remove right value label', () => {
+          it('reset property', () => {
+            expect(view).toHaveProperty('valueLabelRight', undefined);
+          });
+
+          it('remove from DOM', () => {
+            expect(view.getComponent().querySelector('.range-slider__value-label_right')).toBeFalsy();
+          });
+        });
+
+        describe('remove common value label', () => {
+          it('reset property', () => {
+            expect(view).toHaveProperty('valueLabelCommon', undefined);
+          });
+
+          it('remove from DOM', () => {
+            expect(view.getComponent().querySelector('.range-slider__value-label_common')).toBeFalsy();
+          });
+        });
+
         it('reset range top indent', () => {
           const range: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__range');
           expect(range?.style.top).toBe('');
@@ -2315,98 +2097,6 @@ describe('View', () => {
         it('say subscribers that range was changed', () => {
           expect(subscriber.inform).toBeCalledWith('viewToggleRange', null);
         });
-      });
-    });
-  });
-
-  describe('setScaleIntervals(value)', () => {
-    describe('if passed value > 0', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        scale: true,
-        scaleIntervals: 3,
-      });
-
-      // view.removeScale = jest.fn();
-
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      view.setScaleIntervals(5);
-
-      it('set scaleIntervals property to value', () => {
-        expect(view.getScaleIntervals()).toBe(5);
-      });
-
-      // it('remove scale', () => {
-      //   expect(view.removeScale).toBeCalled();
-      // });
-
-      it('say subscribers that scaleIntervals was changed', () => {
-        expect(subscriber.inform).toBeCalledWith('viewSetScaleIntervals', null);
-      });
-    });
-
-    describe('if passed value is 0', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        scale: true,
-        scaleIntervals: 3,
-      });
-
-      view.removeScale = jest.fn();
-
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      view.setScaleIntervals(0);
-
-      it('scaleIntervals is not changed', () => {
-        expect(view.getScaleIntervals()).toBe(3);
-      });
-
-      it('scale was not removed', () => {
-        expect(view.removeScale).not.toBeCalled();
-      });
-
-      it('subscribers was not informed', () => {
-        expect(subscriber.inform).not.toBeCalled();
-      });
-    });
-
-    describe('if passed value < 0', () => {
-      const slider = document.createElement('div');
-      const view = new View(slider, {
-        scale: true,
-        scaleIntervals: 3,
-      });
-
-      view.removeScale = jest.fn();
-
-      const subscriber = {
-        inform() {},
-      };
-      subscriber.inform = jest.fn();
-      view.subscribe(subscriber);
-
-      view.setScaleIntervals(-2);
-
-      it('scaleIntervals is not changed', () => {
-        expect(view.getScaleIntervals()).toBe(3);
-      });
-
-      it('scale was not removed', () => {
-        expect(view.removeScale).not.toBeCalled();
-      });
-
-      it('subscribers was not informed', () => {
-        expect(subscriber.inform).not.toBeCalled();
       });
     });
   });
@@ -2421,24 +2111,40 @@ describe('View', () => {
 
       view.toggleValueLabels();
 
-      describe('remove value labels from DOM', () => {
-        it('left', () => {
-          const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
-          expect(valueLabelLeft).toBeFalsy();
+      describe('remove value labels', () => {
+        describe('reset properties', () => {
+          it('left', () => {
+            expect(view).toHaveProperty('valueLabelLeft', undefined);
+          });
+
+          it('right', () => {
+            expect(view).toHaveProperty('valueLabelRight', undefined);
+          });
+
+          it('common', () => {
+            expect(view).toHaveProperty('valueLabelCommon', undefined);
+          });
         });
 
-        it('right', () => {
-          const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
-          expect(valueLabelRight).toBeFalsy();
-        });
+        describe('remove from DOM', () => {
+          it('left', () => {
+            const valueLabelLeft = view.getComponent().querySelector('.range-slider__value-label_left');
+            expect(valueLabelLeft).toBeFalsy();
+          });
 
-        it('common', () => {
-          const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common');
-          expect(valueLabelCommon).toBeFalsy();
+          it('right', () => {
+            const valueLabelRight = view.getComponent().querySelector('.range-slider__value-label_right');
+            expect(valueLabelRight).toBeFalsy();
+          });
+
+          it('common', () => {
+            const valueLabelCommon = view.getComponent().querySelector('.range-slider__value-label_common');
+            expect(valueLabelCommon).toBeFalsy();
+          });
         });
       });
 
-      describe('if slider had no min-max labels', () => {
+      describe('remove labels container, if slider had no min-max labels', () => {
         const newSlider = document.createElement('div');
         const newView = new View(newSlider, {
           range: true,
@@ -2448,14 +2154,18 @@ describe('View', () => {
 
         newView.toggleValueLabels();
 
-        it('remove labels container from DOM', () => {
+        it('reset property', () => {
+          expect(newView).toHaveProperty('labelsContainer', undefined);
+        });
+
+        it('remove from DOM', () => {
           const labelsContainer = newView.getComponent().querySelector('.range-slider__labels-container');
           expect(labelsContainer).toBeFalsy();
         });
       });
 
       describe('if slider had min-max labels', () => {
-        describe('if slider is horizontal', () => {
+        it('fix labels container height, if slider is horizontal', () => {
           const newSlider = document.createElement('div');
           const newView = new View(newSlider, {
             range: true,
@@ -2468,12 +2178,10 @@ describe('View', () => {
 
           newView.toggleValueLabels();
 
-          it('fix labels container height', () => {
-            expect(newView.fixLabelsContainerHeightForHorizontal).toBeCalled();
-          });
+          expect(newView.fixLabelsContainerHeightForHorizontal).toBeCalled();
         });
 
-        describe('if slider is vertical', () => {
+        it('fix labels container width, if slider is vertical', () => {
           const newSlider = document.createElement('div');
           const newView = new View(newSlider, {
             range: true,
@@ -2486,9 +2194,7 @@ describe('View', () => {
 
           newView.toggleValueLabels();
 
-          it('fix labels container width', () => {
-            expect(newView.fixLabelsContainerWidthForVertical).toBeCalled();
-          });
+          expect(newView.fixLabelsContainerWidthForVertical).toBeCalled();
         });
       });
     });
@@ -2498,6 +2204,7 @@ describe('View', () => {
       const view = new View(slider, {
         range: true,
         valueLabels: false,
+        minMaxLabels: false,
         vertical: false,
       });
 
@@ -2528,7 +2235,7 @@ describe('View', () => {
           expect(valueLabelCommon).toBeDefined();
         });
 
-        describe('do not set up right and common value labels if not necessary', () => {
+        describe('do not set up right and common value labels, if not necessary', () => {
           const newSlider = document.createElement('div');
           const newView = new View(newSlider, {
             range: false,
@@ -2549,7 +2256,7 @@ describe('View', () => {
         });
       });
 
-      describe('add labels container if necessary and append labels to it', () => {
+      describe('add labels container, if necessary, and append labels to it', () => {
         const labelsContainer = view.getComponent().querySelector('.range-slider__labels-container');
 
         it('labels container was appended to slider', () => {
@@ -2592,25 +2299,34 @@ describe('View', () => {
     describe('if slider had min-max labels', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
-        range: true,
         minMaxLabels: true,
-        valueLabels: true,
-        vertical: false,
       });
 
       view.fixLabelsContainerHeightForHorizontal = jest.fn();
 
       view.toggleMinMaxLabels();
 
-      describe('remove min-max labels from DOM', () => {
-        it('min', () => {
-          const minLabel = view.getComponent().querySelector('.range-slider__min-max-label_left');
-          expect(minLabel).toBeFalsy();
+      describe('remove min-max labels', () => {
+        describe('reset properties', () => {
+          it('min', () => {
+            expect(view).toHaveProperty('min', undefined);
+          });
+
+          it('max', () => {
+            expect(view).toHaveProperty('max', undefined);
+          });
         });
 
-        it('max', () => {
-          const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right');
-          expect(maxLabel).toBeFalsy();
+        describe('remove from DOM', () => {
+          it('min', () => {
+            const minLabel = view.getComponent().querySelector('.range-slider__min-max-label_left');
+            expect(minLabel).toBeFalsy();
+          });
+
+          it('max', () => {
+            const maxLabel = view.getComponent().querySelector('.range-slider__min-max-label_right');
+            expect(maxLabel).toBeFalsy();
+          });
         });
       });
 
@@ -2661,9 +2377,8 @@ describe('View', () => {
     describe('if slider had no min-max labels', () => {
       const slider = document.createElement('div');
       const view = new View(slider, {
-        range: true,
         minMaxLabels: false,
-        vertical: false,
+        valueLabels: false,
       });
 
       const subscriber = {
@@ -2708,15 +2423,13 @@ describe('View', () => {
         expect(subscriber.inform).toBeCalledWith('viewAddMinMaxLabels', null);
       });
 
-      it('fix labels container height if slider is horizontal', () => {
+      it('fix labels container height, if slider is horizontal', () => {
         expect(view.fixLabelsContainerHeightForHorizontal).toBeCalled();
       });
 
-      it('fix labels container width if slider is vertical', () => {
+      it('fix labels container width, if slider is vertical', () => {
         const newSlider = document.createElement('div');
         const newView = new View(newSlider, {
-          range: true,
-          valueLabels: false,
           minMaxLabels: false,
           vertical: true,
         });
@@ -2736,6 +2449,7 @@ describe('View', () => {
         const slider = document.createElement('div');
         const view = new View(slider, {
           minMaxLabels: true,
+          valueLabels: false,
         });
 
         expect(view.hasLabels()).toBe(true);
@@ -2746,6 +2460,7 @@ describe('View', () => {
         const view = new View(slider, {
           range: false,
           valueLabels: true,
+          minMaxLabels: false,
         });
 
         expect(view.hasLabels()).toBe(true);
@@ -2914,6 +2629,468 @@ describe('View', () => {
       });
 
       expect(view.getTrackLength()).toBe(200);
+    });
+  });
+
+  describe('getOptions()', () => {
+    describe('return object with view options', () => {
+      const slider = document.createElement('div');
+      const passedOptions = {
+        minMaxLabels: true,
+        valueLabels: true,
+        vertical: true,
+        range: true,
+        scale: true,
+        scaleIntervals: 5,
+      };
+      const view = new View(slider, passedOptions);
+      const options = view.getOptions();
+
+      it('minMaxLabels', () => {
+        expect(options.minMaxLabels).toBe(passedOptions.minMaxLabels);
+      });
+
+      it('valueLabels', () => {
+        expect(options.valueLabels).toBe(passedOptions.valueLabels);
+      });
+
+      it('vertical', () => {
+        expect(options.vertical).toBe(passedOptions.vertical);
+      });
+
+      it('range', () => {
+        expect(options.range).toBe(passedOptions.range);
+      });
+
+      it('scale', () => {
+        expect(options.scale).toBe(passedOptions.scale);
+      });
+
+      it('scaleIntervals', () => {
+        expect(options.scaleIntervals).toBe(passedOptions.scaleIntervals);
+      });
+    });
+  });
+
+  describe('mergeLabels()', () => {
+    const slider = document.createElement('div');
+    const view = new View(slider);
+
+    view.mergeLabels();
+
+    const leftLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+    const rightLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+    const commonLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+
+    it('make left label invisible', () => {
+      expect(leftLabel?.style.opacity).toBe('0');
+    });
+
+    it('make right label invisible', () => {
+      expect(rightLabel?.style.opacity).toBe('0');
+    });
+
+    it('make common label visible', () => {
+      expect(commonLabel?.style.opacity).toBe('1');
+    });
+
+    describe('set indent for common label', () => {
+      it('if slider is horizontal', () => {
+        if (rightLabel?.style.left && leftLabel?.style.left) {
+          const distanceBetweenThumbs = parseInt(rightLabel?.style.left, 10)
+                                      - parseInt(leftLabel?.style.left, 10);
+          expect(commonLabel?.style.left).toBe(`${parseInt(leftLabel?.style.left, 10) + distanceBetweenThumbs / 2}%`);
+        }
+      });
+
+      it('if slider is vertical', () => {
+        const newSlider = document.createElement('div');
+        const newView = new View(newSlider, {
+          vertical: true,
+        });
+
+        newView.mergeLabels();
+
+        const newLeftLabel: HTMLElement | null = newView.getComponent().querySelector('.range-slider__value-label_left');
+        const newRightLabel: HTMLElement | null = newView.getComponent().querySelector('.range-slider__value-label_right');
+        const newCommonLabel: HTMLElement | null = newView.getComponent().querySelector('.range-slider__value-label_common');
+
+        if (newRightLabel?.style.left && newLeftLabel?.style.left) {
+          const distanceBetweenThumbs = parseInt(newLeftLabel?.style.top, 10)
+                                      - parseInt(newRightLabel?.style.top, 10);
+          expect(newCommonLabel?.style.top).toBe(`${parseInt(newLeftLabel?.style.top, 10) - distanceBetweenThumbs / 2}%`);
+        }
+      });
+    });
+  });
+
+  describe('splitLabels()', () => {
+    const slider = document.createElement('div');
+    const view = new View(slider);
+
+    view.splitLabels();
+
+    const leftLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+    const rightLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+    const commonLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__value-label_common');
+
+    it('make left label visible', () => {
+      expect(leftLabel?.style.opacity).toBe('1');
+    });
+
+    it('make right label visible', () => {
+      expect(rightLabel?.style.opacity).toBe('1');
+    });
+
+    it('make common label invisible', () => {
+      expect(commonLabel?.style.opacity).toBe('0');
+    });
+  });
+
+  describe('hideMinLabel()', () => {
+    it('make min label invisible', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        minMaxLabels: true,
+      });
+
+      view.hideMinLabel();
+
+      const minLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
+
+      expect(minLabel?.style.opacity).toBe('0');
+    });
+  });
+
+  describe('showMinLabel()', () => {
+    it('make min label visible', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        minMaxLabels: true,
+      });
+
+      view.hideMinLabel();
+      view.showMinLabel();
+
+      const minLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
+
+      expect(minLabel?.style.opacity).toBe('1');
+    });
+  });
+
+  describe('hideMaxLabel()', () => {
+    it('make max label invisible', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        minMaxLabels: true,
+      });
+
+      view.hideMaxLabel();
+
+      const maxLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+      expect(maxLabel?.style.opacity).toBe('0');
+    });
+  });
+
+  describe('showMaxLabel()', () => {
+    it('make max label visible', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        minMaxLabels: true,
+      });
+
+      view.hideMaxLabel();
+      view.showMaxLabel();
+
+      const maxLabel: HTMLElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+      expect(maxLabel?.style.opacity).toBe('1');
+    });
+  });
+
+  describe('getDistanceBetweenValueLabels()', () => {
+    describe('return distance between value labels in px, if slider has labels', () => {
+      it('if slider is horizontal', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: false,
+          valueLabels: true,
+        });
+
+        const leftLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+        if (leftLabel) {
+          leftLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            right: 10,
+          }));
+        }
+
+        const rightLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+        if (rightLabel) {
+          rightLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: 40,
+          }));
+        }
+
+        expect(view.getDistanceBetweenValueLabels()).toBe(30);
+      });
+
+      it('if slider is vertical', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: true,
+          valueLabels: true,
+        });
+
+        const leftLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+        if (leftLabel) {
+          leftLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: 40,
+          }));
+        }
+
+        const rightLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+        if (rightLabel) {
+          rightLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            bottom: 10,
+          }));
+        }
+
+        expect(view.getDistanceBetweenValueLabels()).toBe(30);
+      });
+    });
+
+    describe('return undefined, if slider has no labels', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        valueLabels: false,
+      });
+
+      expect(view.getDistanceBetweenValueLabels()).toBe(undefined);
+    });
+  });
+
+  describe('getDistanceBetweenLeftValueLabelAndMinLabel()', () => {
+    describe('return distance between left value label and min label in px, if slider has these labels', () => {
+      it('if slider is horizontal', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: false,
+          valueLabels: true,
+          minMaxLabels: true,
+        });
+
+        const leftLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+        if (leftLabel) {
+          leftLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: 40,
+          }));
+        }
+
+        const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
+
+        if (minLabel) {
+          minLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            right: 10,
+          }));
+        }
+
+        expect(view.getDistanceBetweenLeftValueLabelAndMinLabel()).toBe(30);
+      });
+
+      it('if slider is vertical', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: true,
+          valueLabels: true,
+          minMaxLabels: true,
+        });
+
+        const leftLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+        if (leftLabel) {
+          leftLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            bottom: 10,
+          }));
+        }
+
+        const minLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_left');
+
+        if (minLabel) {
+          minLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: 40,
+          }));
+        }
+
+        expect(view.getDistanceBetweenLeftValueLabelAndMinLabel()).toBe(30);
+      });
+    });
+
+    describe('return undefined, if slider has no these labels', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        valueLabels: false,
+        minMaxLabels: false,
+      });
+
+      expect(view.getDistanceBetweenLeftValueLabelAndMinLabel()).toBe(undefined);
+    });
+  });
+
+  describe('getDistanceBetweenLeftValueLabelAndMaxLabel()', () => {
+    describe('return distance between left value label and max label in px, if slider has these labels', () => {
+      it('if slider is horizontal', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: false,
+          valueLabels: true,
+          minMaxLabels: true,
+        });
+
+        const leftLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+        if (leftLabel) {
+          leftLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            right: 10,
+          }));
+        }
+
+        const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+        if (maxLabel) {
+          maxLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: 40,
+          }));
+        }
+
+        expect(view.getDistanceBetweenLeftValueLabelAndMaxLabel()).toBe(30);
+      });
+
+      it('if slider is vertical', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: true,
+          valueLabels: true,
+          minMaxLabels: true,
+        });
+
+        const leftLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_left');
+
+        if (leftLabel) {
+          leftLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: 40,
+          }));
+        }
+
+        const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+        if (maxLabel) {
+          maxLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            bottom: 10,
+          }));
+        }
+
+        expect(view.getDistanceBetweenLeftValueLabelAndMaxLabel()).toBe(30);
+      });
+    });
+
+    describe('return undefined, if slider has no these labels', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        valueLabels: false,
+        minMaxLabels: false,
+      });
+
+      expect(view.getDistanceBetweenLeftValueLabelAndMaxLabel()).toBe(undefined);
+    });
+  });
+
+  describe('getDistanceBetweenRightValueLabelAndMaxLabel()', () => {
+    describe('return distance between left value label and max label in px, if slider has these labels', () => {
+      it('if slider is horizontal', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: false,
+          valueLabels: true,
+          minMaxLabels: true,
+        });
+
+        const rightLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+        if (rightLabel) {
+          rightLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            right: 10,
+          }));
+        }
+
+        const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+        if (maxLabel) {
+          maxLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            left: 40,
+          }));
+        }
+
+        expect(view.getDistanceBetweenRightValueLabelAndMaxLabel()).toBe(30);
+      });
+
+      it('if slider is vertical', () => {
+        const slider = document.createElement('div');
+        const view = new View(slider, {
+          vertical: true,
+          valueLabels: true,
+          minMaxLabels: true,
+        });
+
+        const rightLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__value-label_right');
+
+        if (rightLabel) {
+          rightLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            top: 40,
+          }));
+        }
+
+        const maxLabel: HTMLDivElement | null = view.getComponent().querySelector('.range-slider__min-max-label_right');
+
+        if (maxLabel) {
+          maxLabel.getBoundingClientRect = jest.fn(() => ({
+            ...defaultDomRect,
+            bottom: 10,
+          }));
+        }
+
+        expect(view.getDistanceBetweenRightValueLabelAndMaxLabel()).toBe(30);
+      });
+    });
+
+    describe('return undefined, if slider has no these labels', () => {
+      const slider = document.createElement('div');
+      const view = new View(slider, {
+        valueLabels: false,
+        minMaxLabels: false,
+      });
+
+      expect(view.getDistanceBetweenRightValueLabelAndMaxLabel()).toBe(undefined);
     });
   });
 });
