@@ -654,37 +654,24 @@ class View extends BaseElement<'div'> {
   }
 
   private handleLeftInput(x: number, y: number): void {
-    if (!this.vertical) {
-      const trackShift = this.track.getBoundingClientRect().left;
-      const newLeft = x - trackShift;
-
-      this.eventManager.notify('viewInputLeft', newLeft);
-    }
-
-    if (this.vertical) {
-      const trackShift = this.track.getBoundingClientRect().top;
-      const newTop = y - trackShift;
-      const newBottom = this.getTrackLength() - newTop;
-
-      this.eventManager.notify('viewInputLeft', newBottom);
-    }
+    this.eventManager.notify('viewInputLeft', this.getThumbIndent(x, y));
   }
 
   private handleRightInput(x: number, y: number): void {
-    if (!this.vertical) {
-      const trackShift = this.track.getBoundingClientRect().left;
-      const newLeft = x - trackShift;
+    this.eventManager.notify('viewInputRight', this.getThumbIndent(x, y));
+  }
 
-      this.eventManager.notify('viewInputRight', newLeft);
-    }
-
+  private getThumbIndent(x: number, y: number): number {
     if (this.vertical) {
       const trackShift = this.track.getBoundingClientRect().top;
-      const newTop = y - trackShift;
-      const newBottom = this.getTrackLength() - newTop;
-
-      this.eventManager.notify('viewInputRight', newBottom);
+      const top = y - trackShift;
+      const bottom = this.getTrackLength() - top;
+      return bottom;
     }
+
+    const trackShift = this.track.getBoundingClientRect().left;
+    const left = x - trackShift;
+    return left;
   }
 
   private handleScaleOrTrackClick(x: number, y: number): void {
