@@ -19,8 +19,8 @@ type ViewOptions = {
   scaleIntervals: number,
 };
 
-class View extends BaseElement<'div'> {
-  static defaults: Readonly<ViewOptions> = {
+class View extends BaseElement<'div'> implements IEventListener {
+  private static defaults: Readonly<ViewOptions> = {
     minMaxLabels: true,
     valueLabels: true,
     vertical: false,
@@ -68,49 +68,6 @@ class View extends BaseElement<'div'> {
     this.initOptionalFields(validOptions);
     this.subscribeToSubviews();
     this.render();
-  }
-
-  static validate(options: ViewOptions): ViewOptions {
-    let fixedOptions: ViewOptions = { ...options };
-
-    const removeWrongTypes = (): void => {
-      const checkType = (property: keyof ViewOptions): void => {
-        if (typeof options[property] !== typeof View.defaults[property]) {
-          delete fixedOptions[property];
-        }
-      };
-
-      /* There is no Object.keys().forEach because TS throws an error:
-       * "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'" */
-      checkType('range');
-      checkType('minMaxLabels');
-      checkType('valueLabels');
-      checkType('vertical');
-      checkType('scale');
-      checkType('scaleIntervals');
-    };
-
-    const mergeWithDefaults = (): void => {
-      fixedOptions = { ...View.defaults, ...fixedOptions };
-    };
-
-    const fixValues = (): void => {
-      if (fixedOptions.scaleIntervals !== undefined) {
-        if (fixedOptions.scaleIntervals < 1) {
-          fixedOptions.scaleIntervals = 1;
-        }
-
-        if (!Number.isInteger(fixedOptions.scaleIntervals)) {
-          fixedOptions.scaleIntervals = Math.floor(fixedOptions.scaleIntervals);
-        }
-      }
-    };
-
-    removeWrongTypes();
-    mergeWithDefaults();
-    fixValues();
-
-    return fixedOptions;
   }
 
   subscribe(listener: IEventListener): void {
@@ -538,6 +495,49 @@ class View extends BaseElement<'div'> {
       return this.getDistanceBetweenTwoLabels(this.valueLabelRight, this.maxLabel);
     }
     return undefined;
+  }
+
+  private static validate(options: ViewOptions): ViewOptions {
+    let fixedOptions: ViewOptions = { ...options };
+
+    const removeWrongTypes = (): void => {
+      const checkType = (property: keyof ViewOptions): void => {
+        if (typeof options[property] !== typeof View.defaults[property]) {
+          delete fixedOptions[property];
+        }
+      };
+
+      /* There is no Object.keys().forEach because TS throws an error:
+       * "Type 'string[]' is not assignable to type 'keyof RangeSliderOptions[]'" */
+      checkType('range');
+      checkType('minMaxLabels');
+      checkType('valueLabels');
+      checkType('vertical');
+      checkType('scale');
+      checkType('scaleIntervals');
+    };
+
+    const mergeWithDefaults = (): void => {
+      fixedOptions = { ...View.defaults, ...fixedOptions };
+    };
+
+    const fixValues = (): void => {
+      if (fixedOptions.scaleIntervals !== undefined) {
+        if (fixedOptions.scaleIntervals < 1) {
+          fixedOptions.scaleIntervals = 1;
+        }
+
+        if (!Number.isInteger(fixedOptions.scaleIntervals)) {
+          fixedOptions.scaleIntervals = Math.floor(fixedOptions.scaleIntervals);
+        }
+      }
+    };
+
+    removeWrongTypes();
+    mergeWithDefaults();
+    fixValues();
+
+    return fixedOptions;
   }
 
   private initOptionalFields(options: ViewOptions): void {
