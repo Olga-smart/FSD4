@@ -29,25 +29,24 @@ Easy to use, flexible and responsive range slider.
 * Any number of sliders at one page without conflicts and big performance problems
 * Two slider types: single (1 slider) and double (2 sliders)
 * Support of negative and fractional values
+* Supports both horizontal and vertical views
 * Ability to set custom step
-* Ability to disable UI elements (min and max labels, current value label, scale)
-* Slider writes its value right into input value field. This makes it easy to use in any html form
-* Any slider value can be set through data-attribute (eg. data-min="10")
+* Ability to enable/disable UI elements (min and max labels, current value labels, scale)
+* Slider writes its value right into the input value field. This makes it easy to use in any html form
+* Any slider value/property can be set through data-attribute (eg. data-min="10", data-vertical="true")
 * Slider supports external methods to control it after creation
 
 ## Dependencies
 * [jQuery 1.11.x+](https://jquery.com/)
 
 ## Usage
-Add the following libraries to the page:
-* jQuery
+1. Connect jQuery in a convenient way for you
+2. Add the following files to the page:
 * rangeSlider.js
-
-Add the following stylesheets to the page:
 * rangeSlider.css
 
 ## Initialization
-1. Add div with classes 'range-slider' and 'js-range-slider' to the page:
+1. Add div with classes `range-slider` and `js-range-slider` to the page:
 ```html
 <div class="range-slider js-range-slider"></div>
 ```
@@ -69,8 +68,7 @@ $('.js-range-slider').rangeSlider({
   valueLabels: true,
   vertical: false,
   scale: true,
-  scaleIntervals: 5,
-  panel: false,
+  scaleIntervals: 5
 });
 ```
 
@@ -88,26 +86,24 @@ or using data-* attributes:
   data-vertical="false"
   data-scale="true"
   data-scale-intervals="5"
-  data-panel="false"
 >
 </div>
 ```
 
 ## Settings
-| Option           | Data-Attr              | Defaults | Type    | Description          |
-| ---              | ---                    | ---      | ---     | ---                  |
-| `min`            | `data-min`             | `0`      | number  | Slider minimum value |
-| `max`            | `data-max`             | `100`    | number  | Slider maximum value |
-| `range`          | `data-range`           | `true`   | boolean | False for one handle, true for two handles |
-| `leftValue`      | `data-left-value`      | `25`     | number  | Start position for left/bottom handle (or for single handle) |
-| `rightValue`     | `data-right-value`     | `75`     | number  | Start position for right/top handle |
-| `step`           | `data-step`            | `1`      | number  | Slider`s step. Always > 0. Could be fractional |
-| `minMaxLabels`   | `data-min-max-labels`  | `true`   | boolean | Shows min and max labels |
-| `valueLabels`    | `data-value-labels`    | `true`   | boolean | Shows from and to labels |
-| `vertical`       | `data-vertical`        | `false`   | boolean | Makes slider vertical |
-| `scale`          | `data-scale`           | `false`  | boolean | Shows scale |
-| `scaleIntervals` | `data-scale-intervals` | `5`      | number  | Number of scale intervals |
-| `panel`          | `data-panel`           | `false`  | boolean | Enables panel for interactive slider settings |
+| Option           | Data-Attr              | Defaults | Type    | Description                                                  |
+| ---------------- | ---------------------- | :------: | :-----: | ------------------------------------------------------------ |
+| `min`            | `data-min`             | 0        | number  | Slider minimum value                                         |
+| `max`            | `data-max`             | 100      | number  | Slider maximum value                                         |
+| `range`          | `data-range`           | true     | boolean | False for one handle, true for two handles                   |
+| `leftValue`      | `data-left-value`      | 25       | number  | Start position for left/bottom handle (or for single handle) |
+| `rightValue`     | `data-right-value`     | 75       | number  | Start position for right/top handle                          |
+| `step`           | `data-step`            | 1        | number  | Slider`s step. Always > 0. Could be fractional               |
+| `minMaxLabels`   | `data-min-max-labels`  | true     | boolean | Shows min and max labels                                     |
+| `valueLabels`    | `data-value-labels`    | true     | boolean | Shows from and to labels                                     |
+| `vertical`       | `data-vertical`        | false    | boolean | Makes slider vertical                                        |
+| `scale`          | `data-scale`           | false    | boolean | Shows scale                                                  |
+| `scaleIntervals` | `data-scale-intervals` | 5        | number  | Number of scale intervals                                    |
 
 ## Public Methods
 
@@ -127,21 +123,82 @@ slider.setLeftValue(50);
 slider.setLeftValue(50).setRightValue(80).setStep(10);
 ```
 
-There are 3 public methods, whose names speak for themselves:
-``` javascript
-// setLeftValue
-slider.setLeftValue(50);
+There are 12 public methods:
 
-// setRightValue
-slider.setRightValue(80);
+|Method                |Parameter type|Return |Explanations                                                                  |
+|----------------------|:------------:|:-----:|-----------------------------------------------------------------------------|
+|`setLeftValue(value)` |number        |this   |If you try to set left value < min, left value will be equal to min. If you try to set left value > max (if slider is not range), left value will be equal to max. If you try to set left value > right value (if slider is range), left value will be equal to right value. If you pass not a number as an argument, nothing will happen. Value is adjusted to step (for example, if step is 10 and you pass 9, value will become 10). |
+|`setRightValue(value)`|number        |this   |If you try to set right value > max, right value will be equal to max. If you try to set right value < left value, right value will be equal to left value. If you pass not a number as an argument, nothing will happen. Value is adjusted to step (for example, if step is 10 and you pass 9, value will become 10).|
+|`setStep(value)`      |number        |this   |If you pass not a number as an argument, nothing will happen. If you pass a value that <= 0, nothing will happen. Also nothing will happen, if you try to pass value that > \|max - min\|.|
+|`setMin(value)`       |number        |this   |If you try to set min value > left value, nothing will happen. If you pass not a number as an argument, nothing will happen.|
+|`setMax(value)`       |number        |this   |If you try to set max value < left value (if slider is not range) or < right value (if slider is range), nothing will happen. If you pass not a number as an argument, nothing will happen.|
+|`toggleOrientation()` |-             |this   |If slider was horizontal, it will become vertical, and vice versa.|
+|`toggleRange()`       |-             |this   |If slider was single, it will become double, and vice versa.|
+|`toggleValueLabels()` |-             |this   |If slider had no value labels, they will appear, and vice versa.|
+|`toggleMinMaxLabels()`|-             |this   |If slider had no min-max labels, they will appear, and vice versa.|
+|`toggleScale()`       |-             |this   |If slider had no scale, it will appear, and vice versa. The default number of scale intervals is 5.|
+|`setScaleIntervals()` |number        |this   |If you pass not a number as an argument, nothing will happen. Also nothing will happen, if you try to pass value that <= 0 or the slider has no scale. If you pass a fractional number as an argument, it will be rounded down to the nearest integer.|
+|`getValues()`         |-             |object*|Returns the object with the slider options, which you can use as you wish.|
 
-// setStep
-slider.setStep(10);
+```javascript 
+* type SliderOptions = {
+  min: number,
+  max: number,
+  leftValue: number,
+  rightValue: number | undefined,
+  range: boolean,
+  step: number,
+  minMaxLabels: boolean,
+  valueLabels: boolean,
+  vertical: boolean,
+  scale: boolean,
+  scaleIntervals: number,
+};
 ```
 
 ## Events
+Slider can emit 11 types of events:
+| Event name                 | Data     |
+| -------------------------- | -------- |
+| `sliderSetLeft`            | number   |
+| `sliderSetRight`           | number   |
+| `sliderSetMin`             | number   |
+| `sliderSetMax`             | number   |
+| `sliderSetStep`            | number   |
+| `sliderToggleRange`        | null     |
+| `sliderToggleOrientation`  | null     |
+| `sliderToggleValueLabels`  | null     |
+| `sliderToggleMinMaxLabels` | null     |
+| `sliderToggleScale`        | null     |
+| `sliderSetScaleIntervals`  | number   |
 
-You may add your own handler for slider values change event:
+You may subscribe to the slider events and handle them however you want.
+``` javascript
+// Launch plugin
+$('.js-range-slider').rangeSlider();
+
+// Saving it's instance to variable
+const slider = $('.js-range-slider').data('rangeSlider');
+
+// Create a third-party object that will respond to slider events
+const subscriber = {
+  inform(eventType, data) {
+    if (eventType === 'sliderSetLeft') {
+      console.log(`Slider changed left value: ${data}`);
+    }
+  },
+};
+
+// Subscribe our object to slider events
+slider.subscribe(subscriber);
+
+// Trigger an event
+slider.setLeftValue(30);
+
+// The subscriber object will print a message to the console
+```
+
+You may also add your own handler for the slider values change event in a such way:
 ``` javascript
 // Launch plugin
 $('.js-range-slider').rangeSlider();
