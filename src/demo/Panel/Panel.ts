@@ -1,5 +1,5 @@
 import BaseElement from '../../RangeSlider/View/BaseElement/BaseElement';
-import { IEventListener, PossibleEvents } from '../../RangeSlider/EventManager/EventManager';
+import { IEventListener, PossibleEvents, EventHandlers } from '../../RangeSlider/EventManager/EventManager';
 import SliderOptions from '../../RangeSlider/Presenter/SliderOptions';
 import { InputSliderPublicMethods, ToggleSliderPublicMethods } from '../../RangeSlider/Presenter/SliderPublicMethods';
 import Presenter from '../../RangeSlider/Presenter/Presenter';
@@ -59,55 +59,29 @@ class Panel extends BaseElement<'form'> implements IEventListener {
   }
 
   inform<E extends keyof PossibleEvents>(eventType: E, data: PossibleEvents[E]): void {
-    switch (eventType) {
-      case 'sliderSetLeft':
-        if (typeof data === 'number') {
-          this.handleSliderChangeValue('from', data);
-        }
-        break;
-      case 'sliderSetRight':
-        if (typeof data === 'number') {
-          this.handleSliderChangeValue('to', data);
-        }
-        break;
-      case 'sliderSetMin':
-        if (typeof data === 'number') {
-          this.handleSliderChangeValue('min', data);
-        }
-        break;
-      case 'sliderSetMax':
-        if (typeof data === 'number') {
-          this.handleSliderChangeValue('max', data);
-        }
-        break;
-      case 'sliderSetStep':
-        if (typeof data === 'number') {
-          this.handleSliderChangeValue('step', data);
-        }
-        break;
-      case 'sliderToggleRange':
-        this.handleSliderToggle('range');
-        break;
-      case 'sliderToggleOrientation':
-        this.handleSliderToggle('vertical');
-        break;
-      case 'sliderToggleValueLabels':
-        this.handleSliderToggle('valueLabels');
-        break;
-      case 'sliderToggleMinMaxLabels':
-        this.handleSliderToggle('minMaxLabels');
-        break;
-      case 'sliderToggleScale':
-        this.handleSliderToggle('scale');
-        break;
-      case 'sliderSetScaleIntervals':
-        if (typeof data === 'number') {
-          this.handleSliderChangeValue('scaleIntervals', data);
-        }
-        break;
+    const eventHandlers: EventHandlers = {
+      sliderSetLeft: [this.handleSliderChangeValue, 'from'],
+      sliderSetRight: [this.handleSliderChangeValue, 'to'],
+      sliderSetMin: [this.handleSliderChangeValue, 'min'],
+      sliderSetMax: [this.handleSliderChangeValue, 'max'],
+      sliderSetStep: [this.handleSliderChangeValue, 'step'],
+      sliderToggleRange: [this.handleSliderToggle, 'range'],
+      sliderToggleOrientation: [this.handleSliderToggle, 'vertical'],
+      sliderToggleValueLabels: [this.handleSliderToggle, 'valueLabels'],
+      sliderToggleMinMaxLabels: [this.handleSliderToggle, 'minMaxLabels'],
+      sliderToggleScale: [this.handleSliderToggle, 'scale'],
+      sliderSetScaleIntervals: [this.handleSliderChangeValue, 'scaleIntervals'],
+    };
 
-      default:
-        break;
+    const handler = eventHandlers[eventType];
+    if (handler !== undefined) {
+      if (typeof data === 'number') {
+        handler[0].call(this, handler[1], data);
+      }
+
+      if (data === null) {
+        handler[0].call(this, handler[1]);
+      }
     }
   }
 
