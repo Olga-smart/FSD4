@@ -10,7 +10,6 @@ declare type SliderOptions = {
     vertical: boolean;
     scale: boolean;
     scaleIntervals: number;
-    panel: boolean;
 };
 export default SliderOptions;
 //# sourceMappingURL=SliderOptions.d.ts.map

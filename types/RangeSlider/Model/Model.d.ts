@@ -10,7 +10,6 @@ declare class Model {
     private step;
     private range;
     constructor(options: Partial<ModelOptions>);
-    static validate(options: ModelOptions): ModelOptions;
     subscribe(listener: IEventListener): void;
     setLeftValue(value: number): void;
     setRightValue(value?: number): void;
@@ -21,17 +20,12 @@ declare class Model {
     setMax(value: number): void;
     setStep(value: number): void;
     toggleRange(): void;
-    getMin(): number;
-    getMax(): number;
-    getLeftValue(): number;
-    getRightValue(): number | undefined;
-    getStep(): number;
-    isRange(): boolean;
     getOptions(): ModelOptions;
     convertValueToPercent(value: number): number;
-    convertPxToValue(px: number, trackLengthInPx: number): number;
     static isTwoLabelsClose(distanceInPx: number): boolean;
+    private static validate;
     private static removeCalcInaccuracy;
+    private convertPxToValue;
     private fitToStep;
 }
 export default Model;

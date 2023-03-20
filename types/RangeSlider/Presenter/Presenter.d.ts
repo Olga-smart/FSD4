@@ -31,18 +31,12 @@ declare class Presenter implements IEventListener {
     private passLeftValueToView;
     private passRightValueToView;
     private updateViewInput;
-    private handleViewSetLeftFromOutside;
-    private handleViewSetRightFromOutside;
-    private handleViewSetMin;
     private handleModelSetMin;
-    private handleViewSetMax;
     private handleModelSetMax;
-    private handleViewSetStep;
     private handleViewToggleOrientation;
     private handleViewToggleRange;
     private handleModelToggleRange;
     private handleModelSetStep;
-    private handleViewToggleScale;
     private handleViewSetScaleIntervals;
     private handleViewAddValueLabels;
     private handleViewAddMinMaxLabels;
