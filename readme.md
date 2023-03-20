@@ -1,6 +1,7 @@
 # RangeSlider
 Easy to use, flexible and responsive range slider.
-[Demo](https://olga-smart.github.io/FSD_4/demo/demo.html) 
+
+🔹🔹🔹[DEMO](https://olga-smart.github.io/FSD_4/demo/demo.html)🔹🔹🔹
 
 ![W3C Validation](https://img.shields.io/w3c-validation/html?targetUrl=https%3A%2F%2Folga-smart.github.io%2FFSD_4%2Fdemo%2Fdemo.html)
 ![GitHub top language](https://img.shields.io/github/languages/top/Olga-smart/FSD_4)
@@ -33,24 +34,22 @@ Easy to use, flexible and responsive range slider.
 * Ability to set custom step
 * Ability to enable/disable UI elements (min and max labels, current value labels, scale)
 * Slider writes its value right into the input value field. This makes it easy to use in any html form
-* Any slider value/property can be set through data-attribute (eg. data-min="10", data-vertical="true")
+* Any slider value/property can be set through data-attribute (eg. `data-min="10"`, `data-vertical="true"`)
 * Slider supports external methods to control it after creation
 
 ## Dependencies
 * [jQuery 1.11.x+](https://jquery.com/)
 
 ## Usage
-1. Connect jQuery in a convenient way for you
-2. Add the following files to the page:
-* rangeSlider.js
-* rangeSlider.css
+1. Connect `jQuery` in a convenient way for you
+2. Add the following files to the page: `rangeSlider.js`, `rangeSlider.css`
 
 ## Initialization
-1. Add div with classes `range-slider` and `js-range-slider` to the page:
+1. Add `div` with classes `range-slider` and `js-range-slider` to the page:
 ```html
 <div class="range-slider js-range-slider"></div>
 ```
-2. Call rangeSlider on the element:
+2. Call `rangeSlider` on the element:
 ```javascript
 $('.js-range-slider').rangeSlider();
 ```
@@ -91,7 +90,7 @@ or using data-* attributes:
 ```
 
 ## Settings
-| Option           | Data-Attr              | Defaults | Type    | Description                                                  |
+| Option           | Data Attribute         | Defaults | Type    | Description                                                  |
 | ---------------- | ---------------------- | :------: | :-----: | ------------------------------------------------------------ |
 | `min`            | `data-min`             | 0        | number  | Slider minimum value                                         |
 | `max`            | `data-max`             | 100      | number  | Slider maximum value                                         |
@@ -100,7 +99,7 @@ or using data-* attributes:
 | `rightValue`     | `data-right-value`     | 75       | number  | Start position for right/top handle                          |
 | `step`           | `data-step`            | 1        | number  | Slider`s step. Always > 0. Could be fractional               |
 | `minMaxLabels`   | `data-min-max-labels`  | true     | boolean | Shows min and max labels                                     |
-| `valueLabels`    | `data-value-labels`    | true     | boolean | Shows from and to labels                                     |
+| `valueLabels`    | `data-value-labels`    | true     | boolean | Shows value labels                                           |
 | `vertical`       | `data-vertical`        | false    | boolean | Makes slider vertical                                        |
 | `scale`          | `data-scale`           | false    | boolean | Shows scale                                                  |
 | `scaleIntervals` | `data-scale-intervals` | 5        | number  | Number of scale intervals                                    |
@@ -125,10 +124,10 @@ slider.setLeftValue(50).setRightValue(80).setStep(10);
 
 There are 12 public methods:
 
-|Method                |Parameter type|Return |Explanations                                                                  |
+|Method                |Parameter type|Return |Explanations                                                                 |
 |----------------------|:------------:|:-----:|-----------------------------------------------------------------------------|
-|`setLeftValue(value)` |number        |this   |If you try to set left value < min, left value will be equal to min. If you try to set left value > max (if slider is not range), left value will be equal to max. If you try to set left value > right value (if slider is range), left value will be equal to right value. If you pass not a number as an argument, nothing will happen. Value is adjusted to step (for example, if step is 10 and you pass 9, value will become 10). |
-|`setRightValue(value)`|number        |this   |If you try to set right value > max, right value will be equal to max. If you try to set right value < left value, right value will be equal to left value. If you pass not a number as an argument, nothing will happen. Value is adjusted to step (for example, if step is 10 and you pass 9, value will become 10).|
+|`setLeftValue(value)` |number        |this   |If you try to set left value < min, left value will be equal to min. If you try to set left value > max (if slider is not range), left value will be equal to max. If you try to set left value > right value (if slider is range), left value will be equal to right value. If you pass not a number as an argument, nothing will happen. Value is adjusted to the step (for example, if step is 10 and you pass 9, value will become 10). |
+|`setRightValue(value)`|number        |this   |If you try to set right value > max, right value will be equal to max. If you try to set right value < left value, right value will be equal to left value. If you pass not a number as an argument, nothing will happen. Value is adjusted to the step (for example, if step is 10 and you pass 9, value will become 10).|
 |`setStep(value)`      |number        |this   |If you pass not a number as an argument, nothing will happen. If you pass a value that <= 0, nothing will happen. Also nothing will happen, if you try to pass value that > \|max - min\|.|
 |`setMin(value)`       |number        |this   |If you try to set min value > left value, nothing will happen. If you pass not a number as an argument, nothing will happen.|
 |`setMax(value)`       |number        |this   |If you try to set max value < left value (if slider is not range) or < right value (if slider is range), nothing will happen. If you pass not a number as an argument, nothing will happen.|
